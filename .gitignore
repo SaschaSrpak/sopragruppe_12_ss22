@@ -225,9 +225,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,python,react
+.idea/
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/misc.xml
