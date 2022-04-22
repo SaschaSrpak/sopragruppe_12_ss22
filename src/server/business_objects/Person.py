@@ -4,6 +4,7 @@ from server.business_objects import BusinessObject as bo
 class Person(bo.BusinessObject):
 
     def __init__(self):
+        super().__init__()
         self.__name= str
         self.__surname= str
         self.__mail_adress= str

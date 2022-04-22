@@ -2,6 +2,7 @@ from server.business_objects import BusinessObject as bo
 
 class Aktivitaet(bo.BusinessObject):
     def __init__(self):
+        super().__init__()
         self.__activity_name = str
         self.__persons_responsible = dict()
         self.__man_day_capacity = float
@@ -15,7 +16,7 @@ class Aktivitaet(bo.BusinessObject):
         """Ändern des Aktivitäts-Name"""
         self.__activity_name = new_activity_name
 
-"""   def get_persons_responsible(self):
+    """def get_persons_responsible(self):
         return self.__persons_responsible
 
     def set_persons_responsible(self, new_persons_responsible):
