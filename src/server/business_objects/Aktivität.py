@@ -1,12 +1,12 @@
 from server.business_objects import BusinessObject as bo
 
+
 class Aktivitaet(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self.__activity_name = str
         self.__persons_responsible = dict()
         self.__man_day_capacity = float
-
 
     def get_activity_name(self):
         """Anzeigen des Aktivitäts-Name"""
@@ -30,11 +30,9 @@ class Aktivitaet(bo.BusinessObject):
         """Ändern der Kapazität in Personen-Tagen"""
         self.__man_day_capacity = new_man_day_capacity
 
-
-    def add_new_responsible(self, key, Person):
+    def add_new_responsible(self, key, person):
         """Neue verantnwortliche Person zu Dict hinzufügen"""
-        self.__persons_responsible.update({key:Person})
-
+        self.__persons_responsible.update({key: person})
 
     def delete_responsible(self, key):
         """Bestehende verantwortliche Person anhand des Keys aus Dict entfernen"""

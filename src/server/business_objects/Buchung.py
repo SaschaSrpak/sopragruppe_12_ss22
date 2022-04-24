@@ -7,9 +7,9 @@ from server.business_objects import Aktivität
 class Buchung(bo.BusinessObject):
     def __init__(self):
         super().__init__()
-        self.__source_user: Person
-        self.__target_user_account: Zeitkonto
-        self.__target_activity: Aktivität
+        self.__source_user = Person
+        self.__target_user_account = Zeitkonto
+        self.__target_activity = Aktivität
 
     def get_source_user(self):
         """Anzeigen des buchenden Nutzers"""

@@ -5,11 +5,10 @@ class Person(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self.__name= str
-        self.__surname= str
-        self.__mail_adress= str
-        self.__user_name= str
-
+        self.__name = str
+        self.__surname = str
+        self.__mail_adress = str
+        self.__user_name = str
 
     def get_name(self):
         """Anzeigen des Name"""
