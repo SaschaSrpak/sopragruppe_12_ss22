@@ -1,6 +1,6 @@
 from server.business_objects import BusinessObject as bo
-from server.business_objects import datetime
-from server.business_objects import timedelta
+from datetime import datetime
+from datetime import timedelta
 from server.business_objects import Person
 
 class Projekt (bo.BusinessObject):
@@ -41,7 +41,7 @@ class Projekt (bo.BusinessObject):
 
     def get_description(self):
         """Auslesen des Beschreibung des Projekts"""
-        return self.description
+        return self._description
 
     def set_description(self, descr):
         """Setzen der Beschreibung des Projekts"""
@@ -77,14 +77,14 @@ class Projekt (bo.BusinessObject):
 
 """
     def get_person_responsible(self):
-        """Auslesen der verantwortlichen Person(-en)"""
+        Auslesen der verantwortlichen Person(-en)
         return self._persons_responsible
 
     def add_person_responsible(self, Person):
-        """Hinzufügen einer verantwortlichen Person"""
+        Hinzufügen einer verantwortlichen Person
         self._new_Person = Person
 
     def delete_person_responsible(self, Person):
-        """Entfernen einer verantwortlichen Person"""
+        Entfernen einer verantwortlichen Person
         self.delete(Person)
 """

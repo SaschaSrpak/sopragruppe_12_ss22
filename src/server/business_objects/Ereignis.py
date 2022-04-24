@@ -1,5 +1,6 @@
 from server.business_objects import BusinessObject as bo
-from server.business_objects import datetime
+from datetime import datetime
+
 
 class Ereignis (bo.BusinessObject):
 

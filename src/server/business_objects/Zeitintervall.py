@@ -1,5 +1,5 @@
 from server.business_objects import BusinessObject as bo
-from server.business_objects import timedelta
+from datetime import timedelta
 from server.business_objects import Ereignis
 
 class Zeitinervall (bo.BusinessObject):
