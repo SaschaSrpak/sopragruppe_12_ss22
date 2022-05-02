@@ -1,6 +1,6 @@
-from server.business_objects import BusinessObject as bo
+from sopragruppe_12_ss22.src.server.business_objects import BusinessObject as bo
 from datetime import timedelta
-from server.business_objects import Ereignis
+from sopragruppe_12_ss22.src.server.business_objects import Ereignis
 
 class Zeitinervall (bo.BusinessObject):
 
@@ -40,3 +40,6 @@ class Zeitinervall (bo.BusinessObject):
         """Auslesen der Länge des Zeitintervalls."""
         return timedelta
 
+    def set_duration(self, new_duration):
+        """Auslesen der Länge des Zeitintervalls."""
+        self._duration = new_duration

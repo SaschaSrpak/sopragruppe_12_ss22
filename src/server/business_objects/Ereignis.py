@@ -1,4 +1,4 @@
-from server.business_objects import BusinessObject as bo
+from sopragruppe_12_ss22.src.server.business_objects import BusinessObject as bo
 from datetime import datetime
 
 

@@ -48,7 +48,3 @@ class Mapper (AbstractContextManager, ABC):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         pass
 
-
-cnx = connector.connect(user='root', password='roottoor',
-                                      host='127.0.0.1',
-                                      database='SoPra_MySQL_DB')
