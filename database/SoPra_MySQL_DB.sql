@@ -1,3 +1,6 @@
+CREATE DATABASE  IF NOT EXISTS `SoPra_MySQL_DB`
+USE `SoPra_MySQL_DB`;
+
 create table Aktivitaet
 (
     Activity_ID        integer  not null
