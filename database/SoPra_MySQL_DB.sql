@@ -24,7 +24,8 @@ create table Person
     Nachname           varchar(100) not null,
     EMail              varchar(100) not null,
     Username           varchar(100) not null,
-    Last_modified_date timestamp    not null
+    Last_modified_date timestamp    not null,
+    Manager_Status     boolean      not null
 );
 
 create table Aktivitaet_Zustaendigkeit
