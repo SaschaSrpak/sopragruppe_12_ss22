@@ -3,10 +3,11 @@ from datetime import datetime
 from datetime import timedelta
 from server.business_objects import Person
 
+
 class Projekt (bo.BusinessObject):
     def __init__(self):
         super().__init__()
-        self._projectname = ""
+        self._project_name = ""
         self._creator = Person
         self._client = ""
         self._description = ""
@@ -17,7 +18,7 @@ class Projekt (bo.BusinessObject):
 
     def get_project_name(self):
         """Auslesen des Projektnamen"""
-        return self._projectname
+        return self._project_name
 
     def set_project_name(self, name):
         """Setzen des Projektnamen"""
@@ -74,6 +75,7 @@ class Projekt (bo.BusinessObject):
     def delete_activity(self, key):
         """Entfernen einer Aktivität"""
         self._activities.pop(key)
+
 
 """
     def get_person_responsible(self):
