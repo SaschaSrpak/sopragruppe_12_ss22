@@ -3,7 +3,7 @@ import mysql.connector as connector
 
 myconnector = connector.connect(host='localhost',user='root',
                                 password='roottoor',
-                                database='SoPra_Database_Shema')
+                                database='SoPra_MySQL_DB')
 
 
 

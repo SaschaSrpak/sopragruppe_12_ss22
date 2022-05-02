@@ -17,7 +17,7 @@ class PersonMapper (Mapper):
 
         for (id, name, surname,
              mail_adress, user_name,
-             last_modified_date) in tuples:
+             last_modified_date, manager_status) in tuples:
             person = Person()
             person.set_id(id)
             person.set_name(name)
@@ -25,6 +25,7 @@ class PersonMapper (Mapper):
             person.set_mail_adress(mail_adress)
             person.set_user_name(user_name)
             person.set_last_modified_date(last_modified_date)
+            person.set_manager_status(manager_status)
             result.append(person)
 
         self._cnx.commit()
@@ -158,5 +159,12 @@ if (__name__ == "__main__"):
             print(i.get_name())
 
 """
+with PersonMapper() as mapper:
+    # mapper.insert(Hugo)
+    test = mapper.find_by_key("10004")
+    print(test.get_surname(), test.get_mail_adress())
+    result = mapper.find_all()
+    for i in result:
+        print(i.get_name(), i.get_surname())
 
 
