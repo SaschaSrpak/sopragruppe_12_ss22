@@ -1,6 +1,3 @@
-from tkinter.tix import Select
-
-from setuptools import Command
 from Mapper import Mapper
 from ..business_objects.Projekt import Projekt
 
