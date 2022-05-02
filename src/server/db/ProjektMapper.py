@@ -1,4 +1,5 @@
 from Mapper import Mapper
+from ..business_objects.Person import Person
 from ..business_objects.Projekt import Projekt
 
 class ProjektMapper(Mapper):
@@ -47,3 +48,78 @@ class ProjektMapper(Mapper):
         cursor.close()
 
         return projekt
+
+    def find_by_creator
+
+    def find_by_client
+
+    def find_by_responsible_id
+
+    def insert_person_responsible(self, person):
+        """Einfügen einer neuen verantwortlichen Person im Projekt
+         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+        berichtigt.
+
+        :param account das zu speichernde Objekt
+        :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID."""
+
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT MAX(User_ID) AS maxid FROM person")
+        tuples = cursor.fetchall()
+
+        for (maxid) in tuples:
+           person.set_user_name(maxid[0]+1)
+
+        command = "INSERT INTO person (User_ID, Name, Nachname, Email, Username, Last_modified_date) " \
+                  "VALUES (%s,%s,%s,%s,%s,%s)"
+        data = (person.get_id(),
+                person.get_name(),
+                person.get_surname(),
+                person.get_mail_adress(),
+                person.get_surname(),
+                person.get_last_modified_date()
+                )
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return person
+
+    def update_person_responsible(self, person):
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE person " + "SET Name=%s, Nachname=%s, Email=%s, Username=%s, Last_modified_date=%s WHERE " \
+                                     "Projekt_ID=%s"
+        data = (person.get_name(),
+                person.get_surname(),
+                person.get_mail_adress(),
+                person.get_last_modified_date()
+                )
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def delete_person_responsible(self, person):
+        """Löschen einer verantwortlichen Person des Projekts aus der Datenbank.
+
+                :param person das aus der DB zu löschende "Objekt"
+                """
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM person WHERE Project_ID={}".format(person.get_id())
+        """von wo deleten? --> table Person_Zuständigkeit?"""
+        cursor.execute(command)
+
+        self.cnx.commit()
+        cursor.close()
+
+    def find_by_activity_id
+
+    def insert_activity
+
+    def update_activity
+
+    def delete_activity
