@@ -112,11 +112,11 @@ class AktivitaetMapper(Mapper):
 
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Activity_ID) AS maxid FROM Aktivitaet ")
-        """tuples = cursor.fetchall
+        tuples = cursor.fetchall
 
         for (maxid) in tuples:
             activity.set_id(maxid[0]+1)
-        """
+
         cursor.execute("INSERT INTO Aktivitaet (Activity_ID, Name, "
                        "Man_Day_Capacity, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(activity.get_id(),

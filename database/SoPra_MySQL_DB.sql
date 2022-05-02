@@ -67,7 +67,7 @@ create table Buchungs_Bezug_Ereignis
 create table Buchungs_Bezug_Zeitintervall
 (
     Transaction_ID integer not null,
-    Interval_ID_ID       integer not null,
+    Interval_ID    integer not null,
     constraint Buchungs_Bezug_Zeitintervall_Buchung_Transaction_ID_fk
         foreign key (Transaction_ID) references Buchung (Transaction_ID),
     constraint Buchungs_Bezug_Zeitintervall_Zeitintervall_Interval_ID_fk
@@ -120,8 +120,8 @@ create table Zeitintervall
         primary key,
     Name               varchar(100) not null,
     Duration           float        not null,
-    Start_Event_ID     varchar(20)  not null,
-    End_Event_ID       varchar(20)  not null,
+    Start_Event_ID     integer      not null,
+    End_Event_ID       integer      not null,
     Last_modified_date timestamp    not null,
     constraint Zeitintervall_Ereignis_Event_ID_fk
         foreign key (Start_Event_ID) references Ereignis (Event_ID),

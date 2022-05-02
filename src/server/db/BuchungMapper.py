@@ -87,11 +87,11 @@ class BuchungMapper(Mapper):
 
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM Buchung ")
-        """tuples = cursor.fetchall
+        tuples = cursor.fetchall
 
         for (maxid) in tuples:
             transaction.set_id(maxid[0]+1)
-        """
+
         cursor.execute("INSERT INTO Buchung (Transaction_ID, Account_ID, "
                        "Activity_ID, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(transaction.get_id(),
