@@ -1,4 +1,4 @@
-'''from server.business_objects.Zeitkonto import Zeitkonto
+from server.business_objects.Zeitkonto import Zeitkonto
 from Mapper import Mapper
 
 class ZeitkontoMapper(Mapper):
@@ -31,7 +31,7 @@ class ZeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Account_ID, Owner_ID from zeitkonto WHERE id={}".format(key)
+        command = "SELECT Owner_ID from zeitkonto WHERE Account_ID={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -87,7 +87,7 @@ class ZeitkontoMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM zeitkonto WHERE Interval_ID={}".format(zeitkonto.get_id())
+        command = "DELETE FROM zeitkonto WHERE Account_ID={}".format(zeitkonto.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -102,4 +102,4 @@ if (__name__ == "__main__"):
     with ZeitkontoMapper() as mapper:
         result = mapper.find_all()
         for t in result:
-            print(t)'''
+            print(t)
