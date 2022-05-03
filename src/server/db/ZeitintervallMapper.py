@@ -1,4 +1,4 @@
-from sopragruppe_12_ss22.src.server.business_objects.Zeitintervall import Zeitinervall
+from server.business_objects.Zeitintervall import Zeitinervall
 from Mapper import Mapper
 
 class ZeitintervallMapper(Mapper):
@@ -35,7 +35,7 @@ class ZeitintervallMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM transactions WHERE id={}".format(key)
+        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM zeitintervall WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -68,7 +68,7 @@ class ZeitintervallMapper(Mapper):
         for (maxid) in tuples:
             zeitintervall.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO zeitintervall (Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date) VALUES (%s,%s,%s,%s)"
+        command = "INSERT INTO zeitintervall (Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (zeitintervall.get_id(),
                 zeitintervall.get_name(),
                 zeitintervall.get_duration(),
@@ -87,7 +87,7 @@ class ZeitintervallMapper(Mapper):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE transactions " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
+        command = "UPDATE zeitintervall " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
         data = (zeitintervall.get_id(),
                 zeitintervall.get_name(),
                 zeitintervall.get_duration(),
