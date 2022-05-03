@@ -16,11 +16,11 @@ class Projekt (bo.BusinessObject):
         self._activities = {}
         self._persons_responsible = {}
 
-    def get_project_name(self):
+    def get_name(self):
         """Auslesen des Projektnamen"""
         return self._name
 
-    def set_project_name(self, name):
+    def set_name(self, name):
         """Setzen des Projektnamen"""
         self._name = name
 
