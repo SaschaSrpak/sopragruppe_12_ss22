@@ -34,7 +34,7 @@ class EreignisMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Event_ID, Name, Time, Last_modified_date from ereignis WHERE id={}".format(key)
+        command = "SELECT Event_ID, Name, Time, Last_modified_date from ereignis WHERE Event_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -96,7 +96,7 @@ class EreignisMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM ereignis WHERE Event_ID={}".format(ereignis.get_id())
+        command = "DELETE FROM ereignis WHERE Event_ID='{}'".format(ereignis.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

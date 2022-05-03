@@ -31,7 +31,7 @@ class ZeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Owner_ID from zeitkonto WHERE Account_ID={}".format(key)
+        command = "SELECT Owner_ID from zeitkonto WHERE Account_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -87,7 +87,7 @@ class ZeitkontoMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM zeitkonto WHERE Account_ID={}".format(zeitkonto.get_id())
+        command = "DELETE FROM zeitkonto WHERE Account_ID='{}'".format(zeitkonto.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

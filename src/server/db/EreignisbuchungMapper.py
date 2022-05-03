@@ -21,7 +21,7 @@ class EreignisbuchungMapper(BuchungMapper):
 
     def set_interval_relation(self, transaction, event):
         cursor = self._cnx.cursor()
-        cursor.execute("INSERT INTO Buchungs_Bezug_Zeitintervall(Transaction_ID,"
+        cursor.execute("INSERT INTO Buchungs_Bezug_Ereignis(Transaction_ID,"
                        "Event_ID) VALUES('{}', '{}')".format(transaction.get_id(), event.get_id()))
         self._cnx.commit()
         cursor.close()
@@ -38,7 +38,7 @@ class EreignisbuchungMapper(BuchungMapper):
 
     def delete_interval_relation(self, transaction, event):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Buchungs_Bezug_Event " \
+        command = "DELETE FROM Buchungs_Bezug_Ereignis " \
                   "WHERE Transaction_ID='{}'," \
                   " Event_ID='{}'".format(transaction.get_id(),
                                           event.get_id())

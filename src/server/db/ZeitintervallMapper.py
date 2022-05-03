@@ -35,7 +35,7 @@ class ZeitintervallMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM zeitintervall WHERE Interval_ID={}".format(key)
+        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM zeitintervall WHERE Interval_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -103,7 +103,7 @@ class ZeitintervallMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM zeitintervall WHERE Interval_ID={}".format(zeitintervall.get_id())
+        command = "DELETE FROM zeitintervall WHERE Interval_ID='{}'".format(zeitintervall.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

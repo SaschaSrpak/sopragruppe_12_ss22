@@ -72,7 +72,7 @@ class AktivitaetMapper(Mapper):
     def find_by_project_key(self, project_key):
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT Activity_ID FROM Projekt_Aktivitaet " \
+        command = "SELECT Activity_ID FROM Projekt_Aktivitaeten " \
                   "WHERE Project_ID='{}'".format(project_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
