@@ -41,7 +41,7 @@ class Projekt (bo.BusinessObject):
         self._client = name
 
     def get_description(self):
-        """Auslesen des Beschreibung des Projekts"""
+        """Auslesen der Beschreibung des Projekts"""
         return self._description
 
     def set_description(self, descr):

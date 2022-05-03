@@ -7,7 +7,7 @@ class Person(bo.BusinessObject):
         super().__init__()
         self.__name = str
         self.__surname = str
-        self.__mail_adress = str
+        self.__mail_address = str
         self.__user_name = str
         self.__manager_status = False
 
@@ -27,13 +27,13 @@ class Person(bo.BusinessObject):
         """Ändern des Nachname"""
         self.__surname = new_surname
 
-    def get_mail_adress(self):
+    def get_mail_address(self):
         """Anzeigen der Mail-Adresse"""
-        return self.__mail_adress
+        return self.__mail_address
 
-    def set_mail_adress(self, new_mail_adress):
+    def set_mail_address(self, new_mail_address):
         """Ändern der Mail-Adresse"""
-        self.__mail_adress = new_mail_adress
+        self.__mail_address = new_mail_address
 
     def get_user_name(self):
         """Anzeigen des User-Names"""

@@ -3,7 +3,7 @@ from server.db.Mapper import Mapper
 import datetime
 
 
-class PersonMapper (Mapper):
+class PersonMapper(Mapper):
 
     def __init__(self):
         super().__init__()
@@ -16,13 +16,13 @@ class PersonMapper (Mapper):
         tuples = cursor.fetchall()
 
         for (id, name, surname,
-             mail_adress, user_name,
+             mail_address, user_name,
              last_modified_date, manager_status) in tuples:
             person = Person()
             person.set_id(id)
             person.set_name(name)
             person.set_surname(surname)
-            person.set_mail_adress(mail_adress)
+            person.set_mail_address(mail_address)
             person.set_user_name(user_name)
             person.set_last_modified_date(last_modified_date)
             person.set_manager_status(manager_status)
@@ -44,18 +44,18 @@ class PersonMapper (Mapper):
 
         try:
             (id, name, surname,
-             mail_adress, user_name,
+             mail_address, user_name,
              last_modified_date) = tuples[0]
             person = Person()
             person.set_id(id)
             person.set_name(name)
             person.set_surname(surname)
-            person.set_mail_adress(mail_adress)
+            person.set_mail_address(mail_address)
             person.set_user_name(user_name)
             person.set_last_modified_date(last_modified_date)
             result = person
         except IndexError:
-             result = None
+            result = None
 
         self._cnx.commit()
         cursor.close()
@@ -70,7 +70,6 @@ class PersonMapper (Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         for i in tuples:
-
             result.append(self.find_by_key(str(i[0])))
 
         self._cnx.commit()
@@ -98,14 +97,14 @@ class PersonMapper (Mapper):
         tuples = cursor.fetchall
 
         for (maxid) in tuples:
-            person.set_id(maxid[0]+1)
+            person.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
                        "EMail, Username, Last_modified_date) "
                        "VALUES ('{}','{}','{}',"
                        "'{}','{}','{}')".format(person.get_id(), person.get_name(),
-                       person.get_surname(), person.get_mail_adress(),
-                       person.get_user_name(), person.get_last_modified_date()))
+                                                person.get_surname(), person.get_mail_address(),
+                                                person.get_user_name(), person.get_last_modified_date()))
 
         self._cnx.commit()
         cursor.close()
@@ -117,9 +116,9 @@ class PersonMapper (Mapper):
 
         person.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE Person" + "SET Name=%s, Nachname=%s, " \
-                  "EMail=%s, Username=%s, Last_modified_date=%s WHERE User_ID=%s"
+                                    "EMail=%s, Username=%s, Last_modified_date=%s WHERE User_ID=%s"
         data = (person.get_name(), person.get_surname(),
-                person.get_mail_adress(), person.get_user_name(),
+                person.get_mail_address(), person.get_user_name(),
                 person.get_last_modified_date(), person.get_id(),)
         cursor.execute(command, data)
 
@@ -137,14 +136,13 @@ class PersonMapper (Mapper):
         cursor.close()
 
 
-
 """
 if (__name__ == "__main__"):
     Hugo = Person()
     Hugo.set_id("U1000243")
     Hugo.set_name("Hugo")
     Hugo.set_surname("Herbert")
-    Hugo.set_mail_adress("hugo.herbert@hdmv.de")
+    Hugo.set_mail_address("hugo.herbert@hdmv.de")
     Hugo.set_user_name("HHerbert")
     Hugo.set_last_modified_date(datetime.datetime.now())
     
@@ -162,9 +160,7 @@ if (__name__ == "__main__"):
 with PersonMapper() as mapper:
     # mapper.insert(Hugo)
     test = mapper.find_by_key("10004")
-    print(test.get_surname(), test.get_mail_adress())
+    print(test.get_surname(), test.get_mail_address())
     result = mapper.find_all()
     for i in result:
         print(i.get_name(), i.get_surname())
-
-

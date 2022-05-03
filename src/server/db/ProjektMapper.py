@@ -148,7 +148,7 @@ class ProjektMapper(Mapper):
         data = (person.get_id(),
                 person.get_name(),
                 person.get_surname(),
-                person.get_mail_adress(),
+                person.get_mail_address(),
                 person.get_surname(),
                 person.get_last_modified_date()
                 )
@@ -167,7 +167,7 @@ class ProjektMapper(Mapper):
         command = "UPDATE person " + "SET Name=%s, Nachname=%s, Email=%s, Username=%s, Last_modified_date=%s WHERE Projekt_ID=%s"
         data = (person.get_name(),
                 person.get_surname(),
-                person.get_mail_adress(),
+                person.get_mail_address(),
                 person.get_last_modified_date()
                 )
         cursor.execute(command, data)
