@@ -1,13 +1,11 @@
 from server.db.Mapper import Mapper
-from server.business_objects.Person import Person
-"""Notwendig?"""
 from server.business_objects.Projekt import Projekt
+
 
 class ProjektMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
 
     def find_all(self):
         """Lesen aller Projekte aus der Datenbank"""
@@ -31,56 +29,41 @@ class ProjektMapper(Mapper):
 
         return result
 
-
-    def find_by_ID(self, ID):
+    def find_by_key(self, key):
         """Lesen eines Projekts aus der Datenbank mit der gegebenen ID"""
+        result = None
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date from Projekt WHERE Project_ID={}".format(ID))
+        cursor.execute(
+            "SELECT Project_ID, Name, Client, Description, Last_modified_date from Projekt WHERE Project_ID={}".format(
+                key))
         tuples = cursor.fetchall()
 
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
+        try:
+            (Project_ID, Name, Client, Description,
+             Last_modified_date) = tuples[0]
             projekt = Projekt()
             projekt.set_id(Project_ID)
             projekt.set_name(Name)
             projekt.set_client(Client)
             projekt.set_description(Description)
             projekt.set_last_modified_date(Last_modified_date)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return projekt
-
-
-    def find_by_User(self, user):
-        """Lesen aller Projekte aus der Datenbank mit dem gegebenen User"""
-        result = []
-        cursor = self._cnx.cursor()
-
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Zustaendigkeit WHERE User_ID={}".format(user))
-        tuples = cursor.fetchall()
-
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
-            projekt = Projekt()
-            projekt.set_id(Project_ID)
-            projekt.set_name(Name)
-            projekt.set_client(Client)
-            projekt.set_description(Description)
-            projekt.set_last_modified_date(Last_modified_date)
-            result.append(projekt)
+            result = projekt
+        except IndexError:
+            result = None
 
         self._cnx.commit()
         cursor.close()
 
         return result
-
 
     def find_by_client(self, client):
         """Lesen aller Projekte aus der Datenbank mit dem gegebenen Client"""
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt WHERE Client={}".format(client))
+        cursor.execute(
+            "SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt WHERE Client={}".format(
+                client))
         tuples = cursor.fetchall()
 
         for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
@@ -97,100 +80,151 @@ class ProjektMapper(Mapper):
 
         return result
 
-
-    def find_by_creator(self, creator):
+    def find_by_creator(self, creator_key):
         """Lesen aller Projekte aus der Datenbank mit dem gegebenen Projekt-Ersteller"""
         result = []
         cursor = self._cnx.cursor()
-
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Ersteller WHERE User_ID={}".format(creator))
+        command = "SELECT Project_ID FROM Projekt_Ersteller " \
+                  "WHERE User_ID='{}'".format(creator_key)
+        cursor.execute(command)
         tuples = cursor.fetchall()
-
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
-            projekt = Projekt()
-            projekt.set_id(Project_ID)
-            projekt.set_name(Name)
-            projekt.set_client(Client)
-            projekt.set_description(Description)
-            projekt.set_last_modified_date(Last_modified_date)
-            result.append(projekt)
+        for i in tuples:
+            result.append(self.find_by_key(str(i[0])))
 
         self._cnx.commit()
         cursor.close()
-
         return result
 
-    """
-
-
-    def find_by_responsible_id  <--- Identisch zu "find_by_user"?
-
-    
-    """
-
-
-    def insert_person_responsible(self, person):
+    def insert_creator(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.
 
-        :param account das zu speichernde Objekt
         :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID."""
 
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(User_ID) AS maxid FROM person")
-        tuples = cursor.fetchall()
-
-        for (maxid) in tuples:
-            person.set_user_name(maxid[0]+1)
-
-        command = "INSERT INTO person (User_ID, Name, Nachname, Email, Username, Last_modified_date) VALUES (%s,%s,%s,%s,%s,%s)"
-        data = (person.get_id(),
-                person.get_name(),
-                person.get_surname(),
-                person.get_mail_address(),
-                person.get_surname(),
-                person.get_last_modified_date()
-                )
-        cursor.execute(command, data)
-
+        cursor.execute("INSERT INTO Projekt_Ersteller(Project_ID,"
+                       "User_ID) VALUES('{}', '{}')".format(project.get_id(), person.get_id()))
         self._cnx.commit()
         cursor.close()
+        return project
 
-        return person
-
-
-    def update_person_responsible(self, person):
+    def update_creator(self, project, person):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
-        cursor = self._cnx.cursor()
-
-        command = "UPDATE person " + "SET Name=%s, Nachname=%s, Email=%s, Username=%s, Last_modified_date=%s WHERE Projekt_ID=%s"
-        data = (person.get_name(),
-                person.get_surname(),
-                person.get_mail_address(),
-                person.get_last_modified_date()
-                )
+        cursor = self._cnx.cursor
+        command = "UPDATE Projekt_Ersteller" + "SET User_ID=%s, WHERE Project_ID=%s"
+        data = (person.get_id(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-
-
-    def delete_person_responsible(self, person):
+    def delete_creator(self, project, person):
         """Löschen einer verantwortlichen Person des Projekts aus der Datenbank.
 
                 :param person das aus der DB zu löschende "Objekt"
                 """
         cursor = self._cnx.cursor()
-
-        command = "DELETE FROM Person WHERE Project_ID={}".format(person.get_id())
-        """von wo deleten? --> table Person_Zuständigkeit?"""
+        command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}', User_ID='{}'".format(project.get_id(),
+                                                                                             person.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
 
+    def find_by_person_key(self, person_key):
+        """Lesen aller Projekte aus der Datenbank mit dem gegebenen User"""
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT Project_ID FROM Projekt_Zustaendigkeit " \
+                  "WHERE User_ID='{}'".format(person_key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        for i in tuples:
+            result.append(self.find_by_key(str(i[0])))
+
+        self._cnx.commit()
+        cursor.close()
+        return result
+
+    def insert_person_responsible(self, project, person):
+        """Einfügen einer neuen verantwortlichen Person im Projekt
+        Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+        berichtigt.
+
+        :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID."""
+
+        cursor = self._cnx.cursor()
+        cursor.execute("INSERT INTO Projekt_Zustaendigkeit(Project_ID,"
+                       "User_ID) VALUES('{}', '{}')".format(project.get_id(), person.get_id()))
+        self._cnx.commit()
+        cursor.close()
+        return project
+
+    def update_person_responsible(self, project, person):
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        cursor = self._cnx.cursor
+        command = "UPDATE Projekt_Zuständigkeit" + "SET User_ID=%s, WHERE Project_ID=%s"
+        data = (person.get_id(), project.get_id())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def delete_person_responsible(self, project, person):
+        """Löschen einer verantwortlichen Person des Projekts aus der Datenbank.
+
+                :param person das aus der DB zu löschende "Objekt"
+                """
+        cursor = self._cnx.cursor()
+        command = "DELETE FROM Projekt_Zustaendigkeit WHERE Project_ID='{}', User_ID='{}'".format(project.get_id(),
+                                                                                                  person.get_id())
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def find_by_activity_ID(self, activity_ID):
+        """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID"""
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT Project_ID FROM Projekt_Aktivitaeten " \
+                  "WHERE Activity_ID='{}'".format(activity_ID)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        for i in tuples:
+            result.append(self.find_by_key(str(i[0])))
+
+        self._cnx.commit()
+        cursor.close()
+        return result
+
+    def insert_activity(self, project, activity):
+        """Einfügen einer neuen Aktivität in die Datenbank"""
+        cursor = self._cnx.cursor()
+        cursor.execute("INSERT INTO Projekt_Aktivitaeten(Project_ID,"
+                       "Activity_ID) VALUES('{}', '{}')".format(project.get_id(), activity.get_id()))
+        self._cnx.commit()
+        cursor.close()
+        return project
+
+    def update_activity(self, project, activity):
+        cursor = self._cnx.cursor
+        command = "UPDATE Projekt_Aktivitaeten" + "SET Activity_ID=%s, WHERE Project_ID=%s"
+        data = (activity.get_id(), project.get_id())
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+    def delete_activity(self, project, activity):
+        cursor = self._cnx.cursor()
+        command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}', Activity_ID='{}'".format(project.get_id(),
+                                                                                                    activity.get_id())
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
 
     def insert(self, projekt):
         """Einfügen eines Projekts in die Datenbank"""
@@ -199,9 +233,10 @@ class ProjektMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            projekt.set_id(maxid[0]+1)
+            projekt.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO Projekt (Project_ID, Name, Client, Description, Last_modified_date) VALUES (%s, %s, %s, %s, %s)"
+        command = "INSERT INTO Projekt (Project_ID, Name, Client, Description, Last_modified_date) VALUES (%s, %s, " \
+                  "%s, %s, %s) "
         data = (
             projekt.get_id(),
             projekt.get_name(),
@@ -214,7 +249,6 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return projekt
-
 
     def update(self, projekt):
         """Aktualisieren eines Projekts in der Datenbank"""
@@ -233,7 +267,6 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-
     def delete(self, projekt):
         """Löschen eines Projekts aus der Datenbank"""
         cursor = self._cnx.cursor()
@@ -245,58 +278,15 @@ class ProjektMapper(Mapper):
         cursor.close()
 
 
-    def find_by_activity_ID(self, activity_ID):
-        """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID"""
-        cursor = self._cnx.cursor()
+with ProjektMapper() as mapper:
+    test = mapper.find_by_person_key(10001)
+    for i in test:
+        print(i.get_name())
 
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Aktivitaeten WHERE Activity_ID={}".format(activity_ID))
-        tuples = cursor.fetchall()
+    testcreator = mapper.find_by_creator(10009)
+    for i in testcreator:
+        print(i.get_name())
 
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
-            projekt = Projekt()
-            projekt.set_id(Project_ID)
-            projekt.set_name(Name)
-            projekt.set_client(Client)
-            projekt.set_description(Description)
-            projekt.set_last_modified_date(Last_modified_date)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return projekt
-
-
-    def insert_activity(self, activity):
-        """Einfügen einer neuen Aktivität in die Datenbank"""
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT max(Activity_ID) AS maxid FROM Aktivitaet")
-        tuples = cursor.fetchall()
-
-        for (maxid) in tuples:
-            activity.set_id(maxid[0]+1)
-
-        command = "INSERT INTO Aktivitaet (Activity_ID, Man_Day_Capacity, Last_modified_date) VALUES (%s, %s, %s)"
-        data = (
-            activity.get_id(),
-            activity.get_man_day_capacity(),
-            activity.get_last_modified_date()
-        )
-        cursor.execute(command, data)
-
-        self._cnx.commit()
-        cursor.close()
-        return activity
-
-
-    """
-
-
-    def insert_activity
-
-
-    def update_activity
-
-
-    def delete_activity
-    """
-    
+    result = mapper.find_all()
+    for i in result:
+        print(i.get_name())
