@@ -1,0 +1,15 @@
+
+
+
+INSERT INTO Person VALUES (10001,'Klaus','Kleber','klaus.kleber@gmail.com','UhuKlaus','2022-05-02 19:45:44',0),
+                          (10002,'Beathe','Use','beathe.use@gmail.com','AtheBuse','2022-05-02 19:47:48',1),
+                          (10003,'Marie','Blauh','marie.blauh@gmail.com','MaBlauh','2022-05-02 19:48:25',0),
+                          (10004,'Benedick','Schleicher','benedick.schleicher@gmail.com','DickerSchleicher','2022-05-02 19:49:00',0),
+                          (10005,'Heffrey','Yee','yee.heffrey@gmail.com','Yeeeee','2022-05-02 19:49:47',0),
+                          (10006,'Truca','Lautmann','tr.lautmann@gmail.com','SuperLautmann','2022-05-02 19:50:39',1),
+                          (10007,'Kaum','Kisler','kaum.kisler@gmail.com','KislerMisler','2022-05-02 19:52:14',0),
+                          (10008,'Sriracha','Spak','sriracha.spak@gmail.com','SrirachaSpak','2022-05-02 19:53:42',0),
+                          (10009,'Wiam','Lilke','wiam.lilke@gmail.com','Lolke','2022-05-02 19:54:32',1),
+                          (100010,'Jeonard','Lustus','jenni.lustus@gmail.com','BWL-Lustus','2022-05-02 19:55:14',0)
+
+
