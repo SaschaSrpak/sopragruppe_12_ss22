@@ -7,7 +7,7 @@ from server.business_objects import Person
 class Projekt (bo.BusinessObject):
     def __init__(self):
         super().__init__()
-        self._project_name = ""
+        self._name = ""
         self._creator = Person
         self._client = ""
         self._description = ""
@@ -18,11 +18,11 @@ class Projekt (bo.BusinessObject):
 
     def get_project_name(self):
         """Auslesen des Projektnamen"""
-        return self._project_name
+        return self._name
 
     def set_project_name(self, name):
         """Setzen des Projektnamen"""
-        self._project_name = name
+        self._name = name
 
     def get_creator(self):
         """Auslesen des Fremdschlüssels der Person"""

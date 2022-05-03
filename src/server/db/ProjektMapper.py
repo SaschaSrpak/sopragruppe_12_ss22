@@ -1,6 +1,7 @@
-from Mapper import Mapper;
-from ..business_objects.Person import Person;            """Notwendig?"""
-from ..business_objects.Projekt import Projekt;
+from server.db.Mapper import Mapper
+from server.business_objects.Person import Person
+"""Notwendig?"""
+from server.business_objects.Projekt import Projekt
 
 class ProjektMapper(Mapper):
 
@@ -11,7 +12,7 @@ class ProjektMapper(Mapper):
     def find_all(self):
         """Lesen aller Projekte aus der Datenbank"""
         result = []
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt")
         tuples = cursor.fetchall()
@@ -25,7 +26,7 @@ class ProjektMapper(Mapper):
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return result
@@ -33,7 +34,7 @@ class ProjektMapper(Mapper):
 
     def find_by_ID(self, ID):
         """Lesen eines Projekts aus der Datenbank mit der gegebenen ID"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date from Projekt WHERE Project_ID={}".format(ID))
         tuples = cursor.fetchall()
 
@@ -45,7 +46,7 @@ class ProjektMapper(Mapper):
             projekt.set_description(Description)
             projekt.set_last_modified_date(Last_modified_date)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return projekt
@@ -54,7 +55,7 @@ class ProjektMapper(Mapper):
     def find_by_User(self, user):
         """Lesen aller Projekte aus der Datenbank mit dem gegebenen User"""
         result = []
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Zustaendigkeit WHERE User_ID={}".format(user))
         tuples = cursor.fetchall()
@@ -68,7 +69,7 @@ class ProjektMapper(Mapper):
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return result
@@ -77,7 +78,7 @@ class ProjektMapper(Mapper):
     def find_by_client(self, client):
         """Lesen aller Projekte aus der Datenbank mit dem gegebenen Client"""
         result = []
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt WHERE Client={}".format(client))
         tuples = cursor.fetchall()
@@ -91,7 +92,7 @@ class ProjektMapper(Mapper):
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return result
@@ -100,7 +101,7 @@ class ProjektMapper(Mapper):
     def find_by_creator(self, creator):
         """Lesen aller Projekte aus der Datenbank mit dem gegebenen Projekt-Ersteller"""
         result = []
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Ersteller WHERE User_ID={}".format(creator))
         tuples = cursor.fetchall()
@@ -114,7 +115,7 @@ class ProjektMapper(Mapper):
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return result
@@ -210,14 +211,14 @@ class ProjektMapper(Mapper):
         )
         cursor.execute(command, data)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
         return projekt
 
 
     def update(self, projekt):
         """Aktualisieren eines Projekts in der Datenbank"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         command = "UPDATE Projekt SET Name=%s, Client=%s, Description=%s, Last_modified_date=%s WHERE Project_ID=%s"
         data = (
@@ -229,7 +230,7 @@ class ProjektMapper(Mapper):
         )
         cursor.execute(command, data)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
 
