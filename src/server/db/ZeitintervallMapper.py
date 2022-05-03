@@ -35,7 +35,7 @@ class ZeitintervallMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM zeitintervall WHERE id={}".format(key)
+        command = "SELECT Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date FROM zeitintervall WHERE Interval_ID={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
