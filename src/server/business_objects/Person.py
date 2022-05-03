@@ -9,6 +9,7 @@ class Person(bo.BusinessObject):
         self.__surname = str
         self.__mail_adress = str
         self.__user_name = str
+        self.__manager_status = False
 
     def get_name(self):
         """Anzeigen des Name"""
@@ -41,3 +42,12 @@ class Person(bo.BusinessObject):
     def set_user_name(self, new_user_name):
         """Ändern des User-Names"""
         self.__user_name = new_user_name
+
+    def get_manager_status(self):
+        """Anzeigen, ob Das Personen-Objekt ein Manager ist"""
+        return self.__manager_status
+
+    def set_manager_status(self, boolean):
+        """Ändern des Manager-Statuses"""
+        self.__manager_status = boolean
+

@@ -1,9 +1,9 @@
 import mysql.connector as connector
-import os
 from contextlib import AbstractContextManager
 from abc import ABC, abstractmethod
 
-class Mapper (AbstractContextManager, ABC):
+
+class Mapper(AbstractContextManager, ABC):
     """Abstrakte Basisklasse aller Mapper-Klassen"""
 
     def __init__(self):
@@ -11,9 +11,9 @@ class Mapper (AbstractContextManager, ABC):
 
     def __enter__(self):
         """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
-        self._cnx = connector.connect(user='root', password='roottoor',
-                                      host='127.0.0.1',
+        self._cnx = connector.connect(host='localhost', user='root', password='roottoor',
                                       database='SoPra_MySQL_DB')
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -21,7 +21,6 @@ class Mapper (AbstractContextManager, ABC):
         self._cnx.close()
 
     """Formuliere nachfolgend sämtliche Auflagen, die instanzierbare Mapper-Subklassen mind. erfüllen müssen."""
-
 
     @abstractmethod
     def find_all(self):
@@ -47,4 +46,3 @@ class Mapper (AbstractContextManager, ABC):
     def delete(self, object):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         pass
-
