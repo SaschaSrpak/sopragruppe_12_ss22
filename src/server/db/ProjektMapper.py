@@ -194,7 +194,7 @@ class ProjektMapper(Mapper):
 
     def insert(self, projekt):
         """Einfügen eines Projekts in die Datenbank"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
         cursor.execute("SELECT max(Project_ID) AS maxid FROM Projekt")
         tuples = cursor.fetchall()
 
@@ -236,18 +236,18 @@ class ProjektMapper(Mapper):
 
     def delete(self, projekt):
         """Löschen eines Projekts aus der Datenbank"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         command = "DELETE FROM Projekt WHERE Project_ID={}".format(projekt.get_id())
         cursor.execute(command)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
 
     def find_by_activity_ID(self, activity_ID):
         """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt, Projekt_Aktivitaeten WHERE Activity_ID={}".format(activity_ID))
         tuples = cursor.fetchall()
@@ -260,7 +260,7 @@ class ProjektMapper(Mapper):
             projekt.set_description(Description)
             projekt.set_last_modified_date(Last_modified_date)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
 
         return projekt
@@ -268,7 +268,7 @@ class ProjektMapper(Mapper):
 
     def insert_activity(self, activity):
         """Einfügen einer neuen Aktivität in die Datenbank"""
-        cursor = self.cnx.cursor()
+        cursor = self._cnx.cursor()
         cursor.execute("SELECT max(Activity_ID) AS maxid FROM Aktivitaet")
         tuples = cursor.fetchall()
 
@@ -283,7 +283,7 @@ class ProjektMapper(Mapper):
         )
         cursor.execute(command, data)
 
-        self.cnx.commit()
+        self._cnx.commit()
         cursor.close()
         return activity
 
