@@ -76,17 +76,15 @@ class Projekt (bo.BusinessObject):
         """Entfernen einer Aktivität"""
         self._activities.pop(key)
 
-
-"""
     def get_person_responsible(self):
-        Auslesen der verantwortlichen Person(-en)
+        """Auslesen der verantwortlichen Person(-en)"""
         return self._persons_responsible
 
-    def add_person_responsible(self, Person):
-        Hinzufügen einer verantwortlichen Person
-        self._new_Person = Person
+    def add_person_responsible(self, key, person):
+        """Hinzufügen einer verantwortlichen Person"""
+        self._persons_responsible.update({key: person})
 
-    def delete_person_responsible(self, Person):
-        Entfernen einer verantwortlichen Person
-        self.delete(Person)
-"""
+    def delete_person_responsible(self, key):
+        """Entfernen einer verantwortlichen Person"""
+        self._persons_responsible.pop(key)
+

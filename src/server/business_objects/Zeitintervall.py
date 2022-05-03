@@ -26,7 +26,7 @@ class Zeitinervall (bo.BusinessObject):
 
     def set_start(self, new_time):
         """Setzen des Starts des Zeitintervalls."""
-        self._name = new_time
+        self._start = new_time
 
     def get_end(self):
         """Auslesen des Endes des Zeitintervalls."""

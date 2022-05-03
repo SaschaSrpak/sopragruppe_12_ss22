@@ -1,6 +1,7 @@
 from server.business_objects.Ereignis import Ereignis
 from Mapper import Mapper
 
+
 class EreignisMapper(Mapper):
 
     def __init__(self):
@@ -107,8 +108,15 @@ class EreignisMapper(Mapper):
 um die grundsätzliche Funktion zu überprüfen.
 
 Anmerkung: Nicht professionell aber hilfreich..."""
-if (__name__ == "__main__"):
+"""if (__name__ == "__main__"):
     with EreignisMapper() as mapper:
         result = mapper.find_all()
         for t in result:
-            print(t)
+            print(t)"""
+
+with EreignisMapper() as mapper:
+    test = mapper.find_by_key(10001)
+    print(test.get_event_name())
+    result = mapper.find_all()
+    for i in result:
+        print(i.get_event_name())

@@ -178,7 +178,7 @@ if (__name__ == "__main__"):
 """
 
 with AktivitaetMapper() as mapper:
-    test = mapper.find_by_person_key("U10005")
+    test = mapper.find_by_person_key(10001)
     for i in test:
         print(i.get_activity_name())
 
