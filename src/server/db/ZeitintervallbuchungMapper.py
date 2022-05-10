@@ -46,3 +46,15 @@ class ZeitintervallbuchungMapper(BuchungMapper):
 
         self._cnx.commit()
         cursor.close()
+
+
+
+'''
+d 
+with ZeitintervallbuchungMapper() as mapper:
+    test = mapper.find_by_interval_key(10001)
+    for i in test:
+        print(i.get_id())
+    result = mapper.find_all()
+    for i in result:
+        print(i.get_id(),i.get_target_user_account(),i.get_target_activity())'''

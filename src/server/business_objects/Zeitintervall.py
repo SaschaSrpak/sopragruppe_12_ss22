@@ -1,6 +1,7 @@
 from server.business_objects import BusinessObject as bo
 from datetime import timedelta
-from server.business_objects import Ereignis
+from server.business_objects import Startereignis
+from server.business_objects import Endereignis
 
 
 class Zeitinervall (bo.BusinessObject):
@@ -8,8 +9,8 @@ class Zeitinervall (bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self._name = ""
-        self._start = Ereignis
-        self._end = Ereignis
+        self._start = Startereignis
+        self._end = Endereignis
         self._duration = timedelta
 
     def get_name(self):

@@ -38,14 +38,14 @@ class PersonMapper(Mapper):
 
         cursor = self._cnx.cursor()
         command = "SELECT User_ID, Name, Nachname, EMail, Username, " \
-                  "Last_modified_date FROM Person WHERE User_ID='{}'".format(key)
+                  "Last_modified_date, Manager_Status FROM Person WHERE User_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
             (id, name, surname,
              mail_address, user_name,
-             last_modified_date) = tuples[0]
+             last_modified_date, manager_status) = tuples[0]
             person = Person()
             person.set_id(id)
             person.set_name(name)
@@ -53,6 +53,7 @@ class PersonMapper(Mapper):
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
             person.set_last_modified_date(last_modified_date)
+            person.set_manager_status(manager_status)
             result = person
         except IndexError:
             result = None
@@ -100,11 +101,12 @@ class PersonMapper(Mapper):
             person.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
-                       "EMail, Username, Last_modified_date) "
+                       "EMail, Username, Last_modified_date,Manager_Status) "
                        "VALUES ('{}','{}','{}',"
-                       "'{}','{}','{}')".format(person.get_id(), person.get_name(),
-                                                person.get_surname(), person.get_mail_address(),
-                                                person.get_user_name(), person.get_last_modified_date()))
+                       "'{}','{}','{}','{}')".format(person.get_id(), person.get_name(),
+                                                     person.get_surname(), person.get_mail_address(),
+                                                     person.get_user_name(), person.get_last_modified_date(),
+                                                     person.get_manager_status()))
 
         self._cnx.commit()
         cursor.close()
@@ -116,10 +118,11 @@ class PersonMapper(Mapper):
 
         person.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE Person" + "SET Name=%s, Nachname=%s, " \
-                                    "EMail=%s, Username=%s, Last_modified_date=%s WHERE User_ID=%s"
+                                    "EMail=%s, Username=%s, Last_modified_date=%s," \
+                                    "Manager_Status=%s WHERE User_ID=%s"
         data = (person.get_name(), person.get_surname(),
                 person.get_mail_address(), person.get_user_name(),
-                person.get_last_modified_date(), person.get_id(),)
+                person.get_last_modified_date(), person.get_manager_status(), person.get_id(),)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -145,6 +148,7 @@ if (__name__ == "__main__"):
     Hugo.set_mail_address("hugo.herbert@hdmv.de")
     Hugo.set_user_name("HHerbert")
     Hugo.set_last_modified_date(datetime.datetime.now())
+    Hugo.set_manager_status(0)
     
     with PersonMapper() as mapper:
 
@@ -155,11 +159,11 @@ if (__name__ == "__main__"):
         result = mapper.find_all()
         for i in result:
             print(i.get_name())
-
 """
+
 with PersonMapper() as mapper:
     # mapper.insert(Hugo)
-    test = mapper.find_by_key("10004")
+    test = mapper.find_by_key(10004)
     print(test.get_surname(), test.get_mail_address())
     result = mapper.find_all()
     for i in result:

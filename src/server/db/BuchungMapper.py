@@ -127,3 +127,12 @@ class BuchungMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
+
+""""
+with BuchungMapper() as mapper:
+    test = mapper.find_by_key(10001)
+    print(test.get_id())
+    result = mapper.find_all()
+    for i in result:
+        print(i.get_id(),i.get_target_user_account(),i.get_target_activity()) """
