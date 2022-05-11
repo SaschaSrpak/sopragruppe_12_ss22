@@ -11,8 +11,8 @@ class Projekt (bo.BusinessObject):
         self._creator = Person
         self._client = ""
         self._description = ""
-        self._set_deadline = datetime
-        self._project_duration = timedelta
+        self._set_deadline = int
+        self._project_duration = int
         self._activities = {}
         self._persons_responsible = {}
 
