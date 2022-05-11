@@ -1,4 +1,4 @@
-from server.business_objects import Zeitintervall
+from business_objects.Zeitintervalle import Zeitintervall
 
 
 class Pause(Zeitintervall):

@@ -1,7 +1,6 @@
 from server.business_objects import BusinessObject as bo
 from datetime import timedelta
-from server.business_objects import Startereignis
-from server.business_objects import Endereignis
+from business_objects.Ereignisse import Endereignis, Startereignis
 
 
 class Zeitinervall (bo.BusinessObject):

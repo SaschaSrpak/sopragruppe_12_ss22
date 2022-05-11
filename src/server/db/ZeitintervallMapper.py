@@ -1,4 +1,4 @@
-from server.business_objects.Zeitintervall import Zeitinervall
+from business_objects.Zeitintervalle.Zeitintervall import Zeitinervall
 from Mapper import Mapper
 
 class ZeitintervallMapper(Mapper):

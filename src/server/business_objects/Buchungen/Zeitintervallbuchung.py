@@ -1,12 +1,11 @@
-from server.business_objects import Buchung
-from server.business_objects import Zeitintervall
+from business_objects.Buchungen import Buchung
 
 
 class Zeitintervallbuchung(Buchung):
 
     def __init__(self):
         super().__init__()
-        self.__source_time_interval = Zeitintervall
+        self.__source_time_interval = int
 
     def get_source_time_interval(self):
         """Anzeigen des Zeitintervalls, auf welches sich die Buchung bezieht."""
