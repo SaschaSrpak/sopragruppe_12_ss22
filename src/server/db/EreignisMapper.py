@@ -1,4 +1,4 @@
-from server.business_objects.Ereignis import Ereignis
+from business_objects.Ereignisse.Ereignis import Ereignis
 from Mapper import Mapper
 
 

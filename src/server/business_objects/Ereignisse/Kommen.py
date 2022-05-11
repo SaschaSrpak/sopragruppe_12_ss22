@@ -1,4 +1,4 @@
-from server.business_objects import Ereignis
+from business_objects.Ereignisse import Ereignis
 
 
 class Kommen(Ereignis):
