@@ -6,14 +6,14 @@ class Ereignisbuchung(Buchung):
 
     def __init__(self):
         super().__init__()
-        self._source_event = Ereignis
+        self._event_id = Ereignis
 
-    def get_source_time_interval(self):
+    def get_event_id(self):
         """Anzeigen des Ereignisses, auf welches sich die Buchung bezieht."""
-        return self._source_event
+        return self._event_id
 
-    def set_source_time_interval(self, new_source):
+    def set_event_id(self, new_source):
         """Mit dieser Funktion kann ein Bezug zwischen der Buchung
         und einem Ereignis-Objekt hergestellt werden"""
-        self._source_event = new_source
+        self._event_id = new_source
 

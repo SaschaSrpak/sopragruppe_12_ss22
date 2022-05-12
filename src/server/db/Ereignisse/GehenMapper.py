@@ -1,8 +1,8 @@
-from business_objects.Ereignisse.Ereignis import Ereignis
-from Mapper import Mapper
+from business_objects.Ereignisse.Gehen import Gehen
+from server.db.Mapper import Mapper
 
 
-class EreignisMapper(Mapper):
+class GehenMapper(Mapper):
 
     def __init__(self):
         super().__init__()
@@ -11,16 +11,15 @@ class EreignisMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT Event_ID, Name, Time, Last_modified_date from ereignis")
+        cursor.execute("SELECT Event_ID, Name, Time, Last_modified_date from Gehen")
         tuples = cursor.fetchall()
 
-        for ( Event_ID, Name, Time, Last_modified_date) in tuples:
-            ereignis = Ereignis()
+        for (Event_ID, Name, Time, Last_modified_date) in tuples:
+            ereignis = Gehen()
             ereignis.set_id(Event_ID)
             ereignis.set_event_name(Name)
             ereignis.set_time_of_event(Time)
             ereignis.set_last_modified_date(Last_modified_date)
-
 
             result.append(ereignis)
 
@@ -29,13 +28,12 @@ class EreignisMapper(Mapper):
 
         return result
 
-
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Event_ID, Name, Time, Last_modified_date from ereignis WHERE Event_ID='{}'".format(key)
+        command = "SELECT Event_ID, Name, Time, Last_modified_date from Gehen WHERE Event_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -43,7 +41,7 @@ class EreignisMapper(Mapper):
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
             (Event_ID, Name, Time, Last_modified_date) = tuples[0]
-            ereignis = Ereignis()
+            ereignis = Gehen()
             ereignis.set_id(Event_ID)
             ereignis.set_event_name(Name)
             ereignis.set_time_of_event(Time)
@@ -60,13 +58,13 @@ class EreignisMapper(Mapper):
 
     def insert(self, ereignis):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(Event_ID) AS maxid FROM ereignis ")
+        cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Gehen ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             ereignis.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO ereignis (Event_ID, Name, Time, Last_modified_date) VALUES (%s,%s,%s,%s)"
+        command = "INSERT INTO Gehen (Event_ID, Name, Time, Last_modified_date) VALUES (%s,%s,%s,%s)"
         data = (ereignis.get_id(),
                 ereignis.get_event_name(),
                 ereignis.get_time_of_event(),
@@ -78,12 +76,11 @@ class EreignisMapper(Mapper):
 
         return ereignis
 
-
     def update(self, ereignis):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
+        command = "UPDATE Gehen " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
         data = (ereignis.get_id(),
                 ereignis.get_event_name(),
                 ereignis.get_time_of_event(),
@@ -97,7 +94,7 @@ class EreignisMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM ereignis WHERE Event_ID='{}'".format(ereignis.get_id())
+        command = "DELETE FROM Gehen WHERE Event_ID='{}'".format(ereignis.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -114,7 +111,7 @@ Anmerkung: Nicht professionell aber hilfreich..."""
         for t in result:
             print(t)"""
 
-with EreignisMapper() as mapper:
+with GehenMapper() as mapper:
     test = mapper.find_by_key(10001)
     print(test.get_event_name())
     result = mapper.find_all()

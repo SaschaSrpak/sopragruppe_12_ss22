@@ -14,3 +14,6 @@ class ProjektarbeitBuchung(Zeitintervallbuchung):
     def set_target_activity(self, new_target):
         """Ändern der Ziel-Aktivität"""
         self._target_activity = new_target
+
+
+

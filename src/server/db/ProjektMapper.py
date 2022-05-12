@@ -12,15 +12,18 @@ class ProjektMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt")
+        cursor.execute("SELECT Project_ID, Name, Client, Description, Deadline_ID, "
+                       "Project_Duration_ID, Last_modified_date FROM Projekt")
         tuples = cursor.fetchall()
 
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
+        for (Project_ID, Name, Client, Description, Deadline_ID, Project_Duration_ID, Last_modified_date) in tuples:
             projekt = Projekt()
             projekt.set_id(Project_ID)
             projekt.set_name(Name)
             projekt.set_client(Client)
             projekt.set_description(Description)
+            projekt.set_deadline(Deadline_ID)
+            projekt.set_project_duration(Project_Duration_ID)
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
@@ -34,18 +37,22 @@ class ProjektMapper(Mapper):
         result = None
         cursor = self._cnx.cursor()
         cursor.execute(
-            "SELECT Project_ID, Name, Client, Description, Last_modified_date from Projekt WHERE Project_ID={}".format(
+            "SELECT Project_ID, Name, Client, Description, Deadline_ID, "
+            "Project_Duration_ID,Last_modified_date from Projekt WHERE Project_ID={}".format(
                 key))
         tuples = cursor.fetchall()
 
         try:
             (Project_ID, Name, Client, Description,
+             Deadline_ID, Project_Duration_ID,
              Last_modified_date) = tuples[0]
             projekt = Projekt()
             projekt.set_id(Project_ID)
             projekt.set_name(Name)
             projekt.set_client(Client)
             projekt.set_description(Description)
+            projekt.set_deadline(Deadline_ID)
+            projekt.set_project_duration(Project_Duration_ID)
             projekt.set_last_modified_date(Last_modified_date)
             result = projekt
         except IndexError:
@@ -62,16 +69,20 @@ class ProjektMapper(Mapper):
         cursor = self._cnx.cursor()
 
         cursor.execute(
-            "SELECT Project_ID, Name, Client, Description, Last_modified_date FROM Projekt WHERE Client={}".format(
+            "SELECT Project_ID, Name, Client, Description, Deadline_ID, "
+            "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client={}".format(
                 client))
         tuples = cursor.fetchall()
 
-        for (Project_ID, Name, Client, Description, Last_modified_date) in tuples:
+        for (Project_ID, Name, Client, Description,
+             Deadline_ID, Project_Duration_ID, Last_modified_date) in tuples:
             projekt = Projekt()
             projekt.set_id(Project_ID)
             projekt.set_name(Name)
             projekt.set_client(Client)
             projekt.set_description(Description)
+            projekt.set_deadline(Deadline_ID)
+            projekt.set_project_duration(Project_Duration_ID)
             projekt.set_last_modified_date(Last_modified_date)
             result.append(projekt)
 
@@ -235,13 +246,17 @@ class ProjektMapper(Mapper):
         for (maxid) in tuples:
             projekt.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO Projekt (Project_ID, Name, Client, Description, Last_modified_date) VALUES (%s, %s, " \
-                  "%s, %s, %s) "
+        command = "INSERT INTO Projekt (Project_ID, Name, Client, Description," \
+                  "Deadline_ID, " \
+                  "Project_Duration_ID, Last_modified_date) VALUES (%s, %s, " \
+                  "%s, %s, %s, %s, %s) "
         data = (
             projekt.get_id(),
             projekt.get_name(),
             projekt.get_client(),
             projekt.get_description(),
+            projekt.get_deadline(),
+            projekt.get_project_duration(),
             projekt.get_last_modified_date()
         )
         cursor.execute(command, data)
@@ -254,11 +269,14 @@ class ProjektMapper(Mapper):
         """Aktualisieren eines Projekts in der Datenbank"""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Projekt SET Name=%s, Client=%s, Description=%s, Last_modified_date=%s WHERE Project_ID=%s"
+        command = "UPDATE Projekt SET Name=%s, Client=%s, Description=%s, " \
+                  "Deadline_ID=%s, Project_Duration_ID=%s, Last_modified_date=%s WHERE Project_ID=%s"
         data = (
             projekt.get_name(),
             projekt.get_client(),
             projekt.get_description(),
+            projekt.get_deadline(),
+            projekt.get_project_duration(),
             projekt.get_last_modified_date(),
             projekt.get_id()
         )
