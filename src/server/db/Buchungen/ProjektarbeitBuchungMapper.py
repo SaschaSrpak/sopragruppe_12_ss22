@@ -108,7 +108,7 @@ class ProjektarbeitBuchungMapper(Mapper):
 
     def update(self, transaction):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE ProjektarbeitBuchung" + "SET Account_ID=%s, Activity_ID=%s, Interval_ID=s%" \

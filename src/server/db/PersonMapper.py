@@ -114,10 +114,10 @@ class PersonMapper(Mapper):
 
     def update(self, person):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         person.set_last_modified_date(datetime.datetime.now())
-        command = "UPDATE Person" + "SET Name=%s, Nachname=%s, " \
+        command = "UPDATE Person SET Name=%s, Nachname=%s, " \
                                     "EMail=%s, Username=%s, Last_modified_date=%s," \
                                     "Manager_Status=%s WHERE User_ID=%s"
         data = (person.get_name(), person.get_surname(),
@@ -163,8 +163,12 @@ if (__name__ == "__main__"):
 
 with PersonMapper() as mapper:
     # mapper.insert(Hugo)
-    test = mapper.find_by_key(10004)
+    test = mapper.find_by_key(10001)
     print(test.get_surname(), test.get_mail_address())
+    test.set_name("Benedickt")
+    mapper.update(test)
+    test2 = mapper.find_by_key(10001)
     result = mapper.find_all()
     for i in result:
         print(i.get_name(), i.get_surname())
+

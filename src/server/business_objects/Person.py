@@ -51,3 +51,8 @@ class Person(bo.BusinessObject):
         """Ändern des Manager-Statuses"""
         self.__manager_status = boolean
 
+
+
+
+
+

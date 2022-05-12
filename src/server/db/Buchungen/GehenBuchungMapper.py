@@ -91,7 +91,7 @@ class GehenBuchungMapper(Mapper):
 
     def update(self, transaction):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE GehenBuchung" + "SET Account_ID=%s, Event_ID=%s," \

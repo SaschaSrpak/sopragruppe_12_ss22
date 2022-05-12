@@ -122,7 +122,7 @@ class ProjektMapper(Mapper):
 
     def update_creator(self, project, person):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Ersteller" + "SET User_ID=%s, WHERE Project_ID=%s"
         data = (person.get_id(), project.get_id())
         cursor.execute(command, data)
@@ -174,7 +174,7 @@ class ProjektMapper(Mapper):
 
     def update_person_responsible(self, project, person):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Zuständigkeit" + "SET User_ID=%s, WHERE Project_ID=%s"
         data = (person.get_id(), project.get_id())
         cursor.execute(command, data)
@@ -220,7 +220,7 @@ class ProjektMapper(Mapper):
         return project
 
     def update_activity(self, project, activity):
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Aktivitaeten" + "SET Activity_ID=%s, WHERE Project_ID=%s"
         data = (activity.get_id(), project.get_id())
         cursor.execute(command, data)

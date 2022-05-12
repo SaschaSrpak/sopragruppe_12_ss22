@@ -92,7 +92,7 @@ class AktivitaetMapper(Mapper):
         return activity
 
     def update_person_responsible(self, activity, person):
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
         command = "UPDATE Aktivitaet_Zuständigkeit" + "SET User_ID=%s, WHERE Activity_ID=%s"
         data = (person.get_id(), activity.get_id())
         cursor.execute(command, data)
@@ -129,7 +129,7 @@ class AktivitaetMapper(Mapper):
 
     def update(self, activity):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         activity.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE Aktivitaet" + "SET Name=%s, Man_Day_Capacity=%s," \

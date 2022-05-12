@@ -91,7 +91,7 @@ class PauseBuchungMapper(Mapper):
 
     def update(self, transaction):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE PauseBuchung" + "SET Account_ID=%s, Interval_ID=%s," \
