@@ -9,6 +9,7 @@ class Person(bo.BusinessObject):
         self.__surname = str
         self.__mail_address = str
         self.__user_name = str
+        self.__firebase_id = None
         self.__manager_status = False
 
     def get_name(self):
@@ -42,6 +43,14 @@ class Person(bo.BusinessObject):
     def set_user_name(self, new_user_name):
         """Ändern des User-Names"""
         self.__user_name = new_user_name
+
+    def get_firebase_id(self):
+        """Anzeigen der Google Firebase ID des Nutzers"""
+        return self.__firebase_id
+
+    def set_firebase_id(self, new_id):
+        """Ändern der Google Firebase ID"""
+        self.__firebase_id = new_id
 
     def get_manager_status(self):
         """Anzeigen, ob Das Personen-Objekt ein Manager ist"""

@@ -17,6 +17,7 @@ class PersonMapper(Mapper):
 
         for (id, name, surname,
              mail_address, user_name,
+             firebase_id,
              last_modified_date, manager_status) in tuples:
             person = Person()
             person.set_id(id)
@@ -24,6 +25,7 @@ class PersonMapper(Mapper):
             person.set_surname(surname)
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
+            person.set_firebase_id(firebase_id)
             person.set_last_modified_date(last_modified_date)
             person.set_manager_status(manager_status)
             result.append(person)
@@ -37,14 +39,14 @@ class PersonMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT User_ID, Name, Nachname, EMail, Username, " \
+        command = "SELECT User_ID, Name, Nachname, EMail, Username, Firebase_ID, " \
                   "Last_modified_date, Manager_Status FROM Person WHERE User_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
             (id, name, surname,
-             mail_address, user_name,
+             mail_address, user_name, firebase_id,
              last_modified_date, manager_status) = tuples[0]
             person = Person()
             person.set_id(id)
@@ -52,6 +54,7 @@ class PersonMapper(Mapper):
             person.set_surname(surname)
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
+            person.set_firebase_id(firebase_id)
             person.set_last_modified_date(last_modified_date)
             person.set_manager_status(manager_status)
             result = person
@@ -101,12 +104,12 @@ class PersonMapper(Mapper):
             person.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
-                       "EMail, Username, Last_modified_date,Manager_Status) "
+                       "EMail, Username, Firebase_ID, Last_modified_date,Manager_Status) "
                        "VALUES ('{}','{}','{}',"
-                       "'{}','{}','{}','{}')".format(person.get_id(), person.get_name(),
-                                                     person.get_surname(), person.get_mail_address(),
-                                                     person.get_user_name(), person.get_last_modified_date(),
-                                                     person.get_manager_status()))
+                       "'{}','{}','{}','{}','{}')".format(person.get_id(), person.get_name(),
+                                                          person.get_surname(), person.get_mail_address(),
+                                                          person.get_user_name(), person.get_firebase_id(),
+                                                          person.get_last_modified_date(), person.get_manager_status()))
 
         self._cnx.commit()
         cursor.close()
@@ -118,10 +121,10 @@ class PersonMapper(Mapper):
 
         person.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE Person SET Name=%s, Nachname=%s, " \
-                                    "EMail=%s, Username=%s, Last_modified_date=%s," \
-                                    "Manager_Status=%s WHERE User_ID=%s"
+                  "EMail=%s, Username=%s, Firebase_ID=%s, Last_modified_date=%s," \
+                  "Manager_Status=%s WHERE User_ID=%s"
         data = (person.get_name(), person.get_surname(),
-                person.get_mail_address(), person.get_user_name(),
+                person.get_mail_address(), person.get_user_name(), person.get_firebase_id(),
                 person.get_last_modified_date(), person.get_manager_status(), person.get_id(),)
         cursor.execute(command, data)
 
@@ -164,11 +167,10 @@ if (__name__ == "__main__"):
 with PersonMapper() as mapper:
     # mapper.insert(Hugo)
     test = mapper.find_by_key(10001)
-    print(test.get_surname(), test.get_mail_address())
-    test.set_name("Benedickt")
+    print(test.get_name(),test.get_surname(), test.get_mail_address())
+    test.set_name("Benedicktum")
     mapper.update(test)
     test2 = mapper.find_by_key(10001)
     result = mapper.find_all()
     for i in result:
         print(i.get_name(), i.get_surname())
-
