@@ -2,7 +2,7 @@ from server.business_objects import BusinessObject as bo
 from datetime import timedelta
 from server.business_objects import Ereignis
 
-class Zeitinervall (bo.BusinessObject):
+class Zeitintervall (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
