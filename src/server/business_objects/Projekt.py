@@ -8,7 +8,7 @@ class Projekt (bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self._name = ""
-        self._creator = Person
+        self._creator = int
         self._client = ""
         self._description = ""
         self._set_deadline = int
@@ -68,6 +68,9 @@ class Projekt (bo.BusinessObject):
         """Auslesen der Aktivitäten"""
         return self._activities
 
+    def set_activities(self, new_activities):
+        self._activities = new_activities
+
     def add_activity(self, key, activity):
         """Hinzufügen einer Aktivität"""
         self._activities.update({key: activity})
@@ -79,6 +82,9 @@ class Projekt (bo.BusinessObject):
     def get_person_responsible(self):
         """Auslesen der verantwortlichen Person(-en)"""
         return self._persons_responsible
+
+    def set_person_responsible(self, persons):
+        self._persons_responsible = persons
 
     def add_person_responsible(self, key, person):
         """Hinzufügen einer verantwortlichen Person"""

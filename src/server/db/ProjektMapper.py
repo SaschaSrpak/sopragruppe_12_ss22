@@ -195,12 +195,12 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def find_by_activity_ID(self, activity_ID):
+    def find_by_activity_key(self, activity_key):
         """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Aktivitaeten " \
-                  "WHERE Activity_ID='{}'".format(activity_ID)
+                  "WHERE Activity_ID='{}'".format(activity_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
         for i in tuples:
