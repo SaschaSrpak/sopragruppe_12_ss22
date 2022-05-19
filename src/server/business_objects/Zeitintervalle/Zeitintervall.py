@@ -3,7 +3,7 @@ from datetime import timedelta
 from business_objects.Ereignisse import Endereignis, Startereignis
 
 
-class Zeitinervall (bo.BusinessObject):
+class Zeitintervall (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()

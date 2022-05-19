@@ -1,5 +1,5 @@
 from server.business_objects.Zeitkonto import Zeitkonto
-from Mapper import Mapper
+from server.db.Mapper import Mapper
 
 class ZeitkontoMapper(Mapper):
 
@@ -38,10 +38,10 @@ class ZeitkontoMapper(Mapper):
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (Account_ID, Owner_ID) = tuples[0]
+            (Account_ID) = tuples[0]
             zeitkonto = Zeitkonto()
             zeitkonto.set_id(Account_ID)
-            zeitkonto.set_owner(Owner_ID)
+
 
             result = zeitkonto
         else:

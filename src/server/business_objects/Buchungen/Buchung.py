@@ -1,5 +1,5 @@
 from server.business_objects import BusinessObject as bo
-from server.business_objects import Zeitkonto
+from server.business_objects.Zeitkonto import Zeitkonto
 from server.business_objects import Aktivität
 
 

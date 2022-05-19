@@ -73,7 +73,7 @@ class GehenBuchungMapper(Mapper):
 
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM GehenBuchung ")
-        tuples = cursor.fetchall
+        tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             transaction.set_id(maxid[0]+1)

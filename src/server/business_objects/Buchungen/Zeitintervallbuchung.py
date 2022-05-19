@@ -1,4 +1,4 @@
-from business_objects.Buchungen import Buchung
+from business_objects.Buchungen.Buchung import Buchung
 
 
 class Zeitintervallbuchung(Buchung):

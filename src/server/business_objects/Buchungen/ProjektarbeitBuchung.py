@@ -1,4 +1,4 @@
-from server.business_objects.Buchungen import Zeitintervallbuchung
+from server.business_objects.Buchungen.Zeitintervallbuchung import Zeitintervallbuchung
 
 
 class ProjektarbeitBuchung(Zeitintervallbuchung):

@@ -10,6 +10,13 @@ from server.business_objects.Ereignisse.Gehen import Gehen
 from server.business_objects.Ereignisse.Startereignis import Startereignis
 from server.business_objects.Ereignisse.Endereignis import Endereignis
 from server.business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
+from server.business_objects.Zeitintervalle.Pause import Pause
+from server.business_objects.Zeitintervalle.Projektlaufzeit import Projektlaufzeit
+from server.business_objects.Buchungen.KommenBuchung import KommenBuchung
+from server.business_objects.Buchungen.GehenBuchung import GehenBuchung
+from server.business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
+from server.business_objects.Buchungen.EndereignisBuchung import EndereignisBuchung
+from server.business_objects.Buchungen.PauseBuchung import PauseBuchung
 
 from server.db.PersonMapper import PersonMapper
 from server.db.AktivitätMapper import AktivitaetMapper
@@ -20,6 +27,13 @@ from server.db.Ereignisse.GehenMapper import GehenMapper
 from server.db.Ereignisse.StartereignisMapper import StartereignisMapper
 from server.db.Ereignisse.EndereignisMapper import EndereignisMapper
 from server.db.Zeitintervalle.ProjektarbeitMapper import ProjektarbeitMapper
+from server.db.Zeitintervalle.PauseMapper import PauseMapper
+from server.db.Zeitintervalle.ProjektlaufzeitMapper import ProjektlaufzeitMapper
+from server.db.Buchungen.KommenBuchungMapper import KommenBuchungMapper
+from server.db.Buchungen.GehenBuchungMapper import GehenBuchungMapper
+from server.db.Buchungen.StartereignisBuchungMapper import StartereignisBuchungMapper
+from server.db.Buchungen.EndereignisBuchungMapper import EndereignisBuchungMapper
+from server.db.Buchungen.PauseBuchungMapper import PauseBuchungMapper
 
 
 class SystemAdministration(object):
@@ -206,8 +220,11 @@ class SystemAdministration(object):
         """Wichtig!: Diese Funktion muss noch ausgebaut werden!
         Es müssen alle Buchungen, welche auf dieses Konto
         gebucht wurden auch wieder entfernt werden, um die 
-        referientielle Integrität des Gesamtsystems zu 
+        referentielle Integrität des Gesamtsystems zu 
         gewährleisten"""
+
+    def get_all_bookings(self, account):
+        pass
 
     def get_full_work_time(self, account):
         pass
@@ -338,6 +355,8 @@ class SystemAdministration(object):
             if not (responsible_list is None):
                 for person in responsible_list:
                     self.delete_person_responsible_from_project(project, person)
+            duration = self.get_project_duration_by_project_key(project.get_id())
+            self.delete_project_duration(duration)
 
             mapper.delete(project)
 
@@ -353,7 +372,8 @@ class SystemAdministration(object):
         kommen.set_id(1)
 
         with KommenMapper() as mapper:
-            return mapper.insert(kommen)
+            mapper.insert(kommen)
+            return kommen.get_id()
 
     def get_all_kommen_events(self):
         with KommenMapper() as mapper:
@@ -363,7 +383,7 @@ class SystemAdministration(object):
         with KommenMapper() as mapper:
             return mapper.find_by_key(event_key)
 
-    def get_kommen_by_booking_key(self, booking_key):
+    def get_kommen_by_transaction_key(self, transaction_key):
         pass
 
     def save_kommen_event(self, event):
@@ -387,7 +407,8 @@ class SystemAdministration(object):
         gehen.set_id(1)
 
         with GehenMapper() as mapper:
-            return mapper.insert(gehen)
+            mapper.insert(gehen)
+            return gehen.get_id()
 
     def get_all_gehen_events(self):
         with GehenMapper() as mapper:
@@ -397,7 +418,7 @@ class SystemAdministration(object):
         with GehenMapper() as mapper:
             return mapper.find_by_key(event_key)
 
-    def get_gehen_by_booking_key(self, booking_key):
+    def get_gehen_by_transaction_key(self, transaction_key):
         pass
 
     def save_gehen_event(self, event):
@@ -421,7 +442,8 @@ class SystemAdministration(object):
         start.set_id(1)
 
         with StartereignisMapper() as mapper:
-            return mapper.insert(start)
+            mapper.insert(start)
+            return start.get_id()
 
     def get_all_start_events(self):
         with StartereignisMapper() as mapper:
@@ -431,7 +453,7 @@ class SystemAdministration(object):
         with StartereignisMapper() as mapper:
             return mapper.find_by_key(event_key)
 
-    def get_start_by_booking_key(self, booking_key):
+    def get_start_by_transaction_key(self, transaction_key):
         pass
 
     def get_start_by_interval_key(self, interval_key):
@@ -458,7 +480,8 @@ class SystemAdministration(object):
         end.set_id(1)
 
         with EndereignisMapper() as mapper:
-            return mapper.insert(end)
+            mapper.insert(end)
+            return end.get_id()
 
     def get_all_end_events(self):
         with EndereignisMapper() as mapper:
@@ -468,7 +491,7 @@ class SystemAdministration(object):
         with EndereignisMapper() as mapper:
             return mapper.find_by_key(event_key)
 
-    def get_end_by_booking_key(self, booking_key):
+    def get_end_by_transaction_key(self, transaction_key):
         pass
 
     def get_end_by_interval_key(self, interval_key):
@@ -503,11 +526,322 @@ class SystemAdministration(object):
         project_worktime.set_id(1)
 
         with ProjektarbeitMapper() as mapper:
-            return mapper.insert(project_worktime)
+            mapper.insert(project_worktime)
+            return project_worktime.get_id()
 
     def get_all_project_worktimes(self):
-        with ProjektMapper() as mapper:
+        with ProjektarbeitMapper() as mapper:
             return mapper.find_all()
 
-    
+    def get_project_worktime_by_key(self, interval_key):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.fing_by_key(interval_key)
+
+    def get_project_worktime_by_transaction_key(self, transaction_key):
+        pass
+
+    def save_project_worktime(self, interval):
+        interval.set_last_modified_date(datetime.datetime.now())
+        with ProjektarbeitMapper() as mapper:
+            mapper.update(interval)
+
+    def delete_project_worktime(self, interval):
+        with ProjektarbeitMapper() as mapper:
+            mapper.delete(interval)
+
+
+    """
+    Pause spezifische Methoden
+    """
+
+    def create_pause(self, name, start_event_id, end_event_id):
+        pause = Pause()
+        pause.set_name(name)
+        start = self.get_start_event_by_key(start_event_id)
+        end = self.get_end_event_by_key(end_event_id)
+        start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        duration_seconds = end_time - start_time
+        duration_hours = duration_seconds / datetime.timedelta(hours=1)
+        pause.set_duration(duration_hours)
+        pause.set_start(start_event_id)
+        pause.set_end(end_event_id)
+        pause.set_last_modified_date(datetime.datetime.now())
+        pause.set_id(1)
+
+        with PauseMapper() as mapper:
+            mapper.insert(pause)
+            return pause.get_id()
+
+    def get_all_pauses(self):
+        with PauseMapper() as mapper:
+            return mapper.find_all()
+
+    def get_pause_by_key(self, interval_key):
+        with PauseMapper() as mapper:
+            return mapper.fing_by_key(interval_key)
+
+    def get_pause_by_transaction_key(self, transaction_key):
+        pass
+
+    def save_pause(self, interval):
+        interval.set_last_modified_date(datetime.datetime.now())
+        with PauseMapper() as mapper:
+            mapper.update(interval)
+
+    def delete_pause(self, interval):
+        with PauseMapper() as mapper:
+            mapper.delete(interval)
+
+    """
+    Projektlaufzeit spezifische Methoden
+    """
+
+    def create_project_duration(self, name, start_event_id, end_event_id):
+        project_duration = Projektlaufzeit()
+        project_duration.set_name(name)
+        start = self.get_start_event_by_key(start_event_id)
+        end = self.get_end_event_by_key(end_event_id)
+        start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        duration_seconds = end_time - start_time
+        duration_hours = duration_seconds / datetime.timedelta(hours=1)
+        project_duration.set_duration(duration_hours)
+        project_duration.set_start(start_event_id)
+        project_duration.set_end(end_event_id)
+        project_duration.set_last_modified_date(datetime.datetime.now())
+        project_duration.set_id(1)
+
+        with ProjektlaufzeitMapper() as mapper:
+            mapper.insert(project_duration)
+            return project_duration.get_id()
+
+    def get_all_project_duration(self):
+        with ProjektlaufzeitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_project_duration_by_key(self, interval_key):
+        with ProjektlaufzeitMapper() as mapper:
+            return mapper.fing_by_key(interval_key)
+
+    def get_project_duration_by_project_key(self, project_key):
+        with ProjektlaufzeitMapper() as mapper:
+            return mapper.find_by_project_key(project_key)
+
+    def save_project_duration(self, interval):
+        interval.set_last_modified_date(datetime.datetime.now())
+        with ProjektlaufzeitMapper() as mapper:
+            mapper.update(interval)
+
+    def delete_project_duration(self, interval):
+        with ProjektlaufzeitMapper() as mapper:
+            mapper.delete(interval)
+
+    """
+    KommenBuchung spezifische Methoden
+    """
+
+    def create_kommen_transaction(self,account_id, event_id):
+        transaction = KommenBuchung()
+        transaction.set_target_user_account(account_id)
+        transaction.set_event_id(event_id)
+        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_id(1)
+
+        with KommenBuchungMapper() as mapper:
+            return mapper.insert(transaction)
+
+    def book_kommen_event(self, account, name, time):
+        event = self.create_kommen_event(name, time)
+        account_id = account.get_id()
+        self.create_kommen_transaction(account_id, event)
+        return event
+
+
+    def get_all_kommen_transactions(self):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_all()
+
+
+    def get_kommen_transaction_by_key(self, transaction_key):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_kommen_transaction_by_account_key(self, account_key):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def save_kommen_transaction(self, transaction):
+        with KommenBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_kommen_transaction(self, transaction):
+        self.delete_kommen_event(transaction)
+        with KommenBuchungMapper() as mapper:
+            mapper.delete(transaction)
+
+
+    """
+    GehenBuchung spezifische Methoden
+    """
+
+    def create_gehen_transaction(self, account_id, event_id):
+        transaction = GehenBuchung()
+        transaction.set_target_user_account(account_id)
+        transaction.set_event_id(event_id)
+        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_id(1)
+
+        with GehenBuchungMapper() as mapper:
+            return mapper.insert(transaction)
+
+    def book_gehen_event(self, account, name, time):
+        event = self.create_gehen_event(name, time)
+        account_id = account.get_id()
+        self.create_gehen_transaction(account_id, event)
+        return event
+
+    def get_all_gehen_transactions(self):
+        with GehenBuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_gehen_transaction_by_key(self, transaction_key):
+        with GehenBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_gehen_transaction_by_account_key(self, account_key):
+        with GehenBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def save_gehen_transaction(self, transaction):
+        with GehenBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_gehen_transaction(self, transaction):
+        self.delete_gehen_event(transaction)
+        with GehenBuchungMapper() as mapper:
+            mapper.delete(transaction)
+
+    """
+    StartereignisBuchung spezifische Methoden
+    """
+    def create_start_event_transaction(self, account_id, event_id):
+        transaction = StartereignisBuchung()
+        transaction.set_target_user_account(account_id)
+        transaction.set_event_id(event_id)
+        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_id(1)
+
+        with StartereignisBuchungMapper() as mapper:
+            return mapper.insert(transaction)
+
+    def book_start_event(self, account, name, time):
+        event = self.create_start_event(name, time)
+        account_id = account.get_id()
+        self.create_start_event_transaction(account_id, event)
+        return event
+
+    def get_all_start_event_transactions(self):
+        with StartereignisBuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_start_event_transaction_by_key(self, transaction_key):
+        with StartereignisBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_start_event_transaction_by_account_key(self, account_key):
+        with StartereignisBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def save_start_event_transaction(self, transaction):
+        with StartereignisBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_start_event_transaction(self, transaction):
+        self.delete_start_event(transaction)
+        with StartereignisBuchungMapper() as mapper:
+            mapper.delete(transaction)
+
+    """
+    EndereignisBuchung spezifische Methoden
+    """
+    def create_end_event_transaction(self, account_id, event_id):
+        transaction = EndereignisBuchung()
+        transaction.set_target_user_account(account_id)
+        transaction.set_event_id(event_id)
+        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_id(1)
+
+        with EndereignisBuchungMapper() as mapper:
+            return mapper.insert(transaction)
+
+    def book_end_event(self, account, name, time):
+        event = self.create_end_event(name, time)
+        account_id = account.get_id()
+        self.create_end_event_transaction(account_id, event)
+        return event
+
+    def get_all_end_event_transactions(self):
+        with EndereignisBuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_end_event_transaction_by_key(self, transaction_key):
+        with EndereignisBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_end_event_transaction_by_account_key(self, account_key):
+        with EndereignisBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def save_end_event_transaction(self, transaction):
+        with EndereignisBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_end_event_transaction(self, transaction):
+        self.delete_end_event(transaction)
+        with EndereignisBuchungMapper() as mapper:
+            mapper.delete(transaction)
+
+    """
+    PauseBuchung spezifische Methoden
+    """
+    def create_pause_transaction(self,account_id, interval_id):
+        interval = PauseBuchung()
+        interval.set_target_user_account(account_id)
+        interval.set_time_interval_id(interval_id)
+        interval.set_last_modified_date(datetime.datetime.now())
+        interval.set_id(1)
+
+        with PauseBuchungMapper() as mapper:
+            return mapper.insert(interval)
+
+    def book_pause_transaction(self, account, name, start_event_time, end_event_time):
+        start_event = self.book_start_event(account, "Start", start_event_time)
+        end_event = self.book_end_event(account, "Ende", end_event_time)
+        pause = self.create_pause(name, start_event, end_event)
+        account_id = account.get_id()
+        self.create_pause_transaction(account_id, pause)
+
+
+
+    def get_all_pause_transactions(self):
+        with PauseBuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_pause_transaction_by_key(self, transaction_key):
+        with PauseBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_pause_transaction_by_account_key(self, account_key):
+        with PauseBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def save_pause_transaction(self, transaction):
+        transaction.set_last_modified_date(datetime.datetime.now())
+        with PauseBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_pause_transaction(self, transaction):
+        with PauseBuchungMapper() as mapper:
+            mapper.delete(transaction)
 

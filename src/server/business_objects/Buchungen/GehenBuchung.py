@@ -1,4 +1,4 @@
-from server.business_objects.Buchungen import Ereignisbuchung
+from server.business_objects.Buchungen.Ereignisbuchung import Ereignisbuchung
 
 
 class GehenBuchung(Ereignisbuchung):

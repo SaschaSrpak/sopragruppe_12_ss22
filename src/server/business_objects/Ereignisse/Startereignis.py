@@ -1,4 +1,4 @@
-from business_objects.Ereignisse import Ereignis
+from business_objects.Ereignisse.Ereignis import Ereignis
 
 
 class Startereignis (Ereignis):

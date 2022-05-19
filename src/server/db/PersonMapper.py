@@ -164,13 +164,3 @@ if (__name__ == "__main__"):
             print(i.get_name())
 """
 
-with PersonMapper() as mapper:
-    # mapper.insert(Hugo)
-    test = mapper.find_by_key(10001)
-    print(test.get_name(),test.get_surname(), test.get_mail_address())
-    test.set_name("Benedicktum")
-    mapper.update(test)
-    test2 = mapper.find_by_key(10001)
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_name(), i.get_surname())

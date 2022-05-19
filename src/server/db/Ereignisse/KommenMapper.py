@@ -114,9 +114,9 @@ Anmerkung: Nicht professionell aber hilfreich..."""
         for t in result:
             print(t)"""
 
-with KommenMapper() as mapper:
+""""with KommenMapper() as mapper:
     test = mapper.find_by_key(10001)
     print(test.get_event_name())
     result = mapper.find_all()
     for i in result:
-        print(i.get_event_name())
+        print(i.get_event_name())"""

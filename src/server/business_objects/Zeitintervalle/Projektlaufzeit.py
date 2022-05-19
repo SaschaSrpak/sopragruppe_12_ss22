@@ -1,4 +1,4 @@
-from business_objects.Zeitintervalle import Zeitintervall
+from business_objects.Zeitintervalle.Zeitintervall import Zeitintervall
 
 
 class Projektlaufzeit (Zeitintervall):
