@@ -1,5 +1,5 @@
 from datetime import datetime
-import datetime
+import datetime as dt
 
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
@@ -53,7 +53,7 @@ class SystemAdministration(object):
         person.set_mail_address(mail_address)
         person.set_user_name(user_name)
         person.set_firebase_id(firebase_id)
-        person.set_last_modified_date(datetime.datetime.now())
+        person.set_last_modified_date(dt.datetime.now())
         person.set_manager_status(manager_status)
         person.set_id(1)
 
@@ -82,7 +82,7 @@ class SystemAdministration(object):
 
     def save_person(self, person):
         """Den gegebenen Nutzer speichern"""
-        person.set_last_modified_date(datetime.datetime.now())
+        person.set_last_modified_date(dt.datetime.now())
         with PersonMapper() as mapper:
             mapper.update(person)
 
@@ -109,7 +109,7 @@ class SystemAdministration(object):
         for person in persons_responsible:
             activity.add_new_responsible(person.get_id(), person)
         activity.set_man_day_capacity(man_day_capacity)
-        activity.set_last_modified_date(datetime.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now())
         activity.set_id(1)
 
         with AktivitaetMapper() as mapper:
@@ -152,7 +152,7 @@ class SystemAdministration(object):
         Methode 'create_activity'."""
         activity = self.get_activity_by_key(activity_key)
         activity.set_person_responsible(persons_responsible)
-        activity.set_last_modified_date(datetime.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now())
 
         with AktivitaetMapper() as mapper:
             responsible_dict = activity.get_persons_responsible()
@@ -169,7 +169,7 @@ class SystemAdministration(object):
 
     def update_activity(self, activity):
         """Die gegebene Aktivität speichern"""
-        activity.set_last_modified_date(datetime.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now())
         with AktivitaetMapper() as mapper:
             mapper.update(activity)
 
@@ -209,7 +209,7 @@ class SystemAdministration(object):
 
     def save_account(self, account):
         """Speichert eine Zeitkonto-Instanz"""
-        account.set_last_modified_date(datetime.datetime.now())
+        account.set_last_modified_date(dt.datetime.now())
         with ZeitkontoMapper() as mapper:
             mapper.update(account)
 
@@ -260,7 +260,7 @@ class SystemAdministration(object):
             for person in persons_responsible:
                 project.add_person_responsible(person.get_id(), person)
 
-        project.set_last_modified_date(datetime.datetime.now)
+        project.set_last_modified_date(dt.datetime.now)
         project.set_id(1)
 
         with ProjektMapper() as mapper:
@@ -302,7 +302,7 @@ class SystemAdministration(object):
         Methode 'change_activity_persons_responsible'."""
         project = self.get_activity_by_key(project_key)
         project.set_person_responsible(persons_responsible)
-        project.set_last_modified_date(datetime.datetime.now())
+        project.set_last_modified_date(dt.datetime.now())
 
         with ProjektMapper() as mapper:
             responsible_dict = project.get_persons_responsible()
@@ -327,7 +327,7 @@ class SystemAdministration(object):
         """Ändert Aktivitäten des Projekts."""
         project = self.get_activity_by_key(project_key)
         project.set_activities(activities)
-        project.set_last_modified_date(datetime.datetime.now())
+        project.set_last_modified_date(dt.datetime.now())
 
         with ProjektMapper() as mapper:
             activities_dict = project.get_activities()
@@ -341,7 +341,7 @@ class SystemAdministration(object):
             mapper.delete_activity(project, activity)
 
     def save_project(self, project):
-        project.set_last_modified_date(datetime.datetime.now)
+        project.set_last_modified_date(dt.datetime.now)
         with ProjektMapper() as mapper:
             mapper.update(project)
 
@@ -368,7 +368,7 @@ class SystemAdministration(object):
         kommen = Kommen()
         kommen.set_event_name(name)
         kommen.set_time_of_event(time)
-        kommen.set_last_modified_date(datetime.datetime.now())
+        kommen.set_last_modified_date(dt.datetime.now())
         kommen.set_id(1)
 
         with KommenMapper() as mapper:
@@ -387,7 +387,7 @@ class SystemAdministration(object):
         pass
 
     def save_kommen_event(self, event):
-        event.set_last_modified_date(datetime.datetime.now())
+        event.set_last_modified_date(dt.datetime.now())
         with KommenMapper() as mapper:
             mapper.update(event)
 
@@ -403,7 +403,7 @@ class SystemAdministration(object):
         gehen = Gehen()
         gehen.set_event_name(name)
         gehen.set_time_of_event(time)
-        gehen.set_last_modified_date(datetime.datetime.now())
+        gehen.set_last_modified_date(dt.datetime.now())
         gehen.set_id(1)
 
         with GehenMapper() as mapper:
@@ -422,7 +422,7 @@ class SystemAdministration(object):
         pass
 
     def save_gehen_event(self, event):
-        event.set_last_modified_date(datetime.datetime.now())
+        event.set_last_modified_date(dt.datetime.now())
         with GehenMapper() as mapper:
             mapper.update(event)
 
@@ -438,7 +438,7 @@ class SystemAdministration(object):
         start = Startereignis()
         start.set_event_name(name)
         start.set_time_of_event(time)
-        start.set_last_modified_date(datetime.datetime.now())
+        start.set_last_modified_date(dt.datetime.now())
         start.set_id(1)
 
         with StartereignisMapper() as mapper:
@@ -460,7 +460,7 @@ class SystemAdministration(object):
         pass
 
     def save_start_event(self, event):
-        event.set_last_modified_date(datetime.datetime.now())
+        event.set_last_modified_date(dt.datetime.now())
         with StartereignisMapper() as mapper:
             mapper.update(event)
 
@@ -476,7 +476,7 @@ class SystemAdministration(object):
         end = Endereignis()
         end.set_event_name(name)
         end.set_time_of_event(time)
-        end.set_last_modified_date(datetime.datetime.now())
+        end.set_last_modified_date(dt.datetime.now())
         end.set_id(1)
 
         with EndereignisMapper() as mapper:
@@ -498,7 +498,7 @@ class SystemAdministration(object):
         pass
 
     def save_end_event(self, event):
-        event.set_last_modified_date(datetime.datetime.now())
+        event.set_last_modified_date(dt.datetime.now())
         with EndereignisMapper() as mapper:
             mapper.update(event)
 
@@ -515,14 +515,14 @@ class SystemAdministration(object):
         project_worktime.set_name(name)
         start = self.get_start_event_by_key(start_event_id)
         end = self.get_end_event_by_key(end_event_id)
-        start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
-        end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        start_time = datetime.strptime(start.get_time_of_event(), "%y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(end.get_time_of_event(), "%y-%m-%d %H:%M:%S")
         duration_seconds = end_time - start_time
-        duration_hours = duration_seconds / datetime.timedelta(hours=1)
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
         project_worktime.set_duration(duration_hours)
         project_worktime.set_start(start_event_id)
         project_worktime.set_end(end_event_id)
-        project_worktime.set_last_modified_date(datetime.datetime.now())
+        project_worktime.set_last_modified_date(dt.datetime.now())
         project_worktime.set_id(1)
 
         with ProjektarbeitMapper() as mapper:
@@ -541,7 +541,7 @@ class SystemAdministration(object):
         pass
 
     def save_project_worktime(self, interval):
-        interval.set_last_modified_date(datetime.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now())
         with ProjektarbeitMapper() as mapper:
             mapper.update(interval)
 
@@ -559,14 +559,14 @@ class SystemAdministration(object):
         pause.set_name(name)
         start = self.get_start_event_by_key(start_event_id)
         end = self.get_end_event_by_key(end_event_id)
-        start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
-        end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
         duration_seconds = end_time - start_time
-        duration_hours = duration_seconds / datetime.timedelta(hours=1)
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
         pause.set_duration(duration_hours)
         pause.set_start(start_event_id)
         pause.set_end(end_event_id)
-        pause.set_last_modified_date(datetime.datetime.now())
+        pause.set_last_modified_date(dt.datetime.now())
         pause.set_id(1)
 
         with PauseMapper() as mapper:
@@ -585,7 +585,7 @@ class SystemAdministration(object):
         pass
 
     def save_pause(self, interval):
-        interval.set_last_modified_date(datetime.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now())
         with PauseMapper() as mapper:
             mapper.update(interval)
 
@@ -605,11 +605,11 @@ class SystemAdministration(object):
         start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
         end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
         duration_seconds = end_time - start_time
-        duration_hours = duration_seconds / datetime.timedelta(hours=1)
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
         project_duration.set_duration(duration_hours)
         project_duration.set_start(start_event_id)
         project_duration.set_end(end_event_id)
-        project_duration.set_last_modified_date(datetime.datetime.now())
+        project_duration.set_last_modified_date(dt.datetime.now())
         project_duration.set_id(1)
 
         with ProjektlaufzeitMapper() as mapper:
@@ -629,7 +629,7 @@ class SystemAdministration(object):
             return mapper.find_by_project_key(project_key)
 
     def save_project_duration(self, interval):
-        interval.set_last_modified_date(datetime.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now())
         with ProjektlaufzeitMapper() as mapper:
             mapper.update(interval)
 
@@ -645,7 +645,7 @@ class SystemAdministration(object):
         transaction = KommenBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now())
         transaction.set_id(1)
 
         with KommenBuchungMapper() as mapper:
@@ -689,7 +689,7 @@ class SystemAdministration(object):
         transaction = GehenBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now())
         transaction.set_id(1)
 
         with GehenBuchungMapper() as mapper:
@@ -729,7 +729,7 @@ class SystemAdministration(object):
         transaction = StartereignisBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now())
         transaction.set_id(1)
 
         with StartereignisBuchungMapper() as mapper:
@@ -771,7 +771,7 @@ class SystemAdministration(object):
         transaction = EndereignisBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now())
         transaction.set_id(1)
 
         with EndereignisBuchungMapper() as mapper:
@@ -811,7 +811,7 @@ class SystemAdministration(object):
         interval = PauseBuchung()
         interval.set_target_user_account(account_id)
         interval.set_time_interval_id(interval_id)
-        interval.set_last_modified_date(datetime.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now())
         interval.set_id(1)
 
         with PauseBuchungMapper() as mapper:
@@ -839,7 +839,7 @@ class SystemAdministration(object):
             return mapper.find_by_account_key(account_key)
 
     def save_pause_transaction(self, transaction):
-        transaction.set_last_modified_date(datetime.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now())
         with PauseBuchungMapper() as mapper:
             mapper.update(transaction)
 

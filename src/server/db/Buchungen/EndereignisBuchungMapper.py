@@ -78,7 +78,7 @@ class EndereignisBuchungMapper(Mapper):
         for (maxid) in tuples:
             transaction.set_id(maxid[0]+1)
 
-        cursor.execute("INSERT INTO StartereignisBuchung (Transaction_ID, Account_ID, "
+        cursor.execute("INSERT INTO EndereignisBuchung (Transaction_ID, Account_ID, "
                        "Event_ID, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(transaction.get_id(),
                                                              transaction.get_target_user_account(),
