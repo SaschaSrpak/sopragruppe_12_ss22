@@ -738,6 +738,8 @@ class SystemAdministration(object):
     def book_start_event(self, account, name, time):
         event = self.create_start_event(name, time)
         account_id = account.get_id()
+        print(account_id)
+        print(account.get_id())
         self.create_start_event_transaction(account_id, event)
         return event
 

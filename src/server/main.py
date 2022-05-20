@@ -12,6 +12,7 @@ print(testdruck)
 """
 test_administration = SystemAdministration()
 account = test_administration.get_time_account_by_key(10001)
+print(account.get_id())
 start = dt.datetime(2022, 5, 19, 12, 30, 0)
 start_string = datetime.strftime(start, "%y-%m-%d %H:%M:%S")
 end = dt.datetime(2022, 5, 19, 13, 30, 0)

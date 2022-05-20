@@ -31,16 +31,17 @@ class ZeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT User_ID from Arbeitszeitkonto WHERE Account_ID='{}'".format(key)
+        command = "SELECT Account_ID, User_ID from Arbeitszeitkonto WHERE Account_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         if tuples is not None \
                 and len(tuples) > 0 \
                 and tuples[0] is not None:
-            (Account_ID) = tuples[0]
+            (Account_ID, Owner_ID) = tuples[0]
             zeitkonto = Zeitkonto()
             zeitkonto.set_id(Account_ID)
+            zeitkonto.set_owner(Owner_ID)
 
 
             result = zeitkonto
