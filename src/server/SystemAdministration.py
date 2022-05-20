@@ -1,4 +1,3 @@
-from datetime import datetime
 import datetime as dt
 
 from server.business_objects.Person import Person
@@ -515,8 +514,8 @@ class SystemAdministration(object):
         project_worktime.set_name(name)
         start = self.get_start_event_by_key(start_event_id)
         end = self.get_end_event_by_key(end_event_id)
-        start_time = datetime.strptime(start.get_time_of_event(), "%y-%m-%d %H:%M:%S")
-        end_time = datetime.strptime(end.get_time_of_event(), "%y-%m-%d %H:%M:%S")
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
         duration_seconds = end_time - start_time
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         project_worktime.set_duration(duration_hours)
@@ -602,8 +601,8 @@ class SystemAdministration(object):
         project_duration.set_name(name)
         start = self.get_start_event_by_key(start_event_id)
         end = self.get_end_event_by_key(end_event_id)
-        start_time = datetime.strptime(start.get_time_of_event, "%y-%m-%d %H:%M:%S")
-        end_time = datetime.strptime(end.get_time_of_event, "%y-%m-%d %H:%M:%S")
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
         duration_seconds = end_time - start_time
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         project_duration.set_duration(duration_hours)
