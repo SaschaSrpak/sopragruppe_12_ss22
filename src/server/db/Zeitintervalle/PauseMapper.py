@@ -69,7 +69,7 @@ class PauseMapper(Mapper):
         for (maxid) in tuples:
             pause.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO Projektarbeit (Interval_ID, Name, Duration, " \
+        command = "INSERT INTO Pause (Interval_ID, Name, Duration, " \
                   "Start_Event_ID, End_Event_ID, Last_modified_date) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (pause.get_id(),
                 pause.get_name(),
