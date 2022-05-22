@@ -62,7 +62,7 @@ class SystemAdministration(object):
     def get_all_persons(self):
         """Gibt alle Benutzer aus die im System gespeichert sind"""
         with PersonMapper() as mapper:
-            return mapper.fing_all()
+            return mapper.find_all()
 
     def get_persons_by_activity_key(self, activity_key):
         """Alle Benutzer, die für eine Aktivität zuständig sind."""
@@ -77,7 +77,7 @@ class SystemAdministration(object):
     def get_person_by_key(self, person_key):
         """Gibt den passenden Nutzer zur gegebenen ID aus"""
         with PersonMapper() as mapper:
-            return mapper.fing_by_id(person_key)
+            return mapper.find_by_key(person_key)
 
     def save_person(self, person):
         """Den gegebenen Nutzer speichern"""
@@ -534,7 +534,7 @@ class SystemAdministration(object):
 
     def get_project_worktime_by_key(self, interval_key):
         with ProjektarbeitMapper() as mapper:
-            return mapper.fing_by_key(interval_key)
+            return mapper.find_by_key(interval_key)
 
     def get_project_worktime_by_transaction_key(self, transaction_key):
         pass
@@ -578,7 +578,7 @@ class SystemAdministration(object):
 
     def get_pause_by_key(self, interval_key):
         with PauseMapper() as mapper:
-            return mapper.fing_by_key(interval_key)
+            return mapper.find_by_key(interval_key)
 
     def get_pause_by_transaction_key(self, transaction_key):
         pass
@@ -621,7 +621,7 @@ class SystemAdministration(object):
 
     def get_project_duration_by_key(self, interval_key):
         with ProjektlaufzeitMapper() as mapper:
-            return mapper.fing_by_key(interval_key)
+            return mapper.find_by_key(interval_key)
 
     def get_project_duration_by_project_key(self, project_key):
         with ProjektlaufzeitMapper() as mapper:
