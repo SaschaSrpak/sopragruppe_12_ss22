@@ -847,5 +847,3 @@ class SystemAdministration(object):
             mapper.delete(transaction)
 
 
-"""Jeff's Mama saugt gerne an Liams Mikrobohrer"""
-

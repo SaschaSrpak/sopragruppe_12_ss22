@@ -21,6 +21,7 @@ endevent = test_administration.get_end_event_by_key(1)
 projektworktime = test_administration.get_project_worktime_by_key(1)
 pause = test_administration.get_pause_by_key(1)
 projektdauer = test_administration.get_project_duration_by_project_key(1)
+pausebuchung = test_administration.get_pause_transaction_by_key(2)
 print(account.get_id())
 end = dt.datetime(2022, 5, 19, 13, 00, 0)
 """start = dt.datetime(2022, 5, 19, 12, 30, 0)
@@ -171,17 +172,19 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 
 """EndereignisBuchung spezifische Methoden"""
 
-"""test_administration.create_end_event_transaction(1, 1)
-test_administration.book_end_event(account, "EndeNeu", end)"""
-
-"""print(len(test_administration.get_all_end_event_transactions()))"""
-"""print(test_administration.get_end_event_transaction_by_key(1))"""
-"""print(test_administration.get_end_event_transaction_by_account_key(1))"""
+"""geht - test_administration.create_end_event_transaction(1, 1)"""
+"""geht - test_administration.book_end_event(account, "EndeNeu", end)"""
+"""geht - print(len(test_administration.get_all_end_event_transactions()))"""
+"""geht - print(test_administration.get_end_event_transaction_by_key(1))"""
+"""geht - print(test_administration.get_end_event_transaction_by_account_key(1))"""
 
 """
 PauseBuchung spezifische Methoden
 """
-"""test_administration.create_pause_transaction(2, 2)"""
-
-
-
+"""geht - test_administration.create_pause_transaction(2, 2)"""
+"""geht - test_administration.book_pause_transaction(account, "Name", end, end)"""
+"""error - test_administration.get_all_pause_transactions()"""
+"""geht - test_administration.get_pause_transaction_by_key(1)"""
+"""geht - test_administration.get_pause_transaction_by_account_key(1)"""
+"""error - test_administration.save_pause_transaction(pausebuchung)"""
+"""geht - test_administration.delete_pause_transaction(pausebuchung)"""
