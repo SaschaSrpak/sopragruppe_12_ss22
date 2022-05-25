@@ -102,7 +102,8 @@ class AktivitaetMapper(Mapper):
 
     def delete_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Aktivitaet_Zustaendigkeit WHERE Activity_ID='{}', User_ID='{}'".format(activity.get_id(), person.get_id())
+        command = "DELETE FROM Aktivitaet_Zustaendigkeit WHERE Activity_ID='{}', User_ID='{}'".format(activity.get_id(),
+                                                                                                      person.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -115,13 +116,14 @@ class AktivitaetMapper(Mapper):
         tuples = cursor.fetchall
 
         for (maxid) in tuples:
-            activity.set_id(maxid[0]+1)
+            activity.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO Aktivitaet (Activity_ID, Name, "
                        "Man_Day_Capacity, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(activity.get_id(),
-                        activity.get_activity_name(), activity.get_man_day_capacity(),
-                        activity.get_last_modified_date()))
+                                                             activity.get_activity_name(),
+                                                             activity.get_man_day_capacity(),
+                                                             activity.get_last_modified_date()))
 
         self._cnx.commit()
         cursor.close()
@@ -151,9 +153,6 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-
 
 
 """

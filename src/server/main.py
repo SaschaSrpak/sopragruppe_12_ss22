@@ -10,7 +10,7 @@ time_string = datetime.strftime(time, "%y-%m-%d %H:%M:%S")
 testdruck = test_administration.create_kommen_event("Test", time)
 print(testdruck)
 """
-test_administration = SystemAdministration()
+"""test_administration = SystemAdministration()
 person = test_administration.get_person_by_key(2)
 projekt = test_administration.get_project_by_key(1)
 activity = test_administration.get_activity_by_project_key(1)
@@ -23,7 +23,7 @@ pause = test_administration.get_pause_by_key(1)
 projektdauer = test_administration.get_project_duration_by_project_key(1)
 pausebuchung = test_administration.get_pause_transaction_by_key(2)
 print(account.get_id())
-end = dt.datetime(2022, 5, 19, 13, 00, 0)
+end = dt.datetime(2022, 5, 19, 13, 00, 0)"""
 """start = dt.datetime(2022, 5, 19, 12, 30, 0)
 start_string = datetime.strftime(start, "%y-%m-%d %H:%M:%S")
 

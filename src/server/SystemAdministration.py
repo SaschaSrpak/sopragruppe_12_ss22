@@ -16,6 +16,7 @@ from server.business_objects.Buchungen.GehenBuchung import GehenBuchung
 from server.business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
 from server.business_objects.Buchungen.EndereignisBuchung import EndereignisBuchung
 from server.business_objects.Buchungen.PauseBuchung import PauseBuchung
+from server.business_objects.Buchungen.ProjektarbeitBuchung import ProjektarbeitBuchung
 
 from server.db.PersonMapper import PersonMapper
 from server.db.AktivitätMapper import AktivitaetMapper
@@ -33,6 +34,7 @@ from server.db.Buchungen.GehenBuchungMapper import GehenBuchungMapper
 from server.db.Buchungen.StartereignisBuchungMapper import StartereignisBuchungMapper
 from server.db.Buchungen.EndereignisBuchungMapper import EndereignisBuchungMapper
 from server.db.Buchungen.PauseBuchungMapper import PauseBuchungMapper
+from server.db.Buchungen.ProjektarbeitBuchungMapper import ProjektarbeitBuchungMapper
 
 
 class SystemAdministration(object):
@@ -324,7 +326,7 @@ class SystemAdministration(object):
 
     def change_project_activities(self, project_key, activities):
         """Ändert Aktivitäten des Projekts."""
-        project = self.get_activity_by_key(project_key)
+        project = self.get_project_by_key(project_key)
         project.set_activities(activities)
         project.set_last_modified_date(dt.datetime.now())
 
@@ -537,7 +539,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(interval_key)
 
     def get_project_worktime_by_transaction_key(self, transaction_key):
-        pass
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_transaction_key(transaction_key)
 
     def save_project_worktime(self, interval):
         interval.set_last_modified_date(dt.datetime.now())
@@ -823,8 +826,6 @@ class SystemAdministration(object):
         account_id = account.get_id()
         self.create_pause_transaction(account_id, pause)
 
-
-
     def get_all_pause_transactions(self):
         with PauseBuchungMapper() as mapper:
             return mapper.find_all()
@@ -837,6 +838,20 @@ class SystemAdministration(object):
         with PauseBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
 
+    def show_daily_pause_transactions_for_account(self, account_id, date):
+        daily_transactions = []
+        date_string = dt.date.strftime(date, "%y-%m-%d")
+        all_transactions = self.get_pause_transaction_by_account_key(account_id)
+        for x in all_transactions:
+            interval = self.get_pause_by_key(x.get_time_interval_id())
+            start_event = self.get_start_event_by_key(interval.get_start_event())
+            start_event_time = start_event.get_time_of_event()
+            time_string = dt.datetime.strftime(start_event_time, "%y-%m-%d %H:%M:%S")
+            if date_string in time_string:
+                daily_transactions.append(x)
+
+        return daily_transactions
+
     def save_pause_transaction(self, transaction):
         transaction.set_last_modified_date(dt.datetime.now())
         with PauseBuchungMapper() as mapper:
@@ -844,6 +859,124 @@ class SystemAdministration(object):
 
     def delete_pause_transaction(self, transaction):
         with PauseBuchungMapper() as mapper:
+            mapper.delete(transaction)
+
+
+
+    """ProjektarbeitBuchung spezifische Methoden"""
+
+    def create_project_work_transaction(self, account_id, activity_id, interval_id):
+        interval = ProjektarbeitBuchung()
+        interval.set_target_user_account(account_id)
+        interval.set_target_activity(activity_id)
+        interval.set_time_interval_id(interval_id)
+        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_id(1)
+
+        with PauseBuchungMapper() as mapper:
+            return mapper.insert(interval)
+
+    def book_project_work_transaction(self, account, name, activity_id, start_event_time, end_event_time):
+        start_event_date = dt.datetime.date(start_event_time)
+        daily_transactions = self.show_daily_worktime_transactions_for_account(account.get_id(), start_event_date)
+        daily_worktime_intervals = []
+        daily_worktime_hours = 0.0
+        for transaction in daily_transactions:
+            interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
+            daily_worktime_intervals.append(interval)
+
+        for interval in daily_worktime_intervals:
+            daily_worktime_hours += interval.get_duration()
+
+        daily_pauses = self.show_daily_pause_transactions_for_account(account.get_id(), start_event_date)
+        daily_pause_intervals = []
+        daily_pause_hours = 0.0
+        for transaction in daily_pauses:
+            interval = self.get_pause_by_key(transaction.get_time_interval_id())
+            daily_pause_intervals.append(interval)
+
+        for interval in daily_pause_intervals:
+            daily_pause_hours += interval.get_duration()
+
+        duration_seconds = end_event_time - start_event_time
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
+        daily_worktime_hours += duration_hours
+
+        if daily_worktime_hours >= 6.0:
+            if daily_pause_hours < 0.5:
+                t = 0.5 - daily_pause_hours
+                pause_end_event_time = end_event_time
+                td = dt.timedelta(hours=t, seconds=1)
+                end_event_time = end_event_time-td
+                td2 = dt.timedelta(seconds=1)
+                pause_start_event_time = end_event_time + td2
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name, pause_start_event_time, pause_end_event_time)
+                daily_worktime_hours -= t
+        """Es muss dringend noch gecheckt werden wie viel Pause auf den account täglich gebucht wurde ansonsten ist
+                die Funktion fehlerhaft, da immer wenn die Arbeitszeit über 6h ist, eine Pause gebucht wird, obwohl möglicherweise
+                schon eine halbe Stunde Pause gebucht wurde"""
+
+        if daily_worktime_hours >= 9.0:
+            if daily_pause_hours < 0.75:
+                t = 0.75 - daily_pause_hours
+                pause_end_event_time = end_event_time
+                td = dt.timedelta(hours=t, seconds=1)
+                end_event_time = end_event_time-td
+                td2 = dt.timedelta(seconds=1)
+                pause_start_event_time = end_event_time + td2
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name, pause_start_event_time, pause_end_event_time)
+                daily_worktime_hours -= t
+
+        if daily_worktime_hours >= 10:
+            t = abs(10-daily_worktime_hours)
+            td = dt.timedelta(hours=t)
+            end_event_time = end_event_time - td
+            self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit", end_event_time)
+
+        start_event = self.book_start_event(account, "Start", start_event_time)
+        end_event = self.book_end_event(account, "Ende", end_event_time)
+        project_worktime = self.create_project_worktime(name, start_event, end_event)
+        account_id = account.get_id()
+        self.create_project_work_transaction(account_id, activity_id, project_worktime)
+
+
+    def get_all_project_work_transactions(self):
+        with ProjektarbeitBuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_project_work_transaction_by_key(self, transaction_key):
+        with ProjektarbeitBuchungMapper() as mapper:
+            return mapper.find_by_key(transaction_key)
+
+    def get_project_work_transaction_by_account_key(self, account_key):
+        with ProjektarbeitBuchungMapper() as mapper:
+            return mapper.find_by_account_key(account_key)
+
+    def show_daily_worktime_transactions_for_account(self, account_id, date):
+        daily_transactions = []
+        date_string = dt.date.strftime(date, "%y-%m-%d")
+        all_transactions = self.get_project_work_transaction_by_account_key(account_id)
+        for transaction in all_transactions:
+            interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
+            start_event = self.get_start_event_by_key(interval.get_start_event())
+            start_event_time = start_event.get_time_of_event()
+            time_string = dt.datetime.strftime(start_event_time, "%y-%m-%d %H:%M:%S")
+            if date_string in time_string:
+                daily_transactions.append(transaction)
+
+        return daily_transactions
+
+    def get_project_work_transaction_by_activity_key(self, activity_key):
+        with ProjektarbeitBuchungMapper() as mapper:
+            return mapper.find_by_activity_key(activity_key)
+
+    def save_project_work_transaction(self, transaction):
+        transaction.set_last_modified_date(dt.datetime.now())
+        with ProjektarbeitBuchungMapper() as mapper:
+            mapper.update(transaction)
+
+    def delete_project_work_transaction(self, transaction):
+        with ProjektarbeitBuchungMapper() as mapper:
             mapper.delete(transaction)
 
 
