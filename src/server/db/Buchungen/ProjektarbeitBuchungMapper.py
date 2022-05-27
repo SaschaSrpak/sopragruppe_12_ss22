@@ -85,6 +85,7 @@ class ProjektarbeitBuchungMapper(Mapper):
         cursor.close()
         return result
 
+
     def insert(self, transaction):
 
         cursor = self._cnx.cursor(buffered=True)

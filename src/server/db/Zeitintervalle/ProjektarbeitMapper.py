@@ -63,6 +63,20 @@ class ProjektarbeitMapper(Mapper):
 
         return result
 
+    def find_by_transaction_key(self, transaction_key):
+        result = None
+        cursor = self._cnx.cursor()
+
+        command = "SELECT Interval_ID FROM ProjektarbeitBuchung " \
+                  "WHERE Transaction_ID='{}'".format(transaction_key)
+        cursor.execute(command)
+        pause_id = cursor.fetchall()
+
+        result = self.find_by_key(str(pause_id[0]))
+        self._cnx.commit()
+        cursor.close()
+        return result
+
     def insert(self, projektarbeit):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Interval_ID) AS maxid FROM Projektarbeit ")
