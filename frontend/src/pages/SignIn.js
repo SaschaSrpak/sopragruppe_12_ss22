@@ -13,7 +13,9 @@ Click Event von SignIn Button und ruft die onSignIn Methode auf
 		this.props.onSignIn();
 	}
 
-
+/*
+Rendert SignIn Page
+*/
 	render() {
 		return (
 			<div>
@@ -30,7 +32,6 @@ Click Event von SignIn Button und ruft die onSignIn Methode auf
 			</div>
 		);
 	}
-
 }
 
 SignIn.propTypes = {
