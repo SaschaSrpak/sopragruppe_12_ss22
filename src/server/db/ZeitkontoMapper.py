@@ -76,7 +76,7 @@ class ZeitkontoMapper(Mapper):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE Arbeitszeitkonto " + "SET Owner_ID=%s WHERE Account_ID=%s"
+        command = "UPDATE Arbeitszeitkonto " + "SET User_ID=%s WHERE Account_ID=%s"
         data = (zeitkonto.get_id(),
                 zeitkonto.get_owner())
         cursor.execute(command, data)

@@ -12,7 +12,7 @@ class PauseBuchungMapper(Mapper):
 
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from Pause")
+        cursor.execute("SELECT * from pausebuchung")
         tuples = cursor.fetchall()
 
         for (id, target_user_account_id, interval_id,
@@ -94,7 +94,7 @@ class PauseBuchungMapper(Mapper):
         cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
-        command = "UPDATE PauseBuchung" + "SET Account_ID=%s, Interval_ID=%s," \
+        command = "UPDATE PauseBuchung " + "SET Account_ID=%s, Interval_ID=%s," \
                                      "Last_modified_date=%s WHERE Transaction_ID=%s"
         data = (transaction.get_target_user_account(),
                 transaction.get_time_interval_id(), transaction.get_last_modified_date(),

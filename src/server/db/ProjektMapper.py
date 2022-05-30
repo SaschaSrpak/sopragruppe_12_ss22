@@ -69,7 +69,7 @@ class ProjektMapper(Mapper):
         cursor = self._cnx.cursor()
 
         cursor.execute(
-            "SELECT Project_ID, Name, Client, Description, Deadline_ID, "
+            "SELECT Project_ID, Name, Client, Description, Deadline_ID, " 
             "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client={}".format(
                 client))
         tuples = cursor.fetchall()
@@ -188,7 +188,7 @@ class ProjektMapper(Mapper):
                 :param person das aus der DB zu löschende "Objekt"
                 """
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Projekt_Zustaendigkeit WHERE Project_ID='{}', User_ID='{}'".format(project.get_id(),
+        command = "DELETE FROM Projekt_Zustaendigkeit WHERE Project_ID='{}' and User_ID='{}'".format(project.get_id(),
                                                                                                   person.get_id())
         cursor.execute(command)
 
@@ -221,7 +221,7 @@ class ProjektMapper(Mapper):
 
     def update_activity(self, project, activity):
         cursor = self._cnx.cursor()
-        command = "UPDATE Projekt_Aktivitaeten" + "SET Activity_ID=%s, WHERE Project_ID=%s"
+        command = "UPDATE Projekt_Aktivitaeten " + "SET Activity_ID=%s WHERE Project_ID=%s"
         data = (activity.get_id(), project.get_id())
         cursor.execute(command, data)
 
@@ -230,7 +230,7 @@ class ProjektMapper(Mapper):
 
     def delete_activity(self, project, activity):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}', Activity_ID='{}'".format(project.get_id(),
+        command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}' and Activity_ID='{}'".format(project.get_id(),
                                                                                                     activity.get_id())
         cursor.execute(command)
 

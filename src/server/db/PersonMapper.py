@@ -98,10 +98,11 @@ class PersonMapper(Mapper):
 
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(User_ID) AS maxid FROM Person ")
-        tuples = cursor.fetchall
+        tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             person.set_id(maxid[0] + 1)
+
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
                        "EMail, Username, Firebase_ID, Last_modified_date,Manager_Status) "

@@ -117,7 +117,7 @@ class SystemAdministration(object):
             mapper.insert(activity)
             responsible_dict = activity.get_persons_responsible()
             for person in responsible_dict:
-                mapper.insert_person_responsible(activity, person)
+                mapper.insert_person_responsible(activity, responsible_dict[person])
             return
 
     def get_all_activities(self):
@@ -326,6 +326,7 @@ class SystemAdministration(object):
 
     def change_project_activities(self, project_key, activities):
         """Ändert Aktivitäten des Projekts."""
+
         project = self.get_project_by_key(project_key)
         project.set_activities(activities)
         project.set_last_modified_date(dt.datetime.now())

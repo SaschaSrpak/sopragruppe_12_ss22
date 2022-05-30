@@ -107,12 +107,13 @@ class ProjektarbeitMapper(Mapper):
 
         command = "UPDATE Projektarbeit " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, " \
                                             "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
-        data = (projektarbeit.get_id(),
+        data = (
                 projektarbeit.get_name(),
                 projektarbeit.get_duration(),
                 projektarbeit.get_start(),
                 projektarbeit.get_end(),
-                projektarbeit.get_last_modified_date())
+                projektarbeit.get_last_modified_date(),
+                projektarbeit.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()

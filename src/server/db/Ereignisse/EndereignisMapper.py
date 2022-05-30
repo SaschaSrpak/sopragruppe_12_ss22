@@ -83,10 +83,11 @@ class EndereignisMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE Endereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
-        data = (ereignis.get_id(),
+        data = (
                 ereignis.get_event_name(),
                 ereignis.get_time_of_event(),
-                ereignis.get_last_modified_date())
+                ereignis.get_last_modified_date(),
+                ereignis.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
