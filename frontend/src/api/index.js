@@ -25,7 +25,7 @@ export {default as StartereignisBO} from "./Ereignisse/StartereignisBO";
 
 
 /* Zeitintervalle */
-export {default as PauseBO } from "./Zeitintervall/";
+export {default as PauseBO } from "./Zeitintervall/PauseBO";
 export {default as ProjektarbeitBO} from "./Zeitintervall/ProjektarbeitBO";
 export {default as ProjektlaufzeitBO} from "./Zeitintervall/ProjektlaufzeitBO";
 export {default as ZeitintervallBO} from "./Zeitintervall/ZeitintervallBO";
