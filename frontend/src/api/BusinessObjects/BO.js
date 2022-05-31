@@ -6,14 +6,5 @@
 
 export default class BO{
     constructor(){
-
     }
-    
-        
-
-
-   
-
-
-
 }
