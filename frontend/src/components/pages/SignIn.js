@@ -5,22 +5,40 @@ import { Typography, Grid, Button} from "@material-ui/core";
 
 class SignIn extends Component {
     
-    
-    render() {
-        return (
+/*
+Click Event von SignIn Button und ruft die onSignIn Methode auf
+*/
+
+    handleSignInButtonClicked = () => {
+		this.props.onSignIn();
+	}
+
+/*
+Rendert SignIn Page
+*/
+	render() {
+		return (
 			<div>
-				<p align='center'> Welcome to the HdM React/Python Project Showcase</p>
-				<p align='center'>It appears, that you are not signed in.</p>
-				<p align='center'>To use the services of the HdM Bank please</p>
-				<Grid container justify='center'>
+				<Typography sx={{margin: 2}} align='center' variant='h6'>Willkommen zur Zeitmanagement App</Typography>
+				<Typography sx={{margin: 2}} align='center'>Du bist nicht eingeloggt</Typography>
+				<Typography sx={{margin: 2}} align='center'>To use the services of the HdM Bank please</Typography>
+				<Grid container justifyContent='center'>
 					<Grid item>
 						<Button variant='contained' color='primary' onClick={this.handleSignInButtonClicked}>
 							Sign in with Google
-      			        </Button>
+						</Button>
 					</Grid>
 				</Grid>
 			</div>
 		);
 	}
 }
+
+SignIn.propTypes = {
+/* 
+Handler-Funktion, die aufgerufen wird, wenn der Benutzer sich anmelden möchte.
+*/
+	onSignIn: PropTypes.func.isRequired,
+}
+
 export default SignIn;
