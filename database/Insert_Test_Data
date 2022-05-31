@@ -1,0 +1,74 @@
+
+
+
+INSERT INTO Person VALUES (10001,'Klaus','Kleber','klaus.kleber@gmail.com','UhuKlaus','2022-05-02 19:45:44',0),
+                          (10002,'Beathe','Use','beathe.use@gmail.com','AtheBuse','2022-05-02 19:47:48',1),
+                          (10003,'Marie','Blauh','marie.blauh@gmail.com','MaBlauh','2022-05-02 19:48:25',0),
+                          (10004,'Benedick','Schleicher','benedick.schleicher@gmail.com','DickerSchleicher','2022-05-02 19:49:00',0),
+                          (10005,'Heffrey','Yee','yee.heffrey@gmail.com','Yeeeee','2022-05-02 19:49:47',0),
+                          (10006,'Truca','Lautmann','tr.lautmann@gmail.com','SuperLautmann','2022-05-02 19:50:39',1),
+                          (10007,'Kaum','Kisler','kaum.kisler@gmail.com','KislerMisler','2022-05-02 19:52:14',0),
+                          (10008,'Sriracha','Spak','sriracha.spak@gmail.com','SrirachaSpak','2022-05-02 19:53:42',0),
+                          (10009,'Wiam','Lilke','wiam.lilke@gmail.com','Lolke','2022-05-02 19:54:32',1),
+                          (100010,'Jeonard','Lustus','jenni.lustus@gmail.com','BWL-Lustus','2022-05-02 19:55:14',0);
+
+
+insert into SoPra_MySQL_DB.Aktivitaet (Activity_ID, Name, Man_Day_Capacity, Last_modified_date)
+values  (10001, 'Anforderungen erfassen', 2, '2022-05-03 16:02:44'),
+        (10002, 'Prototyp erstellen', 8, '2022-05-03 16:02:46'),
+        (10003, 'Funktionen programmieren', 20, '2022-05-03 16:02:47'),
+        (10004, 'Design optimieren', 10, '2022-05-03 16:02:47');
+
+insert into SoPra_MySQL_DB.Projekt (Project_ID, Name, Client, Description, Last_modified_date)
+values  (10001, 'Website', 'Tante_Emma_Laden', 'Erstellen einer kleinen Website für den örtlichen Tante Emma Laden.', '2022-05-03 15:58:10'),
+        (10002, 'Hausputz', 'Örtliche_WG', 'Die WG muss mal wieder geputzt werden!', '2022-05-03 15:59:04');
+
+
+insert into SoPra_MySQL_DB.Aktivitaet (Activity_ID, Name, Man_Day_Capacity, Last_modified_date)
+values  (10001, 'Anforderungen erfassen', 2, '2022-05-03 16:02:44'),
+        (10002, 'Prototyp erstellen', 8, '2022-05-03 16:02:46'),
+        (10003, 'Funktionen programmieren', 20, '2022-05-03 16:02:47'),
+        (10004, 'Design optimieren', 10, '2022-05-03 16:02:47');
+
+insert into SoPra_MySQL_DB.Projekt_Ersteller (Project_ID, User_ID)
+values  (10001, 10002),
+        (10002, 10009);
+
+insert into SoPra_MySQL_DB.Projekt_Zustaendigkeit (Project_ID, User_ID)
+values  (10001, 10001),
+        (10001, 10002),
+        (10001, 10003),
+        (10001, 10004);
+
+insert into SoPra_MySQL_DB.Projekt_Aktivitaeten (Project_ID, Activity_ID)
+values  (10001, 10001),
+        (10001, 10002),
+        (10001, 10003),
+        (10001, 10004);
+
+insert into SoPra_MySQL_DB.Aktivitaet_Zustaendigkeit (Activity_ID, User_ID)
+values  (10001, 10001),
+        (10002, 10001),
+        (10002, 10002),
+        (10003, 10003),
+        (10003, 10004),
+        (10004, 10004);
+
+insert into SoPra_MySQL_DB.Ereignis (Event_ID, Name, Time, Last_modified_date)
+values  (10001, 'Gesprächsstart', '2022-05-03 08:15:41', '2022-05-03 16:11:55'),
+        (10002, 'Gesprächsende', '2022-05-03 10:01:16', '2022-05-03 16:12:27');
+
+insert into SoPra_MySQL_DB.Zeitintervall (Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date)
+values  (10001, 'Gespräch zur Anforderungsaufnahme', 1.75, 10001, 10002, '2022-05-03 16:13:31');
+
+insert into SoPra_MySQL_DB.Buchung (Transaction_ID, Account_ID, Activity_ID, Last_modified_date)
+values  (10001, 10001, 10001, '2022-05-03 16:19:52');
+
+insert into SoPra_MySQL_DB.Buchungs_Bezug_Ereignis (Transaction_ID, Event_ID)
+values  (10001, 10001),
+        (10001, 10002);
+
+insert into SoPra_MySQL_DB.Buchungs_Bezug_Zeitintervall (Transaction_ID, Interval_ID)
+values  (10001, 10001);
+
+

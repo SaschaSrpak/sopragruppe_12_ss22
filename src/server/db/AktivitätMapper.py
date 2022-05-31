@@ -72,7 +72,7 @@ class AktivitaetMapper(Mapper):
     def find_by_project_key(self, project_key):
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT Activity_ID FROM Projekt_Aktivitaet " \
+        command = "SELECT Activity_ID FROM Projekt_Aktivitaeten " \
                   "WHERE Project_ID='{}'".format(project_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -92,7 +92,7 @@ class AktivitaetMapper(Mapper):
         return activity
 
     def update_person_responsible(self, activity, person):
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
         command = "UPDATE Aktivitaet_Zuständigkeit" + "SET User_ID=%s, WHERE Activity_ID=%s"
         data = (person.get_id(), activity.get_id())
         cursor.execute(command, data)
@@ -102,7 +102,8 @@ class AktivitaetMapper(Mapper):
 
     def delete_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Aktivitaet WHERE Activity_ID='{}', User_ID='{}'".format(activity.get_id(), person.get_id())
+        command = "DELETE FROM Aktivitaet_Zustaendigkeit WHERE Activity_ID='{}' and User_ID='{}'".format(activity.get_id(),
+                                                                                                      person.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -112,16 +113,17 @@ class AktivitaetMapper(Mapper):
 
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Activity_ID) AS maxid FROM Aktivitaet ")
-        tuples = cursor.fetchall
+        tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            activity.set_id(maxid[0]+1)
+            activity.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO Aktivitaet (Activity_ID, Name, "
                        "Man_Day_Capacity, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(activity.get_id(),
-                        activity.get_activity_name(), activity.get_man_day_capacity(),
-                        activity.get_last_modified_date()))
+                                                             activity.get_activity_name(),
+                                                             activity.get_man_day_capacity(),
+                                                             activity.get_last_modified_date()))
 
         self._cnx.commit()
         cursor.close()
@@ -129,10 +131,10 @@ class AktivitaetMapper(Mapper):
 
     def update(self, activity):
 
-        cursor = self._cnx.cursor
+        cursor = self._cnx.cursor()
 
         activity.set_last_modified_date(datetime.datetime.now())
-        command = "UPDATE Aktivitaet" + "SET Name=%s, Man_Day_Capacity=%s," \
+        command = "UPDATE Aktivitaet " + "SET Name=%s, Man_Day_Capacity=%s," \
                                         "Last_modified_date=%s WHERE Activity_ID=%s"
         data = (activity.get_activity_name(),
                 activity.get_man_day_capacity(), activity.get_last_modified_date(),
@@ -151,9 +153,6 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-
 
 
 """
@@ -178,7 +177,7 @@ if (__name__ == "__main__"):
 """
 
 with AktivitaetMapper() as mapper:
-    test = mapper.find_by_person_key("U10005")
+    test = mapper.find_by_person_key(10001)
     for i in test:
         print(i.get_activity_name())
 

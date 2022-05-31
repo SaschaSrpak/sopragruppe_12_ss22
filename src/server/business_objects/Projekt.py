@@ -8,11 +8,11 @@ class Projekt (bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self._name = ""
-        self._creator = Person
+        self._creator = int
         self._client = ""
         self._description = ""
-        self._set_deadline = datetime
-        self._project_duration = timedelta
+        self._set_deadline = int
+        self._project_duration = int
         self._activities = {}
         self._persons_responsible = {}
 
@@ -41,7 +41,7 @@ class Projekt (bo.BusinessObject):
         self._client = name
 
     def get_description(self):
-        """Auslesen des Beschreibung des Projekts"""
+        """Auslesen der Beschreibung des Projekts"""
         return self._description
 
     def set_description(self, descr):
@@ -68,6 +68,9 @@ class Projekt (bo.BusinessObject):
         """Auslesen der Aktivitäten"""
         return self._activities
 
+    def set_activities(self, new_activities):
+        self._activities = new_activities
+
     def add_activity(self, key, activity):
         """Hinzufügen einer Aktivität"""
         self._activities.update({key: activity})
@@ -76,17 +79,18 @@ class Projekt (bo.BusinessObject):
         """Entfernen einer Aktivität"""
         self._activities.pop(key)
 
-
-"""
     def get_person_responsible(self):
-        Auslesen der verantwortlichen Person(-en)
+        """Auslesen der verantwortlichen Person(-en)"""
         return self._persons_responsible
 
-    def add_person_responsible(self, Person):
-        Hinzufügen einer verantwortlichen Person
-        self._new_Person = Person
+    def set_person_responsible(self, persons):
+        self._persons_responsible = persons
 
-    def delete_person_responsible(self, Person):
-        Entfernen einer verantwortlichen Person
-        self.delete(Person)
-"""
+    def add_person_responsible(self, key, person):
+        """Hinzufügen einer verantwortlichen Person"""
+        self._persons_responsible.update({key: person})
+
+    def delete_person_responsible(self, key):
+        """Entfernen einer verantwortlichen Person"""
+        self._persons_responsible.pop(key)
+

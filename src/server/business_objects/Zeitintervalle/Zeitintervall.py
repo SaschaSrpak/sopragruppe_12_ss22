@@ -1,15 +1,15 @@
 from server.business_objects import BusinessObject as bo
 from datetime import timedelta
-from server.business_objects import Ereignis
+from business_objects.Ereignisse import Endereignis, Startereignis
 
 
-class Zeitinervall (bo.BusinessObject):
+class Zeitintervall (bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
         self._name = ""
-        self._start = Ereignis
-        self._end = Ereignis
+        self._start = Startereignis
+        self._end = Endereignis
         self._duration = timedelta
 
     def get_name(self):
@@ -26,7 +26,7 @@ class Zeitinervall (bo.BusinessObject):
 
     def set_start(self, new_time):
         """Setzen des Starts des Zeitintervalls."""
-        self._name = new_time
+        self._start = new_time
 
     def get_end(self):
         """Auslesen des Endes des Zeitintervalls."""
