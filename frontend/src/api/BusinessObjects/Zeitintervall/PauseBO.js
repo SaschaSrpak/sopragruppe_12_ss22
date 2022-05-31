@@ -1,11 +1,10 @@
-import BuchungBO from './Buchungen/BuchungBO';
-
+import PauseBO from './Zeitintervall/PauseBO';
 /** 
  *@fileOverview 
  *@author Luca Trautmann
 */
 
-export default class BuchungBO{
+export default class PauseBO{
 
     constructor() {
            }

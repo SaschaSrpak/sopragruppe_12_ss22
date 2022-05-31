@@ -1,4 +1,4 @@
-import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
+import ZeitintervallbuchungBO from './Buchungen/ZeitintervallbuchungBO';
 /** 
  *@fileOverview 
  *@author Luca Trautmann

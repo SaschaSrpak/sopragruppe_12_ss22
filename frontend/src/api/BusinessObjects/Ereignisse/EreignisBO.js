@@ -1,11 +1,10 @@
-import BuchungBO from './Buchungen/BuchungBO';
-
+import EreignisBO from "/Ereignisse/EreignisBO";
 /** 
  *@fileOverview 
  *@author Luca Trautmann
 */
 
-export default class BuchungBO{
+export default class EreignisBO{
 
     constructor() {
            }

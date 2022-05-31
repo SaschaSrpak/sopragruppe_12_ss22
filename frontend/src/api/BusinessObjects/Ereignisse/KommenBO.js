@@ -1,10 +1,10 @@
-import EreignisBO from './EreignisBO';
+import KommenBO from "/Ereignisse/KommenBO";
 /** 
  *@fileOverview 
  *@author Luca Trautmann
 */
 
-export default class EreignisBO{
+export default class KommenBO{
 
     constructor() {
            }

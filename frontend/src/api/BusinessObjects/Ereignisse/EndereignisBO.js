@@ -1,10 +1,10 @@
-import ZeitintervallBO from './ZeitintervallBO';
+import EndereignisBO from "/Ereignisse/EndereignisBO";
 /** 
  *@fileOverview 
  *@author Luca Trautmann
 */
 
-export default class ZeitintervallBO{
+export default class EndereignisBO{
 
     constructor() {
            }
