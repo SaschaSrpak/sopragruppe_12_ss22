@@ -4,7 +4,7 @@ import './App.css';
 import { Card, Typography } from '@mui/material';
 import firebaseConfig from './firebaseconfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import Header from './layout/Header';
+import Header from './components/layout/Header';
 
 
 
