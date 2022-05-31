@@ -16,11 +16,11 @@ class Aktivitaet(bo.BusinessObject):
         """Ändern des Aktivitäts-Name"""
         self.__activity_name = new_activity_name
 
-    """def get_persons_responsible(self):
+    def get_persons_responsible(self):
         return self.__persons_responsible
 
     def set_persons_responsible(self, new_persons_responsible):
-        self.__persons_responsible = new_persons_responsible"""
+        self.__persons_responsible = new_persons_responsible
 
     def get_man_day_capacity(self):
         """Anzeigen der Kapazität in Personen-Tagen"""

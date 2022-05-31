@@ -81,6 +81,12 @@ create table Projekt
     Client             varchar(100) not null,
     Description        varchar(500) null,
     Last_modified_date timestamp    not null
+    Deadline           int          null,
+    Project_Duration   int          null,
+    constraint Projekt_Ereignis_Event_ID_fk
+        foreign key (Deadline) references Ereignis (Event_ID),
+    constraint Projekt_Zeitintervall_Interval_ID_fk
+        foreign key (Project_Duration) references Zeitintervall (Interval_ID)
 );
 
 create table Projekt_Aktivitaeten
