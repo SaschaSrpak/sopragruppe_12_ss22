@@ -9,7 +9,7 @@ export default class ZeitintervallBO extends BO {
 
     constructor() {
         super()
-        this.name = name;
+        this.name = Name;
         this.start = start;
         this.end = end;
         this.duration = duration;
@@ -19,35 +19,35 @@ export default class ZeitintervallBO extends BO {
  * @param {*} name
  */
 
-    get_name() {
+    getName() {
         return this.name;
     }
 
-    set_name(name) {
+    setName(name) {
         this.name = name;
     }
 
-    get_start() {
+    getStart() {
         return this.start;
     }
 
-    set_start(start) {
+    setStart(start) {
         this.start = start;
     }
 
-    get_end() {
+    getEnd() {
         return this.end;
     }
 
-    set_end(end) {
+    setEnd(end) {
         this.end = end;
     }
 
-    get_duration() {
+    getDuration() {
         return this.duration;
     }
 
-    set_duration(duration) {
+    setDuration(duration) {
         this.duration = duration;
     }
     
