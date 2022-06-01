@@ -4,9 +4,10 @@ import EreignisBO from "/Ereignisse/EreignisBO";
 *@author Luca Trautmann, Kim Kausler
 */
 
-export default class EreignisBO{
+export default class EreignisBO extends EreignisBO{
 
     constructor() {
+        super()
         this.event_name = null;
         this.time_of_event = null;
            }
