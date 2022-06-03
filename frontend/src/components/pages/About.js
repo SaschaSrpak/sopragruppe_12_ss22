@@ -1,4 +1,5 @@
-import { Component, Link } from "react";
+import { Component } from "react";
+import { Link } from '@material-ui/core';
 
 export class About extends Component {
 
