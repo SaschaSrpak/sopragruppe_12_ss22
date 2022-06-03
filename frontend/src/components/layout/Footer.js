@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-/*
- *@fileOverview 
- *@author 
+/**
+ *@fileOverview
+ *@author Luca Trautmann
 */
 
 export class Footer extends Component{
@@ -29,3 +29,4 @@ Footer.propTypes={
 };
 export default Footer;
        
+
