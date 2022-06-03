@@ -3,8 +3,9 @@ import Appbar from '@mui/material/AppBar';
 import { Typography } from '@mui/material';
 
 
-class Header extends Component {
+export class Header extends Component {
     render() {
+        const{classes} = this.props;
         const { currentUser } = this.props;
         return (
             <Appbar>
