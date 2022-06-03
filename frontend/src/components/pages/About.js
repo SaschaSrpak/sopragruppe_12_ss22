@@ -1,25 +1,29 @@
-function About() {
+import { Component, Link } from "react";
 
-    const classes = useStyles();
+export class About extends Component {
 
-    return (
-      <Paper elevation={0} className={classes.root}>
-        <div className={classes.content}>
-          <Typography variant='h6'>
+
+
+    render (){
+      return(
+        <div>
+          <p variant='h6'>
             Zeiterfassungsprojekt
-          </Typography>
+          </p>
           <br />
-          <Typography>
+          <p>
             React Frontend written by <Link href='https://www.youtube.com/watch?v=czTksCF6X8Y&t=15s'>Alle</Link>
-          </Typography>
-          <Typography>
+          </p>
+          <p>
             Python Backend written by <Link href='https://www.youtube.com/watch?v=czTksCF6X8Y&t=15s'>Alle</Link>
-          </Typography>
+          </p>
           <br />
-          <Typography variant='body2'>
+          <p variant='body2'>
             © Gruppe was weis ich für ne zahl? 2022, all rights reserved.
-          </Typography>
+          </p>
         </div>
-      </Paper>
-    )
-  }
+      )
+    }
+    
+};
+export default About;
