@@ -6,7 +6,7 @@ import firebaseConfig from './firebaseconfig';
 import {  Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
-/** 
+/*
  *@fileOverview 
  *@author Luca Trautmann
 */
