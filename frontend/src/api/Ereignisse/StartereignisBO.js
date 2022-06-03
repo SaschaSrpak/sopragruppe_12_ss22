@@ -8,7 +8,6 @@ export default class StartereignisBO extends StartereignisBO{
 
     constructor() {
         super()
-           }
-
+    }
     
 }
