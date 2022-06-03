@@ -4,7 +4,8 @@ import ProjektDeadlineBO from "/Ereignisse/ProjektDeadlineBO";
  *@author Luca Trautmann, Kim Kausler
 */
 
-export default class StartereignisBO extends StartereignisBO{
+export default class ProjektDeadlineBO extends ProjektDeadlineBO{
+
 
     constructor() {
         super()
