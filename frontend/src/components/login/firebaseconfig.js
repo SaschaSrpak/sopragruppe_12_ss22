@@ -1,5 +1,10 @@
 import { initializeApp, getApps } from "firebase/app";
 
+/** 
+ *@fileOverview 
+ *@author Sascha Srpak
+*/
+
 const firebaseConfig = {
     apiKey: "AIzaSyALX2D5j2MI2OrVBTZ-nLHeYe9QDflT-mk",
     authDomain: "sopra-6237a.firebaseapp.com",
