@@ -2,7 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 
 /** 
  *@fileOverview 
- *@author Sascha Srpak
+ *@author Sascha Srpak, Luca Trautmann
 */
 
 const firebaseConfig = {
