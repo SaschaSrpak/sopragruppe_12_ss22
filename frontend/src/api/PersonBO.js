@@ -60,6 +60,8 @@ export default class PersonBO{
     getManager_status(){
         return this.manager_status;
     }
+/* 
+    Wie manager_status vetrteilen 0 oder 1 automatisch? */
 
     setManager_status(new_manager_status){
         this.manager_status = new_manager_status;
