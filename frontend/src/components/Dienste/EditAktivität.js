@@ -3,8 +3,8 @@ import Error from '../Zwischenelemente/Error'
 
 
 export class EditAktivität extends Component {
-    constructor(){
-
+    constructor(props){
+        super(props)
     }
 
     render(){
