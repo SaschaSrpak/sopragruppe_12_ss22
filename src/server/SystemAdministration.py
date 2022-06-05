@@ -89,6 +89,18 @@ class SystemAdministration(object):
 
     def delete_person(self, person):
         """Den angegebenen Benutzer aus dem System löschen"""
+        person_account = self.get_time_account_by_person_key(person.get_id())
+        self.delete_account(person_account)
+        all_projects = self.get_project_by_person_key(person.get_id())
+        for project in all_projects:
+            self.delete_person_responsible_from_project(project, person)
+        all_activities = self.get_activity_by_person_key(person.get_id())
+        for activity in all_activities:
+            self.delete_person_responsible_from_activity(activity, person)
+        project_creator = self.get_project_by_creator_key(person.get_id())
+        if project_creator is not None:
+            for project in project_creator:
+                self.delete_project(project)
         with PersonMapper() as mapper:
             mapper.delete(person)
 
@@ -228,20 +240,64 @@ class SystemAdministration(object):
         referentielle Integrität des Gesamtsystems zu 
         gewährleisten"""
 
-    def get_all_bookings(self, account):
-        pass
+    def get_all_bookings_for_account(self, account):
+        all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        all_start_event_transactions = self.get_start_event_transaction_by_account_key(account.get_id())
+        all_end_event_transactions = self.get_end_event_transaction_by_account_key(account.get_id())
+        all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
+        all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
+        return all_kommen_transactions, all_gehen_transactions, all_start_event_transactions, \
+               all_end_event_transactions, all_pause_transactions, all_project_worktime_transactions
 
     def get_full_work_time(self, account):
-        pass
+        all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
+        full_work_time = 0
+        all_project_worktimes =[]
+        for transaction in all_project_worktime_transactions:
+            worktime_id = transaction.get_time_interval_id()
+            all_project_worktimes.append(self.get_project_worktime_by_key(worktime_id))
+
+        for worktime in all_project_worktimes:
+            full_work_time += worktime.get_duration()
+
+        return full_work_time
+
+
 
     def get_full_pause_time(self, account):
-        pass
+        all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
+        full_pause_time = 0
+        all_pauses = []
+        for transaction in all_pause_transactions:
+            worktime_id = transaction.get_time_interval_id()
+            all_pauses.append(self.get_project_worktime_by_key(worktime_id))
+
+        for worktime in all_pauses:
+            full_pause_time += worktime.get_duration()
+
+        return full_pause_time
 
     def get_worktime_on_activity(self, account, activity):
-        pass
+        all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
+        all_transactions_on_activity = []
+        worktime_on_activity = 0
+        for transaction in all_project_worktime_transactions:
+            if transaction.get_target_activity() == activity.get_id():
+                all_transactions_on_activity.append(transaction)
+
+        for worktime in all_transactions_on_activity:
+            worktime_on_activity += worktime.get_duration()
+
+        return worktime_on_activity
 
     def get_work_time_on_project(self, account, project):
-        pass
+        all_activities_on_project = project.get_activities()
+        worktime_on_project = 0
+        for activity in all_activities_on_project.values():
+            worktime_on_project += self.get_worktime_on_activity(account, activity)
+
+        return worktime_on_project
 
     """
     Projekt spezifische Methoden
@@ -357,9 +413,11 @@ class SystemAdministration(object):
             if not (activities_to_delete is None):
                 for activity in activities_to_delete:
                     self.delete_activity(activity)
+                    self.delete_activity_from_project(project, activity)
             responsible_list = self.get_persons_by_project_key(project.get_id())
             if not (responsible_list is None):
                 for person in responsible_list:
+                    self.delete_person_responsible_from_project(project, person)
                     self.delete_person_responsible_from_project(project, person)
             duration = self.get_project_duration_by_project_key(project.get_id())
             self.delete_project_duration(duration)
@@ -390,7 +448,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(event_key)
 
     def get_kommen_by_transaction_key(self, transaction_key):
-        pass
+        transaction = self.get_kommen_transaction_by_key(transaction_key)
+        return self.get_kommen_event_by_key(transaction.get_event_id())
 
     def save_kommen_event(self, event):
         event.set_last_modified_date(dt.datetime.now())
@@ -425,7 +484,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(event_key)
 
     def get_gehen_by_transaction_key(self, transaction_key):
-        pass
+        transaction = self.get_gehen_transaction_by_key(transaction_key)
+        return self.get_gehen_event_by_key(transaction.get_event_id())
 
     def save_gehen_event(self, event):
         event.set_last_modified_date(dt.datetime.now())
@@ -460,10 +520,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(event_key)
 
     def get_start_by_transaction_key(self, transaction_key):
-        pass
-
-    def get_start_by_interval_key(self, interval_key):
-        pass
+        transaction = self.get_start_event_transaction_by_key(transaction_key)
+        return self.get_start_event_by_key(transaction.get_event_id())
 
     def save_start_event(self, event):
         event.set_last_modified_date(dt.datetime.now())
@@ -498,10 +556,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(event_key)
 
     def get_end_by_transaction_key(self, transaction_key):
-        pass
-
-    def get_end_by_interval_key(self, interval_key):
-        pass
+        transaction = self.get_end_event_transaction_by_key(transaction_key)
+        return self.get_end_event_by_key(transaction.get_event_id())
 
     def save_end_event(self, event):
         event.set_last_modified_date(dt.datetime.now())
@@ -556,7 +612,6 @@ class SystemAdministration(object):
         with ProjektarbeitMapper() as mapper:
             mapper.delete(interval)
 
-
     """
     Pause spezifische Methoden
     """
@@ -589,7 +644,8 @@ class SystemAdministration(object):
             return mapper.find_by_key(interval_key)
 
     def get_pause_by_transaction_key(self, transaction_key):
-        pass
+        transaction = self.get_pause_by_transaction_key(transaction_key)
+        return self.get_pause_by_key(transaction.get_time_interval_id())
 
     def save_pause(self, interval):
         interval.set_last_modified_date(dt.datetime.now())
@@ -648,7 +704,7 @@ class SystemAdministration(object):
     KommenBuchung spezifische Methoden
     """
 
-    def create_kommen_transaction(self,account_id, event_id):
+    def create_kommen_transaction(self, account_id, event_id):
         transaction = KommenBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
@@ -659,16 +715,30 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_kommen_event(self, account, name, time):
-        event = self.create_kommen_event(name, time)
-        account_id = account.get_id()
-        self.create_kommen_transaction(account_id, event)
-        return event
+        kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        kommen_events = []
+        for transaction in kommen_transactions:
+            kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
+        last_kommen_event = kommen_events[-1]
 
+        gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        gehen_events = []
+        for transaction in gehen_transactions:
+            gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
+        last_gehen_event = gehen_events[-1]
+
+        if last_kommen_event > last_gehen_event:
+            return
+
+        else:
+            event = self.create_kommen_event(name, time)
+            account_id = account.get_id()
+            self.create_kommen_transaction(account_id, event)
+            return event
 
     def get_all_kommen_transactions(self):
         with KommenBuchungMapper() as mapper:
             return mapper.find_all()
-
 
     def get_kommen_transaction_by_key(self, transaction_key):
         with KommenBuchungMapper() as mapper:
@@ -687,7 +757,6 @@ class SystemAdministration(object):
         with KommenBuchungMapper() as mapper:
             mapper.delete(transaction)
 
-
     """
     GehenBuchung spezifische Methoden
     """
@@ -703,10 +772,26 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_gehen_event(self, account, name, time):
-        event = self.create_gehen_event(name, time)
-        account_id = account.get_id()
-        self.create_gehen_transaction(account_id, event)
-        return event
+        kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        kommen_events = []
+        for transaction in kommen_transactions:
+            kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
+        last_kommen_event = kommen_events[-1]
+
+        gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        gehen_events = []
+        for transaction in gehen_transactions:
+            gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
+        last_gehen_event = gehen_events[-1]
+
+        if last_kommen_event > last_gehen_event:
+            return
+
+        else:
+            event = self.create_gehen_event(name, time)
+            account_id = account.get_id()
+            self.create_gehen_transaction(account_id, event)
+            return event
 
     def get_all_gehen_transactions(self):
         with GehenBuchungMapper() as mapper:
@@ -732,6 +817,7 @@ class SystemAdministration(object):
     """
     StartereignisBuchung spezifische Methoden
     """
+
     def create_start_event_transaction(self, account_id, event_id):
         transaction = StartereignisBuchung()
         transaction.set_target_user_account(account_id)
@@ -774,6 +860,7 @@ class SystemAdministration(object):
     """
     EndereignisBuchung spezifische Methoden
     """
+
     def create_end_event_transaction(self, account_id, event_id):
         transaction = EndereignisBuchung()
         transaction.set_target_user_account(account_id)
@@ -814,7 +901,8 @@ class SystemAdministration(object):
     """
     PauseBuchung spezifische Methoden
     """
-    def create_pause_transaction(self,account_id, interval_id):
+
+    def create_pause_transaction(self, account_id, interval_id):
         interval = PauseBuchung()
         interval.set_target_user_account(account_id)
         interval.set_time_interval_id(interval_id)
@@ -866,8 +954,6 @@ class SystemAdministration(object):
         with PauseBuchungMapper() as mapper:
             mapper.delete(transaction)
 
-
-
     """ProjektarbeitBuchung spezifische Methoden"""
 
     def create_project_work_transaction(self, account_id, activity_id, interval_id):
@@ -912,10 +998,11 @@ class SystemAdministration(object):
                 t = 0.5 - daily_pause_hours
                 pause_end_event_time = end_event_time
                 td = dt.timedelta(hours=t, seconds=1)
-                end_event_time = end_event_time-td
+                end_event_time = end_event_time - td
                 td2 = dt.timedelta(seconds=1)
                 pause_start_event_time = end_event_time + td2
-                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name, pause_start_event_time, pause_end_event_time)
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name,
+                                            pause_start_event_time, pause_end_event_time)
                 daily_worktime_hours -= t
         """Es muss dringend noch gecheckt werden wie viel Pause auf den account täglich gebucht wurde ansonsten ist
                 die Funktion fehlerhaft, da immer wenn die Arbeitszeit über 6h ist, eine Pause gebucht wird, obwohl möglicherweise
@@ -926,17 +1013,19 @@ class SystemAdministration(object):
                 t = 0.75 - daily_pause_hours
                 pause_end_event_time = end_event_time
                 td = dt.timedelta(hours=t, seconds=1)
-                end_event_time = end_event_time-td
+                end_event_time = end_event_time - td
                 td2 = dt.timedelta(seconds=1)
                 pause_start_event_time = end_event_time + td2
-                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name, pause_start_event_time, pause_end_event_time)
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name,
+                                            pause_start_event_time, pause_end_event_time)
                 daily_worktime_hours -= t
 
         if daily_worktime_hours >= 10:
-            t = abs(10-daily_worktime_hours)
+            t = abs(10 - daily_worktime_hours)
             td = dt.timedelta(hours=t)
             end_event_time = end_event_time - td
-            self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit", end_event_time)
+            self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit",
+                                  end_event_time)
             return
 
         start_event = self.book_start_event(account, "Start", start_event_time)
@@ -944,7 +1033,6 @@ class SystemAdministration(object):
         project_worktime = self.create_project_worktime(name, start_event, end_event)
         account_id = account.get_id()
         self.create_project_work_transaction(account_id, activity_id, project_worktime)
-
 
     def get_all_project_work_transactions(self):
         with ProjektarbeitBuchungMapper() as mapper:
@@ -984,5 +1072,3 @@ class SystemAdministration(object):
     def delete_project_work_transaction(self, transaction):
         with ProjektarbeitBuchungMapper() as mapper:
             mapper.delete(transaction)
-
-
