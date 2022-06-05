@@ -3,9 +3,10 @@ import Error from '../Zwischenelemente/Error'
 
 
 export class NewBuchung extends Component {
-    constructor(){
-
+    constructor(props){
+        super(props)
     }
+
 
     render(){
 
