@@ -53,6 +53,33 @@ class ZeitkontoMapper(Mapper):
 
         return result
 
+    def find_by_person_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT Account_ID, User_ID from Arbeitszeitkonto WHERE User_ID='{}'".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        if tuples is not None \
+                and len(tuples) > 0 \
+                and tuples[0] is not None:
+            (Account_ID, Owner_ID) = tuples[0]
+            zeitkonto = Zeitkonto()
+            zeitkonto.set_id(Account_ID)
+            zeitkonto.set_owner(Owner_ID)
+
+
+            result = zeitkonto
+        else:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def insert(self, zeitkonto):
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Account_ID) AS maxid FROM Arbeitszeitkonto ")
