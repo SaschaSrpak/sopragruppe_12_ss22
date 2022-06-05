@@ -3,8 +3,8 @@ import Error from '../Zwischenelemente/Error'
 
 
 export class DeleteProjekt extends Component {
-    constructor(){
-
+    constructor(props){
+        super(props)
     }
 
     render(){
