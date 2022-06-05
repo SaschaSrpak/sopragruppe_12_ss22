@@ -17,51 +17,51 @@ export default class PersonBO{
         this.manager_status = null;
     }
 
-    get name(){
+    getName(){
         return this.name;
     }
 
-    set name(new_name){
+    setName(new_name){
         this.name = new_name;
     }
 
-    get surname(){
+    getSurname(){
         return this.surname;
     }
 
-    set surname(new_surname){
+    setSurname(new_surname){
         this.surname = new_surname;
     }
 
-    get mail_adress(){
+    getMail_adress(){
         return this.mail_adress;
     }
 
-    set mail_adress(new_mailadress){
+    setMail_adress(new_mailadress){
         this.mail_adress = new_mailadress;
     }
 
-    get user_name(){
+    getUser_name(){
         return this.user_name;
     }
 
-    set user_name(new_user_name){
+    setUser_name(new_user_name){
         this.user_name = new_user_name;
     }
 
-    get firebase_id(){
+    getFirebase_id(){
         return this.firebase_id;
     }
 
-    set firebase_id(new_firebase_id){
+    setFirebase_id(new_firebase_id){
         this.firebase_id = new_firebase_id;
     }
 
-    get manager_status(){
+    getManager_status(){
         return this.manager_status;
     }
 
-    set manager_status(new_manager_status){
+    setManager_status(new_manager_status){
         this.manager_status = new_manager_status;
     }
 

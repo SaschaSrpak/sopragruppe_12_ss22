@@ -11,11 +11,11 @@ export default class BO{
         this.last_modified_date = null
     }
 
-    get id(){
+    getId(){
         return this.id;
     }
 
-    set id(new_id){
+    setId(new_id){
         this.id = new_id;   
     }
 }

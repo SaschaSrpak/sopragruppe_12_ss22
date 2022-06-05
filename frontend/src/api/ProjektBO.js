@@ -19,39 +19,39 @@ export default class ProjektBO{
         this.persons_responsible = ([]);
     }
 
-    get name(){
+    getName(){
         return this.name;
     }
 
-    set name(name){
+    setName(name){
         this.name = name;
     }
     
-    get creator(){
+    getCreator(){
         return this.creator;
     }
 
-    set creator(name){
+    setCreator(name){
         this.name = name;
     }
 
-    get client(){
+    getClient(){
         return this.creator;
     }
 
-    set client(name){
+    setClient(name){
         this.client = name;
     }
 
-    get description(){
+    getDescription(){
         return this.description;
     }
 
-    set description(new_description){
+    setDescription(new_description){
         this.description = new_description;
     }
 
-    get set_deadline(){
+    getSet_deadline(){
         return this.set_deadline;
     }
 

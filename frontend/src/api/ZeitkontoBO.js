@@ -13,11 +13,11 @@ export default class ZeitkontoBO{
         this.owner = Person;
     }
 
-    get owner(){
+    getOwner(){
         return this.owner; 
     }
     
-    set owner(new_person){
+    setOwner(new_person){
         this.owner = new_person;
     }
 }
