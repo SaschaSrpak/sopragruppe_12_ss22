@@ -1,5 +1,10 @@
 import { initializeApp, getApps } from "firebase/app";
 
+/** 
+ *@fileOverview 
+ *@author Sascha Srpak, Luca Trautmann
+*/
+
 const firebaseConfig = {
     apiKey: "AIzaSyALX2D5j2MI2OrVBTZ-nLHeYe9QDflT-mk",
     authDomain: "sopra-6237a.firebaseapp.com",
@@ -11,6 +16,7 @@ const firebaseConfig = {
     };
 
 
+// Initialize Firebase
 let firebaseApp
 if(!getApps().length){
     firebaseApp= initializeApp(firebaseConfig);
