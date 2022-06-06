@@ -1,6 +1,6 @@
 import ZeitintervallBO from './Zeitintervall/ZeitintervallBO';
 import BO from '../BO';
-import { valueToPercent } from '@mui/base';
+
 /** 
  *@fileOverview 
  *@author Luca Trautmann, Sascha Srpak
