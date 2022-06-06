@@ -9,41 +9,41 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
  *@author Kim Kausler, Luca Trautmann
 */
 
-class Error extends Component {
-    #standardText = 'Da ist wohl etwas schief geloffen... Sorry!';
+// class Error extends Component {
+//     #standardText = 'Da ist wohl etwas schief geloffen... Sorry!';
 
-    /** Renders the ContextErrorMessage if error object is not null  */
-    render() {
-        const { error, contextErrorMsg, onReload } = this.props;
+//     /** Renders the ContextErrorMessage if error object is not null  */
+//     render() {
+//         const { error, contextErrorMsg, onReload } = this.props;
 
-        return (
-            (error !== null) ?
-                <Alert severity='error'>
-                    <div>
-                        {this.#standardText}
-                    </div>
-                    <AlertTitle>
-                        {contextErrorMsg}
-                    </AlertTitle>
-                    <div>
-                        Error message (for debugging only) is:
-                    </div>
-                    <div>
-                        {error.message}
-                    </div>
-                    {
-                        onReload ?
-                            <div>
-                                <Button variant='contained' color='primary' startIcon={<AutorenewIcon />} onClick={onReload}>
-                                    Reload
-                                </Button>
-                            </div>
-                            : null
-                    }
-                </Alert>
-                : null
-        );
-    }
-}
+//         return (
+//             (error !== null) ?
+//                 <Alert severity='error'>
+//                     <div>
+//                         {this.#standardText}
+//                     </div>
+//                     <AlertTitle>
+//                         {contextErrorMsg}
+//                     </AlertTitle>
+//                     <div>
+//                         Error message (for debugging only) is:
+//                     </div>
+//                     <div>
+//                         {error.message}
+//                     </div>
+//                     {
+//                         onReload ?
+//                             <div>
+//                                 <Button variant='contained' color='primary' startIcon={<AutorenewIcon />} onClick={onReload}>
+//                                     Reload
+//                                 </Button>
+//                             </div>
+//                             : null
+//                     }
+//                 </Alert>
+//                 : null
+//         );
+//     }
+// }
 
-export default Error;
+// export default Error;
