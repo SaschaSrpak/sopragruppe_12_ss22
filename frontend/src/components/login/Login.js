@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
-
 import Box from '@mui/material/Box';
+import { Container } from "@mui/system";
 
-/*
+/**
  *@fileOverview 
  *@author Luca Trautmann
 */
@@ -11,26 +11,25 @@ import Box from '@mui/material/Box';
 
 
 class Login extends Component {
-
+	
 	constructor (props){
 		super(props)
 	}
-
-
+	
 	/*
 	Rendert Login Page
 	*/
 	render() {
 
 		return (
-			<div>
+			<Container>
 				<p> wir sind bei login</p>
-				<Box sx={{ textAlign: 'center', fontSize: 'h3.fontSize', fontWeight: 'bold', marginBottom: '5rem', marginTop: 'rem' }}>Zeitmanagement App</Box>
+				<Typography align='center' variant='h6'>Zeitmanagement App</Typography>
 				<Button variant='contained' color='primary' onClick={this.props.google}>
 					Einloggen mit Google
 				</Button>
 
-			</div>
+			</Container>
 		);
 	}
 }
