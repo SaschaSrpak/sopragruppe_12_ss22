@@ -10,9 +10,12 @@ import { Typography } from '@mui/material';
 
 
 
+
 class Header extends Component {
 
+
     render() {
+        const{classes} = this.props;
         const { currentUser } = this.props;
 
         return (
