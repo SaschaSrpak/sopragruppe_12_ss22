@@ -11,21 +11,19 @@ import { Typography } from '@mui/material';
 
 
 class Header extends Component {
-    
+
     render() {
         const { currentUser } = this.props;
-        
+
         return (
             <Appbar>
-                
+
                 <Typography variant='h3' component='h1' align='center'>
-                {currentUser?<>Jemand ist eingeloggt</>:<>Niemand ist eingeloggt</>}
-                <br></br>Willkommen in der Zeitmanagement APP
-                
-                </Typography>               
-            {
-               
-        }
+                    {currentUser ? <>Jemand ist eingeloggt</> : <>Niemand ist eingeloggt</>}
+                    <br />Willkommen in der Zeitmanagement App
+
+                </Typography>
+
             </Appbar>
         )
     }

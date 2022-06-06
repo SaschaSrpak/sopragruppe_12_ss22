@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import { Card, Typography } from '@mui/material';
 import firebaseConfig from './components/login/firebaseconfig';
@@ -8,7 +8,9 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import Header from './components/layout/Header';
 import { Container } from '@mui/system';
 import Login from './components/login/Login';
-import About from './components/pages/About'
+import About from './components/pages/About';
+import Home from './components/pages/Home';
+import Projektanzeige from './components/pages/Projektanzeige';
 
 
 
@@ -64,18 +66,36 @@ export class App extends Component {
 
       <div>
         <p> Wir sind auf der APP</p>
-        <Router basename={`${process.env.PUBLIC_URL}`}> {/* fügt automatisch die url vor jedem link ein */}>
-          <Header currentUser={currentUser}  />
-          <Routes>
-            <Route path="" element={!currentUser ? <Navigate to="/login" /> : <Navigate to="/about"/>}>
-              <Route path='/about' element={<About setLoading={this.setLoading} />} />              
-            </Route>
-            <Route path='/login' element={<Login setLoading={this.setLoading} google={this.handleSignInButtonClicked}/> } />
-          </Routes>
+        <Router basename={process.env.PUBLIC_URL}>
+          <Container maxWidth='md'>
+            <Header user={currentUser} />
+            {
+              // Is a user signed in?
+              currentUser ?
+                <>
+                  <Navigate from='/' to='home' />
+                  <Route exact path='/home'>
+                    <Home />
+                  </Route>
+                  <Route path='/projekte'>
+                    <Projektanzeige />
+                  </Route>
+                  <Route path='/about' component={About} />
+                </>
+                :
+                // else show the sign in page
+                <>
+                  <Navigate to="login" />
+                  <Login google={this.handleSignInButtonClicked} />
+                </>
+            }
+            <ContextErrorMessage error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+            <ContextErrorMessage error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
+          </Container>
         </Router>
-      </div >
+      </div>
+    );
 
-    )
   };
 }
 
