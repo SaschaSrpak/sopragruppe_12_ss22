@@ -7,6 +7,9 @@ import Error from '../Zwischenelemente/Error';
 */
 
 export class Buchungen extends Component{
+
+    #myPerson = null;
+
     constructor(props){
         super(probs);
 
@@ -16,13 +19,20 @@ export class Buchungen extends Component{
 
     }
 
-get
+getPerson(){
+    return this.#myPerson;
+}
 
     componentDidMount(){
 
     }
 
     render(){
+        return(
+            <div>
+                
+            </div>
+        )
 
     }
 
