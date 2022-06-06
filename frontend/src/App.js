@@ -11,6 +11,7 @@ import Login from './components/login/Login';
 import About from './components/pages/About';
 import Home from './components/pages/Home';
 import Projektanzeige from './components/pages/Projektanzeige';
+import Error from './components/Zwischenelemente/Error';
 
 
 
@@ -89,8 +90,8 @@ export class App extends Component {
                   <Login google={this.handleSignInButtonClicked} />
                 </>
             }
-            <ContextErrorMessage error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
-            <ContextErrorMessage error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
+            <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+            <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
           </Container>
         </Router>
       </div>
