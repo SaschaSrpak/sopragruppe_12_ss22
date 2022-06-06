@@ -3,7 +3,7 @@ import Error from '../Zwischenelemente/Error';
 
 /** 
  *@fileOverview 
- *@author
+ *@author Kim Kausler
 */
 
 export class Buchungen extends Component{
@@ -11,10 +11,12 @@ export class Buchungen extends Component{
         super(probs);
 
         this.state={
-            
-        }
+            buchungen:[],   
+        };
 
     }
+
+get
 
     componentDidMount(){
 
