@@ -6,6 +6,7 @@ import ProjektDeadlineBO from "/Ereignisse/ProjektDeadlineBO";
 
 export default class ProjektDeadlineBO extends ProjektDeadlineBO{
 
+
     constructor() {
         super()
            }

@@ -1,7 +1,7 @@
 import EreignisBO from "/Ereignisse/EreignisBO";
 /** 
- *@fileOverview 
- *@author Luca Trautmann, Kim Kausler
+ *@fileOverview
+*@author Luca Trautmann, Kim Kausler
 */
 
 export default class EreignisBO extends EreignisBO{
@@ -32,5 +32,5 @@ export default class EreignisBO extends EreignisBO{
         // Setzen des Zeitpunkts des Ereignisses
         this.time_of_event = TimeOfEvent;
     }
-    
+
 }
