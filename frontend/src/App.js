@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Navigation, NavigationType } from 'react-router-dom';
 import './App.css';
-import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
 import firebaseConfig from './components/login/firebaseconfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
@@ -132,25 +131,3 @@ console.log(this.state.currentUser)
 }
 
 export default App;
-
-
-/* {
-  // Is a user signed in?
-  currentUser ?
-    <>
-      <Navigate from='/' to='home' />
-      <Route exact path='/home'>
-        <Home />
-      </Route>
-      <Route path='/projekte'>
-        <Projektanzeige />
-      </Route>
-      <Route path='/about' component={About} />
-    </>
-    :
-    // else show the sign in page
-    <>
-
-      <Login google={this.handleSignInButtonClicked} />
-    </>
-} */
