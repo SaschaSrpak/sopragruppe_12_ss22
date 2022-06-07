@@ -16,13 +16,13 @@ class Header extends Component {
 
     render() {
         const{classes} = this.props;
-        const { currentUser } = this.props;
+        const { user } = this.props;
 
         return (
             <Appbar>
 
                 <Typography variant='h3' component='h1' align='center'>
-                    {currentUser ? <>Jemand ist eingeloggt</> : <>Niemand ist eingeloggt</>}
+                    {user ? <>Jemand ist eingeloggt</> : <>Niemand ist eingeloggt</>}
                     <br />Willkommen in der Zeitmanagement App
 
                 </Typography>

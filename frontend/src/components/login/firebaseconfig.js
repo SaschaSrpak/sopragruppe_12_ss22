@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+
 
 /** 
  *@fileOverview 
@@ -15,14 +15,4 @@ const firebaseConfig = {
     appId: "1:805029827580:web:ec2280a5d3074fcd719879"
     };
 
-
-// Initialize Firebase
-let firebaseApp
-if(!getApps().length){
-    firebaseApp= initializeApp(firebaseConfig);
-}
-else{
-    firebaseApp= getApps()[0];
-}
-
-export default firebaseApp;
+export default firebaseConfig;
