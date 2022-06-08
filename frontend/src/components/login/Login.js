@@ -23,8 +23,10 @@ class Login extends Component {
 
 		return (
 			<div>
-				<p> wir sind bei login</p>
-				<Typography align='center' variant='h6'>Zeitmanagement App</Typography>
+				<Typography align='center' variant='h2'>Wilkommen bei der Zeitmanagement App</Typography>
+				<br/>
+				<Typography align='center' variant='h6'>Anscheinend sind Sie noch nicht eingeloggt</Typography>
+				<br/>
 				<Grid container justify='center'>
 					<Button variant='contained' color='primary' onClick={this.props.google}>
 						Einloggen mit Google

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Navigation, NavigationType } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, } from 'react-router-dom';
+import { Container } from '@mui/material';
 import './App.css';
 import firebaseConfig from './components/login/firebaseconfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -11,7 +12,7 @@ import Home from './components/pages/Home';
 import Projektanzeige from './components/pages/Projektanzeige';
 import Buchungen from './components/pages/Buchungen';
 import Error from './components/Zwischenelemente/Error';
-import {initializeApp} from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 
 
 
@@ -29,7 +30,7 @@ export class App extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     onAuthStateChanged(auth, this.handleAuthStateChange)
@@ -41,7 +42,7 @@ export class App extends Component {
     const provider = new GoogleAuthProvider();
 
     //funciton aufstellen onlcick
-    
+
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -49,7 +50,7 @@ export class App extends Component {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        this.setState({ currentUser: user , authLoading: false})
+        this.setState({ currentUser: user, authLoading: false })
         // ...
       }).catch((error) => {
         // Handle Errors here.
@@ -65,7 +66,7 @@ export class App extends Component {
 
   handleAuthStateChange = user => {
     if (user) {
-    
+
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
 
@@ -95,37 +96,34 @@ export class App extends Component {
   render() {
     const { currentUser, authError, appError, loading } = this.state;
 
-    
+
 
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
       )
     } else {
-console.log(this.state.currentUser)
+      console.log(this.state.currentUser)
       return (
         <div>
           <Router>
-            <Header user={currentUser} />
-            <Routes>
-              <Route path='/static/reactclient' element={
-                <Navigate replace to={'/home'} />
-              }></Route>
-              <Route path={'/home'} element={<Home />} />
-              <Route path={'/buchungen'} element={<Buchungen />} />
-              <Route path={'/projektanzeige'} element={<Projektanzeige />} />
-              <Route path={'/about'} element={<About />} />
-
-            </Routes>
-
-            <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
-            <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
+            <Container maxWidth='md'>
+              <Header user={currentUser} />
+              <Routes>
+                <Route path='/static/reactclient' element={
+                  <Navigate replace to={'/home'} />
+                }></Route>
+                <Route path={'/home'} element={<Home />} />
+                <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/projektanzeige'} element={<Projektanzeige />} />
+                <Route path={'/about'} element={<About />} />
+              </Routes>
+              <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+              <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
+            </Container>
           </Router>
         </div >
-
-
       );
-
     };
   }
 }
