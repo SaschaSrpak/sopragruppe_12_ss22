@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button } from "@mui/material";
+import { MenuItem, Paper, TextField, Typography, Button, Divider } from "@mui/material";
 
 /**
- * @fileOverview
+ * @fileOverview 
  * @author Sascha Srpak
  */
 
@@ -20,7 +20,7 @@ const TestProjekte = [
 // Mapping der Testliste funktioniert nicht
 
 
-export class ProjekteAnzeigen extends Component {
+export class Projektwahl extends Component {
 
 
     render () {
@@ -35,6 +35,7 @@ export class ProjekteAnzeigen extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>"Projektwahl"</Typography>
+{/** Projektauswahl -> Mapping aus Datenbank  */}
                 <form>
                     <TextField label="Projektwahl">
                         {TestProjekte.map((projekt) => (
@@ -52,9 +53,21 @@ export class ProjekteAnzeigen extends Component {
                     }}
                     >Auswählen</Typography>
                 </Button>
+{/** Trennlinie aus Material-UI, ähnlich <hr> */}
+                <Divider/>
+                
+{/** Button zum Erstellen eines neuen Projekts */}
+                <Button variant="contained" sx={{
+                    margin: "20px",
+                }}>
+                    <Typography sx={{
+                        fontWeight: "bold",
+                    }}
+                    >Neues Projekt</Typography>
+                </Button>
             </Paper>
         )
     }
 }
 
-export default ProjekteAnzeigen;
+export default Projektwahl;
