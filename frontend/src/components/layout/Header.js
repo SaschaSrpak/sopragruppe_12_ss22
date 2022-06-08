@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Appbar from '@mui/material/AppBar';
 import { Typography } from '@mui/material';
+import ProfileDropDown from '../Dienste/Profildropdown';
 
 /** 
  *@fileOverview 
@@ -13,20 +14,18 @@ import { Typography } from '@mui/material';
 
 class Header extends Component {
 
+    
 
     render() {
-        const{classes} = this.props;
         const { user } = this.props;
 
         return (
             <Appbar>
-
+                <ProfileDropDown user={user} />
                 <Typography variant='h3' component='h1' align='center'>
                     {user ? <>Jemand ist eingeloggt</> : <>Niemand ist eingeloggt</>}
                     <br />Willkommen in der Zeitmanagement App
-
                 </Typography>
-
             </Appbar>
         )
     }
