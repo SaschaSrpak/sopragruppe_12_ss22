@@ -9,7 +9,7 @@ test_administration = SystemAdministration()
 time_string = datetime.strftime(time, "%y-%m-%d %H:%M:%S")
 testdruck = test_administration.create_kommen_event("Test", time)
 print(testdruck)
-
+"""
 test_administration = SystemAdministration()
 persons = test_administration.get_all_persons()
 person = test_administration.get_person_by_key(1)
@@ -22,7 +22,7 @@ endevent = test_administration.get_end_event_by_key(20)
 projektworktime = test_administration.get_project_worktime_by_key(4)
 pause = test_administration.get_pause_by_key(1)
 projektdauer = test_administration.get_project_duration_by_key(3)
-pausebuchung = test_administration.get_pause_transaction_by_key(3)"""
+pausebuchung = test_administration.get_pause_transaction_by_key(3)
 
 #end = dt.datetime(2022, 5, 19, 13, 00, 0)
 """start = dt.datetime(2022, 5, 19, 12, 30, 0)
@@ -86,14 +86,15 @@ print(test_administration.get_work_time_on_project(account, projekt2))"""
 """geht - print(test_administration.get_project_by_creator_key(1))"""
 """geht - test_administration.get_project_by_person_key(1)"""
 """geht - test_administration.add_person_responsible_to_project(projekt, person)"""
-"""error test_administration.change_project_persons_responsible(1, [person])                         error"""
+"""geht - test_administration.change_project_persons_responsible(1, [person])"""
 """geht - test_administration.delete_person_responsible_from_project(projekt, person)"""
 """geht - test_administration.get_project_by_activity_key(1)"""
 """geht -test_administration.add_activity_to_project(projekt, activity)"""
 """geht -test_administration.change_project_activities(1, [activity])"""
 """geht - test_administration.delete_activity_from_project(projekt, activity)"""
 """geht - test_administration.save_project(projekt2)"""
-"""error / duration wird als liste zurückgegeben  - test_administration.delete_project(projekt)                         error"""
+
+test_administration.delete_project(projekt)
 
 
 """Kommen spezifische Methoden"""

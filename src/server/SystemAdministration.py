@@ -8,6 +8,7 @@ from server.business_objects.Ereignisse.Kommen import Kommen
 from server.business_objects.Ereignisse.Gehen import Gehen
 from server.business_objects.Ereignisse.Startereignis import Startereignis
 from server.business_objects.Ereignisse.Endereignis import Endereignis
+from server.business_objects.Ereignisse.ProjektDeadline import ProjektDeadline
 from server.business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
 from server.business_objects.Zeitintervalle.Pause import Pause
 from server.business_objects.Zeitintervalle.Projektlaufzeit import Projektlaufzeit
@@ -18,6 +19,7 @@ from server.business_objects.Buchungen.EndereignisBuchung import EndereignisBuch
 from server.business_objects.Buchungen.PauseBuchung import PauseBuchung
 from server.business_objects.Buchungen.ProjektarbeitBuchung import ProjektarbeitBuchung
 
+
 from server.db.PersonMapper import PersonMapper
 from server.db.AktivitätMapper import AktivitaetMapper
 from server.db.ZeitkontoMapper import ZeitkontoMapper
@@ -26,6 +28,7 @@ from server.db.Ereignisse.KommenMapper import KommenMapper
 from server.db.Ereignisse.GehenMapper import GehenMapper
 from server.db.Ereignisse.StartereignisMapper import StartereignisMapper
 from server.db.Ereignisse.EndereignisMapper import EndereignisMapper
+from server.db.Ereignisse.ProjektDeadlineMapper import ProjektDeadlineMapper
 from server.db.Zeitintervalle.ProjektarbeitMapper import ProjektarbeitMapper
 from server.db.Zeitintervalle.PauseMapper import PauseMapper
 from server.db.Zeitintervalle.ProjektlaufzeitMapper import ProjektlaufzeitMapper
@@ -466,9 +469,16 @@ class SystemAdministration(object):
                     self.delete_person_responsible_from_project(project, person)
                     self.delete_person_responsible_from_project(project, person)
             duration = self.get_project_duration_by_project_key(project.get_id())
-            self.delete_project_duration(duration)
+            deadline = self.get_project_deadline_by_project_key(project.get_id())
 
+            self.delete_project_creator(project, project.get_creator())
             mapper.delete(project)
+            self.delete_project_duration(duration)
+            self.delete_project_duration(deadline)
+
+    def delete_project_creator(self, project, person):
+        with ProjektMapper() as mapper:
+            mapper.delete_creator(project, person)
 
     """
     Kommen spezifische Methoden
@@ -614,6 +624,41 @@ class SystemAdministration(object):
         with EndereignisMapper() as mapper:
             mapper.delete(event)
 
+        """
+        Deadline spezifische Methoden
+        """
+
+    def create_project_deadline(self, name, time):
+        projectdeadline = ProjektDeadline()
+        projectdeadline.set_event_name(name)
+        projectdeadline.set_time_of_event(time)
+        projectdeadline.set_last_modified_date(dt.datetime.now())
+        projectdeadline.set_id(1)
+
+        with KommenMapper() as mapper:
+            mapper.insert(projectdeadline)
+            return projectdeadline.get_id()
+
+    def get_all_project_deadlines(self):
+        with ProjektDeadlineMapper() as mapper:
+            return mapper.find_all()
+
+    def get_project_deadline_by_key(self, event_key):
+        with ProjektDeadlineMapper() as mapper:
+            return mapper.find_by_key(event_key)
+
+    def get_project_deadline_by_project_key(self, project_key):
+        with ProjektDeadlineMapper() as mapper:
+            return mapper.find_by_project_key(project_key)
+
+    def save_project_deadline(self, event):
+        event.set_last_modified_date(dt.datetime.now())
+        with ProjektDeadlineMapper() as mapper:
+            mapper.update(event)
+
+    def delete_project_deadline(self, event):
+        with ProjektDeadlineMapper() as mapper:
+            mapper.delete(event)
     """
     Projektarbeit spezifische Methode
     """

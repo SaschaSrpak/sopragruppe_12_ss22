@@ -106,6 +106,7 @@ class ProjektMapper(Mapper):
         cursor.close()
         return result
 
+
     def insert_creator(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
@@ -228,6 +229,7 @@ class ProjektMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+
 
     def delete_activity(self, project, activity):
         cursor = self._cnx.cursor()
