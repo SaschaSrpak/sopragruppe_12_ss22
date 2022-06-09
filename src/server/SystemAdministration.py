@@ -57,6 +57,7 @@ class SystemAdministration(object):
         person.set_last_modified_date(dt.datetime.now())
         person.set_manager_status(manager_status)
         person.set_id(1)
+        self.create_time_account_for_person(person)
 
         with PersonMapper() as mapper:
             return mapper.insert(person)
@@ -727,7 +728,7 @@ class SystemAdministration(object):
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
         last_gehen_event = gehen_events[-1]
 
-        if last_kommen_event > last_gehen_event:
+        if last_kommen_event.get_time_of_event() > last_gehen_event.get_time_of_event():
             return
 
         else:
@@ -784,7 +785,7 @@ class SystemAdministration(object):
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
         last_gehen_event = gehen_events[-1]
 
-        if last_kommen_event > last_gehen_event:
+        if last_kommen_event.get_time_of_event() > last_gehen_event.get_time_of_event():
             return
 
         else:
