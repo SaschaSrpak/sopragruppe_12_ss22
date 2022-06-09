@@ -121,41 +121,56 @@ class SystemAdministration(object):
         activity = Aktivitaet()
         activity.set_activity_name(name)
         for person in persons_responsible:
-            activity.add_new_responsible(person.get_id(), person)
+            activity.add_new_responsible(person)
         activity.set_man_day_capacity(man_day_capacity)
         activity.set_last_modified_date(dt.datetime.now())
         activity.set_id(1)
 
         with AktivitaetMapper() as mapper:
             mapper.insert(activity)
-            responsible_dict = activity.get_persons_responsible()
-            for person in responsible_dict:
-                mapper.insert_person_responsible(activity, responsible_dict[person])
+            responsibles = activity.get_persons_responsible()
+            for person in responsibles:
+                mapper.insert_person_responsible(activity, person)
             return
 
     def get_all_activities(self):
         """Gibt alle Aktivitäten aus, die im System gespeichert sind."""
 
         with AktivitaetMapper() as mapper:
-            return mapper.find_all()
+            all_activities = mapper.find_all()
+            for activity in all_activities:
+                responsibles = self.get_persons_by_activity_key(activity.get_id())
+                activity.set_persons_responsible(responsibles)
+            return all_activities
 
     def get_activity_by_key(self, activity_key):
         """Gibt die passende Aktivität zur gegebenen ID aus."""
 
         with AktivitaetMapper() as mapper:
-            return mapper.find_by_key(activity_key)
+            activity = mapper.find_by_key(activity_key)
+            responsibles = self.get_persons_by_activity_key(activity.get_id())
+            activity.set_persons_responsible(responsibles)
+            return activity
 
     def get_activity_by_person_key(self, person_key):
         """Alle Aktivitäten, für die der gegebene Nutzer zuständig ist."""
 
         with AktivitaetMapper() as mapper:
-            return mapper.find_by_person_key(person_key)
+            activities = mapper.find_by_person_key(person_key)
+            for activity in activities:
+                responsibles = self.get_persons_by_activity_key(activity.get_id())
+                activity.set_persons_responsible(responsibles)
+            return activities
 
     def get_activity_by_project_key(self, project_key):
         """Gibt das Projekt aus, zu welchem die jeweilige Aktivität gehört."""
 
         with AktivitaetMapper() as mapper:
-            return mapper.find_by_project_key(project_key)
+            activities = mapper.find_by_project_key(project_key)
+            for activity in activities:
+                responsibles = self.get_persons_by_activity_key(activity.get_id())
+                activity.set_persons_responsible(responsibles)
+            return activities
 
     def add_person_responsible_to_activity(self, activity, person):
         with AktivitaetMapper() as mapper:
@@ -295,7 +310,7 @@ class SystemAdministration(object):
     def get_work_time_on_project(self, account, project):
         all_activities_on_project = project.get_activities()
         worktime_on_project = 0
-        for activity in all_activities_on_project.values():
+        for activity in all_activities_on_project:
             worktime_on_project += self.get_worktime_on_activity(account, activity)
 
         return worktime_on_project
@@ -316,7 +331,7 @@ class SystemAdministration(object):
         project.set_project_duration(project_duration_id)
         if not (activities is None):
             for activity in activities:
-                project.add_activity(activity.get_id(), activity)
+                project.add_activity(activity)
 
         if not (persons_responsible is None):
             for person in persons_responsible:
@@ -327,38 +342,62 @@ class SystemAdministration(object):
 
         with ProjektMapper() as mapper:
             mapper.insert(project)
-            activity_dict = project.get_activities()
-            responsible_dict = project.get_person_responsible()
-            for activity in activity_dict:
+            activities = project.get_activities()
+            responsibles= project.get_person_responsible()
+            for activity in activities:
                 mapper.insert_activity(project, activity)
-            for person in responsible_dict:
+            for person in responsibles:
                 mapper.insert_person_responsible(project, person)
             return
 
     def get_all_projects(self):
         with ProjektMapper() as mapper:
-            return mapper.find_all()
+            all_projects = mapper.find_all()
+            for project in all_projects:
+                responsible = self.get_persons_by_project_key(project.get_id())
+                activities = self.get_activity_by_project_key(project.get_id())
+                project.set_person_responsible(responsible)
+                project.set_activities(activities)
+            return all_projects
 
     def get_project_by_key(self, project_key):
         with ProjektMapper() as mapper:
             project = mapper.find_by_key(project_key)
             responsible = self.get_persons_by_project_key(project_key)
-            activities =  self.get_activity_by_project_key(project_key)
+            activities = self.get_activity_by_project_key(project_key)
             project.set_person_responsible(responsible)
             project.set_activities(activities)
-            return
+            return project
 
     def get_project_by_client(self, client):
         with ProjektMapper() as mapper:
-            return mapper.find_by_client(client)
+            projects = mapper.find_by_client(client)
+            for project in projects:
+                responsible = self.get_persons_by_project_key(project.get_id())
+                activities = self.get_activity_by_project_key(project.get_id())
+                project.set_person_responsible(responsible)
+                project.set_activities(activities)
+            return projects
 
     def get_project_by_creator_key(self, creator_key):
         with ProjektMapper() as mapper:
-            return mapper.find_by_creator(creator_key)
+            projects = mapper.find_by_creator(creator_key)
+            for project in projects:
+                responsible = self.get_persons_by_project_key(project.get_id())
+                activities = self.get_activity_by_project_key(project.get_id())
+                project.set_person_responsible(responsible)
+                project.set_activities(activities)
+            return projects
 
     def get_project_by_person_key(self, person_key):
         with ProjektMapper() as mapper:
-            return mapper.find_by_person_key(person_key)
+            projects = mapper.find_by_person_key(person_key)
+            for project in projects:
+                responsible = self.get_persons_by_project_key(project.get_id())
+                activities = self.get_activity_by_project_key(project.get_id())
+                project.set_person_responsible(responsible)
+                project.set_activities(activities)
+            return projects
 
     def add_person_responsible_to_project(self, project, person):
         with ProjektMapper() as mapper:

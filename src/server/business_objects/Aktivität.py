@@ -5,7 +5,7 @@ class Aktivitaet(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self.__activity_name = str
-        self.__persons_responsible = dict()
+        self.__persons_responsible = []
         self.__man_day_capacity = float
 
     def get_activity_name(self):
@@ -30,10 +30,10 @@ class Aktivitaet(bo.BusinessObject):
         """Ändern der Kapazität in Personen-Tagen"""
         self.__man_day_capacity = new_man_day_capacity
 
-    def add_new_responsible(self, key, person):
+    def add_new_responsible(self, person):
         """Neue verantnwortliche Person zu Dict hinzufügen"""
-        self.__persons_responsible.update({key: person})
+        self.__persons_responsible.append(person)
 
-    def delete_responsible(self, key):
+    def delete_responsible(self, person):
         """Bestehende verantwortliche Person anhand des Keys aus Dict entfernen"""
-        self.__persons_responsible.pop(key)
+        self.__persons_responsible.pop(person)

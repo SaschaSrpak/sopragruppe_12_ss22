@@ -192,11 +192,11 @@ PauseBuchung spezifische Methoden
 
 
 
-person = test_administration.get_person_by_key(10001)
+"""person = test_administration.get_person_by_key(10001)
 account = test_administration.get_time_account_by_person_key(10001)
 activity = test_administration.get_activity_by_key(1)
 
 start_time = dt.datetime.now()
 end_time = start_time + dt.timedelta(hours=7)
 
-test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(),start_time, end_time)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(),start_time, end_time)"""

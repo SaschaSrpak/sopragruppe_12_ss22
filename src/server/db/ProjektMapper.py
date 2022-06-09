@@ -96,7 +96,7 @@ class ProjektMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Ersteller " \
-                  "WHERE User_ID='{}'".format(creator_key)
+                  "WHERE User_ID LIKE '{}' ORDER BY User_ID".format(creator_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
         for i in tuples:
@@ -297,15 +297,4 @@ class ProjektMapper(Mapper):
         cursor.close()
 
 
-with ProjektMapper() as mapper:
-    test = mapper.find_by_person_key(10001)
-    for i in test:
-        print(i.get_name())
 
-    testcreator = mapper.find_by_creator(10009)
-    for i in testcreator:
-        print(i.get_name())
-
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_name())

@@ -13,8 +13,8 @@ class Projekt (bo.BusinessObject):
         self._description = ""
         self._set_deadline = int
         self._project_duration = int
-        self._activities = {}
-        self._persons_responsible = {}
+        self._activities = []
+        self._persons_responsible = []
 
     def get_name(self):
         """Auslesen des Projektnamen"""
@@ -71,13 +71,13 @@ class Projekt (bo.BusinessObject):
     def set_activities(self, new_activities):
         self._activities = new_activities
 
-    def add_activity(self, key, activity):
+    def add_activity(self, activity):
         """Hinzufügen einer Aktivität"""
-        self._activities.update({key: activity})
+        self._activities.append(activity)
 
-    def delete_activity(self, key):
+    def delete_activity(self, activity):
         """Entfernen einer Aktivität"""
-        self._activities.pop(key)
+        self._activities.remove(activity)
 
     def get_person_responsible(self):
         """Auslesen der verantwortlichen Person(-en)"""
@@ -88,9 +88,9 @@ class Projekt (bo.BusinessObject):
 
     def add_person_responsible(self, key, person):
         """Hinzufügen einer verantwortlichen Person"""
-        self._persons_responsible.update({key: person})
+        self._persons_responsible.append({key: person})
 
-    def delete_person_responsible(self, key):
+    def delete_person_responsible(self, person):
         """Entfernen einer verantwortlichen Person"""
-        self._persons_responsible.pop(key)
+        self._persons_responsible.remove(person)
 
