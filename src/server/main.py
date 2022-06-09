@@ -164,8 +164,15 @@ print(test_administration.get_work_time_on_project(account, projekt2))"""
 
 """KommenBuchung spezifische Methoden"""
 
-account = test_administration.get_time_account_by_person_key(10001)
-test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 9, 15, 11))
+"""account = test_administration.get_time_account_by_person_key(10001)
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 10, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 13, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 14, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 20, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 11, 9, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 11, 23, 13))"""
+
+
 """geht - test_administration.create_start_event_transaction(1, 1)"""
 """geht - test_administration.book_start_event(account, 1, end)"""
 """geht - print(test_administration.get_all_start_event_transactions())"""

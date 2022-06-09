@@ -458,8 +458,8 @@ class SystemAdministration(object):
             activities_to_delete = self.get_activity_by_project_key(project.get_id())
             if not (activities_to_delete is None):
                 for activity in activities_to_delete:
-                    self.delete_activity(activity)
                     self.delete_activity_from_project(project, activity)
+                    self.delete_activity(activity)
             responsible_list = self.get_persons_by_project_key(project.get_id())
             if not (responsible_list is None):
                 for person in responsible_list:
@@ -767,9 +767,16 @@ class SystemAdministration(object):
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
         last_gehen_event = gehen_events[-1]
 
+        kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        kommen_events = []
+        for transaction in kommen_transactions:
+            kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
+        last_kommen_event = kommen_events[-1]
+
+        last_kommen_time = last_kommen_event.get_time_of_event()
         last_gehen_time = last_gehen_event.get_time_of_event()
 
-        if time < last_gehen_time:
+        if time <= last_gehen_time or time <= last_kommen_time or last_gehen_time <= last_kommen_time:
             return
 
         else:
@@ -820,9 +827,16 @@ class SystemAdministration(object):
             kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
         last_kommen_event = kommen_events[-1]
 
-        last_kommen_time = last_kommen_event.get_time_of_event()
+        gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        gehen_events = []
+        for transaction in gehen_transactions:
+            gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
+        last_gehen_event = gehen_events[-1]
 
-        if time < last_kommen_time:
+        last_kommen_time = last_kommen_event.get_time_of_event()
+        last_gehen_time = last_gehen_event.get_time_of_event()
+
+        if time <= last_kommen_time or time <= last_gehen_time or not last_gehen_time <= last_kommen_time <= time:
             return
 
         else:
