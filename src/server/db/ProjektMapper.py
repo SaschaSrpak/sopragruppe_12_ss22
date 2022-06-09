@@ -70,7 +70,7 @@ class ProjektMapper(Mapper):
 
         cursor.execute(
             "SELECT Project_ID, Name, Client, Description, Deadline_ID, " 
-            "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client={}".format(
+            "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client LIKE '{}' ORDER BY Client".format(
                 client))
         tuples = cursor.fetchall()
 
@@ -157,6 +157,7 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return result
+
 
     def insert_person_responsible(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt

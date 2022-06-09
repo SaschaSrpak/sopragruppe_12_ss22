@@ -341,7 +341,12 @@ class SystemAdministration(object):
 
     def get_project_by_key(self, project_key):
         with ProjektMapper() as mapper:
-            return mapper.find_by_key(project_key)
+            project = mapper.find_by_key(project_key)
+            responsible = self.get_persons_by_project_key(project_key)
+            activities =  self.get_activity_by_project_key(project_key)
+            project.set_person_responsible(responsible)
+            project.set_activities(activities)
+            return
 
     def get_project_by_client(self, client):
         with ProjektMapper() as mapper:
@@ -362,7 +367,7 @@ class SystemAdministration(object):
     def change_project_persons_responsible(self, project_key, persons_responsible):
         """Ändert die zuständigen Personen. Ähnliche funktionsweise wie in der
         Methode 'change_activity_persons_responsible'."""
-        project = self.get_activity_by_key(project_key)
+        project = self.get_project_by_key(project_key)
         project.set_person_responsible(persons_responsible)
         project.set_last_modified_date(dt.datetime.now())
 
