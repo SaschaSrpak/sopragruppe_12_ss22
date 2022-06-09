@@ -80,6 +80,11 @@ class SystemAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_by_project_key(project_key)
 
+    def get_creator_by_project_key(self, project_key):
+
+        with PersonMapper() as mapper:
+            return mapper.find_creator_by_project_key(project_key)
+
     def get_person_by_key(self, person_key):
         """Gibt den passenden Nutzer zur gegebenen ID aus"""
         with PersonMapper() as mapper:
@@ -358,8 +363,10 @@ class SystemAdministration(object):
         with ProjektMapper() as mapper:
             all_projects = mapper.find_all()
             for project in all_projects:
+                creator = self.get_creator_by_project_key(project.get_id())
                 responsible = self.get_persons_by_project_key(project.get_id())
                 activities = self.get_activity_by_project_key(project.get_id())
+                project.set_creator(creator.get_id())
                 project.set_person_responsible(responsible)
                 project.set_activities(activities)
             return all_projects
@@ -367,8 +374,10 @@ class SystemAdministration(object):
     def get_project_by_key(self, project_key):
         with ProjektMapper() as mapper:
             project = mapper.find_by_key(project_key)
+            creator = self.get_creator_by_project_key(project.get_id())
             responsible = self.get_persons_by_project_key(project_key)
             activities = self.get_activity_by_project_key(project_key)
+            project.set_creator(creator.get_id())
             project.set_person_responsible(responsible)
             project.set_activities(activities)
             return project
@@ -377,8 +386,10 @@ class SystemAdministration(object):
         with ProjektMapper() as mapper:
             projects = mapper.find_by_client(client)
             for project in projects:
+                creator = self.get_creator_by_project_key(project.get_id())
                 responsible = self.get_persons_by_project_key(project.get_id())
                 activities = self.get_activity_by_project_key(project.get_id())
+                project.set_creator(creator.get_id())
                 project.set_person_responsible(responsible)
                 project.set_activities(activities)
             return projects
@@ -389,6 +400,7 @@ class SystemAdministration(object):
             for project in projects:
                 responsible = self.get_persons_by_project_key(project.get_id())
                 activities = self.get_activity_by_project_key(project.get_id())
+                project.set_creator(creator_key)
                 project.set_person_responsible(responsible)
                 project.set_activities(activities)
             return projects
@@ -397,8 +409,10 @@ class SystemAdministration(object):
         with ProjektMapper() as mapper:
             projects = mapper.find_by_person_key(person_key)
             for project in projects:
+                creator = self.get_creator_by_project_key(project.get_id())
                 responsible = self.get_persons_by_project_key(project.get_id())
                 activities = self.get_activity_by_project_key(project.get_id())
+                project.set_creator(creator.get_id())
                 project.set_person_responsible(responsible)
                 project.set_activities(activities)
             return projects

@@ -94,6 +94,20 @@ class PersonMapper(Mapper):
         cursor.close()
         return result
 
+    def find_creator_by_project_key(self, project_key):
+        result = None
+        cursor = self._cnx.cursor()
+        command = "SELECT User_ID FROM Projekt_Ersteller " \
+                  "WHERE Project_ID='{}'".format(project_key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        for i in tuples:
+            result = (self.find_by_key(str(i[0])))
+
+        self._cnx.commit()
+        cursor.close()
+        return result
+
     
 
     def insert(self, person):
