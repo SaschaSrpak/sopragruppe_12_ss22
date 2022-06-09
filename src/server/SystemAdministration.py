@@ -296,13 +296,14 @@ class SystemAdministration(object):
 
     def get_worktime_on_activity(self, account, activity):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
-        all_transactions_on_activity = []
+        all_worktime_intervals_on_activity = []
         worktime_on_activity = 0
         for transaction in all_project_worktime_transactions:
             if transaction.get_target_activity() == activity.get_id():
-                all_transactions_on_activity.append(transaction)
+                interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
+                all_worktime_intervals_on_activity.append(interval)
 
-        for worktime in all_transactions_on_activity:
+        for worktime in all_worktime_intervals_on_activity:
             worktime_on_activity += worktime.get_duration()
 
         return worktime_on_activity
@@ -448,7 +449,7 @@ class SystemAdministration(object):
             mapper.delete_activity(project, activity)
 
     def save_project(self, project):
-        project.set_last_modified_date(dt.datetime.now)
+        project.set_last_modified_date(dt.datetime.now())
         with ProjektMapper() as mapper:
             mapper.update(project)
 
@@ -760,19 +761,15 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_kommen_event(self, account, name, time):
-        kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
-        kommen_events = []
-        for transaction in kommen_transactions:
-            kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
-        last_kommen_event = kommen_events[-1]
-
         gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         gehen_events = []
         for transaction in gehen_transactions:
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
         last_gehen_event = gehen_events[-1]
 
-        if last_kommen_event.get_time_of_event() > last_gehen_event.get_time_of_event():
+        last_gehen_time = last_gehen_event.get_time_of_event()
+
+        if time < last_gehen_time:
             return
 
         else:
@@ -823,13 +820,9 @@ class SystemAdministration(object):
             kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
         last_kommen_event = kommen_events[-1]
 
-        gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
-        gehen_events = []
-        for transaction in gehen_transactions:
-            gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
-        last_gehen_event = gehen_events[-1]
+        last_kommen_time = last_kommen_event.get_time_of_event()
 
-        if last_kommen_event.get_time_of_event() > last_gehen_event.get_time_of_event():
+        if time < last_kommen_time:
             return
 
         else:
