@@ -164,14 +164,16 @@ test_administration.delete_project(projekt)
 
 
 """KommenBuchung spezifische Methoden"""
-
-"""account = test_administration.get_time_account_by_person_key(10001)
+"""
+account = test_administration.get_time_account_by_person_key(10001)
 test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 10, 13))
 test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 13, 13))
 test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 14, 13))
 test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 20, 13))
 test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 11, 9, 13))
-test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 11, 23, 13))"""
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 11, 23, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 12, 9, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 12, 10, 13))"""
 
 
 """geht - test_administration.create_start_event_transaction(1, 1)"""
@@ -202,11 +204,24 @@ PauseBuchung spezifische Methoden
 
 
 
-"""person = test_administration.get_person_by_key(10001)
+person = test_administration.get_person_by_key(10001)
 account = test_administration.get_time_account_by_person_key(10001)
 activity = test_administration.get_activity_by_key(1)
 
-start_time = dt.datetime.now()
-end_time = start_time + dt.timedelta(hours=7)
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 9, 45))
 
-test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(),start_time, end_time)"""
+"""start_time = dt.datetime(2022, 6, 10, 10, 0)
+end_time = start_time + dt.timedelta(hours=4)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 14, 00, 23)
+end_time = start_time + dt.timedelta(minutes=15)
+test_administration.book_pause_transaction(account, "Kaffepause", start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 14, 16)
+end_time = start_time + dt.timedelta(hours=3)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 17, 20, 23)
+end_time = start_time + dt.timedelta(minutes=15)
+test_administration.book_pause_transaction(account, "Kaffepause", start_time, end_time)"""
+start_time = dt.datetime(2022, 6, 10, 21, 00)
+end_time = start_time + dt.timedelta(hours=2)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)

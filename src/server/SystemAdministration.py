@@ -822,7 +822,7 @@ class SystemAdministration(object):
         last_gehen_time = last_gehen_event.get_time_of_event()
 
         if time <= last_gehen_time or time <= last_kommen_time or last_gehen_time <= last_kommen_time:
-            return
+            return False
 
         else:
             event = self.create_kommen_event(name, time)
@@ -882,7 +882,7 @@ class SystemAdministration(object):
         last_gehen_time = last_gehen_event.get_time_of_event()
 
         if time <= last_kommen_time or time <= last_gehen_time or not last_gehen_time <= last_kommen_time <= time:
-            return
+            return False
 
         else:
             event = self.create_gehen_event(name, time)
@@ -1121,9 +1121,15 @@ class SystemAdministration(object):
             t = abs(10 - daily_worktime_hours)
             td = dt.timedelta(hours=t)
             end_event_time = end_event_time - td
-            self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit",
+            book_gehen = self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit",
                                   end_event_time)
-            return
+            if book_gehen:
+                start_event = self.book_start_event(account, "Start", start_event_time)
+                end_event = self.book_end_event(account, "Ende", end_event_time)
+                project_worktime = self.create_project_worktime(name, start_event, end_event)
+                account_id = account.get_id()
+                self.create_project_work_transaction(account_id, activity_id, project_worktime)
+            return False
 
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)

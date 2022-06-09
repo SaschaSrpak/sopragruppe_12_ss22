@@ -94,6 +94,8 @@ class PersonMapper(Mapper):
         cursor.close()
         return result
 
+    
+
     def insert(self, person):
 
         cursor = self._cnx.cursor(buffered=True)
