@@ -23,6 +23,13 @@ export default class AktivitätBO{
 
 /* Wie persons_responsible Dict Get und Setten? */
 
+    getPersons_Responsible(){
+        return this.persons_responsible;
+    }
+
+    setPersons_Responsible(){
+        this.persons_responsible;
+    }
 
     setMan_day_capacity(man_day_capacity){
         this.man_day_capacity = man_day_capacity;
