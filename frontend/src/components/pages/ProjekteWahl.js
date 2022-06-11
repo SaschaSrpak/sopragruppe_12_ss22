@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { MenuItem, Paper, TextField, Typography, Button, Divider } from "@mui/material";
 
 /**
- * @fileOverview 
+ * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
  * @author Sascha Srpak
  */
 

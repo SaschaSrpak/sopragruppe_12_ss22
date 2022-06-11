@@ -9,7 +9,7 @@ import Header from './components/layout/Header';
 import Login from './components/login/Login';
 import About from './components/pages/About';
 import Home from './components/pages/Home';
-import Projektanzeige from './components/pages/Projektanzeige';
+import Projektanzeige from './components/pages/ProjektAnzeige';
 import Buchungen from './components/pages/Buchungen';
 import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app'
