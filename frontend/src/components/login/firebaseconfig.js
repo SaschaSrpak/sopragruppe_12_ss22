@@ -1,4 +1,9 @@
-import { initializeApp, getApps } from "firebase/app";
+
+
+/** 
+ *@fileOverview 
+ *@author Sascha Srpak, Luca Trautmann
+*/
 
 const firebaseConfig = {
     apiKey: "AIzaSyALX2D5j2MI2OrVBTZ-nLHeYe9QDflT-mk",
@@ -10,13 +15,4 @@ const firebaseConfig = {
     appId: "1:805029827580:web:ec2280a5d3074fcd719879"
     };
 
-
-let firebaseApp
-if(!getApps().length){
-    firebaseApp= initializeApp(firebaseConfig);
-}
-else{
-    firebaseApp= getApps()[0];
-}
-
-export default firebaseApp;
+export default firebaseConfig;

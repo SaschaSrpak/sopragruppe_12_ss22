@@ -208,6 +208,10 @@ class SystemAdministration(object):
         with ZeitkontoMapper() as mapper:
             return mapper.find_by_key(account_key)
 
+    def get_time_account_by_person_key(self, person_key):
+        with ZeitkontoMapper() as mapper:
+            return mapper.find_by_person_key(person_key)
+
     def save_account(self, account):
         """Speichert eine Zeitkonto-Instanz"""
         account.set_last_modified_date(dt.datetime.now())
@@ -845,7 +849,7 @@ class SystemAdministration(object):
         all_transactions = self.get_pause_transaction_by_account_key(account_id)
         for x in all_transactions:
             interval = self.get_pause_by_key(x.get_time_interval_id())
-            start_event = self.get_start_event_by_key(interval.get_start_event())
+            start_event = self.get_start_event_by_key(interval.get_start())
             start_event_time = start_event.get_time_of_event()
             time_string = dt.datetime.strftime(start_event_time, "%y-%m-%d %H:%M:%S")
             if date_string in time_string:
@@ -874,7 +878,7 @@ class SystemAdministration(object):
         interval.set_last_modified_date(dt.datetime.now())
         interval.set_id(1)
 
-        with PauseBuchungMapper() as mapper:
+        with ProjektarbeitBuchungMapper() as mapper:
             return mapper.insert(interval)
 
     def book_project_work_transaction(self, account, name, activity_id, start_event_time, end_event_time):
@@ -933,6 +937,7 @@ class SystemAdministration(object):
             td = dt.timedelta(hours=t)
             end_event_time = end_event_time - td
             self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit", end_event_time)
+            return
 
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)
@@ -959,7 +964,7 @@ class SystemAdministration(object):
         all_transactions = self.get_project_work_transaction_by_account_key(account_id)
         for transaction in all_transactions:
             interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
-            start_event = self.get_start_event_by_key(interval.get_start_event())
+            start_event = self.get_start_event_by_key(interval.get_start())
             start_event_time = start_event.get_time_of_event()
             time_string = dt.datetime.strftime(start_event_time, "%y-%m-%d %H:%M:%S")
             if date_string in time_string:

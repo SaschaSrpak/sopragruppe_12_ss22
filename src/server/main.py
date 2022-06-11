@@ -5,7 +5,7 @@ from server.SystemAdministration import SystemAdministration
 
 
 test_administration = SystemAdministration()
-time = dt.datetime.now()
+"""time = dt.datetime.now()
 time_string = datetime.strftime(time, "%y-%m-%d %H:%M:%S")
 testdruck = test_administration.create_kommen_event("Test", time)
 print(testdruck)
@@ -22,9 +22,9 @@ endevent = test_administration.get_end_event_by_key(20)
 projektworktime = test_administration.get_project_worktime_by_key(4)
 pause = test_administration.get_pause_by_key(1)
 projektdauer = test_administration.get_project_duration_by_key(3)
-pausebuchung = test_administration.get_pause_transaction_by_key(3)
+pausebuchung = test_administration.get_pause_transaction_by_key(3)"""
 
-end = dt.datetime(2022, 5, 19, 13, 00, 0)
+#end = dt.datetime(2022, 5, 19, 13, 00, 0)
 """start = dt.datetime(2022, 5, 19, 12, 30, 0)
 start_string = datetime.strftime(start, "%y-%m-%d %H:%M:%S")
 
@@ -78,7 +78,7 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 
 """geht - print(test_administration.get_all_projects())"""
 """geht - test_administration.get_project_by_key(1)"""
-"""error / Client1 wird nicht als String in sql erkannt - test_administration.get_project_by_client("Client1")                         error"""
+"""error / Client1 wird nicht als String in sql erkannt - test_administration.get_project_by_client("Client3")                         error"""
 """geht - print(test_administration.get_project_by_creator_key(1))"""
 """geht - test_administration.get_project_by_person_key(1)"""
 """geht - test_administration.add_person_responsible_to_project(projekt, person)"""
@@ -189,3 +189,14 @@ PauseBuchung spezifische Methoden
 """geht - test_administration.get_pause_transaction_by_account_key(1)"""
 """geht - test_administration.save_pause_transaction(pausebuchung)"""
 """geht - test_administration.delete_pause_transaction(pausebuchung)"""
+
+
+
+person = test_administration.get_person_by_key(10001)
+account = test_administration.get_time_account_by_person_key(10001)
+activity = test_administration.get_activity_by_key(1)
+
+start_time = dt.datetime.now()
+end_time = start_time + dt.timedelta(hours=7)
+
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(),start_time, end_time)
