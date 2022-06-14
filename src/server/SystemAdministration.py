@@ -85,6 +85,11 @@ class SystemAdministration(object):
         with PersonMapper() as mapper:
             return mapper.find_creator_by_project_key(project_key)
 
+    def get_person_by_firebase_id(self, firebase_id):
+        """Gibt den passenden Nutzer zur gegebenen Google ID aus"""
+        with PersonMapper() as mapper:
+            return mapper.find_person_by_firebase_id(firebase_id)
+
     def get_person_by_key(self, person_key):
         """Gibt den passenden Nutzer zur gegebenen ID aus"""
         with PersonMapper() as mapper:

@@ -66,6 +66,37 @@ class PersonMapper(Mapper):
 
         return result
 
+    def find_by_firebase_id(self, firebase_id):
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT User_ID, Name, Nachname, EMail, Username, Firebase_ID, " \
+                  "Last_modified_date, Manager_Status FROM Person WHERE Firebase_ID='{}'".format(firebase_id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, name, surname,
+             mail_address, user_name, firebase_id,
+             last_modified_date, manager_status) = tuples[0]
+            person = Person()
+            person.set_id(id)
+            person.set_name(name)
+            person.set_surname(surname)
+            person.set_mail_address(mail_address)
+            person.set_user_name(user_name)
+            person.set_firebase_id(firebase_id)
+            person.set_last_modified_date(last_modified_date)
+            person.set_manager_status(manager_status)
+            result = person
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_by_activity_key(self, activity_key):
         result = []
         cursor = self._cnx.cursor()
