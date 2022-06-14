@@ -1,10 +1,10 @@
-import React,{component} from 'react';
+/*import React,{component} from 'react';
 import Error from '../Zwischenelemente/Error';
 
 /** 
  *@fileOverview 
  *@author Kim Kausler
-*/
+
 
 export class Buchungen extends Component{
 
@@ -39,3 +39,4 @@ getPerson(){
 }
 
 export default Buchungen;
+*/
