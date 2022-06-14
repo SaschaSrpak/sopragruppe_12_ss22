@@ -131,14 +131,14 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def delete_creator(self, project, person):
+    def delete_creator(self, project, person_key):
         """Löschen einer verantwortlichen Person des Projekts aus der Datenbank.
 
                 :param person das aus der DB zu löschende "Objekt"
                 """
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}', User_ID='{}'".format(project.get_id(),
-                                                                                             person.get_id())
+        command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}'AND User_ID='{}'".format(project.get_id(),
+                                                                                             person_key)
         cursor.execute(command)
 
         self._cnx.commit()

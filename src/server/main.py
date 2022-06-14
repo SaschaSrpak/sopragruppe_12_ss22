@@ -14,7 +14,7 @@ test_administration = SystemAdministration()
 persons = test_administration.get_all_persons()
 person = test_administration.get_person_by_key(1)
 projekt = test_administration.get_project_by_key(1)
-activity = test_administration.get_activity_by_key(3)
+"""activity = test_administration.get_activity_by_key(3)
 account = test_administration.get_time_account_by_key(1)
 event = test_administration.get_kommen_event_by_key(12)
 startevent = test_administration.get_start_event_by_key(10)
@@ -22,7 +22,7 @@ endevent = test_administration.get_end_event_by_key(20)
 projektworktime = test_administration.get_project_worktime_by_key(4)
 pause = test_administration.get_pause_by_key(1)
 projektdauer = test_administration.get_project_duration_by_key(3)
-pausebuchung = test_administration.get_pause_transaction_by_key(3)
+pausebuchung = test_administration.get_pause_transaction_by_key(3)"""
 
 #end = dt.datetime(2022, 5, 19, 13, 00, 0)
 """start = dt.datetime(2022, 5, 19, 12, 30, 0)
@@ -202,13 +202,13 @@ PauseBuchung spezifische Methoden
 """geht - test_administration.save_pause_transaction(pausebuchung)"""
 """geht - test_administration.delete_pause_transaction(pausebuchung)"""
 
-
-
+"""
 person = test_administration.get_person_by_key(10001)
 account = test_administration.get_time_account_by_person_key(10001)
 activity = test_administration.get_activity_by_key(1)
 
 test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 9, 45))
+"""
 
 """start_time = dt.datetime(2022, 6, 10, 10, 0)
 end_time = start_time + dt.timedelta(hours=4)
@@ -222,6 +222,8 @@ test_administration.book_project_work_transaction(account, "Test Buchung", activ
 start_time = dt.datetime(2022, 6, 10, 17, 20, 23)
 end_time = start_time + dt.timedelta(minutes=15)
 test_administration.book_pause_transaction(account, "Kaffepause", start_time, end_time)"""
+"""
 start_time = dt.datetime(2022, 6, 10, 21, 00)
 end_time = start_time + dt.timedelta(hours=2)
 test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+"""

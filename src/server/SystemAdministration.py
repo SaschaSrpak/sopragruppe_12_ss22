@@ -475,17 +475,19 @@ class SystemAdministration(object):
             activities_to_delete = self.get_activity_by_project_key(project.get_id())
             if not (activities_to_delete is None):
                 for activity in activities_to_delete:
+                    transaction_to_delete = self.get_project_work_transaction_by_activity_key(activity.get_id())
+                    for transaction in transaction_to_delete:
+                        self.delete_project_work_transaction(transaction)
                     self.delete_activity_from_project(project, activity)
                     self.delete_activity(activity)
             responsible_list = self.get_persons_by_project_key(project.get_id())
             if not (responsible_list is None):
                 for person in responsible_list:
                     self.delete_person_responsible_from_project(project, person)
-                    self.delete_person_responsible_from_project(project, person)
             duration = self.get_project_duration_by_project_key(project.get_id())
             deadline = self.get_project_deadline_by_project_key(project.get_id())
-
-            self.delete_project_creator(project, project.get_creator())
+            projectcreator = project.get_creator()
+            self.delete_project_creator(project, projectcreator)
             mapper.delete(project)
             self.delete_project_duration(duration)
             self.delete_project_duration(deadline)
