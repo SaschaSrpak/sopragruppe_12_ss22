@@ -1,8 +1,9 @@
 import ZeitintervallBO from './Zeitintervall/ZeitintervallBO';
 import BO from '../BO';
+
 /** 
  *@fileOverview 
- *@author Luca Trautmann
+ *@author Luca Trautmann, Sascha Srpak
 */
 
 export default class ZeitintervallBO extends BO {
@@ -51,4 +52,27 @@ export default class ZeitintervallBO extends BO {
         this.duration = duration;
     }
     
+
+    /**
+     * 
+     * @param {*} zeit
+     * @returns an array of ZeitintervallBO from a given JSON structure 
+     */
+
+    static fromJSON(zeit) {
+        let result = [];
+        if (Array.isArray(zeit)) {
+            zeit.forEach((z) => {
+                Object.setPrototypeOF(z, ZeitintervallBO.prototype);
+                result.push(z);
+            })
+        }   else {
+            // es handelt sich um ein einzelnes Objekt
+            let z = zeit;
+            Object.setPrototypeOf(z, ZeitintervallBO.prototype);
+        return result;
+    }
+
 }
+
+export default ZeitintervallBO;
