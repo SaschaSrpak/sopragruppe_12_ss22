@@ -7,6 +7,23 @@ from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
 from server.business_objects.Ereignisse.Kommen import Kommen
 from server.business_objects.Ereignisse.Gehen import Gehen
+from server.business_objects.Zeitkonto import Zeitkonto
+from server.business_objects.Projekt import Projekt
+from server.business_objects.Ereignisse.Kommen import Kommen
+from server.business_objects.Ereignisse.Gehen import Gehen
+from server.business_objects.Ereignisse.Startereignis import Startereignis
+from server.business_objects.Ereignisse.Endereignis import Endereignis
+from server.business_objects.Ereignisse.ProjektDeadline import ProjektDeadline
+from server.business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
+from server.business_objects.Zeitintervalle.Pause import Pause
+from server.business_objects.Zeitintervalle.Projektlaufzeit import Projektlaufzeit
+from server.business_objects.Buchungen.KommenBuchung import KommenBuchung
+from server.business_objects.Buchungen.GehenBuchung import GehenBuchung
+from server.business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
+from server.business_objects.Buchungen.EndereignisBuchung import EndereignisBuchung
+from server.business_objects.Buchungen.PauseBuchung import PauseBuchung
+from server.business_objects.Buchungen.ProjektarbeitBuchung import ProjektarbeitBuchung
+
 
 from SecurityDecorator import secured
 
@@ -111,7 +128,7 @@ end_event_transaction = api.model('EndereignisBuchung', event_transaction)
 
 
 @timesystem.route('/persons')
-@timesystem.responnse(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllPersonListOperations(Resource):
     @timesystem.marshal_list_with(person)
     @secured
@@ -138,7 +155,7 @@ class AllPersonListOperations(Resource):
 
 
 @timesystem.route('/persons/<int:id>')
-@timesystem.responnse(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Personen Objekts')
 class PersonOperations(Resource):
     @timesystem.marshal_with(person)
@@ -187,8 +204,105 @@ class PersonRelatedActivityOperations(Resource):
             return 'Person not found', 500
 
 
+@timesystem.route('/projects')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AllProjectListOperations(Resource):
+    @timesystem.marshal_list_with(project)
+    @secured
+    def get(self):
+        s_adm = SystemAdministration()
+        all_projects = s_adm.get_all_projects()
+        return all_projects
+
+    @timesystem.marshal_with(project, code=200)
+    @timesystem.expect(project)
+    @secured
+    def post(self):
+        s_adm = SystemAdministration()
+
+        proposal = Projekt.from_dict(api.payload)
+
+        if proposal is not None:
+            pr = s_adm.create_project(proposal.get_name(), proposal.get_creator(),
+                                      proposal.get_client(), proposal.get_description(),
+                                      proposal.get_deadline(), proposal.get_project_duration(),
+                                      proposal.get_activities(), proposal.get_person_responsible())
+            return pr, 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/projects/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Projekt Objekts')
+class PersonOperations(Resource):
+    @timesystem.marshal_with(project)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        pr = s_adm.get_project_by_key(id)
+        return pr
+
+    @secured
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        pr = s_adm.get_project_by_key(id)
+        s_adm.delete_person(pr)
+        return '', 200
+
+    @timesystem.marshal_with(project)
+    @timesystem.expect(project, validate=True)
+    @secured
+    def put(self, id):
+        s_adm = SystemAdministration()
+        pr = Projekt.from_dict(api.payload)
+
+        if pr is not None:
+            pr.set_id(id)
+            s_adm.save_project(pr)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/projects/<int:id>/persons')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt')
+@timesystem.param('id', 'ID des Projekt Objekts')
+class PersonRelatedProjectOperations(Resource):
+    @timesystem.marshal_with(person)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+
+        if project is not None:
+            person_list = s_adm.get_persons_by_project_key(project.get_id())
+            return person_list
+
+        else:
+            return 'Person not found', 500
+
+
+@timesystem.route('projects/≤int:id>/activity')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Projekt-Objekts')
+class PersonRelatedActivityOperations(Resource):
+    @timesystem.marshal_with(activity)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+
+        if project is not None:
+            activity_list = s_adm.get_activity_by_project_key(project.get_id())
+            return activity_list
+
+        else:
+            return 'Person not found', 500
+
+
+
 @timesystem.route('/activities')
-@timesystem.responnse(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllActivityListOperations(Resource):
     @timesystem.marshal_list_with(activity)
     @secured
@@ -212,26 +326,11 @@ class AllActivityListOperations(Resource):
         else:
             return '', 500
 
-@timesystem.route('activities/<int:id>/person')
-@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
-class ActivityRelatedPersonOperations(Resource):
-    @timesystem.marshal_with(person)
-    @secured
-    def get(self, id):
-        s_adm = SystemAdministration()
-        activity = s_adm.get_activity_by_key(id)
-
-        if activity is not None:
-            person_list = s_adm.get_persons_by_activity_key(activity.get_id())
-            return person_list
-        else:
-            return 'Activity not found', 500
 
 @timesystem.route('/activities/<int:id>')
-@timesystem.responnse(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
-class PersonOperations(Resource):
+class ActivityOperations(Resource):
     @timesystem.marshal_with(activity)
     def get(self, id):
         s_adm = SystemAdministration()
@@ -259,11 +358,29 @@ class PersonOperations(Resource):
         else:
             return '', 500
 
+
+@timesystem.route('activities/<int:id>/person')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
+class ActivityRelatedPersonOperations(Resource):
+    @timesystem.marshal_with(person)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        activity = s_adm.get_activity_by_key(id)
+
+        if activity is not None:
+            person_list = s_adm.get_persons_by_activity_key(activity.get_id())
+            return person_list
+        else:
+            return 'Activity not found', 500
+
+
 @timesystem.route('activities/<int:id>/person/<int:person_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 @timesystem.param('person_id', 'Die ID des Personen-Objekts')
-class ActivityRelatedSpecificPersonOperations:
+class ActivityRelatedSpecificPersonOperations(Resource):
     @secured
     def delete(self, id, person_id):
         s_adm = SystemAdministration()
@@ -293,6 +410,7 @@ class ActivityRelatedPersonOperations(Resource):
         s_adm.add_person_responsible_to_activity(activity, person)
         return '', 200
 
+
 @timesystem.route('kommen/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenOperations(Resource):
@@ -309,6 +427,65 @@ class KommenOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/accounts')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AllAccountListOperations(Resource):
+    @timesystem.marshal_list_with(account)
+    @secured
+    def get(self):
+        s_adm = SystemAdministration()
+        all_accounts = s_adm.get_all_time_accounts()
+        return all_accounts
+
+
+@timesystem.route('/accounts/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class AccountOperations(Resource):
+    @timesystem.marshal_with(account)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        ac = s_adm.get_time_account_by_key(id)
+        return ac
+
+    @secured
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        ac = s_adm.get_time_account_by_key(id)
+        s_adm.delete_account(ac)
+        return '', 200
+
+    @timesystem.marshal_with(account)
+    @timesystem.expect(account, validate=True)
+    @secured
+    def put(self, id):
+        s_adm = SystemAdministration()
+        ac = Zeitkonto.from_dict(api.payload)
+
+        if ac is not None:
+            ac.set_id(id)
+            s_adm.save_activity(ac)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('accounts/<int:id>/activities/≤int:activite_id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
+class ActivityWorktimeRelatedAccountOperations(Resource):
+    @timesystem.marshal_with(project_worktime_transaction)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        activity = s_adm.get_activity_by_key(id)
+>>>>>>> Stashed changes
+
+        if activity is not None:
+            person_list = s_adm.get_persons_by_activity_key(activity.get_id())
+            return person_list
+        else:
+            return 'Activity not found', 500
 
 @timesystem.route('gehen/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
