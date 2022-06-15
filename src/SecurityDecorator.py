@@ -28,20 +28,20 @@ def secured(function):
                         user.set_email(email)
                         s_adm.save_person(user)
 
-                    else:
-                        return '', 401  # UNAUTHORIZED!
+                    """else:
+                        return '', 401  # UNAUTHORIZED!"""
 
                     objects = function(*args, **kwargs)
                     return objects
 
-                else:
-                    return '', 401  # UNAUTHORIZED!
+                """else:
+                    return '', 401  # UNAUTHORIZED!"""
 
             except ValueError as exception:
                 error_message = str(exception)
 
-                return exception, 401  # UNAUTHORIZED!
+                """return exception, 401  # UNAUTHORIZED!"""
 
-        return '', 401  # UNAUTHORIZED!
+        """return '', 401  # UNAUTHORIZED!"""
 
     return wrapper

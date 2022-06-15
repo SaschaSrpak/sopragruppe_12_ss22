@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
@@ -29,7 +29,7 @@ from SecurityDecorator import secured
 
 app = Flask(__name__)
 
-CORS(app, resources=r'/zeiterfassung/')
+CORS(app, resources=r'/zeiterfassung/*')
 
 api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')
@@ -39,7 +39,7 @@ timesystem = api.namespace('timesystem', description='Funktionen des Projektzeit
 
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='__id', description='Die ID eines Business Object'),
-    'last_modified_date': fields.DateTime(attribute = "__last_modified_date", description="Zeitpunkt der letzten Änderung")
+    'last_modified_date': fields.DateTime(attribute="__last_modified_date", description="Zeitpunkt der letzten Änderung", dt_format='rfc822')
 })
 
 person = api.inherit('Person', bo, {
@@ -131,10 +131,10 @@ end_event_transaction = api.inherit('EndereignisBuchung', event_transaction)
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllPersonListOperations(Resource):
     @timesystem.marshal_list_with(person)
-
     def get(self):
         s_adm = SystemAdministration()
         all_persons = s_adm.get_all_persons()
+
         return all_persons
 
     @timesystem.marshal_with(person, code=200)
@@ -144,11 +144,13 @@ class AllPersonListOperations(Resource):
         s_adm = SystemAdministration()
 
         proposal = Person.from_dict(api.payload)
+        print(proposal.get_name)
 
         if proposal is not None:
             p = s_adm.create_person(proposal.get_name(), proposal.get_surname(),
                                     proposal.get_mail_address(), proposal.get_user_name(),
                                     person.get_firebase_id(), person.get_manager_status())
+            print(proposal.get_name)
             return p, 200
         else:
             return '', 500
