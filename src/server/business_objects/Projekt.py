@@ -94,3 +94,18 @@ class Projekt (bo.BusinessObject):
         """Entfernen einer verantwortlichen Person"""
         self._persons_responsible.remove(person)
 
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python Dictionaries in ein Projekt()-Objekt."""
+        obj = Projekt()
+        obj.set_id(dictionary['id'])
+        obj.set_name(dictionary['name'])
+        obj.set_creator(dictionary['creator'])
+        obj.set_client(dictionary['client'])
+        obj.set_description(dictionary['description'])
+        obj.set_deadline(dictionary['set_deadline'])
+        obj.set_project_duration(dictionary['project_duration'])
+        obj.set_last_modified_date(dictionary['last_modified_date'])
+        return obj
+
+

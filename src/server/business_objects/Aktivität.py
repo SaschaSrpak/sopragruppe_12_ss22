@@ -37,3 +37,14 @@ class Aktivitaet(bo.BusinessObject):
     def delete_responsible(self, person):
         """Bestehende verantwortliche Person anhand des Keys aus Dict entfernen"""
         self.__persons_responsible.pop(person)
+
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python Dictionaries in ein Aktivitaet()-Objekt."""
+        obj = Aktivitaet()
+        obj.set_id(dictionary['id'])
+        obj.set_activity_name(dictionary['activity_name'])
+        obj.set_man_day_capacity(dictionary['man_day_capacity'])
+        obj.set_last_modified_date(dictionary['last_modified_date'])
+        return obj
+

@@ -209,7 +209,7 @@ class SystemAdministration(object):
         with AktivitaetMapper() as mapper:
             mapper.delete_person_responsible(activity, person)
 
-    def update_activity(self, activity):
+    def save_activity(self, activity):
         """Die gegebene Aktivität speichern"""
         activity.set_last_modified_date(dt.datetime.now())
         with AktivitaetMapper() as mapper:

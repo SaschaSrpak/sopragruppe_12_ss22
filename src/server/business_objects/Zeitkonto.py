@@ -1,7 +1,8 @@
 from server.business_objects import BusinessObject as bo
 from server.business_objects import Person
 
-class Zeitkonto (bo.BusinessObject):
+
+class Zeitkonto(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()
@@ -15,3 +16,11 @@ class Zeitkonto (bo.BusinessObject):
         """Setzen des Owners des Zeitkontos."""
         self._owner = new_owner
 
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python Dictionaries in ein Zeitkonto()-Objekt."""
+        obj = Zeitkonto()
+        obj.set_id(dictionary['id'])
+        obj.set_owner(dictionary['owner'])
+        obj.set_last_modified_date(dictionary['last_modified_date'])
+        return obj

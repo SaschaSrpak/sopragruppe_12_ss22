@@ -10,7 +10,7 @@ class Person(bo.BusinessObject):
         self.__mail_address = str
         self.__user_name = str
         self.__firebase_id = None
-        self.__manager_status = False
+        self.__manager_status = int
 
     def get_name(self):
         """Anzeigen des Name"""
@@ -61,7 +61,18 @@ class Person(bo.BusinessObject):
         self.__manager_status = boolean
 
 
-
-
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python Dictionaries in ein Person()-Objekt."""
+        obj = Person()
+        obj.set_id(dictionary['id'])
+        obj.set_name(dictionary['name'])
+        obj.set_surname(dictionary['surname'])
+        obj.set_mail_address(dictionary['mail_address'])
+        obj.set_user_name(dictionary['user_name'])
+        obj.set_firebase_id(dictionary['google_user_id'])
+        obj.set_manager_status(dictionary['manager_status'])
+        obj.set_last_modified_date(dictionary['last_modified_date'])
+        return obj
 
 
