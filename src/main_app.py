@@ -31,10 +31,10 @@ app = Flask(__name__)
 
 CORS(app, resources=r'/zeiterfassung/')
 
-api = Api(app, version='0.1', title='Zeiterfassung API',
+api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')
 
-timesystem = api.namespaces('timesystem', description = 'Funktionen des Projektzeiterfassungssystem')
+timesystem = api.namespace('timesystem', description='Funktionen des Projektzeiterfassungssystem')
 
 
 bo = api.model('BusinessObject', {
@@ -186,7 +186,7 @@ class PersonOperations(Resource):
             return '', 500
 
 
-@timesystem.route('persons/≤int:id>/activity')
+@timesystem.route('/persons/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Personen-Objekts')
 class PersonRelatedActivityOperations(Resource):
@@ -282,7 +282,7 @@ class PersonRelatedProjectOperations(Resource):
             return 'Person not found', 500
 
 
-@timesystem.route('projects/≤int:id>/activity')
+@timesystem.route('/projects/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Projekt-Objekts')
 class ProjectRelatedActivityOperations(Resource):
@@ -453,12 +453,28 @@ class AccountOperations(Resource):
         else:
             return '', 500
 
-
-@timesystem.route('accounts/<int:id>/activities/≤int:activite_id>')
+@timesystem.route('/accounts/<int:id>/activities/<int:activite_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 @timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
 class ActivityWorktimeRelatedAccountOperations(Resource):
+    @secured
+    def get(self, id, activity_id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        activity = s_adm.get_activity_by_key(activity_id)
+
+        if activity is not None and account is not None:
+            worktime_on_activity = s_adm.get_worktime_on_activity(account, activity)
+            return worktime_on_activity
+        else:
+            return 'Activity not found', 500
+
+@timesystem.route('/accounts/<int:id>/activities/<int:activite_id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
+class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
     @secured
     def get(self, id, activity_id):
@@ -467,8 +483,8 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
         activity = s_adm.get_activity_by_key(activity_id)
 
         if activity is not None and account is not None:
-            transaction = s_adm.get_persons_by_activity_key(activity.get_id())
-            return person_list
+            transactions = s_adm.get_worktime_transactions_on_activity(account, activity)
+            return transactions
         else:
             return 'Activity not found', 500
 
@@ -477,7 +493,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
 
 
 
-@timesystem.route('kommen/')
+@timesystem.route('/kommen/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
@@ -493,7 +509,7 @@ class KommenOperations(Resource):
         else:
             return '', 500
 
-@timesystem.route('gehen/')
+@timesystem.route('/gehen/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenOperations(Resource):
     @timesystem.marshal_with(gehen)
@@ -508,3 +524,6 @@ class GehenOperations(Resource):
             return a, 200
         else:
             return '', 500
+
+
+app.run(debug=True)

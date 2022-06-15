@@ -311,13 +311,9 @@ class SystemAdministration(object):
         all_worktime_transactions_on_activity = []
         for transaction in all_project_worktime_transactions:
             if transaction.get_target_activity() == activity.get_id():
-                interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
-                all_worktime_intervals_on_activity.append(interval)
+                all_worktime_transactions_on_activity.append(transaction)
 
-        for worktime in all_worktime_intervals_on_activity:
-            worktime_on_activity += worktime.get_duration()
-
-        return worktime_on_activity
+        return all_worktime_transactions_on_activity
 
     def get_worktime_on_activity(self, account, activity):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
