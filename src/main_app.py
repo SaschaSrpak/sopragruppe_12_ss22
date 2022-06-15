@@ -42,7 +42,7 @@ bo = api.model('BusinessObject', {
     'last_modified_date': fields.DateTime(attribute = "__last_modified_date", description="Zeitpunkt der letzten Änderung")
 })
 
-person = api.model('Person', bo, {
+person = api.inherit('Person', bo, {
     'name': fields.String(attribute='__name', description='Vorname der Person'),
     'surname': fields.String(attribute='__surname', description='Nachname der Person'),
     'mail_address': fields.String(attribute='__mail_address', description='Mail-Adresse der Person'),
@@ -52,11 +52,11 @@ person = api.model('Person', bo, {
                                                                                'Projektleiter ist'),
 })
 
-account = api.model('Account', bo, {
+account = api.inherit('Account', bo, {
     'owner': fields.Integer(attribute='_owner', description = 'ID der zugehörigen Person')
 })
 
-project = api.model('Projekt', bo, {
+project = api.inherit('Projekt', bo, {
     'name': fields.String(attribute='_name', description='Name des Projekts'),
     'creator': fields.Integer(attribute='_creator', description='ID des Projekterstellers'),
     'client': fields.String(attribute='_creator', description='Name des Auftraggebers'),
@@ -65,65 +65,65 @@ project = api.model('Projekt', bo, {
     'project_duration': fields.Integer(attribute='_project_duration', description='ID der Projektlaufzeit'),
 })
 
-activity = api.model('Aktivitaet', bo, {
+activity = api.inherit('Aktivitaet', bo, {
     'activity_name': fields.String(attribute='__activity_name', description='Name der Aktivität'),
     'man_day_capacity': fields.Float(attribute='__man_day_capacity', description='Kapazität in Personentagen')
 })
 
-zi = api.model('Zeitintervall', bo, {
+zi = api.inherit('Zeitintervall', bo, {
     'name': fields.String(attribute='_name', description='Name des Intervalls'),
     'start': fields.Integer(attribute='_start', description='ID des Startereignisses'),
     'end': fields.Integer(attribute='_end', description='ID des Endereignisses'),
     'duration': fields.Float(attribute='_duration', description='Dauer des Intervals')
 })
 
-pause = api.model('Pause', zi)
+pause = api.inherit('Pause', zi)
 
-project_duration = api.model('Projektlaufzeit', zi)
+project_duration = api.inherit('Projektlaufzeit', zi)
 
-project_worktime = api.model('Projektarbeit', zi)
+project_worktime = api.inherit('Projektarbeit', zi)
 
-ev = api.model('Ereignis', bo, {
+ev = api.inherit('Ereignis', bo, {
     'event_name': fields.String(attribute='_event_name', description='Name des Ereignisses'),
     'time_of_event': fields.DateTime(attribute='_time_of_event', description='Zeitpunkt des Ereignisses')
 })
 
-kommen = api.model('Kommen', ev)
+kommen = api.inherit('Kommen', ev)
 
-gehen = api.model('Gehen', ev)
+gehen = api.inherit('Gehen', ev)
 
-project_deadline = api.model('ProjektDeadline', ev)
+project_deadline = api.inherit('ProjektDeadline', ev)
 
-start_event = api.model('Startereignis', ev)
+start_event = api.inherit('Startereignis', ev)
 
-end_event = api.model('Endereignis', ev)
+end_event = api.inherit('Endereignis', ev)
 
-transaction = api.model('Buchung', bo, {
+transaction = api.inherit('Buchung', bo, {
     'target_user_account': fields.Integer(attribute='__target_user_account', description='ID des Zielkontos'),
 })
 
-event_transaction = api.model('Ereignisbuchung', transaction, {
+event_transaction = api.inherit('Ereignisbuchung', transaction, {
     'event_id': fields.Integer(attribute='_event_id', discription='ID des gebuchten Ereignisses')
 })
 
-interval_transaction = api.model('ZeitintervallBuchung', transaction, {
+interval_transaction = api.inherit('ZeitintervallBuchung', transaction, {
     'time_interval_id': fields.Integer(attribute='_time_interval_id', discription='ID des gebuchten Intervals')
 })
 
-pause_transaction = api.model('PauseBuchung', interval_transaction)
+pause_transaction = api.inherit('PauseBuchung', interval_transaction)
 
-project_worktime_transaction = api.model('ProjektarbeitBuchung', interval_transaction, {
+project_worktime_transaction = api.inherit('ProjektarbeitBuchung', interval_transaction, {
     'target_activity': fields.Integer(attribute='_target_activity', description='ID der Aktivität, '
                                                                                 'an welcher gearbeitet wurde')
 })
 
-kommen_transaction = api.model('KommenBuchung', event_transaction)
+kommen_transaction = api.inherit('KommenBuchung', event_transaction)
 
-gehen_transaction = api.model('GehenBuchung', event_transaction)
+gehen_transaction = api.inherit('GehenBuchung', event_transaction)
 
-start_event_transaction = api.model('StartereignisBuchung', event_transaction)
+start_event_transaction = api.inherit('StartereignisBuchung', event_transaction)
 
-end_event_transaction = api.model('EndereignisBuchung', event_transaction)
+end_event_transaction = api.inherit('EndereignisBuchung', event_transaction)
 
 
 
@@ -131,7 +131,7 @@ end_event_transaction = api.model('EndereignisBuchung', event_transaction)
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllPersonListOperations(Resource):
     @timesystem.marshal_list_with(person)
-    @secured
+
     def get(self):
         s_adm = SystemAdministration()
         all_persons = s_adm.get_all_persons()
@@ -526,4 +526,4 @@ class GehenOperations(Resource):
             return '', 500
 
 
-app.run(debug=True)
+app.run(debug=True, port=5000)
