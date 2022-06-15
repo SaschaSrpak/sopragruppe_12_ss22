@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import AktivitätAnzeige from "./AktivitätAnzeige";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
