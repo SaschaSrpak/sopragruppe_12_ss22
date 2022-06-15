@@ -10,7 +10,7 @@ import React, { Component } from "react";
 
 
 
-export class Aktivität extends Component {
+export class AktivitätAnzeige extends Component {
     render() {
         return (
             <Paper>
@@ -20,4 +20,4 @@ export class Aktivität extends Component {
     }
 }
 
-export default Aktivität;
+export default AktivitätAnzeige;
