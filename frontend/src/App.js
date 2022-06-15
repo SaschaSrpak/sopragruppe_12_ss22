@@ -12,7 +12,7 @@ import Home from './components/pages/Home';
 import Projektanzeige from './components/pages/Projektanzeige';
 import Buchungen from './components/pages/Buchungen';
 import Error from './components/Zwischenelemente/Error';
-import { initializeApp } from 'firebase/app'
+import { initializeApp } from 'firebase/app';
 
 
 
