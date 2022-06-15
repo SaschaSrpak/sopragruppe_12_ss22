@@ -1,36 +1,39 @@
-/*import React,{component} from 'react';
+import React,{component} from 'react';
+import Button from '@mui/material/Button';
 import Error from '../Zwischenelemente/Error';
+import Loader from '../Zwischenelemente/Loader'
+import { touchRippleClasses } from '@mui/material';
 
 /** 
  *@fileOverview 
  *@author Kim Kausler
-
+*/
 
 export class Buchungen extends Component{
-
-    #myPerson = null;
 
     constructor(props){
         super(probs);
 
         this.state={
-            buchungen:[],   
+            buchungen:[],
+            loadingBuchungError: null, 
+            loadingLoader: null,    
         };
 
     }
 
-getPerson(){
-    return this.#myPerson;
-}
-
-    componentDidMount(){
-
+    newBuchung(){
+        API
     }
+
+
 
     render(){
         return(
             <div>
-                
+                <h1>Buchungen</h1>
+                <Button variant="contained" onClick={(e)=>this.probs.changeState(id)}> Kommen </Button>
+                <Button variant="contained" onClick={(e)=>this.probs.changeState(id)}> Gehen </Button>
             </div>
         )
 
@@ -38,5 +41,5 @@ getPerson(){
 
 }
 
+
 export default Buchungen;
-*/
