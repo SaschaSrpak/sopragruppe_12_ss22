@@ -235,7 +235,7 @@ class AllProjectListOperations(Resource):
 @timesystem.route('/projects/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Projekt Objekts')
-class PersonOperations(Resource):
+class ProjectOperations(Resource):
     @timesystem.marshal_with(project)
     def get(self, id):
         s_adm = SystemAdministration()
@@ -285,7 +285,7 @@ class PersonRelatedProjectOperations(Resource):
 @timesystem.route('projects/≤int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Projekt-Objekts')
-class PersonRelatedActivityOperations(Resource):
+class ProjectRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
     @secured
     def get(self, id):
@@ -359,7 +359,7 @@ class ActivityOperations(Resource):
             return '', 500
 
 
-@timesystem.route('activities/<int:id>/person')
+@timesystem.route('/activities/<int:id>/person')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 class ActivityRelatedPersonOperations(Resource):
@@ -376,7 +376,7 @@ class ActivityRelatedPersonOperations(Resource):
             return 'Activity not found', 500
 
 
-@timesystem.route('activities/<int:id>/person/<int:person_id>')
+@timesystem.route('/activities/<int:id>/person/<int:person_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 @timesystem.param('person_id', 'Die ID des Personen-Objekts')
@@ -397,7 +397,7 @@ class ActivityRelatedSpecificPersonOperations(Resource):
         s_adm.add_person_responsible_to_activity(activity, person)
         return '', 200
 
-@timesystem.route('activities/<int:person_id>/kommen')
+@timesystem.route('/activities/<int:person_id>/kommen')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 class ActivityRelatedPersonOperations(Resource):
@@ -410,22 +410,6 @@ class ActivityRelatedPersonOperations(Resource):
         s_adm.add_person_responsible_to_activity(activity, person)
         return '', 200
 
-
-@timesystem.route('kommen/')
-@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class KommenOperations(Resource):
-    @timesystem.marshal_with(kommen)
-    @secured
-    def post(self):
-        s_adm = SystemAdministration()
-        proposal = Kommen.from_dict(api.payload)
-
-        if proposal is not None:
-            a = s_adm.book_kommen_event(proposal.get_id(), proposal.get_event_name(),
-                                      proposal.get_time_of_event())
-            return a, 200
-        else:
-            return '', 500
 
 @timesystem.route('/accounts')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -472,20 +456,42 @@ class AccountOperations(Resource):
 
 @timesystem.route('accounts/<int:id>/activities/≤int:activite_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
 class ActivityWorktimeRelatedAccountOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
     @secured
-    def get(self, id):
+    def get(self, id, activity_id):
         s_adm = SystemAdministration()
-        activity = s_adm.get_activity_by_key(id)
->>>>>>> Stashed changes
+        account = s_adm.get_time_account_by_key(id)
+        activity = s_adm.get_activity_by_key(activity_id)
 
-        if activity is not None:
-            person_list = s_adm.get_persons_by_activity_key(activity.get_id())
+        if activity is not None and account is not None:
+            transaction = s_adm.get_persons_by_activity_key(activity.get_id())
             return person_list
         else:
             return 'Activity not found', 500
+
+
+
+
+
+
+@timesystem.route('kommen/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class KommenOperations(Resource):
+    @timesystem.marshal_with(kommen)
+    @secured
+    def post(self):
+        s_adm = SystemAdministration()
+        proposal = Kommen.from_dict(api.payload)
+
+        if proposal is not None:
+            a = s_adm.book_kommen_event(proposal.get_id(), proposal.get_event_name(),
+                                      proposal.get_time_of_event())
+            return a, 200
+        else:
+            return '', 500
 
 @timesystem.route('gehen/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

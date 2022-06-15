@@ -292,8 +292,6 @@ class SystemAdministration(object):
 
         return full_work_time
 
-
-
     def get_full_pause_time(self, account):
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
         full_pause_time = 0
@@ -306,6 +304,20 @@ class SystemAdministration(object):
             full_pause_time += worktime.get_duration()
 
         return full_pause_time
+
+
+    def get_worktime_transactions_on_activity(self, account, activity):
+        all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
+        all_worktime_transactions_on_activity = []
+        for transaction in all_project_worktime_transactions:
+            if transaction.get_target_activity() == activity.get_id():
+                interval = self.get_project_worktime_by_key(transaction.get_time_interval_id())
+                all_worktime_intervals_on_activity.append(interval)
+
+        for worktime in all_worktime_intervals_on_activity:
+            worktime_on_activity += worktime.get_duration()
+
+        return worktime_on_activity
 
     def get_worktime_on_activity(self, account, activity):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
