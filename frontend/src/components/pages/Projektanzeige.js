@@ -16,6 +16,8 @@ export class Projektanzeige extends Component {
         return (
             <div>
                 <h1>Projektanzeige Testpage</h1>
+                <p>Platzhalter für Projektdaten</p>
+                <AktivitätAnzeige/>
             </div>
         );
     }
