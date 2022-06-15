@@ -5,6 +5,8 @@ from flask_cors import CORS
 from server.SystemAdministration import SystemAdministration
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
+from server.business_objects.Ereignisse.Kommen import Kommen
+from server.business_objects.Ereignisse.Gehen import Gehen
 
 from SecurityDecorator import secured
 
@@ -278,8 +280,48 @@ class ActivityRelatedSpecificPersonOperations:
         s_adm.add_person_responsible_to_activity(activity, person)
         return '', 200
 
+@timesystem.route('activities/<int:person_id>/kommen')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
+class ActivityRelatedPersonOperations(Resource):
+    @timesystem.marshal_with(person)
+    @secured
+    def post(self, id, person_id):
+        s_adm = SystemAdministration()
+        activity = s_adm.get_activity_by_key(id)
+        person = s_adm.get_person_by_key(person_id)
+        s_adm.add_person_responsible_to_activity(activity, person)
+        return '', 200
+
+@timesystem.route('kommen/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class KommenOperations(Resource):
+    @timesystem.marshal_with(kommen)
+    @secured
+    def post(self):
+        s_adm = SystemAdministration()
+        proposal = Kommen.from_dict(api.payload)
+
+        if proposal is not None:
+            a = s_adm.book_kommen_event(proposal.get_id(), proposal.get_event_name(),
+                                      proposal.get_time_of_event())
+            return a, 200
+        else:
+            return '', 500
 
 
+@timesystem.route('gehen/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class GehenOperations(Resource):
+    @timesystem.marshal_with(gehen)
+    @secured
+    def post(self):
+        s_adm = SystemAdministration()
+        proposal = Gehen.from_dict(api.payload)
 
-
-
+        if proposal is not None:
+            a = s_adm.book_gehen_event(proposal.get_id(), proposal.get_event_name(),
+                                      proposal.get_time_of_event())
+            return a, 200
+        else:
+            return '', 500
