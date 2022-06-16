@@ -43,16 +43,16 @@ bo = api.model('BusinessObject', {
 })
 
 person = api.inherit('Person', {
+    'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
+    'last_modified_date': fields.DateTime(attribute='_manager_status', description='Zeitpunkt der letzten Änder', dt_format='rfc822'),
     'name': fields.String(attribute='_name', description='Vorname der Person'),
     'surname': fields.String(attribute='_surname', description='Nachname der Person'),
     'mail_address': fields.String(attribute='_mail_address', description='Mail-Adresse der Person'),
     'user_name': fields.String(attribute='_user_name', description="User-Name der Person"),
     'google_user_id': fields.String(attribute='_firebase_id', description='Google_ID der Person'),
     'manager_status': fields.String(attribute="_last_modified_date",
-                                        description="Zeitpunkt der letzten Änderung", dt_format='rfc822'),
-    'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
-    'last_modified_date': fields.String(attribute='_manager_status', description='Information, ob die Person ein '
-                                                                               'Projektleiter ist')
+                                        description='Information, ob die Person ein '
+                                                                               'Projektleiter ist'),
 
 })
 
@@ -528,8 +528,5 @@ class GehenOperations(Resource):
 
 
 
-s_adm = SystemAdministration()
-all_projects = s_adm.get_all_projects()
-print(all_projects[0].get_deadline())
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
