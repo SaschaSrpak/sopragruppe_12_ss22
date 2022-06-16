@@ -11,7 +11,7 @@ class Projekt (bo.BusinessObject):
         self._creator = int
         self._client = ""
         self._description = ""
-        self._set_deadline = int
+        self._set_deadline = ""
         self._project_duration = int
         self._activities = []
         self._persons_responsible = []
@@ -50,11 +50,11 @@ class Projekt (bo.BusinessObject):
 
     def get_deadline(self):
         """Auslesen der geplanten Abgabe/Deadline"""
-        return self._project_duration
+        return self._set_deadline
 
     def set_deadline(self, value):
         """Setzen der Abgabe/Deadline"""
-        self._project_duration = value
+        self._set_deadline = value
 
     def get_project_duration(self):
         """Auslesen der Projektlaufzeit"""
@@ -105,6 +105,9 @@ class Projekt (bo.BusinessObject):
         obj.set_description(dictionary['description'])
         obj.set_deadline(dictionary['set_deadline'])
         obj.set_project_duration(dictionary['project_duration'])
+        obj.set_activities(dictionary['activities'])
+        obj.set_person_responsible(dictionary['persons_responsible'])
+
         obj.set_last_modified_date(dictionary['last_modified_date'])
         return obj
 

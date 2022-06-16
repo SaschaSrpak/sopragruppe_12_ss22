@@ -60,10 +60,13 @@ class SystemAdministration(object):
         person.set_last_modified_date(dt.datetime.now())
         person.set_manager_status(manager_status)
         person.set_id(1)
-        self.create_time_account_for_person(person)
+
 
         with PersonMapper() as mapper:
-            return mapper.insert(person)
+            mapper.insert(person)
+            self.create_time_account_for_person(person)
+            return
+
 
     def get_all_persons(self):
         """Gibt alle Benutzer aus die im System gespeichert sind"""

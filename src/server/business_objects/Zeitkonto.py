@@ -16,11 +16,13 @@ class Zeitkonto(bo.BusinessObject):
         """Setzen des Owners des Zeitkontos."""
         self._owner = new_owner
 
+    def __str__(self):
+        return "Account: {}, {}".format(self.get_id(), self.get_owner())
+
     @staticmethod
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python Dictionaries in ein Zeitkonto()-Objekt."""
         obj = Zeitkonto()
         obj.set_id(dictionary['id'])
         obj.set_owner(dictionary['owner'])
-        obj.set_last_modified_date(dictionary['last_modified_date'])
         return obj

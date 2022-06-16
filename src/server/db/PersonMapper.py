@@ -25,9 +25,9 @@ class PersonMapper(Mapper):
             person.set_surname(surname)
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
+            person.set_manager_status(manager_status)
             person.set_firebase_id(firebase_id)
             person.set_last_modified_date(last_modified_date)
-            person.set_manager_status(manager_status)
             result.append(person)
 
         self._cnx.commit()
