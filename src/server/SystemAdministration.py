@@ -1,5 +1,5 @@
 import datetime as dt
-
+from datetime import datetime
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
 from server.business_objects.Zeitkonto import Zeitkonto
@@ -295,16 +295,22 @@ class SystemAdministration(object):
 
         return full_work_time
 
-    def get_full_pause_time(self, account):
+
+    def get_all_pause_transactions_for_account(self, account):
+        all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
+        return all_pause_transactions
+
+
+    def get_full_pause_time_for_account(self, account):
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
         full_pause_time = 0
         all_pauses = []
         for transaction in all_pause_transactions:
-            worktime_id = transaction.get_time_interval_id()
-            all_pauses.append(self.get_project_worktime_by_key(worktime_id))
+            pause_id = transaction.get_time_interval_id()
+            all_pauses.append(self.get_pause_by_key(pause_id))
 
-        for worktime in all_pauses:
-            full_pause_time += worktime.get_duration()
+        for pause in all_pauses:
+            full_pause_time += pause.get_duration()
 
         return full_pause_time
 
@@ -838,6 +844,8 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_kommen_event(self, account, name, time):
+        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        account = self.get_time_account_by_key(account)
         gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         gehen_events = []
         for transaction in gehen_transactions:
@@ -898,6 +906,8 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_gehen_event(self, account, name, time):
+        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        account = self.get_time_account_by_key(account)
         kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         kommen_events = []
         for transaction in kommen_transactions:

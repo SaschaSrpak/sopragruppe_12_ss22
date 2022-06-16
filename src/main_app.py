@@ -38,21 +38,22 @@ timesystem = api.namespace('timesystem', description='Funktionen des Projektzeit
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
     'last_modified_date': fields.DateTime(attribute='_last_modified_date', description='Information, ob die Person ein '
-                                                                               'Projektleiter ist')
+                                                                                       'Projektleiter ist')
 
 })
 
 person = api.inherit('Person', {
     'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
-    'last_modified_date': fields.DateTime(attribute='_manager_status', description='Zeitpunkt der letzten Änder', dt_format='rfc822'),
+    'last_modified_date': fields.DateTime(attribute='_manager_status', description='Zeitpunkt der letzten Änder',
+                                          dt_format='rfc822'),
     'name': fields.String(attribute='_name', description='Vorname der Person'),
     'surname': fields.String(attribute='_surname', description='Nachname der Person'),
     'mail_address': fields.String(attribute='_mail_address', description='Mail-Adresse der Person'),
     'user_name': fields.String(attribute='_user_name', description="User-Name der Person"),
     'google_user_id': fields.String(attribute='_firebase_id', description='Google_ID der Person'),
     'manager_status': fields.String(attribute="_last_modified_date",
-                                        description='Information, ob die Person ein '
-                                                                               'Projektleiter ist'),
+                                    description='Information, ob die Person ein '
+                                                'Projektleiter ist'),
 
 })
 
@@ -61,7 +62,7 @@ account = api.inherit('Account', {
     'owner': fields.Integer(attribute='_owner', description='ID der zugehörigen Person')
 })
 
-project = api.inherit('Projekt', bo,{
+project = api.inherit('Projekt', bo, {
     'name': fields.String(attribute='_name', description='Name des Projekts'),
     'creator': fields.String(attribute='_creator', description='ID des Projekterstellers'),
     'client': fields.String(attribute='_client', description='Name des Auftraggebers'),
@@ -82,53 +83,53 @@ zi = api.inherit('Zeitintervall', bo, {
     'duration': fields.Float(attribute='_duration', description='Dauer des Intervals')
 })
 
-pause = api.inherit('Pause', zi)
+pause = api.inherit('Pause', bo, zi)
 
-project_duration = api.inherit('Projektlaufzeit', zi)
+project_duration = api.inherit('Projektlaufzeit', bo, zi)
 
-project_worktime = api.inherit('Projektarbeit', zi)
+project_worktime = api.inherit('Projektarbeit', bo, zi)
 
 ev = api.inherit('Ereignis', bo, {
     'event_name': fields.String(attribute='_event_name', description='Name des Ereignisses'),
     'time_of_event': fields.DateTime(attribute='_time_of_event', description='Zeitpunkt des Ereignisses')
 })
 
-kommen = api.inherit('Kommen', ev)
+kommen = api.inherit('Kommen', bo, ev)
 
-gehen = api.inherit('Gehen', ev)
+gehen = api.inherit('Gehen', bo, ev)
 
-project_deadline = api.inherit('ProjektDeadline', ev)
+project_deadline = api.inherit('ProjektDeadline', bo, ev)
 
-start_event = api.inherit('Startereignis', ev)
+start_event = api.inherit('Startereignis', bo, ev)
 
-end_event = api.inherit('Endereignis', ev)
+end_event = api.inherit('Endereignis', bo, ev)
 
 transaction = api.inherit('Buchung', bo, {
     'target_user_account': fields.Integer(attribute='_target_user_account', description='ID des Zielkontos'),
 })
 
-event_transaction = api.inherit('Ereignisbuchung', transaction, {
+event_transaction = api.inherit('Ereignisbuchung', bo, transaction, {
     'event_id': fields.Integer(attribute='_event_id', discription='ID des gebuchten Ereignisses')
 })
 
-interval_transaction = api.inherit('ZeitintervallBuchung', transaction, {
+interval_transaction = api.inherit('ZeitintervallBuchung', bo, transaction, {
     'time_interval_id': fields.Integer(attribute='_time_interval_id', discription='ID des gebuchten Intervals')
 })
 
-pause_transaction = api.inherit('PauseBuchung', interval_transaction)
+pause_transaction = api.inherit('PauseBuchung', bo, interval_transaction)
 
 project_worktime_transaction = api.inherit('ProjektarbeitBuchung', interval_transaction, {
     'target_activity': fields.Integer(attribute='_target_activity', description='ID der Aktivität, '
                                                                                 'an welcher gearbeitet wurde')
 })
 
-kommen_transaction = api.inherit('KommenBuchung', event_transaction)
+kommen_transaction = api.inherit('KommenBuchung', bo, event_transaction)
 
-gehen_transaction = api.inherit('GehenBuchung', event_transaction)
+gehen_transaction = api.inherit('GehenBuchung', bo, event_transaction)
 
-start_event_transaction = api.inherit('StartereignisBuchung', event_transaction)
+start_event_transaction = api.inherit('StartereignisBuchung', bo, event_transaction)
 
-end_event_transaction = api.inherit('EndereignisBuchung', event_transaction)
+end_event_transaction = api.inherit('EndereignisBuchung', bo ,event_transaction)
 
 
 @timesystem.route('/persons')
@@ -136,17 +137,14 @@ end_event_transaction = api.inherit('EndereignisBuchung', event_transaction)
 class AllPersonListOperations(Resource):
 
     @timesystem.marshal_list_with(person)
-
     def get(self):
         s_adm = SystemAdministration()
         all_persons = s_adm.get_all_persons()
-
 
         return all_persons
 
     @timesystem.marshal_with(person, code=200)
     @timesystem.expect(person)
-
     def post(self):
         s_adm = SystemAdministration()
 
@@ -173,7 +171,6 @@ class PersonOperations(Resource):
         p = s_adm.get_person_by_key(id)
         return p
 
-
     def delete(self, id):
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_key(id)
@@ -182,7 +179,6 @@ class PersonOperations(Resource):
 
     @timesystem.marshal_with(person)
     @timesystem.expect(person, validate=True)
-
     def put(self, id):
         s_adm = SystemAdministration()
         p = Person.from_dict(api.payload)
@@ -200,7 +196,6 @@ class PersonOperations(Resource):
 @timesystem.param('id', 'Die ID des Personen-Objekts')
 class PersonRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
-
     def get(self, id):
         s_adm = SystemAdministration()
         person = s_adm.get_person_by_key(id)
@@ -217,7 +212,6 @@ class PersonRelatedActivityOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllProjectListOperations(Resource):
     @timesystem.marshal_list_with(project)
-
     def get(self):
         s_adm = SystemAdministration()
         all_projects = s_adm.get_all_projects()
@@ -226,7 +220,6 @@ class AllProjectListOperations(Resource):
 
     @timesystem.marshal_with(project, code=200)
     @timesystem.expect(project)
-
     def post(self):
         s_adm = SystemAdministration()
 
@@ -260,7 +253,6 @@ class ProjectOperations(Resource):
 
     @timesystem.marshal_with(project)
     @timesystem.expect(project, validate=True)
-
     def put(self, id):
         s_adm = SystemAdministration()
         pr = Projekt.from_dict(api.payload)
@@ -278,7 +270,6 @@ class ProjectOperations(Resource):
 @timesystem.param('id', 'ID des Projekt Objekts')
 class PersonRelatedProjectOperations(Resource):
     @timesystem.marshal_with(person)
-
     def get(self, id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -296,7 +287,6 @@ class PersonRelatedProjectOperations(Resource):
 @timesystem.param('id', 'Die ID des Projekt-Objekts')
 class ProjectRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
-
     def get(self, id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -313,7 +303,6 @@ class ProjectRelatedActivityOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllActivityListOperations(Resource):
     @timesystem.marshal_list_with(activity)
-
     def get(self):
         s_adm = SystemAdministration()
         all_activities = s_adm.get_all_activities()
@@ -322,7 +311,6 @@ class AllActivityListOperations(Resource):
 
     @timesystem.marshal_with(activity, code=200)
     @timesystem.expect(activity)
-
     def post(self):
         s_adm = SystemAdministration()
 
@@ -346,7 +334,6 @@ class ActivityOperations(Resource):
         a = s_adm.get_activity_by_key(id)
         return a
 
-
     def delete(self, id):
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
@@ -355,7 +342,6 @@ class ActivityOperations(Resource):
 
     @timesystem.marshal_with(activity)
     @timesystem.expect(activity, validate=True)
-
     def put(self, id):
         s_adm = SystemAdministration()
         a = Aktivitaet.from_dict(api.payload)
@@ -373,7 +359,6 @@ class ActivityOperations(Resource):
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 class ActivityRelatedPersonOperations(Resource):
     @timesystem.marshal_with(person)
-
     def get(self, id):
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
@@ -397,7 +382,6 @@ class ActivityRelatedSpecificPersonOperations(Resource):
         person = s_adm.get_person_by_key(person_id)
         s_adm.delete_person_responsible_from_activity(activity, person)
         return '', 200
-
 
     def post(self, id, person_id):
         s_adm = SystemAdministration()
@@ -460,6 +444,37 @@ class AccountOperations(Resource):
             return '', 500
 
 
+@timesystem.route('/account-pause/<int:id>/time')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class PauseTimeRelatedAccountOperations(Resource):
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        pause_time = s_adm.get_full_pause_time_for_account(account)
+
+        if account is not None:
+            return pause_time
+        else:
+            return 'Account not found', 500
+
+
+@timesystem.route('/account-pause/<int:id>/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class PauseTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(pause_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        pauses = s_adm.get_all_pause_transactions_for_account(account)
+
+        if account is not None:
+            return pauses
+        else:
+            return 'Account not found', 500
+
+
 @timesystem.route('/account-worktime/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -495,37 +510,153 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
             return 'Activity not found', 500
 
 
-@timesystem.route('/kommen/')
+@timesystem.route('/commit-kommen-transaction/<int:account_id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
-    def post(self):
+    @timesystem.expect(kommen)
+    def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
+        account = s_adm.get_time_account_by_key(account_id)
 
         if proposal is not None:
-            a = s_adm.book_kommen_event(proposal.get_id(), proposal.get_event_name(),
-                                        proposal.get_time_of_event())
-            return a, 200
+            if account is not None:
+                b = s_adm.book_kommen_event(account_id, proposal.get_event_name(),
+                                            proposal.get_time_of_event())
+                return b, 200
+            else:
+                return 'Account not found', 500
         else:
             return '', 500
 
 
-@timesystem.route('/gehen/')
+@timesystem.route('/commit-gehen-transaction/<int:account_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
 class GehenOperations(Resource):
     @timesystem.marshal_with(gehen)
-    def post(self):
+    @timesystem.expect(gehen)
+    def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Gehen.from_dict(api.payload)
+        account = s_adm.get_time_account_by_key(account_id)
 
         if proposal is not None:
-            a = s_adm.book_gehen_event(proposal.get_id(), proposal.get_event_name(),
-                                       proposal.get_time_of_event())
-            return a, 200
+            if account is not None:
+                b = s_adm.book_gehen_event(account_id, proposal.get_event_name(),
+                                           proposal.get_time_of_event())
+                return b, 200
+            else:
+                return 'Account not found', 500
         else:
             return '', 500
 
+
+@timesystem.route('/pause-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des PauseBuchungs-Objekt')
+class PauseTransactionOperations(Resource):
+    @timesystem.marshal_with(pause_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        pt = s_adm.get_pause_by_transaction_key(id)
+        return pt
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        pt = s_adm.get_pause_by_transaction_key(id)
+        s_adm.delete_pause_transaction(pt)
+        return '', 200
+
+    @timesystem.marshal_with(pause_transaction)
+    @timesystem.expect(pause_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        pt = PauseBuchung.from_dict(api.payload)
+
+        if pt is not None:
+            pt.set_id(id)
+            pt.set_target_user_account(pt.get_target_user_account())
+            pt.set_time_interval_id(pt.get_time_interval_id())
+            s_adm.save_pause_transaction(pt)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/commit-pause-transaction/<int:account_id>/<string:name>/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
+@timesystem.param('name', 'Name der Pause')
+@timesystem.param('start_time', 'Startzeitpunkt der Pause')
+@timesystem.param('end_time', 'Endzeitpunkt der Pause')
+class CommitPauseTransaction(Resource):
+    def post(self, account_id, name, start_time, end_time):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(account_id)
+        if account is not None:
+            a = s_adm.book_pause_transaction(account, name, start_time, end_time)
+            return a, 200
+        else:
+            return 'Account not found', 200
+
+
+@timesystem.route('/worktime-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des ProjektArbeitBuchungs-Objekt')
+class WorktimeTransactionOperations(Resource):
+    @timesystem.marshal_with(project_worktime_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        pt = s_adm.get_project_worktime_by_transaction_key(id)
+        return pt
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        pt = s_adm.get_project_worktime_by_transaction_key(id)
+        s_adm.delete_project_work_transaction(pt)
+        return '', 200
+
+    @timesystem.marshal_with(project_worktime_transaction)
+    @timesystem.expect(project_worktime_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        pt = ProjektarbeitBuchung.from_dict(api.payload)
+
+        if pt is not None:
+            pt.set_id(id)
+            pt.set_target_user_account(pt.get_target_user_account())
+            pt.set_target_activity(pt.get_target_activity())
+            pt.set_time_interval_id(pt.get_time_interval_id())
+            s_adm.save_pause_transaction(pt)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route(
+    '/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
+@timesystem.param('name', 'Name der Pause')
+@timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
+@timesystem.param('start_time', 'Startzeitpunkt der Pause')
+@timesystem.param('end_time', 'Endzeitpunkt der Pause')
+class CommitWorktimeTransaction(Resource):
+    def post(self, account_id, name, activity_id, start_time, end_time):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(account_id)
+        activity = s_adm.get_activity_by_key(activity_id)
+        if account is not None:
+            if activity is not None:
+                a = s_adm.book_project_work_transaction(account, name, activity_id, start_time, end_time)
+                return a, 200
+            else:
+                return 'Activity not found', 200
+        else:
+            return 'Account not found', 200
 
 
 if __name__ == '__main__':
