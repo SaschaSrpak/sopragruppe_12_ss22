@@ -443,8 +443,37 @@ class AccountOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/accounts/kommen/transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class KommenTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(kommen_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        transactions = s_adm.get_all_kommen_transactions_for_account(account)
 
-@timesystem.route('/account-pause/<int:id>/time')
+        if account is not None:
+            return transactions
+        else:
+            return 'Account not found', 500
+
+@timesystem.route('/accounts/gehen/transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class KommenTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(gehen_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        transactions = s_adm.get_all_gehen_transactions_for_account(account)
+
+        if account is not None:
+            return transactions
+        else:
+            return 'Account not found', 500
+
+@timesystem.route('/accounts/pause/<int:id>/time')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class PauseTimeRelatedAccountOperations(Resource):
@@ -459,7 +488,7 @@ class PauseTimeRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/account-pause/<int:id>/')
+@timesystem.route('/accounts/pause/<int:id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class PauseTransactionRelatedAccountOperations(Resource):
@@ -475,7 +504,7 @@ class PauseTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/account-worktime/<int:id>/activities/<int:activity_id>')
+@timesystem.route('/accounts/worktime/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 @timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
@@ -492,7 +521,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
             return 'Activity not found', 500
 
 
-@timesystem.route('/account-transactions/<int:id>/activities/<int:activity_id>')
+@timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 @timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
@@ -509,6 +538,69 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
         else:
             return 'Activity not found', 500
 
+
+@timesystem.route('/kommen/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Kommen-Objekts')
+class KommenOperations(Resource):
+    @timesystem.marshal_with(kommen)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        k = s_adm.get_kommen_event_by_key(id)
+        return k
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        k = s_adm.get_kommen_event_by_key(id)
+        s_adm.delete_kommen_event(k)
+        return '', 200
+
+    @timesystem.marshal_with(kommen)
+    @timesystem.expect(kommen, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        k = Kommen.from_dict(api.payload)
+        print(k.get_id())
+
+        if k is not None:
+            k.set_id(id)
+            k.set_event_name(k.get_event_name())
+            k.set_time_of_event(k.get_time_of_event())
+            s_adm.save_kommen_event(k)
+            return '', 200
+        else:
+            return '', 500
+
+@timesystem.route('/kommen-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des KommenBuchungs-Objekt')
+class GehenTransactionOperations(Resource):
+    @timesystem.marshal_with(kommen_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        k = s_adm.get_kommen_by_transaction_key(id)
+        return k
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        k = s_adm.get_kommen_by_transaction_key(id)
+        s_adm.delete_kommen_transaction(k)
+        return '', 200
+
+    @timesystem.marshal_with(kommen_transaction)
+    @timesystem.expect(kommen_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        k = KommenBuchung.from_dict(api.payload)
+
+        if k is not None:
+            k.set_id(id)
+            k.set_target_user_account(k.get_target_user_account())
+            k.set_event_id(k.get_event_id())
+            s_adm.save_kommen_transaction(k)
+            return '', 200
+        else:
+            return '', 500
 
 @timesystem.route('/commit-kommen-transaction/<int:account_id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -531,6 +623,67 @@ class KommenOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/gehen/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Gehen-Objekts')
+class GehenOperations(Resource):
+    @timesystem.marshal_with(gehen)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        gh = s_adm.get_gehen_event_by_key(id)
+        return gh
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        gh = s_adm.get_gehen_event_by_key(id)
+        s_adm.delete_gehen_event(gh)
+        return '', 200
+
+    @timesystem.marshal_with(gehen)
+    @timesystem.expect(gehen, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        gh = Gehen.from_dict(api.payload)
+
+        if gh is not None:
+            gh.set_id(id)
+            gh.set_event_name(gh.get_event_name())
+            gh.set_time_of_event(gh.get_time_of_event())
+            s_adm.save_gehen_event(gh)
+            return '', 200
+        else:
+            return '', 500
+
+@timesystem.route('/gehen-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des GehenBuchungs-Objekt')
+class GehenTransactionOperations(Resource):
+    @timesystem.marshal_with(gehen_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        gh = s_adm.get_gehen_by_transaction_key(id)
+        return gh
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        gh = s_adm.get_gehen_by_transaction_key(id)
+        s_adm.delete_gehen_transaction(gh)
+        return '', 200
+
+    @timesystem.marshal_with(gehen_transaction)
+    @timesystem.expect(gehen_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        gh = GehenBuchung.from_dict(api.payload)
+
+        if gh is not None:
+            gh.set_id(id)
+            gh.set_target_user_account(gh.get_target_user_account())
+            gh.set_event_id(gh.get_event_id())
+            s_adm.save_gehen_transaction(gh)
+            return '', 200
+        else:
+            return '', 500
 
 @timesystem.route('/commit-gehen-transaction/<int:account_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -553,6 +706,38 @@ class GehenOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/pause/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Pausen-Objekt')
+class PauseOperations(Resource):
+    @timesystem.marshal_with(pause)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        p = s_adm.get_pause_by_key(id)
+        return p
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        p = s_adm.get_pause_by_key(id)
+        s_adm.delete_pause(p)
+        return '', 200
+
+    @timesystem.marshal_with(pause)
+    @timesystem.expect(pause, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        p = Pause.from_dict(api.payload)
+
+        if p is not None:
+            p.set_id(id)
+            p.set_name(p.get_name())
+            p.set_start(p.get_start())
+            p.set_end(p.get_end())
+            p.set_duration(p.get_duration())
+            s_adm.save_pause(p)
+            return '', 200
+        else:
+            return '', 500
 
 @timesystem.route('/pause-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -602,6 +787,39 @@ class CommitPauseTransaction(Resource):
         else:
             return 'Account not found', 200
 
+@timesystem.route('/worktime/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des ProjektArbeits-Objekt')
+class WorktimeOperations(Resource):
+    @timesystem.marshal_with(project_worktime)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        wt = s_adm.get_project_worktime_by_key(id)
+        return wt
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        wt = s_adm.get_project_worktime_by_key(id)
+        s_adm.delete_project_worktime(wt)
+        return '', 200
+
+    @timesystem.marshal_with(project_worktime)
+    @timesystem.expect(project_worktime, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        wt = Projektarbeit.from_dict(api.payload)
+
+        if wt is not None:
+            wt.set_id(id)
+            wt.set_name(wt.get_name())
+            wt.set_start(wt.get_start())
+            wt.set_end(wt.get_end())
+            wt.set_duration(wt.get_duration())
+            s_adm.save_project_worktime(wt)
+            return '', 200
+        else:
+            return '', 500
+
 
 @timesystem.route('/worktime-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -630,7 +848,7 @@ class WorktimeTransactionOperations(Resource):
             pt.set_target_user_account(pt.get_target_user_account())
             pt.set_target_activity(pt.get_target_activity())
             pt.set_time_interval_id(pt.get_time_interval_id())
-            s_adm.save_pause_transaction(pt)
+            s_adm.save_project_work_transaction(pt)
             return '', 200
         else:
             return '', 500

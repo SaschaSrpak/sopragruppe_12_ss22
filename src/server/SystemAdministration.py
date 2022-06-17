@@ -282,6 +282,14 @@ class SystemAdministration(object):
         return all_kommen_transactions, all_gehen_transactions, all_start_event_transactions, \
                all_end_event_transactions, all_pause_transactions, all_project_worktime_transactions
 
+    def get_all_kommen_transactions_for_account(self, account):
+        all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        return all_kommen_transactions
+
+    def get_all_gehen_transactions_for_account(self, account):
+        all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        return all_gehen_transactions
+
     def get_full_work_time(self, account):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         full_work_time = 0
@@ -733,6 +741,15 @@ class SystemAdministration(object):
             return mapper.find_by_transaction_key(transaction_key)
 
     def save_project_worktime(self, interval):
+        start_event_id = interval.get_start()
+        start = self.get_start_event_by_key(start_event_id)
+        end_event_id = interval.get_end()
+        end = self.get_end_event_by_key(end_event_id)
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
+        duration_seconds = end_time - start_time
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
+        interval.set_duration(duration_hours)
         interval.set_last_modified_date(dt.datetime.now())
         with ProjektarbeitMapper() as mapper:
             mapper.update(interval)
@@ -777,6 +794,15 @@ class SystemAdministration(object):
         return self.get_pause_by_key(transaction.get_time_interval_id())
 
     def save_pause(self, interval):
+        start_event_id = interval.get_start()
+        start = self.get_start_event_by_key(start_event_id)
+        end_event_id = interval.get_end()
+        end = self.get_end_event_by_key(end_event_id)
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
+        duration_seconds = end_time - start_time
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
+        interval.set_duration(duration_hours)
         interval.set_last_modified_date(dt.datetime.now())
         with PauseMapper() as mapper:
             mapper.update(interval)
@@ -821,6 +847,15 @@ class SystemAdministration(object):
             return mapper.find_by_project_key(project_key)
 
     def save_project_duration(self, interval):
+        start_event_id = interval.get_start()
+        start = self.get_start_event_by_key(start_event_id)
+        end_event_id = interval.get_end()
+        end = self.get_end_event_by_key(end_event_id)
+        start_time = start.get_time_of_event()
+        end_time = end.get_time_of_event()
+        duration_seconds = end_time - start_time
+        duration_hours = duration_seconds / dt.timedelta(hours=1)
+        interval.set_duration(duration_hours)
         interval.set_last_modified_date(dt.datetime.now())
         with ProjektlaufzeitMapper() as mapper:
             mapper.update(interval)
@@ -887,10 +922,9 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_kommen_transaction(self, transaction):
-        self.delete_kommen_event(transaction)
         with KommenBuchungMapper() as mapper:
             mapper.delete(transaction)
-
+        self.delete_kommen_event(transaction)
     """
     GehenBuchung spezifische Methoden
     """
@@ -949,9 +983,9 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_gehen_transaction(self, transaction):
-        self.delete_gehen_event(transaction)
         with GehenBuchungMapper() as mapper:
             mapper.delete(transaction)
+        self.delete_gehen_event(transaction)
 
     """
     StartereignisBuchung spezifische Methoden
