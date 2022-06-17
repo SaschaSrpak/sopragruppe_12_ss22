@@ -11,8 +11,10 @@ import About from './components/pages/About';
 import Home from './components/pages/Home';
 import Projektanzeige from './components/pages/Projektanzeige';
 import Buchungen from './components/pages/Buchungen';
+import Profil from './components/pages/Profil';
 import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
+import Projektwahl from './components/pages/ProjekteWahl';
 
 
 
@@ -117,6 +119,7 @@ export class App extends Component {
                 <Route path={'/buchungen'} element={<Buchungen />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
                 <Route path={'/about'} element={<About />} />
+                <Route path={'/profil'} element={<Profil />} />
               </Routes>
               <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
               <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />

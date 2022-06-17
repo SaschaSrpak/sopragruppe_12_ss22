@@ -1,7 +1,8 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
+import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider} from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
+import LogoutIcon from '@mui/icons-material/Logout';
 /**
  * @author
  */
@@ -63,22 +64,20 @@ class ProfileDropDown extends Component {
                     <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                         anchorOrigin={{
                             vertical: 'top',
-                            horizontal: 'right',
+                            horizontal: 'right'
                         }}
                         transformOrigin={{
                             vertical: 'top',
-                            horizontal: 'right',
+                            horizontal: 'right'
                         }}>
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
-                                <Typography align='center'>Hello</Typography>
-                                <Divider sx={{ margin: 1 }} />
-                                <Typography align='center' variant='body2'>{user.displayName}</Typography>
-                                <Typography align='center' variant='body2'>{user.email}</Typography>
+                                <Typography align='center'>Hallo {user.displayName}</Typography>
                                 <Divider sx={{ margin: 1 }} />
                                 <Grid container justifyContent='center'>
                                     <Grid item>
-                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                                        <LogoutIcon/>
+                                        <Button color='primary' style={{position:"relative",bottom:7}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
                                     </Grid>
                                 </Grid>
                             </Paper>
