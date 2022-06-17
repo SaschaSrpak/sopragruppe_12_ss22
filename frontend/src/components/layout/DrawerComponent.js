@@ -1,89 +1,12 @@
-// import React, { useState } from 'react';
-// import {
-//   List,
-//   ListItem,
-//   ListItemIcon,
-//   IconButton,
-//   ListItemText,
-//   makeStyles,
-//   Drawer,
-// } from '@material-ui/core';
-// import MenuIcon from '@material-ui/icons/Menu';
-// import HomeIcon from '@mui/icons-material/Home';
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-// import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
-// const DrawerComponent = () => {
-//   const useStyles = makeStyles(theme => ({
-//     drawerContainer: {},
-//     iconButtonContainer: {
-//       marginLeft: 'auto',
-//       color: 'white',
-//     },
-
-//   }));
-
-//   const [openDrawer, setOpenDrawer] = useState(false);
-
-//   //Css
-//   const classes = useStyles();
-//   return (
-//     <>
-//       <Drawer
-//         anchor='left'
-//         classes={{ paper: classes.drawerContainer }}
-//         onClose={() => setOpenDrawer(false)}
-//         open={openDrawer}
-//         onOpen={() => setOpenDrawer(true)}>
-//         <List>
-//           <ListItem divider button onClick={() => setOpenDrawer(false)} disablePadding>
-//             <HomeIcon />
-//             <ListItemIcon>
-//               <ListItemText>Startsteite</ListItemText>
-//             </ListItemIcon>
-//           </ListItem>
-
-//           <ListItem divider button onClick={() => setOpenDrawer(false)}>
-//             <AccountCircleIcon />
-//             <ListItemIcon>
-//               <ListItemText>Profil</ListItemText>
-//             </ListItemIcon>
-//           </ListItem>
-
-//           <ListItem divider button onClick={() => setOpenDrawer(false)}>
-//             <AccessTimeIcon />
-//             <ListItemIcon>
-//               <ListItemText>Buchung</ListItemText>
-//             </ListItemIcon>
-//           </ListItem>
-//         </List>
-//       </Drawer>
-//       {/* Since this is inside our toolbar we can push it to the end of the toolbar */}
-//       <IconButton
-//         className={classes.iconButtonContainer}
-//         onClick={() => setOpenDrawer(!openDrawer)}
-//         disableRipple>
-//         <MenuIcon className={classes.menuIconToggle} />
-//       </IconButton>
-//     </>
-//   );
-// };
-
-// export default DrawerComponent;
-
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -91,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import InfoIcon from '@mui/icons-material/Info';
 import {useNavigate} from "react-router-dom"
+import { IconButton } from '@mui/material';
 
 export default function TemporaryDrawer() {
 
@@ -99,37 +23,6 @@ export default function TemporaryDrawer() {
       width: "200px"
     }
   });
-
-  // const Drawer = props => {
-  //   const { history } = props;
-  //   const classes = useStyles();
-  //   const itemsList = [
-  //     {
-  //       text: "Home",
-  //       icon: <HomeIcon />,
-  //       onClick: () => history.push("Home")
-  //     },
-  //     {
-  //       text: "Profil",
-  //       icon: <AccountCircleIcon />,
-  //       onClick: () => history.push("/")
-  //     },
-  //     {
-  //       text: "Buchung",
-  //       icon: <AccessTimeIcon />,
-  //       onClick: () => history.push("/Buchungen")
-  //     }
-  //      {
-  //       text: "Projektanzeige",
-  //       icon: <AccountCircleIcon />,
-  //       onClick: () => history.push("/Projektanzeigen")
-  //     },
-  //     {
-  //       text: "Projektauswahl",
-  //       icon: <AccountCircleIcon />,
-  //       onClick: () => history.push("/ProjekteWahl")
-  //     },
-  //   ];
 
   const navigate = useNavigate();
 
@@ -205,9 +98,8 @@ export default function TemporaryDrawer() {
     <div>
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
-        <MenuIcon  onClick={toggleDrawer(anchor,true)}/>
-
-
+          <IconButton size='large' edge='start' color='inherit' aria-label='logo'>
+          <MenuIcon onClick={toggleDrawer(anchor,true)}/>
           <Drawer
             anchor={anchor}
             open={state[anchor]}
@@ -215,6 +107,8 @@ export default function TemporaryDrawer() {
           >
             {list(anchor)}
           </Drawer>
+          </IconButton>
+        
         </React.Fragment>
       ))}
     </div>
