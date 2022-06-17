@@ -56,14 +56,14 @@ class ProfileDropDown extends Component {
         return (
             user ?
                 <div>
-                    <IconButton sx={{ float: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
+                    <IconButton sx={{ align: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
                         <Avatar src={user.photoURL} />
                     </IconButton>
 
                     <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                         anchorOrigin={{
                             vertical: 'top',
-                            horizontal: 'left',
+                            horizontal: 'right',
                         }}
                         transformOrigin={{
                             vertical: 'top',
