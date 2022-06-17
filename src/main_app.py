@@ -539,6 +539,135 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
             return 'Activity not found', 500
 
 
+@timesystem.route('/start-event/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des StartEreignis-Objekts')
+class StartEventOperations(Resource):
+    @timesystem.marshal_with(start_event)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        se = s_adm.get_start_event_by_key(id)
+        return se
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        se = s_adm.get_start_event_by_key(id)
+        s_adm.delete_start_event(se)
+        return '', 200
+
+    @timesystem.marshal_with(start_event)
+    @timesystem.expect(start_event, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        se = Startereignis.from_dict(api.payload)
+
+        if se is not None:
+            se.set_id(id)
+            se.set_event_name(se.get_event_name())
+            se.set_time_of_event(se.get_time_of_event())
+            s_adm.save_start_event(se)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/start-event-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des StartEreignisBuchungs-Objekt')
+class StartEventTransactionOperations(Resource):
+    @timesystem.marshal_with(start_event_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        st = s_adm.get_start_by_transaction_key(id)
+        return st
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        st = s_adm.get_start_by_transaction_key(id)
+        s_adm.delete_start_event_transaction(st)
+        return '', 200
+
+    @timesystem.marshal_with(start_event_transaction)
+    @timesystem.expect(start_event_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        st = StartereignisBuchung.from_dict(api.payload)
+
+        if st is not None:
+            st.set_id(id)
+            st.set_target_user_account(st.get_target_user_account())
+            st.set_event_id(st.get_event_id())
+            s_adm.save_start_event_transaction(st)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/end-event/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des EndEreignis-Objekts')
+class EndEventOperations(Resource):
+    @timesystem.marshal_with(end_event)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        e = s_adm.get_end_event_by_key(id)
+        return e
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        e = s_adm.get_end_event_by_key(id)
+        s_adm.delete_end_event(e)
+        return '', 200
+
+    @timesystem.marshal_with(end_event)
+    @timesystem.expect(end_event, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        e = Endereignis.from_dict(api.payload)
+
+        if e is not None:
+            e.set_id(id)
+            e.set_event_name(e.get_event_name())
+            e.set_time_of_event(e.get_time_of_event())
+            s_adm.save_end_event(e)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/end-event-transaction/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des EndEreignisBuchungs-Objekt')
+class EndEventTransactionOperations(Resource):
+    @timesystem.marshal_with(end_event_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        et = s_adm.get_end_event_transaction_by_key(id)
+        return et
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        et = s_adm.get_end_event_transaction_by_key(id)
+        s_adm.delete_end_event_transaction(et)
+        return '', 200
+
+    @timesystem.marshal_with(end_event_transaction)
+    @timesystem.expect(end_event_transaction, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        et = EndereignisBuchung.from_dict(api.payload)
+
+        if et is not None:
+            et.set_id(id)
+            et.set_target_user_account(et.get_target_user_account())
+            et.set_event_id(et.get_event_id())
+            s_adm.save_end_event_transaction(et)
+            return '', 200
+        else:
+            return '', 500
+
+
+
 @timesystem.route('/kommen/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des Kommen-Objekts')
@@ -560,7 +689,6 @@ class KommenOperations(Resource):
     def put(self, id):
         s_adm = SystemAdministration()
         k = Kommen.from_dict(api.payload)
-        print(k.get_id())
 
         if k is not None:
             k.set_id(id)
@@ -574,7 +702,7 @@ class KommenOperations(Resource):
 @timesystem.route('/kommen-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des KommenBuchungs-Objekt')
-class GehenTransactionOperations(Resource):
+class KommenTransactionOperations(Resource):
     @timesystem.marshal_with(kommen_transaction)
     def get(self, id):
         s_adm = SystemAdministration()
