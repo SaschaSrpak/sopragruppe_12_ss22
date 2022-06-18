@@ -55,5 +55,20 @@ export default class ProjektBO{
         return this.set_deadline;
     }
 
+    getActivites(){
+        return this.activities;
+    }
+    
+    setActivities(){
+        this.activities;
+    }
+
+    getPersons_Responsible(){
+        return this.persons_responsible;
+    }
+
+    setPersons_Responsible(){
+        this.persons_responsible;
+    }
     
 }
