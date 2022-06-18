@@ -13,7 +13,7 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import MenuIcon from '@mui/icons-material/Menu';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import InfoIcon from '@mui/icons-material/Info';
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IconButton } from '@mui/material';
 
 export default function TemporaryDrawer() {
@@ -44,7 +44,7 @@ export default function TemporaryDrawer() {
   const list = (anchor) => (
 
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 225 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -99,16 +99,16 @@ export default function TemporaryDrawer() {
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
           <IconButton size='large' edge='start' color='inherit' aria-label='logo'>
-          <MenuIcon onClick={toggleDrawer(anchor,true)}/>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
+            <MenuIcon onClick={toggleDrawer(anchor, true)} />
+            <Drawer
+              anchor={anchor}
+              open={state[anchor]}
+              onClose={toggleDrawer(anchor, false)}
+            >
+              {list(anchor)}
+            </Drawer>
           </IconButton>
-        
+
         </React.Fragment>
       ))}
     </div>

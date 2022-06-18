@@ -27,8 +27,8 @@ class Header extends React.Component {
                     <Appbar postion="static" sx={{ width: '100%' }}>
                         <Toolbar variant="dense" align="center">
                             <DrawerComponent />
-                            
-                            <div style={{margin: '0 auto'}}>
+
+                            <div style={{ margin: '0 auto' }}>
                                 <Typography variant='h5' align='center'>
                                     {user ? <>Willkommen im Zeiterfassungssystem</> : <>Niemand ist eingeloggt</>}
                                 </Typography>

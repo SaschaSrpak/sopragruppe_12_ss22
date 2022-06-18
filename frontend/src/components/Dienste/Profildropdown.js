@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider} from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 /**
  * @author
  */
@@ -50,6 +51,11 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
+    handleProfilButtonClicked = () => {
+        const navigate = useNavigate('/Profil');
+
+    }
+
     render() {
         const { user } = this.props;
         const { open } = this.state;
@@ -73,6 +79,8 @@ class ProfileDropDown extends Component {
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
                                 <Typography align='center'>Hallo {user.displayName}</Typography>
+                                <Divider sx={{ margin: 1 }} />
+                                <Button  onClick={this.handleProfilButtonClicked}>Profil</Button>
                                 <Divider sx={{ margin: 1 }} />
                                 <Grid container justifyContent='center'>
                                     <Grid item>
