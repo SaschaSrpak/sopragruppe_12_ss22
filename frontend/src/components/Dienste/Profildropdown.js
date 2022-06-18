@@ -2,6 +2,9 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useNavigate } from 'react-router-dom';
 /**
  * @author
  */
@@ -51,6 +54,11 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
+    handleProfilButtonClicked = () => {
+        const navigate = useNavigate();
+
+    }
+
     render() {
         const { user } = this.props;
         const { open } = this.state;
@@ -58,32 +66,43 @@ class ProfileDropDown extends Component {
         return (
             user ?
                 <div>
-                    <IconButton sx={{ float: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
+                    <IconButton sx={{ align: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
                         <Avatar src={user.photoURL} />
                     </IconButton>
 
                     <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                         anchorOrigin={{
                             vertical: 'top',
-                            horizontal: 'left',
+                            horizontal: 'right'
                         }}
                         transformOrigin={{
                             vertical: 'top',
-                            horizontal: 'right',
+                            horizontal: 'right'
                         }}>
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
-                                <Typography align='center'>Hello {user.displayName}</Typography>
-                                <Divider sx={{ margin: 1 }} />
-                                <Typography align='center' variant='body2'>{user.email}</Typography>
-                                <Divider sx={{ margin: 1 }} />
+
                                 <Grid container justifyContent='center'>
-                                    <Grid item>
-                                        <Button color='primary'>Profil</Button>
+
+                                    <Grid item align='center'>
+                                        <Typography align='center'>Hallo {user.displayName}</Typography>
+                                        <Divider sx={{ margin: 1 }} />
+                                        <Typography align='center' variant='body2'>{user.email}</Typography>
+                                        <Divider sx={{ margin: 1 }} />
+                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Profil</Button> <br />
+                                        <Divider sx={{ margin: 1 }} />
+                                        {/* <Button color='primary'>Profil</Button> */}
                                         <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
 
                                     </Grid>
                                 </Grid>
+                                {/* <Grid container justifyContent='center'>
+                                
+                                    <Grid item>
+                                        <LogoutIcon/>
+                                        <Button color='primary' style={{position:"relative", bottom:7}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                                    </Grid>
+                                </Grid> */}
                             </Paper>
                         </ClickAwayListener>
                     </Popover>

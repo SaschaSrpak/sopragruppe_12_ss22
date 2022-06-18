@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Component } from "react";
 import { Link } from '@material-ui/core';
 
@@ -20,7 +21,7 @@ export class About extends Component {
           </p>
           <br />
           <p variant='body2'>
-            © Gruppe was weis ich für ne zahl? 2022, all rights reserved.
+            © Gruppe 8 2022, all rights reserved.
           </p>
         </div>
       )
