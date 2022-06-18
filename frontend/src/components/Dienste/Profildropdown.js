@@ -44,6 +44,8 @@ class ProfileDropDown extends Component {
      * @see See Google [firebase.auth](https://firebase.google.com/docs/reference/js/firebase.auth.Auth)
      * @see See Google [firebase.auth().signOut](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signout)
      */
+
+
     handleSignOutButtonClicked = () => {
         const auth = getAuth();
         signOut(auth);
@@ -71,14 +73,14 @@ class ProfileDropDown extends Component {
                         }}>
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
-                                <Typography align='center'>Hello</Typography>
+                                <Typography align='center'>Hello {user.displayName}</Typography>
                                 <Divider sx={{ margin: 1 }} />
-                                <Typography align='center' variant='body2'>{user.displayName}</Typography>
                                 <Typography align='center' variant='body2'>{user.email}</Typography>
                                 <Divider sx={{ margin: 1 }} />
                                 <Grid container justifyContent='center'>
                                     <Grid item>
-                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+                                        <Button color='primary'>Profil</Button>
                                     </Grid>
                                 </Grid>
                             </Paper>
