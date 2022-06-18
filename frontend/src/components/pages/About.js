@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
 import { Link } from '@material-ui/core';
+import { Toolbar } from '@mui/material';
 
 export class About extends Component {
 
@@ -9,6 +10,7 @@ export class About extends Component {
     render (){
       return(
         <div>
+          <Toolbar/>
           <p variant='h6'>
             Zeiterfassungsprojekt
           </p>

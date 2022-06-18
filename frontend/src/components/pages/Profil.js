@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Appbar from '@mui/material/AppBar';
 import { Toolbar, Typography, Box, Drawer, List } from '@mui/material';
 import ProfileDropDown from '../Dienste/Profildropdown';
@@ -22,9 +23,11 @@ class Header extends React.Component {
         const { user } = this.props;
 
         return (
-            <p>
-                Hallo
-            </p>
+            <div>
+                <Toolbar/>
+                <h1>Ihr Profil</h1>
+            </div>
+            
         )
     }
 }

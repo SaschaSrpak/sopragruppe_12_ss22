@@ -1,8 +1,10 @@
+import React, { Component } from "react";
+import { Container, Toolbar } from '@mui/material';
+
 /** 
  *@fileOverview 
  *@author
 */
-import React, { Component } from "react";
 
 export class Home extends Component {
 
@@ -10,7 +12,12 @@ export class Home extends Component {
 
     render() {
         return (
-                <p> wir sind auf der homepage</p>
+            <div>
+                <Toolbar />
+                  <h1>Willkommen</h1> 
+        
+            </div>
+                
             )
     }
 }

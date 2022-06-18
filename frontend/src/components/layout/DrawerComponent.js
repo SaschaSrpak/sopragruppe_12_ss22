@@ -15,6 +15,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from "react-router-dom"
 import { IconButton } from '@mui/material';
+import {Link} from "react-router-dom";
 
 export default function TemporaryDrawer() {
 
@@ -56,6 +57,14 @@ export default function TemporaryDrawer() {
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary={"Home"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding onClick={() => navigate('/Profil')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Profil"} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding onClick={() => navigate('/Buchungen')}>

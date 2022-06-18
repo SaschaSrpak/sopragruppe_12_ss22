@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AktivitätAnzeige from "./AktivitätAnzeige";
+import { Toolbar } from '@mui/material';
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -13,9 +13,10 @@ import AktivitätAnzeige from "./AktivitätAnzeige";
 
 export class Projektanzeige extends Component {
     render() {
-        return (
+        return ( 
             <div>
-                <h1>Projektanzeige Testpage</h1>
+                <Toolbar/>
+                <h1>Projektanzeige</h1>
             </div>
         );
     }
