@@ -17,6 +17,9 @@ export class Projektanzeige extends Component {
             <div>
                 <h1>Projektanzeige Testpage</h1>
                 <p>Platzhalter für Projektdaten</p>
+                <Divider sx={{
+                    margin: "10px",
+                }}/>
                 <AktivitätAnzeige/>
             </div>
         );

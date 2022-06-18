@@ -54,7 +54,9 @@ export class Projektwahl extends Component {
                     >Auswählen</Typography>
                 </Button>
 {/** Trennlinie aus Material-UI, ähnlich <hr> */}
-                <Divider/>
+                <Divider sx={{
+                    margin: "10px",
+                }}/>
                 
 {/** Button zum Erstellen eines neuen Projekts */}
                 <Button variant="contained" sx={{
