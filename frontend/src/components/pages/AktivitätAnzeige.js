@@ -127,7 +127,7 @@ Row.propTypes = {
 
 
 
-export default function CollapsibleTable() {
+export default function AktivitätAnzeige() {
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
