@@ -35,7 +35,7 @@ export class Projektwahl extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>"Projektwahl"</Typography>
-{/** Projektauswahl -> Mapping aus Datenbank  */}
+{/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
                 <form>
                     <TextField label="Projektwahl">
                         {TestProjekte.map((projekt) => (
