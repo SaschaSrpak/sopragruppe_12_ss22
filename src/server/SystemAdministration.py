@@ -924,7 +924,7 @@ class SystemAdministration(object):
     def delete_kommen_transaction(self, transaction):
         with KommenBuchungMapper() as mapper:
             mapper.delete(transaction)
-        self.delete_kommen_event(transaction)
+        self.delete_kommen_event(self.get_kommen_event_by_key(transaction.get_event_id()))
     """
     GehenBuchung spezifische Methoden
     """
@@ -985,7 +985,7 @@ class SystemAdministration(object):
     def delete_gehen_transaction(self, transaction):
         with GehenBuchungMapper() as mapper:
             mapper.delete(transaction)
-        self.delete_gehen_event(transaction)
+        self.delete_gehen_event(self.get_gehen_event_by_key(transaction.get_event_id()))
 
     """
     StartereignisBuchung spezifische Methoden
@@ -1004,8 +1004,6 @@ class SystemAdministration(object):
     def book_start_event(self, account, name, time):
         event = self.create_start_event(name, time)
         account_id = account.get_id()
-        print(account_id)
-        print(account.get_id())
         self.create_start_event_transaction(account_id, event)
         return event
 
@@ -1026,9 +1024,9 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_start_event_transaction(self, transaction):
-        self.delete_start_event(transaction)
         with StartereignisBuchungMapper() as mapper:
             mapper.delete(transaction)
+        self.delete_start_event(self.get_start_event_by_key(transaction.get_event_id()))
 
     """
     EndereignisBuchung spezifische Methoden
@@ -1067,9 +1065,9 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_end_event_transaction(self, transaction):
-        self.delete_end_event(transaction)
         with EndereignisBuchungMapper() as mapper:
             mapper.delete(transaction)
+        self.delete_end_event(self.get_end_event_by_key(transaction.get_event_id()))
 
     """
     PauseBuchung spezifische Methoden
@@ -1126,6 +1124,7 @@ class SystemAdministration(object):
     def delete_pause_transaction(self, transaction):
         with PauseBuchungMapper() as mapper:
             mapper.delete(transaction)
+        self.delete_pause(self.get_pause_by_key(transaction.get_time_interval_id()))
 
     """ProjektarbeitBuchung spezifische Methoden"""
 
@@ -1251,3 +1250,4 @@ class SystemAdministration(object):
     def delete_project_work_transaction(self, transaction):
         with ProjektarbeitBuchungMapper() as mapper:
             mapper.delete(transaction)
+        self.delete_project_worktime(self.get_project_worktime_by_key(transaction.get_time_interval_id()))

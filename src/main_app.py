@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
@@ -149,7 +149,6 @@ class AllPersonListOperations(Resource):
         s_adm = SystemAdministration()
 
         proposal = Person.from_dict(api.payload)
-        print(proposal.get_name)
 
         if proposal is not None:
             p = s_adm.create_person(proposal.get_name(), proposal.get_surname(),
@@ -208,6 +207,105 @@ class PersonRelatedActivityOperations(Resource):
             return 'Person not found', 500
 
 
+
+@timesystem.route('/project_deadline')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectDeadlineGetOperation(Resource):
+    @timesystem.marshal_with(project_deadline, code=200)
+    @timesystem.expect(project_deadline)
+    def post(self):
+        s_adm = SystemAdministration()
+
+        proposal = ProjektDeadline.from_dict(api.payload)
+
+        if proposal is not None:
+            pd = s_adm.create_project_deadline(proposal.get_id(), proposal.get_time_of_event())
+            return pd, 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/project_deadline/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des ProjektDeadline-Objekts')
+class ProjectDeadlineOperations(Resource):
+    @timesystem.marshal_with(project_deadline)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        pd = s_adm.get_project_deadline_by_key(id)
+        return pd
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        pd = s_adm.get_project_deadline_by_key(id)
+        s_adm.delete_project_deadline(pd)
+        return '', 200
+
+    @timesystem.marshal_with(project_deadline)
+    @timesystem.expect(project_deadline, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        pd = ProjektDeadline.from_dict(api.payload)
+
+        if pd is not None:
+            pd.set_id(id)
+            pd.set_event_name(pd.get_event_name())
+            pd.set_time_of_event(pd.get_time_of_event())
+            s_adm.save_project_deadline(pd)
+            return '', 200
+        else:
+            return '', 500
+
+@timesystem.route('/project_duration')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectDurationGetOperation(Resource):
+    @timesystem.marshal_with(project_duration, code=200)
+    @timesystem.expect(project_duration)
+    def post(self):
+        s_adm = SystemAdministration()
+
+        proposal = Projektlaufzeit.from_dict(api.payload)
+
+        if proposal is not None:
+            pd = s_adm.create_project_duration(proposal.get_id(), proposal.get_start(), proposal.get_end())
+            return pd, 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/project_duration/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Projektlaufzeit-Objekts')
+class ProjectDurationOperations(Resource):
+    @timesystem.marshal_with(project_duration)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        pd = s_adm.get_project_duration_by_key(id)
+        return pd
+
+    def delete(self, id):
+        s_adm = SystemAdministration()
+        pd = s_adm.get_project_duration_by_key(id)
+        s_adm.delete_project_duration(pd)
+        return '', 200
+
+    @timesystem.marshal_with(project_duration)
+    @timesystem.expect(project_duration, validate=True)
+    def put(self, id):
+        s_adm = SystemAdministration()
+        pd = Projektlaufzeit.from_dict(api.payload)
+
+        if pd is not None:
+            pd.set_id(id)
+            pd.set_name(pd.get_name())
+            pd.set_start(pd.get_start())
+            pd.set_end(pd.get_end())
+            s_adm.save_project_duration(pd)
+            return '', 200
+        else:
+            return '', 500
+
+
 @timesystem.route('/projects')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllProjectListOperations(Resource):
@@ -215,7 +313,6 @@ class AllProjectListOperations(Resource):
     def get(self):
         s_adm = SystemAdministration()
         all_projects = s_adm.get_all_projects()
-        print(all_projects)
         return all_projects
 
     @timesystem.marshal_with(project, code=200)
