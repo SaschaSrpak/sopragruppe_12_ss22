@@ -1079,8 +1079,7 @@ class WorktimeTransactionOperations(Resource):
             return '', 500
 
 
-@timesystem.route(
-    '/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
+@timesystem.route('/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
 @timesystem.param('name', 'Name der Pause')
