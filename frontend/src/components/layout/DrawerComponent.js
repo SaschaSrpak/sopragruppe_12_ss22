@@ -59,14 +59,6 @@ export default function TemporaryDrawer() {
             <ListItemText primary={"Home"} />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding onClick={() => navigate('/Profil')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Profil"} />
-          </ListItemButton>
-        </ListItem>
         <ListItem disablePadding onClick={() => navigate('/Buchungen')}>
           <ListItemButton>
             <ListItemIcon>
