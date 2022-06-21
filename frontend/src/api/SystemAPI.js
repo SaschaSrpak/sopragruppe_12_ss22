@@ -83,6 +83,21 @@ export default class SystemAPI {
 
     #getWorktimeTransactionsOfAccount= (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
 
+    //Commit-Transaction related
+
+    #
+
+    // End-Event related
+
+    #getEndEvent = (id) => `${this.#bankServerBaseURL}/end-event/${id}`;
+    #deleteEndEvent = (id) => `${this.#bankServerBaseURL}/end-event/${id}`;
+    #updateEndEvent = (id) => `${this.#bankServerBaseURL}/end-event/${id}`;
+
+    // End-Event Transaction related
+
+    #getEndEventTransaction = (id) => `${this.#bankServerBaseURL}/end-event-transaction/${id}`;
+    #deleteEndEventTransaction = (id) => `${this.#bankServerBaseURL}/end-event-transaction/${id}`;
+    #updateEndEventTransaction = (id) => `${this.#bankServerBaseURL}/end-event-transaction/${id}`;
 
 
 
