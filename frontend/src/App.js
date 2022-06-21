@@ -15,6 +15,7 @@ import Profil from './components/pages/Profil';
 import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
+import Auslese from './components/pages/Auslese';
 
 
 
@@ -119,6 +120,7 @@ export class App extends Component {
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
                 <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/auslese'} element={<Auslese />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
                 <Route path={'/projektewahl'} element={<Projektwahl />} />
                 <Route path={'/about'} element={<About />} />
