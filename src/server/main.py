@@ -9,12 +9,12 @@ test_administration = SystemAdministration()
 time_string = datetime.strftime(time, "%y-%m-%d %H:%M:%S")
 testdruck = test_administration.create_kommen_event("Test", time)
 print(testdruck)
-
+"""
 test_administration = SystemAdministration()
 persons = test_administration.get_all_persons()
 person = test_administration.get_person_by_key(1)
 projekt = test_administration.get_project_by_key(1)
-activity = test_administration.get_activity_by_key(3)
+"""activity = test_administration.get_activity_by_key(3)
 account = test_administration.get_time_account_by_key(1)
 event = test_administration.get_kommen_event_by_key(12)
 startevent = test_administration.get_start_event_by_key(10)
@@ -63,13 +63,17 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - test_administration.delete_account(account)"""
 
 """
-? get_all_bookings ?
-? get_full_work_time ?
+account = test_administration.get_time_account_by_person_key(10001)
+print(test_administration.get_all_bookings_for_account(account))"""
+"""? get_full_work_time ?
 ? get_full_pause_time ?
-? get_worktime_on_activity ?
-? get_work_time_on_project ?
-"""
+? get_worktime_on_activity ?"""
 
+"""
+projekt2 = test_administration.get_project_by_key(1)
+print(test_administration.get_work_time_on_project(account, projekt2))"""
+"""
+"""
 
 """Projekt spezifische Methoden"""
 
@@ -82,14 +86,15 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - print(test_administration.get_project_by_creator_key(1))"""
 """geht - test_administration.get_project_by_person_key(1)"""
 """geht - test_administration.add_person_responsible_to_project(projekt, person)"""
-"""error test_administration.change_project_persons_responsible(1, [person])                         error"""
+"""geht - test_administration.change_project_persons_responsible(1, [person])"""
 """geht - test_administration.delete_person_responsible_from_project(projekt, person)"""
 """geht - test_administration.get_project_by_activity_key(1)"""
 """geht -test_administration.add_activity_to_project(projekt, activity)"""
 """geht -test_administration.change_project_activities(1, [activity])"""
 """geht - test_administration.delete_activity_from_project(projekt, activity)"""
-"""error - test_administration.save_project(projekt)                                         error"""
-"""error / duration wird als liste zurückgegeben  - test_administration.delete_project(projekt)                         error"""
+"""geht - test_administration.save_project(projekt2)"""
+
+test_administration.delete_project(projekt)
 
 
 """Kommen spezifische Methoden"""
@@ -97,7 +102,7 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - test_administration.create_kommen_event("Kommen", end)"""
 """geht - print(test_administration.get_all_kommen_events())"""
 """geht - print(test_administration.get_kommen_event_by_key(1))"""
-"""? get_kommen_by_transaction_key ?"""
+"""geht - print(test_administration.get_kommen_by_transaction_key(10000))"""
 """geht - test_administration.save_kommen_event(event)"""
 """geht - test_administration.delete_kommen_event(event)"""
 
@@ -117,8 +122,7 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - test_administration.create_start_event("Start", end)"""
 """geht - test_administration.get_all_start_events()"""
 """geht - test_administration.get_start_event_by_key(1)"""
-"""?get_start_by_transaction_key?"""
-"""?get_start_by_interval_key?"""
+"""geht print(test_administration.get_start_by_transaction_key(10000))"""
 """geht - test_administration.save_start_event(startevent)"""
 """geht - test_administration.delete_start_event(startevent)"""
 
@@ -128,8 +132,7 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - test_administration.create_end_event("Ende", end)"""
 """geht - test_administration.get_all_end_events()"""
 """geht - test_administration.get_end_event_by_key(1)"""
-"""?get_end_by_transaction_key?"""
-"""?get_end_by_interval_key?"""
+"""geht - print(test_administration.get_end_by_transaction_key(10000))"""
 """geht - test_administration.save_end_event(endevent)"""
 """geht - test_administration.delete_end_event(endevent)"""
 
@@ -139,7 +142,6 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 """geht - test_administration.create_project_worktime("Projektarbeit3", 1, 1)"""
 """geht - test_administration.get_all_project_worktimes()"""
 """geht - test_administration.get_project_worktime_by_key(1)"""
-"""?get_project_worktime_by_transaction_key?"""
 """geht - test_administration.save_project_worktime(projektworktime)"""
 """geht - test_administration.delete_project_worktime(projektworktime)"""
 
@@ -162,8 +164,18 @@ end_string = datetime.strftime(end, "%y-%m-%d %H:%M:%S")"""
 
 
 """KommenBuchung spezifische Methoden"""
+"""
+account = test_administration.get_time_account_by_person_key(10001)
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 10, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 13, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 14, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 10, 20, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 11, 9, 13))
+test_administration.book_gehen_event(account, "Gehen", dt.datetime(2022, 6, 11, 23, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 12, 9, 13))
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 12, 10, 13))"""
 
-"""Error test_administration.create_kommen_transaction(2, 1)                                 error"""
+
 """geht - test_administration.create_start_event_transaction(1, 1)"""
 """geht - test_administration.book_start_event(account, 1, end)"""
 """geht - print(test_administration.get_all_start_event_transactions())"""
@@ -190,13 +202,28 @@ PauseBuchung spezifische Methoden
 """geht - test_administration.save_pause_transaction(pausebuchung)"""
 """geht - test_administration.delete_pause_transaction(pausebuchung)"""
 
-
-
+"""
 person = test_administration.get_person_by_key(10001)
 account = test_administration.get_time_account_by_person_key(10001)
 activity = test_administration.get_activity_by_key(1)
 
-start_time = dt.datetime.now()
-end_time = start_time + dt.timedelta(hours=7)
+test_administration.book_kommen_event(account, "Kommen", dt.datetime(2022, 6, 10, 9, 45))
+"""
 
-test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(),start_time, end_time)
+"""start_time = dt.datetime(2022, 6, 10, 10, 0)
+end_time = start_time + dt.timedelta(hours=4)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 14, 00, 23)
+end_time = start_time + dt.timedelta(minutes=15)
+test_administration.book_pause_transaction(account, "Kaffepause", start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 14, 16)
+end_time = start_time + dt.timedelta(hours=3)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+start_time = dt.datetime(2022, 6, 10, 17, 20, 23)
+end_time = start_time + dt.timedelta(minutes=15)
+test_administration.book_pause_transaction(account, "Kaffepause", start_time, end_time)"""
+"""
+start_time = dt.datetime(2022, 6, 10, 21, 00)
+end_time = start_time + dt.timedelta(hours=2)
+test_administration.book_project_work_transaction(account, "Test Buchung", activity.get_id(), start_time, end_time)
+"""

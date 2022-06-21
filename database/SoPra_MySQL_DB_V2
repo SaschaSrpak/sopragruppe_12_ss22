@@ -45,7 +45,7 @@ create table Person
     Nachname           varchar(100) not null,
     EMail              varchar(100) not null,
     Username           varchar(100) not null,
-    Firebase_ID        varchar(100) not null,
+    Firebase_ID        varchar(1000) not null,
     Last_modified_date timestamp    not null,
     Manager_Status     tinyint(1)   not null
 );

@@ -70,7 +70,7 @@ class ProjektMapper(Mapper):
 
         cursor.execute(
             "SELECT Project_ID, Name, Client, Description, Deadline_ID, " 
-            "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client={}".format(
+            "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client LIKE '{}' ORDER BY Client".format(
                 client))
         tuples = cursor.fetchall()
 
@@ -96,7 +96,7 @@ class ProjektMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Ersteller " \
-                  "WHERE User_ID='{}'".format(creator_key)
+                  "WHERE User_ID LIKE '{}' ORDER BY User_ID".format(creator_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
         for i in tuples:
@@ -105,6 +105,7 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return result
+
 
     def insert_creator(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt
@@ -130,14 +131,14 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-    def delete_creator(self, project, person):
+    def delete_creator(self, project, person_key):
         """Löschen einer verantwortlichen Person des Projekts aus der Datenbank.
 
                 :param person das aus der DB zu löschende "Objekt"
                 """
         cursor = self._cnx.cursor()
-        command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}', User_ID='{}'".format(project.get_id(),
-                                                                                             person.get_id())
+        command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}'AND User_ID='{}'".format(project.get_id(),
+                                                                                             person_key)
         cursor.execute(command)
 
         self._cnx.commit()
@@ -157,6 +158,7 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return result
+
 
     def insert_person_responsible(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt
@@ -228,6 +230,7 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
+
     def delete_activity(self, project, activity):
         cursor = self._cnx.cursor()
         command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}' and Activity_ID='{}'".format(project.get_id(),
@@ -296,15 +299,4 @@ class ProjektMapper(Mapper):
         cursor.close()
 
 
-with ProjektMapper() as mapper:
-    test = mapper.find_by_person_key(10001)
-    for i in test:
-        print(i.get_name())
 
-    testcreator = mapper.find_by_creator(10009)
-    for i in testcreator:
-        print(i.get_name())
-
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_name())
