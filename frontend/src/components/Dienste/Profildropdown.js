@@ -110,14 +110,10 @@ class ProfileDropDown extends Component {
                                         <Divider sx={{ margin: 1 }} />
                                         <Typography align='center' variant='body2'>{user.email}</Typography> 
                                         <Divider sx={{ margin: 1 }} />
-                                        <div>
-                                            {this.renderRedirect()}
-                                            <AccountCircleIcon style={{position:"relative", top:7, right: 31}}/>
-                                            <Button style={{position:"relative", right:8}} color='primary' onClick={this.setRedirect}>Profil</Button>
-                                        </div>
+                                        <Button color='primary' style={{position:"relative", left: 2}} onClick={this.handleSignOutButtonClicked}>Profil</Button> <br />
                                         <Divider sx={{ margin: 1 }} />
-                                        <LogoutIcon style={{position:"relative", top:7, right:25}}/>
-                                        <Button color='primary' style={{position:"relative", right:8}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                                        <LogoutIcon style={{position:"relative", bottom: -8, right: 27}}/>
+                                        <Button color='primary' style={{position:"relative", right: 10}} onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
 
                                     </Grid>
                                 </Grid>
