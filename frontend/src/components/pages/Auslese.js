@@ -20,7 +20,7 @@ export class Auslese extends Component {
     render() {
         return (
             <div>
-            <h1>Buchungen Auslesen</h1>
+            <h1 style={{textAlign: "center"}}>Buchungen Auslesen</h1>
             <Accordion>
               <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
