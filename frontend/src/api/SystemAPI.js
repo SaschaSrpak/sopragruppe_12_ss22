@@ -37,7 +37,20 @@ export default class SystemAPI {
     #bankServerBaseURL = '/bank'
 
     //Person related
-    #getPersonsURL = () => `${this.#bankServerBaseURL}/persons`
+    #getPersonsURL = () => `${this.#bankServerBaseURL}/persons`;
+    #getPersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
+    #addPersonURL = () => `${this.#bankServerBaseURL}/persons`;
+    #getActivityforPerson = (id) => `${this.#bankServerBaseURL}/persons/${id}/activity`;
+    #deletePersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
+    #updatePersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
+
+    //Project related
+
+    #getProjects = () => `${this.#bankServerBaseURL}/projects`;
+    #addProject = () => `${this.#bankServerBaseURL}/projects`;
+    
+
+
 
     static getApi() {
         if (this.#api == null) {
@@ -55,6 +68,12 @@ export default class SystemAPI {
         }
         )
 
+    /**
+     * Gibt alle Personen im System aus
+     *
+     * @public
+     */
+
     getPersons() {
         return this.#fetchAdvancend(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON);
@@ -62,6 +81,10 @@ export default class SystemAPI {
                 resolve(personBOs);
             })
         })
+    }
+
+    getPerson(person_id){
+        return this.#fetchAdvancend(this.#getCustomerURL(person_id)).then((responseJSON))
     }
 
 

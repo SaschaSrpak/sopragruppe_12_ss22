@@ -16,8 +16,8 @@ class PersonMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (id, name, surname,
-             mail_address, user_name,
-             last_modified_date, manager_status, firebase_id) in tuples:
+             mail_address, user_name, firebase_id,
+             manager_status, last_modified_date) in tuples:
             person = Person()
             person.set_id(id)
             person.set_name(name)
