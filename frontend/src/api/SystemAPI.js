@@ -99,10 +99,82 @@ export default class SystemAPI {
     #deleteEndEventTransaction = (id) => `${this.#bankServerBaseURL}/end-event-transaction/${id}`;
     #updateEndEventTransaction = (id) => `${this.#bankServerBaseURL}/end-event-transaction/${id}`;
 
+    //Gehen related
+
+    #getGehen = (id) => `${this.#bankServerBaseURL}/gehen/${id}`;
+    #deleteGehen = (id) => `${this.#bankServerBaseURL}/gehen/${id}`;
+    #updateGehen = (id) => `${this.#bankServerBaseURL}/gehen/${id}`;
+
+    //Gehen Transaction related
+
+    #getGehenTransaction = (id) => `${this.#bankServerBaseURL}/gehen-transaction/${id}`;
+    #deleteGehenTransaction = (id) => `${this.#bankServerBaseURL}/gehen-transaction/${id}`;
+    #updateGehenTransaction = (id) => `${this.#bankServerBaseURL}/gehen-transaction/${id}`;
+
+    //Kommen related
+
+    #getKommen = (id) => `${this.#bankServerBaseURL}/kommen/${id}`;
+    #deleteKommen = (id) => `${this.#bankServerBaseURL}/kommen/${id}`;
+    #updateKommen = (id) => `${this.#bankServerBaseURL}/kommen/${id}`;
+
+    //Kommen Transaction relate
+
+    #getKommenTransaction = (id) => `${this.#bankServerBaseURL}/kommen-transaction/${id}`;
+    #deleteKommenTransaction = (id) => `${this.#bankServerBaseURL}/kommen-transaction/${id}`;
+    #updateKommenTransaction = (id) => `${this.#bankServerBaseURL}/kommen-transaction/${id}`;
+
+    //Pause related
+
+    #getpause = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+    #deletepause = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+    #updatepause = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+
+    //Pause Transaction relate
+
+    #getpauseTransaction = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+    #deletepauseTransaction = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+    #updatepauseTransaction = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+
+    //Start-event related
+
+    #getstartEvent = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+    #deletestartEvent = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+    #updatestartEvent= (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+
+    //Start-event Transaction relate
+
+    #getstartEventTransaction = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    #deletestartEventTransaction = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    #updatestartEventTransaction = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    
+    //Worktime related
+
+    #getWorktime = (id) => `${this.#bankServerBaseURL}/worktime/${id}`;
+    #deleteWorktime = (id) => `${this.#bankServerBaseURL}/worktime/${id}`;
+    #updateWorktime= (id) => `${this.#bankServerBaseURL}/worktime/${id}`;
+
+    //Worktime Transaction relate
+
+    #getWorktimeTransaction = (id) => `${this.#bankServerBaseURL}/worktime-transaction/${id}`;
+    #deleteWorktimeTransaction = (id) => `${this.#bankServerBaseURL}/worktime-transaction/${id}`;
+    #updateWorktimeTransaction = (id) => `${this.#bankServerBaseURL}/worktime-transaction/${id}`;
+
+    //Project-deadline related
+
+    #getProjectDeadline = (id) => `${this.#bankServerBaseURL}/project_deadline/${id}`;
+    #deleteProjectDeadline = (id) => `${this.#bankServerBaseURL}/project_deadline/${id}`;
+    #updateProjectDeadline= (id) => `${this.#bankServerBaseURL}/project_deadline/${id}`;
+    #addProjectDeadline = () => `${this.#bankServerBaseURL}/project_deadline`;
+
+    //Project-duration related
+
+    #getProjectDuration = (id) => `${this.#bankServerBaseURL}/project_duration/${id}`;
+    #deleteProjectDuration = (id) => `${this.#bankServerBaseURL}/project_duration/${id}`;
+    #updateProjectDuration= (id) => `${this.#bankServerBaseURL}/project_duration/${id}`;
+    #addProjectDuration = () => `${this.#bankServerBaseURL}/project_duration`;
 
 
-
-
+    
     static getApi() {
         if (this.#api == null) {
             this.#api = new SystemAPI();
