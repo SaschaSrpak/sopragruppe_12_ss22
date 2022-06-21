@@ -35,7 +35,7 @@ export class Projektwahl extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>"Projektwahl"</Typography>
-{/** Projektauswahl -> Mapping aus Datenbank  */}
+{/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
                 <form>
                     <TextField label="Projektwahl">
                         {TestProjekte.map((projekt) => (
@@ -54,7 +54,9 @@ export class Projektwahl extends Component {
                     >Auswählen</Typography>
                 </Button>
 {/** Trennlinie aus Material-UI, ähnlich <hr> */}
-                <Divider/>
+                <Divider sx={{
+                    margin: "10px",
+                }}/>
                 
 {/** Button zum Erstellen eines neuen Projekts */}
                 <Button variant="contained" sx={{

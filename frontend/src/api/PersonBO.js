@@ -67,4 +67,21 @@ export default class PersonBO{
         this.manager_status = new_manager_status;
     }
 
+
+    static fromJSON(person){
+        let result = []
+        if(Array.isArray(person)){
+            person.forEach((p) => {
+                Object.setPrototypeOf(p, PersonBO.prototype);
+                result.push(p)
+            })
+        } else{
+            let p = person;
+            Object.setPrototypeOf(p, PersonBO.prototype);
+            result.push(p);
+        }
+
+        return result;
+    }
+
 }

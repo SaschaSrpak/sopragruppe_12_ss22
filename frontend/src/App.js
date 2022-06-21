@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, } from 'react-router-dom';
-import { Container } from '@mui/material';
+import { Container, Toolbar } from '@mui/material';
 import './App.css';
 import firebaseConfig from './components/login/firebaseconfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -15,6 +15,7 @@ import Profil from './components/pages/Profil';
 import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
+import Auslese from './components/pages/Auslese';
 
 
 
@@ -107,7 +108,9 @@ export class App extends Component {
     } else {
       console.log(this.state.currentUser)
       return (
+        
         <div>
+          <Toolbar/>
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
@@ -117,7 +120,9 @@ export class App extends Component {
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
                 <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/auslese'} element={<Auslese />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
+                <Route path={'/projektewahl'} element={<Projektwahl />} />
                 <Route path={'/about'} element={<About />} />
                 <Route path={'/profil'} element={<Profil />} />
               </Routes>

@@ -55,6 +55,7 @@ export default class ProjektBO{
         return this.set_deadline;
     }
 
+
     getActivites(){
         return this.activities;
     }
@@ -70,5 +71,23 @@ export default class ProjektBO{
     setPersons_Responsible(){
         this.persons_responsible;
     }
+
+    static fromJSON(projekt){
+        let result = []
+        if(Array.isArray(projekt)){
+            projekt.forEach((j) => {
+                Object.setPrototypeOf(j, ProjektBO.prototype);
+                result.push(j)
+            })
+        } else{
+            let j = projekt;
+            Object.setPrototypeOf(j, ProjektBO.prototype);
+            result.push(j);
+        }
+
+        return result;
+    }
+
+
     
 }

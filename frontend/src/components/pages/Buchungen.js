@@ -1,26 +1,115 @@
-import React, { Component } from "react";
-import { Toolbar } from '@mui/material';
+import React, { Component } from 'react';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import PropTypes from 'prop-types';
+import Error from '../Zwischenelemente/Error';
+import Loader from '../Zwischenelemente/Loader'
+import { touchRippleClasses } from '@mui/material';
+import { applyActionCode } from 'firebase/auth';
+import { breakpoints } from '@mui/system';
 
 /** 
- *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
- *@author 
+ *@fileOverview 
+ *@author Kim Kausler
 */
 
-/**
- * Popup einer Aktivität über Dialog Komponente aus Material-UI: https://mui.com/material-ui/react-dialog/
- */
+export class Buchungen extends Component{
 
+/*     constructor(props){
+        super(props);
+        this.kommen = null;
+        this.gehen = null;
 
-export class Buchung extends Component {
-    render() {
-        return (
-            
-            <div>
-                <Toolbar/>
-                <h1>Buchungen</h1>
-            </div>
-        );
+        this.state = {btnText: "Kommen",};
+
     }
+
+    getZeitkonto(){
+
+    }
+
+    getZeitintervall(){
+
+    }
+
+    handleClick = () => {
+      let btnText = this.state.btnText == "Kommen" ? "Gehen" : "Kommen"
+      this.setState({btnText: btnText})
+      this.changeState();
+      let zeitstempel = new Date();
+      
+      switch(this.state.changeState){
+        case false:
+          this.Kommen = new KommenBuchungBO(zeitstempel);
+          break;
+        case true:
+          this.Gehen = new GehenBuchungBO(zeitstempel);
+          break;
+          default: 
+          break;
+        }
+
+    } */
+    render(){
+        return(
+        <div>
+            <h1>Buchungen</h1>
+            <Button variant="contained" onClick={() => this.handleClick()} > Kommen </Button>
+            <p>Letzte Kommen Buchung um </p>
+            <Button variant="contained" > Gehen </Button>
+            <p>Letzte Gehen Buchung um </p>
+            <Divider sx={{margin:"20px"}}/>
+
+            <Stack display="flex" flex-direction="row">
+            <Box sx={{ maxWidth: 120}}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Aktivität</InputLabel>
+                <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Age"
+                >
+                  <MenuItem value={10}>Eins</MenuItem>
+                  <MenuItem value={20}>Zwei</MenuItem>
+                  <MenuItem value={30}>Drei</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
+              <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
+              <Button variant="contained" > Buchen </Button>
+            </Box>
+            </Stack>
+
+            <Divider sx={{margin:"20px"}}/>
+
+            <Box sx={{ maxWidth: 120}}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Pause</InputLabel>
+                <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Age"
+                >
+                  <MenuItem value={10}>Eins</MenuItem>
+                  <MenuItem value={20}>Zwei</MenuItem>
+                  <MenuItem value={30}>Drei</MenuItem>
+                </Select>
+                <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
+              <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
+              <Button variant="contained" > Buchen </Button>
+              </FormControl>
+            </Box>
+        </div>
+    )
+  }
+    
 }
 
-export default Buchung;
+export default Buchungen;

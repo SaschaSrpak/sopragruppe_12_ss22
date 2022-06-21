@@ -74,5 +74,4 @@ export default class ZeitintervallBO extends BO {
     }
 
 }
-
-export default ZeitintervallBO;
+}
