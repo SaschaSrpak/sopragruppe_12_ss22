@@ -61,7 +61,6 @@ class SystemAdministration(object):
         person.set_manager_status(manager_status)
         person.set_id(1)
 
-
         with PersonMapper() as mapper:
             mapper.insert(person)
             self.create_time_account_for_person(person)
@@ -321,6 +320,10 @@ class SystemAdministration(object):
             full_pause_time += pause.get_duration()
 
         return full_pause_time
+
+    def get_all_worktime_transactions_for_account(self, account):
+        all_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
+        return all_worktime_transactions
 
 
     def get_worktime_transactions_on_activity(self, account, activity):

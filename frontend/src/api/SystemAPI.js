@@ -46,9 +46,45 @@ export default class SystemAPI {
 
     //Project related
 
-    #getProjects = () => `${this.#bankServerBaseURL}/projects`;
-    #addProject = () => `${this.#bankServerBaseURL}/projects`;
-    
+    #getProjectsURL = () => `${this.#bankServerBaseURL}/projects`;
+    #addProjectURL = () => `${this.#bankServerBaseURL}/projects`;
+    #getProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}`;
+    #deleteProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}`;
+    #updateProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}`;
+    #getActivitiesOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/activity`;
+    #getPersonsOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/persons`;
+
+    //Activity related
+
+    #getActivities = () => `${this.#bankServerBaseURL}/activities`;
+    #addActivity = () => `${this.#bankServerBaseURL}/activities`;
+    #getActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #deleteActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #updateActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #getPersonsResponsibleOnActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}/person`;
+    #addPersonsResponsibleOnActivity = (id, person_id) => `${this.#bankServerBaseURL}/activities/
+                                                               ${id}/person/${person_id}`;
+    #deletePersonsResponsibleOnActivity = (id, person_id) => `${this.#bankServerBaseURL}/activities/
+                                                                ${id}/person/${person_id}`;
+
+    //Account related
+
+    #getAccounts = () => `${this.#bankServerBaseURL}/activities`;
+    #getAccount = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
+    #updateAccount = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
+    #getKommenTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/kommen/transactions/${id}`;
+    #getGehenTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/gehen/transactions/${id}`;
+    #getPauseTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}`;
+    #getPauseTimeOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}/Time`;
+    #getWorktimeTransactionsOfAccountOnActivity = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
+                                                                         transactions/${id}/activities/${activity_id}`;
+    #getWorktimeOfAccountOnActivity = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
+                                                            worktime/${id}/activities/${activity_id}`;
+
+    #getWorktimeTransactionsOfAccount= (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
+
+
+
 
 
 

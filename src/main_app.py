@@ -488,19 +488,6 @@ class ActivityRelatedSpecificPersonOperations(Resource):
         return '', 200
 
 
-@timesystem.route('/activities/<int:person_id>/kommen')
-@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
-class ActivityRelatedPersonOperations(Resource):
-    @timesystem.marshal_with(person)
-    def post(self, id, person_id):
-        s_adm = SystemAdministration()
-        activity = s_adm.get_activity_by_key(id)
-        person = s_adm.get_person_by_key(person_id)
-        s_adm.add_person_responsible_to_activity(activity, person)
-        return '', 200
-
-
 @timesystem.route('/accounts')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllAccountListOperations(Resource):
@@ -597,6 +584,22 @@ class PauseTransactionRelatedAccountOperations(Resource):
 
         if account is not None:
             return pauses
+        else:
+            return 'Account not found', 500
+
+
+@timesystem.route('/accounts/worktime-transactions/<int:id>/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+class WorktimeTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(project_worktime_transaction)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        pwt = s_adm.get_all_worktime_transactions_for_account(account)
+
+        if account is not None:
+            return pwt
         else:
             return 'Account not found', 500
 
