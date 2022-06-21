@@ -22,7 +22,7 @@ import { breakpoints } from '@mui/system';
 
 export class Buchungen extends Component{
 
-    constructor(props){
+/*     constructor(props){
         super(props);
         this.kommen = null;
         this.gehen = null;
@@ -56,7 +56,7 @@ export class Buchungen extends Component{
           break;
         }
 
-    }
+    } */
     render(){
         return(
         <div>
