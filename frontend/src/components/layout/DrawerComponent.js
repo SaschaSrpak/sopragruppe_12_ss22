@@ -71,7 +71,7 @@ export default function TemporaryDrawer() {
             <ListItemIcon>
               <FactCheckIcon />
             </ListItemIcon>
-            <ListItemText primary={"ProjekteWahl"} />
+            <ListItemText primary={"Projektwahl"} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding onClick={() => navigate('/About')}>
