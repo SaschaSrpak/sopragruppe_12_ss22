@@ -34,7 +34,7 @@ export class Projektwahl extends Component {
                 <Typography variant="h4" sx={{
                     textAlign: 'center',
                     margin: "5px",
-                }}>"Projektwahl"</Typography>
+                }}>Projektwahl</Typography>
 {/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
                 <form>
                     <TextField label="Projektwahl">
