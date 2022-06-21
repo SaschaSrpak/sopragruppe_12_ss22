@@ -120,6 +120,7 @@ export class App extends Component {
                 <Route path={'/home'} element={<Home />} />
                 <Route path={'/buchungen'} element={<Buchungen />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
+                <Route path={'/projektewahl'} element={<Projektwahl />} />
                 <Route path={'/about'} element={<About />} />
                 <Route path={'/profil'} element={<Profil />} />
               </Routes>
