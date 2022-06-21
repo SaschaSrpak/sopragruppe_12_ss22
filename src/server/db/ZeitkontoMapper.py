@@ -1,5 +1,5 @@
 from server.business_objects.Zeitkonto import Zeitkonto
-from Mapper import Mapper
+from server.db.Mapper import Mapper
 
 class ZeitkontoMapper(Mapper):
 
@@ -10,7 +10,7 @@ class ZeitkontoMapper(Mapper):
         result = []
         cursor = self._cnx.cursor()
 
-        cursor.execute("SELECT Account_ID, Owner_ID from zeitkonto")
+        cursor.execute("SELECT Account_ID, User_ID from Arbeitszeitkonto")
         tuples = cursor.fetchall()
 
         for (Account_ID, Owner_ID) in tuples:
@@ -31,7 +31,7 @@ class ZeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT Owner_ID from zeitkonto WHERE Account_ID={}".format(key)
+        command = "SELECT Account_ID, User_ID from Arbeitszeitkonto WHERE Account_ID='{}'".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -42,6 +42,34 @@ class ZeitkontoMapper(Mapper):
             zeitkonto = Zeitkonto()
             zeitkonto.set_id(Account_ID)
             zeitkonto.set_owner(Owner_ID)
+
+
+            result = zeitkonto
+        else:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_person_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT Account_ID, User_ID from Arbeitszeitkonto WHERE User_ID='{}'".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        if tuples is not None \
+                and len(tuples) > 0 \
+                and tuples[0] is not None:
+            (Account_ID, Owner_ID) = tuples[0]
+            zeitkonto = Zeitkonto()
+            zeitkonto.set_id(Account_ID)
+            zeitkonto.set_owner(Owner_ID)
+
 
             result = zeitkonto
         else:
@@ -54,13 +82,13 @@ class ZeitkontoMapper(Mapper):
 
     def insert(self, zeitkonto):
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(Account_ID) AS maxid FROM zeitkonto ")
+        cursor.execute("SELECT MAX(Account_ID) AS maxid FROM Arbeitszeitkonto ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             zeitkonto.set_id(maxid[0] + 1)
 
-        command = "INSERT INTO zeitkonto (Account_ID, Owner_ID) VALUES (%s,%s)"
+        command = "INSERT INTO Arbeitszeitkonto (Account_ID, User_ID) VALUES (%s,%s)"
         data = (zeitkonto.get_id(),
                 zeitkonto.get_owner())
         cursor.execute(command, data)
@@ -75,7 +103,7 @@ class ZeitkontoMapper(Mapper):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE zeitkonto " + "SET Owner_ID=%s WHERE Account_ID=%s"
+        command = "UPDATE Arbeitszeitkonto " + "SET User_ID=%s WHERE Account_ID=%s"
         data = (zeitkonto.get_id(),
                 zeitkonto.get_owner())
         cursor.execute(command, data)
@@ -87,7 +115,7 @@ class ZeitkontoMapper(Mapper):
         """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM zeitkonto WHERE Account_ID={}".format(zeitkonto.get_id())
+        command = "DELETE FROM Arbeitszeitkonto WHERE Account_ID='{}'".format(zeitkonto.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

@@ -1,0 +1,258 @@
+CREATE DATABASE  IF NOT EXISTS `SoPra_MySQL_DB_V2`;
+USE `SoPra_MySQL_DB_V2`;
+
+create table Aktivitaet
+(
+    Activity_ID        int          not null
+        primary key,
+    Name               varchar(100) null,
+    Man_Day_Capacity   float        not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Endereignis
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Gehen
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Kommen
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Person
+(
+    User_ID            int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Nachname           varchar(100) not null,
+    EMail              varchar(100) not null,
+    Username           varchar(100) not null,
+    Firebase_ID        varchar(100) not null,
+    Last_modified_date timestamp    not null,
+    Manager_Status     tinyint(1)   not null
+);
+
+create table Aktivitaet_Zustaendigkeit
+(
+    Activity_ID int not null,
+    User_ID     int not null,
+    constraint Aktivitaet_Zustaendigkeit_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint Aktivitaet_Zustaendigkeit_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID)
+);
+
+create table Arbeitszeitkonto
+(
+    Account_ID int not null
+        primary key,
+    User_ID    int null,
+    constraint Zeitkonto_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID)
+);
+
+create table EndereignisBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint EndereignisBuchung_Endereignis_Event_ID_fk
+        foreign key (Event_ID) references Endereignis (Event_ID),
+    constraint EndereignisBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+create table GehenBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint GehenBuchung_Gehen_Event_ID_fk
+        foreign key (Event_ID) references Gehen (Event_ID),
+    constraint GehenBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+create table KommenBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint KommenBuchung_Kommen_Event_ID_fk
+        foreign key (Event_ID) references Kommen (Event_ID),
+    constraint KommenBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+create table Projekt_deadline
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Projektlaufzeit
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Projekt
+(
+    Project_ID          int          not null
+        primary key,
+    Name                varchar(100) not null,
+    Client              varchar(100) not null,
+    Description         varchar(500) null,
+    Deadline_ID         int          null,
+    Project_Duration_ID int          null,
+    Last_modified_date  timestamp    not null,
+    constraint Projekt_Projekt_deadline_Event_ID_fk
+        foreign key (Deadline_ID) references Projekt_deadline (Event_ID),
+    constraint Projekt_Projektlaufzeit_Interval_ID_fk
+        foreign key (Project_Duration_ID) references Projektlaufzeit (Interval_ID)
+);
+
+create table Projekt_Aktivitaeten
+(
+    Project_ID  int not null,
+    Activity_ID int not null,
+    constraint Projekt_Aktivitaeten_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint Projekt_Aktivitaeten_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+create table Projekt_Ersteller
+(
+    Project_ID int not null,
+    User_ID    int not null,
+    constraint Projekt_Ersteller_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID),
+    constraint Projekt_Ersteller_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+create table Projekt_Zustaendigkeit
+(
+    Project_ID int not null,
+    User_ID    int not null,
+    constraint Projekt_Zustaendigkeit_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID),
+    constraint Projekt_Zustaendigkeit_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+create table Startereignis
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+create table Pause
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null,
+    constraint Pause_Endereignis_Event_ID_fk
+        foreign key (End_Event_ID) references Endereignis (Event_ID),
+    constraint Pause_Startereignis_Event_ID_fk
+        foreign key (Start_Event_ID) references Startereignis (Event_ID)
+);
+
+create table PauseBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Interval_ID        int      null,
+    Last_modified_date datetime not null,
+    constraint PauseBuchung_Pause_Interval_ID_fk
+        foreign key (Interval_ID) references Pause (Interval_ID),
+    constraint PauseBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+create table Projektarbeit
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null,
+    constraint Projektarbeit_Endereignis_Event_ID_fk
+        foreign key (End_Event_ID) references Endereignis (Event_ID),
+    constraint Projektarbeit_Startereignis_Event_ID_fk
+        foreign key (Start_Event_ID) references Startereignis (Event_ID)
+);
+
+create table ProjektarbeitBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Activity_ID        int      null,
+    Interval_ID        int      null,
+    Last_modified_date datetime not null,
+    constraint ProjektarbeitBuchung_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint ProjektarbeitBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint ProjektarbeitBuchung_Projektarbeit_Interval_ID_fk
+        foreign key (Interval_ID) references Projektarbeit (Interval_ID)
+);
+
+create table StartereignisBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint StartereignisBuchung_Person_User_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint StartereignisBuchung_Startereignis_Event_ID_fk
+        foreign key (Event_ID) references Startereignis (Event_ID)
+);
+
+
