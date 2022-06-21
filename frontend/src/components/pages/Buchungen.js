@@ -27,7 +27,34 @@ export class Buchungen extends Component{
         this.kommen = null;
         this.gehen = null;
 
-        this.state = {loading: false, buttonText: "Kommen", currentUser: this.props.currentUser};
+        this.state = {btnText: "Kommen",};
+
+    }
+
+    getZeitkonto(){
+
+    }
+
+    getZeitintervall(){
+
+    }
+
+    handleClick = () => {
+      let btnText = this.state.btnText == "Kommen" ? "Gehen" : "Kommen"
+      this.setState({btnText: btnText})
+      this.changeState();
+      let zeitstempel = new Date();
+      
+      switch(this.state.changeState){
+        case false:
+          this.Kommen = new KommenBuchungBO(zeitstempel);
+          break;
+        case true:
+          this.Gehen = new GehenBuchungBO(zeitstempel);
+          break;
+          default: 
+          break;
+        }
 
     }
     render(){
