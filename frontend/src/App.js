@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, } from 'react-router-dom';
-import { Container } from '@mui/material';
+import { Container, Toolbar } from '@mui/material';
 import './App.css';
 import firebaseConfig from './components/login/firebaseconfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -107,7 +107,9 @@ export class App extends Component {
     } else {
       console.log(this.state.currentUser)
       return (
+        
         <div>
+          <Toolbar/>
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
