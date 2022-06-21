@@ -123,13 +123,13 @@ project_worktime_transaction = api.inherit('ProjektarbeitBuchung', interval_tran
                                                                                 'an welcher gearbeitet wurde')
 })
 
-kommen_transaction = api.inherit('KommenBuchung', bo, event_transaction)
+kommen_transaction = api.inherit('KommenBuchung', bo, transaction, event_transaction)
 
-gehen_transaction = api.inherit('GehenBuchung', bo, event_transaction)
+gehen_transaction = api.inherit('GehenBuchung', bo, transaction, event_transaction)
 
-start_event_transaction = api.inherit('StartereignisBuchung', bo, event_transaction)
+start_event_transaction = api.inherit('StartereignisBuchung', bo, transaction, event_transaction)
 
-end_event_transaction = api.inherit('EndereignisBuchung', bo ,event_transaction)
+end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event_transaction)
 
 
 @timesystem.route('/persons')
