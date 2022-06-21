@@ -36,6 +36,9 @@ export default class SystemAPI {
 
     #bankServerBaseURL = '/bank'
 
+    //Person related
+    #getPersonsURL = () => `${this.#bankServerBaseURL}/persons`
+
     static getApi() {
         if (this.#api == null) {
             this.#api = new SystemAPI();
@@ -49,8 +52,17 @@ export default class SystemAPI {
                 throw Error(`${res.status} ${res.statusText}`)
             }
             return res.json();
-        })
+        }
+        )
 
+    getPersons() {
+        return this.#fetchAdvancend(this.#getPersonsURL()).then((responseJSON) => {
+            let personBOs = PersonBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(personBOs);
+            })
+        })
+    }
 
 
 }
