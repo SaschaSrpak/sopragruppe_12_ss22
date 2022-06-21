@@ -77,15 +77,11 @@ class KommenBuchungMapper(Mapper):
 
         for (maxid) in tuples:
             transaction.set_id(maxid[0]+1)
-        print(transaction.get_id())
-        print(transaction.get_target_user_account)
-        print(transaction.get_event_id)
-        print(transaction.get_last_modified_date)
         cursor.execute("INSERT INTO KommenBuchung (Transaction_ID, Account_ID, "
                        "Event_ID, Last_modified_date) "
                        "VALUES ('{}','{}','{}','{}')".format(transaction.get_id(),
                                                              transaction.get_target_user_account(),
-                                                             transaction.get_event_id,
+                                                             transaction.get_event_id(),
                                                              transaction.get_last_modified_date()))
 
         self._cnx.commit()

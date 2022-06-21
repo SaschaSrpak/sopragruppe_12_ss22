@@ -176,11 +176,4 @@ if (__name__ == "__main__"):
             print(i.get_name())
 """
 
-with AktivitaetMapper() as mapper:
-    test = mapper.find_by_person_key(10001)
-    for i in test:
-        print(i.get_activity_name())
 
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_activity_name())

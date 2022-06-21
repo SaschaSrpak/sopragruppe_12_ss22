@@ -62,14 +62,14 @@ class ProjektlaufzeitMapper(Mapper):
         return result
 
     def find_by_project_key(self, project_key):
-        result = []
+        result = None
         cursor = self._cnx.cursor()
         command = "SELECT Project_Duration_ID FROM Projekt " \
                   "WHERE Project_ID='{}'".format(project_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
         for i in tuples:
-            result.append(self.find_by_key(str(i[0])))
+            result = (self.find_by_key(str(i[0])))
 
         self._cnx.commit()
         cursor.close()

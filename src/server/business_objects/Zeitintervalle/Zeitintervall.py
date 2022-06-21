@@ -43,3 +43,5 @@ class Zeitintervall (bo.BusinessObject):
     def set_duration(self, new_duration):
         """Auslesen der Länge des Zeitintervalls."""
         self._duration = new_duration
+
+
