@@ -17,17 +17,17 @@ class PersonMapper(Mapper):
 
         for (id, name, surname,
              mail_address, user_name,
-             firebase_id,
-             last_modified_date, manager_status) in tuples:
+             last_modified_date, manager_status, firebase_id) in tuples:
             person = Person()
             person.set_id(id)
             person.set_name(name)
             person.set_surname(surname)
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
+            person.set_last_modified_date(last_modified_date)
             person.set_manager_status(manager_status)
             person.set_firebase_id(firebase_id)
-            person.set_last_modified_date(last_modified_date)
+
             result.append(person)
 
         self._cnx.commit()
