@@ -1,5 +1,5 @@
 import BuchungBO from './BuchungBO';
-import EreignisbuchungBO from './Buchungen/EreignisbuchungBO';
+
 /** 
  *@fileOverview 
  *@author Luca Trautmann
@@ -7,9 +7,9 @@ import EreignisbuchungBO from './Buchungen/EreignisbuchungBO';
 
 export default class EreignisbuchungBO extends BuchungBO{
 
-    constructor() {
+    constructor(event_id) {
         super()
-        this.event_id = Ereignis;
+        this.event_id = event_id;
     }
 
     setEvent_id(event_id){
@@ -19,5 +19,6 @@ export default class EreignisbuchungBO extends BuchungBO{
     getEvent_id(){
         return this.event_id;
     }
+
 
 }

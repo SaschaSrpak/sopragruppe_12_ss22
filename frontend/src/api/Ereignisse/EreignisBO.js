@@ -1,15 +1,15 @@
-import EreignisBO from "/Ereignisse/EreignisBO";
+import BO from "../BO";
 /** 
  *@fileOverview
 *@author Luca Trautmann, Kim Kausler
 */
 
-export default class EreignisBO extends EreignisBO{
+export default class EreignisBO extends BO{
 
-    constructor() {
+    constructor(event_name, time_of_event) {
         super()
-        this.event_name = null;
-        this.time_of_event = null;
+        this.event_name = event_name;
+        this.time_of_event = time_of_event;
            }
 
     getEventName() {
