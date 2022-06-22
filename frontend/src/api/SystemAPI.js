@@ -302,11 +302,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a EndereignisBO.
    *
-   * @param {Number} EndEvent_id to be updated
+   * @param {EndereignisBO} EndereignisBO to be updated
    * @public
    */
-  updateEndEvent(EndEvent_id) {
-    return this.#fetchAdvanced(this.updateEndEventURL(EndEvent_id), {
+  updateEndEvent(EndereignisBO) {
+    return this.#fetchAdvanced(this.updateEndEventURL(EndereignisBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -359,11 +359,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a EndereignisBuchungBO.
    *
-   * @param {Number} EndEventTransaction_id to be updated
+   * @param {EndereignisBuchungBO} EndereignisBuchungBO to be updated
    * @public
    */
-  updateEndEventTransaction(EndEventTransaction_id) {
-    return this.#fetchAdvanced(this.updateEndEventTransactionURL(EndEventTransaction_id), {
+  updateEndEventTransaction(EndereignisBuchungBO) {
+    return this.#fetchAdvanced(this.updateEndEventTransactionURL(EndereignisBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -416,11 +416,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a GehenBO.
    *
-   * @param {Number} Gehen_id to be updated
+   * @param {GehenBO} GehenBO to be updated
    * @public
    */
-  updateGehen(Gehen_id) {
-    return this.#fetchAdvanced(this.updateGehenURL(Gehen_id), {
+  updateGehen(GehenBO) {
+    return this.#fetchAdvanced(this.updateGehenURL(GehenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -472,11 +472,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a GehenBuchungBO.
    *
-   * @param {Number} GehenTransaction_id to be updated
+   * @param {GehenBuchungBO} GehenBuchungBO to be updated
    * @public
    */
-  updateGehenTransaction(GehenTransaction_id) {
-    return this.#fetchAdvanced(this.updateGehenTransactionURL(GehenTransaction_id), {
+  updateGehenTransaction(GehenBuchungBO) {
+    return this.#fetchAdvanced(this.updateGehenTransactionURL(GehenBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -529,11 +529,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a KommenBO.
    *
-   * @param {Number} Kommen_id to be updated
+   * @param {KommenBO} KommenBO to be updated
    * @public
    */
-  updateKommen(Kommen_id) {
-    return this.#fetchAdvanced(this.updateKommenURL(Kommen_id), {
+  updateKommen(KommenBO) {
+    return this.#fetchAdvanced(this.updateKommenURL(KommenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -586,11 +586,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a KommenBuchungBO.
    *
-   * @param {Number} KommenTransaction_id to be updated
+   * @param {KommenBuchungBO} KommenBuchungBO to be updated
    * @public
    */
-  updateKommenTransaction(KommenTransaction_id) {
-    return this.#fetchAdvanced(this.updateKommenTransactionURL(KommenTransaction_id), {
+  updateKommenTransaction(KommenBuchungBO) {
+    return this.#fetchAdvanced(this.updateKommenTransactionURL(KommenBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -598,7 +598,7 @@ export default class SystemAPI {
       },
       body: JSON.stringify(KommenBuchungBO)
     }).then((responseJSON) => {
-      // We always get an array of KommenBO.fromJSON
+      // We always get an array of KommenBuchungBO.fromJSON
       let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
       // console.info(KommenBuchungBO);
       return new Promise(function (resolve) {
@@ -644,11 +644,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a PauseBO.
    *
-   * @param {Number} Pause_id to be updated
+   * @param {PauseBO} PauseBO to be updated
    * @public
    */
-  updatePause(Pause_id) {
-    return this.#fetchAdvanced(this.updatePauseURL(Pause_id), {
+  updatePause(PauseBO) {
+    return this.#fetchAdvanced(this.updatePauseURL(PauseBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -700,11 +700,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a PauseBuchungBO.
    *
-   * @param {Number} PauseTransaction_id to be updated
+   * @param {PauseBuchungBO} PauseBuchungBO to be updated
    * @public
    */
-  updatePauseTransaction(PauseTransaction_id) {
-    return this.#fetchAdvanced(this.updatePauseTransactionURL(PauseTransaction_id), {
+  updatePauseTransaction(PauseBuchungBO) {
+    return this.#fetchAdvanced(this.updatePauseTransactionURL(PauseBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -757,11 +757,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a StartereignisBO.
    *
-   * @param {Number} StartEvent_id to be updated
+   * @param {StartereignisBO} StartereignisBO to be updated
    * @public
    */
-  updateStartEvent(StartEvent_id) {
-    return this.#fetchAdvanced(this.updateStartEventURL(StartEvent_id), {
+  updateStartEvent(StartereignisBO) {
+    return this.#fetchAdvanced(this.updateStartEventURL(StartereignisBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -814,11 +814,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a StartereignisBuchungBO.
    *
-   * @param {Number} StartEventTransaction_id to be updated
+   * @param {StartereignisBuchungBO} StartereignisBuchungBO to be updated
    * @public
    */
-  updateStartEventTransaction(StartEventTransaction_id) {
-    return this.#fetchAdvanced(this.updateStartEventTransactionURL(StartEventTransaction_id), {
+  updateStartEventTransaction(StartereignisBuchungBO) {
+    return this.#fetchAdvanced(this.updateStartEventTransactionURL(StartereignisBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -871,11 +871,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBO.
    *
-   * @param {Number} StartEvent_id to be updated
+   * @param {ProjektarbeitBO} ProjektarbeitBO to be updated
    * @public
    */
-  updateWorktime(Worktime_id) {
-    return this.#fetchAdvanced(this.updateWorktimeURL(Worktime_id), {
+  updateWorktime(ProjektarbeitBO) {
+    return this.#fetchAdvanced(this.updateWorktimeURL(ProjektarbeitBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -928,11 +928,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBuchungBO.
    *
-   * @param {Number} WorktimeTransaction_id to be updated
+   * @param {ProjektarbeitBuchungBO} ProjektarbeitBuchungBO to be updated
    * @public
    */
-  updateWorktimeTransaction(WorktimeTransaction_id) {
-    return this.#fetchAdvanced(this.updateWorktimeTransactionURL(WorktimeTransaction_id), {
+  updateWorktimeTransaction(ProjektarbeitBuchungBO) {
+    return this.#fetchAdvanced(this.updateWorktimeTransactionURL(ProjektarbeitBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -985,11 +985,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektDeadlineBO.
    *
-   * @param {Number} StartEvent_id to be updated
+   * @param {ProjektDeadlineBO} ProjektDeadlineBO to be updated
    * @public
    */
-  updateProjectDeadline(ProjectDeadline_id) {
-    return this.#fetchAdvanced(this.updateProjectDeadlineURL(ProjectDeadline_id), {
+  updateProjectDeadline(ProjektDeadlineBO) {
+    return this.#fetchAdvanced(this.updateProjectDeadlineURL(ProjektDeadlineBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -1065,11 +1065,11 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektlaufzeitBO.
    *
-   * @param {Number} StartEvent_id to be updated
+   * @param {ProjektlaufzeitBO} ProjektlaufzeitBO to be updated
    * @public
    */
-  updateProjectDuration(ProjectDuration_id) {
-    return this.#fetchAdvanced(this.updateProjectDurationURL(ProjectDuration_id), {
+  updateProjectDuration(ProjektlaufzeitBO) {
+    return this.#fetchAdvanced(this.updateProjectDurationURL(ProjektlaufzeitBO.getId), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
