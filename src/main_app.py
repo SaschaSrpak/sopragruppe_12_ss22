@@ -379,6 +379,27 @@ class PersonRelatedProjectOperations(Resource):
             return 'Person not found', 500
 
 
+@timesystem.route('/projects/<int:id>/persons/<int:person_id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Project-Objekts')
+@timesystem.param('person_id', 'Die ID des Personen-Objekts')
+class ProjectRelatedSpecificPersonOperations(Resource):
+
+    def delete(self, id, person_id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+        person = s_adm.get_person_by_key(person_id)
+        s_adm.delete_person_responsible_from_project(project, person)
+        return '', 200
+
+    def post(self, id, person_id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+        person = s_adm.get_person_by_key(person_id)
+        s_adm.add_person_responsible_to_project(project, person)
+        return '', 200
+
+
 @timesystem.route('/projects/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Projekt-Objekts')
@@ -394,6 +415,27 @@ class ProjectRelatedActivityOperations(Resource):
 
         else:
             return 'Person not found', 500
+
+
+@timesystem.route('/projects/<int:id>/activity/<int:activity_id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Project-Objekts')
+@timesystem.param('activity_id', 'Die ID des Aktivität-Objekts')
+class ProjectRelatedSpecificActivityOperations(Resource):
+
+    def delete(self, id, activity_id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+        activity = s_adm.get_activity_by_key(activity_id)
+        s_adm.delete_activity_from_project(project, activity)
+        return '', 200
+
+    def post(self, id, activity_id):
+        s_adm = SystemAdministration()
+        project = s_adm.get_project_by_key(id)
+        activity = s_adm.get_activity_by_key(activity_id)
+        s_adm.add_person_responsible_to_project(project, activity)
+        return '', 200
 
 
 @timesystem.route('/activities')
@@ -527,6 +569,22 @@ class AccountOperations(Resource):
         else:
             return '', 500
 
+
+@timesystem.route('/accounts/person/<int:id>/')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Person-Objekts')
+class PersonOfAccountOperations(Resource):
+    @timesystem.marshal_list_with(account)
+    def get(self, id):
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_person_key(id)
+
+        if account is not None:
+            return account
+        else:
+            return 'Account not found', 500
+
+
 @timesystem.route('/accounts/kommen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -542,6 +600,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
         else:
             return 'Account not found', 500
 
+
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -556,6 +615,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return transactions
         else:
             return 'Account not found', 500
+
 
 @timesystem.route('/accounts/pause/<int:id>/time')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -604,6 +664,7 @@ class WorktimeTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
+
 @timesystem.route('/accounts/worktime/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -636,7 +697,7 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
             transactions = s_adm.get_worktime_transactions_on_activity(account, activity)
             return transactions
         else:
-            return 'Activity not found', 500
+            return 'Activity or Account not found', 500
 
 
 @timesystem.route('/start-event/<int:id>')

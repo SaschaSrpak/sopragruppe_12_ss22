@@ -36,11 +36,13 @@ export default class SystemAPI {
 
     #bankServerBaseURL = '/bank'
 
+
+
     //Person related
     #getPersonsURL = () => `${this.#bankServerBaseURL}/persons`;
     #getPersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
     #addPersonURL = () => `${this.#bankServerBaseURL}/persons`;
-    #getActivityforPerson = (id) => `${this.#bankServerBaseURL}/persons/${id}/activity`;
+    #getActivitiesForPersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}/activity`;
     #deletePersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
     #updatePersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}`;
 
@@ -53,42 +55,54 @@ export default class SystemAPI {
     #updateProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}`;
     #getActivitiesOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/activity`;
     #getPersonsOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/persons`;
+    #addActivitiyToProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
+    #deleteActivitiyFromProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
+    #addPersonResponsibleToProjectURL = (id, person_id) => `${this.#bankServerBaseURL}/projects/${id}/persons/${person_id}`;
+    #deletePersonResponsibleFromProjectURL = (id, person_id) => `${this.#bankServerBaseURL}/projects/${id}/persons/${person_id}`;
 
     //Activity related
 
-    #getActivities = () => `${this.#bankServerBaseURL}/activities`;
-    #addActivity = () => `${this.#bankServerBaseURL}/activities`;
-    #getActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
-    #deleteActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
-    #updateActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
-    #getPersonsResponsibleOnActivity = (id) => `${this.#bankServerBaseURL}/activities/${id}/person`;
-    #addPersonsResponsibleOnActivity = (id, person_id) => `${this.#bankServerBaseURL}/activities/
+    #getActivitiesURL = () => `${this.#bankServerBaseURL}/activities`;
+    #addActivityURL = () => `${this.#bankServerBaseURL}/activities`;
+    #getActivityURL = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #deleteActivityURL = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #updateActivityURL = (id) => `${this.#bankServerBaseURL}/activities/${id}`;
+    #getPersonsResponsibleOnActivityURL = (id) => `${this.#bankServerBaseURL}/activities/${id}/person`;
+    #addPersonsResponsibleOnActivityURL = (id, person_id) => `${this.#bankServerBaseURL}/activities/
                                                                ${id}/person/${person_id}`;
-    #deletePersonsResponsibleOnActivity = (id, person_id) => `${this.#bankServerBaseURL}/activities/
+    #deletePersonsResponsibleOnActivityURL = (id, person_id) => `${this.#bankServerBaseURL}/activities/
                                                                 ${id}/person/${person_id}`;
 
     //Account related
 
-    #getAccounts = () => `${this.#bankServerBaseURL}/activities`;
-    #getAccount = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
-    #updateAccount = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
-    #getKommenTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/kommen/transactions/${id}`;
-    #getGehenTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/gehen/transactions/${id}`;
-    #getPauseTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}`;
-    #getPauseTimeOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}/Time`;
-    #getWorktimeTransactionsOfAccountOnActivity = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
+    #getAccountsURL = () => `${this.#bankServerBaseURL}/activities`;
+    #getAccountURL = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
+    #getAccountForPersonURL = (id) => `${this.#bankServerBaseURL}/accounts/person/${id}`;
+    #updateAccountURL = (id) => `${this.#bankServerBaseURL}/accounts/${id}`;
+    #getKommenTransactionsOfAccountURL = (id) =>`${this.#bankServerBaseURL}/accounts/kommen/transactions/${id}`;
+    #getGehenTransactionsOfAccountURL = (id) =>`${this.#bankServerBaseURL}/accounts/gehen/transactions/${id}`;
+    #getPauseTransactionsOfAccountURL = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}`;
+    #getPauseTimeOfAccountURL = (id) =>`${this.#bankServerBaseURL}/accounts/pause/${id}/Time`;
+    #getWorktimeTransactionsOfAccountOnActivityURL = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
                                                                          transactions/${id}/activities/${activity_id}`;
-    #getWorktimeOfAccountOnActivity = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
+    #getWorktimeOfAccountOnActivityURL = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
                                                             worktime/${id}/activities/${activity_id}`;
 
-    #getWorktimeTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
+    #getWorktimeTransactionsOfAccountURL = (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
 
     //Commit-Transaction related
 
-    #commitKommenTransaction = (account_id) =>`${this.#bankServerBaseURL}/commit-kommen-transaction/${account_id}`
-    #commitGehenTransaction = (account_id) =>`${this.#bankServerBaseURL}/commit-gehen-transaction/${account_id}`
-    #commitPauseTransaction = (account_id, name, start_time, end_time) =>`${this.#bankServerBaseURL}/commit-pause-transaction/${account_id}/${name}/${start_time}/${end_time}`
-    #commitProjectWorktimeTransaction = (account_id, name, activity_id, start_time, end_time) =>`${this.#bankServerBaseURL}/commit-pause-transaction/${account_id}/${name}/${activity_id}/${start_time}/${end_time}`
+    #commitKommenTransactionURL = (account_id) =>`${this.#bankServerBaseURL}/commit-kommen-transaction/${account_id}`
+    #commitGehenTransactionURL = (account_id) =>`${this.#bankServerBaseURL}/commit-gehen-transaction/${account_id}`
+    #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#bankServerBaseURL}
+                                                                             /commit-pause-transaction/${account_id}/
+                                                                             ${name}/${start_time}/${end_time}`
+
+    #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>
+                                                                            `${this.#bankServerBaseURL}
+                                                                            /commit-pause-transaction/${account_id}/
+                                                                            ${name}/${activity_id}/${start_time}/
+                                                                            ${end_time}`
 
 
     // End-Event related
@@ -211,7 +225,7 @@ export default class SystemAPI {
     }
 
     getPerson(person_id){
-        return this.#fetchAdvanced(this.#getCustomerURL(person_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getPersonURL(person_id)).then((responseJSON) => {
             let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePersonBO)
@@ -266,6 +280,497 @@ export default class SystemAPI {
         })
   }
 
+  getActivitiesForPerson(person_id) {
+        return this.#fetchAdvanced(this.#getActivitiesForPersonURL(person_id)).then((responseJSON) => {
+            let activityBOs = AktivitaetBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(activityBOs);
+            })
+        })
+  }
+
+  //Project related Functions
+
+
+  getProjects() {
+        return this.#fetchAdvanced(this.#getProjectsURL()).then((responseJSON) => {
+            let projectBOs = ProjektBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(projectBOs);
+            })
+        })
+  }
+
+  getProject(project_id){
+        return this.#fetchAdvanced(this.#getProjectURL(project_id)).then((responseJSON) => {
+            let responseProjectBO = ProjektBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseProjectBO)
+            })
+        })
+  }
+
+  addProject(projectBO) {
+        return this.#fetchAdvanced(this.#addProjectURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(projectBO)
+        }).then((responseJSON) => {
+            let responseProjectBO = ProjektBO.fromJSON(responseJSON)[0];
+            // console.info(projectBO);
+            return new Promise(function (resolve) {
+                resolve(responseProjectBO);
+            })
+        })
+  }
+
+  updateProject(projectBO) {
+    return this.#fetchAdvanced(this.#updateProjectURL(projectBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projectBO)
+    }).then((responseJSON) => {
+
+      let responseProjectBO = ProjektBO.fromJSON(responseJSON)[0];
+      // console.info(projectBO);
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+      })
+    })
+  }
+
+  deleteProject(project_id) {
+        return this.#fetchAdvanced(this.#deleteProjectURL(project_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseProjectBO = ProjektBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseProjectBO);
+            })
+        })
+  }
+
+  getActivitiesOnProject(project_id) {
+        return this.#fetchAdvanced(this.#getActivitiesOnProjectURL(project_id)).then((responseJSON) => {
+            let activityBOs = AktivitaetBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(activityBOs);
+            })
+        })
+  }
+
+  getPersonsOnProject(project_id) {
+        return this.#fetchAdvanced(this.#getPersonsOnProjectURL(project_id)).then((responseJSON) => {
+            let personBOs = PersonBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(personBOs);
+            })
+        })
+  }
+
+  addActivityToProject(project_id, activity_id) {
+        return this.#fetchAdvanced(this.#addActivitiyToProjectURL(project_id, activity_id), {
+            method: 'POST'
+        })
+  }
+
+  deleteActivityToProject(project_id, activity_id) {
+        return this.#fetchAdvanced(this.#deleteActivitiyFromProjectURL(project_id, activity_id), {
+            method: 'DELETE'
+        })
+  }
+
+  addPersonResponsibleToProject(project_id, person_id) {
+        return this.#fetchAdvanced(this.#addPersonResponsibleToProjectURL(project_id, person_id), {
+            method: 'POST'
+        })
+  }
+
+  deletePersonResponsibleToProject(project_id, person_id) {
+        return this.#fetchAdvanced(this.#deletePersonResponsibleFromProjectURL(project_id, person_id), {
+            method: 'DELETE'
+        })
+  }
+
+
+  //Activity related Functions
+
+  getActivities() {
+        return this.#fetchAdvanced(this.#getActivitiesURL()).then((responseJSON) => {
+            let activityBOs = AktivitaetBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(activityBOs);
+            })
+        })
+  }
+
+  getActivity(activity_id){
+        return this.#fetchAdvanced(this.#getActivityURL(activity_id)).then((responseJSON) => {
+            let responseActivityBO = AktivitaetBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseActivityBO)
+            })
+        })
+  }
+
+  addActivity(activityBO) {
+        return this.#fetchAdvanced(this.#addActivityURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(activityBO)
+        }).then((responseJSON) => {
+            let responseActivityBO = AktivitaetBO.fromJSON(responseJSON)[0];
+            // console.info(activityBO);
+            return new Promise(function (resolve) {
+                resolve(responseActivityBO);
+            })
+        })
+  }
+
+  updateActivity(activityBO) {
+    return this.#fetchAdvanced(this.#updateActivityURL(activityBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(activityBO)
+    }).then((responseJSON) => {
+
+      let responseActivityBO = AktivitaetBO.fromJSON(responseJSON)[0];
+      // console.info(activityBO);
+      return new Promise(function (resolve) {
+        resolve(responseActivityBO);
+      })
+    })
+  }
+
+  deleteActivity(activity_id) {
+        return this.#fetchAdvanced(this.#deleteActivityURL(activity_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseActivityBO = AktivitaetBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseActivityBO);
+            })
+        })
+  }
+
+  getPersonsResponsibleOnActivity(activity_id) {
+        return this.#fetchAdvanced(this.#getPersonsResponsibleOnActivityURL(activity_id)).then((responseJSON) => {
+            let personBOs = PersonBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(personBOs);
+            })
+        })
+  }
+
+  addPersonResponsibleOnActivity(activity_id, person_id) {
+        return this.#fetchAdvanced(this.#addPersonsResponsibleOnActivityURL(activity_id, person_id), {
+            method: 'POST'
+        })
+  }
+
+  deletePersonResponsibleOnActivity(activity_id, person_id) {
+        return this.#fetchAdvanced(this.#deletePersonsResponsibleOnActivityURL(activity_id, person_id), {
+            method: 'DELETE'
+        })
+  }
+
+
+  // Account related Functions
+
+  getAccounts() {
+        return this.#fetchAdvanced(this.#getAccountsURL()).then((responseJSON) => {
+            let accountBOs = ZeitkontoBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(accountBOs);
+            })
+        })
+  }
+
+  getAccount(account_id){
+        return this.#fetchAdvanced(this.#getAccountURL(account_id)).then((responseJSON) => {
+            let responseAccountBO = ZeitkontoBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseAccountBO)
+            })
+        })
+  }
+
+  getAccountForPerson(person_id){
+        return this.#fetchAdvanced(this.#getAccountForPersonURL(person_id)).then((responseJSON) => {
+            let responseAccountBO = ZeitkontoBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseAccountBO)
+            })
+        })
+  }
+
+
+  updateAccount(accountBO) {
+    return this.#fetchAdvanced(this.#updateAccountURL(accountBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(accountBO)
+    }).then((responseJSON) => {
+
+      let responseAccountBO = ZeitkontoBO.fromJSON(responseJSON)[0];
+      // console.info(activityBO);
+      return new Promise(function (resolve) {
+        resolve(responseAccountBO);
+      })
+    })
+  }
+
+  getKommenTransactionsOfAccount(account_id){
+        return this.#fetchAdvanced(this.#getKommenTransactionsOfAccountURL(account_id)).then((responseJSON) => {
+            let transactionBOs = KommenBuchungBO.fromJSON(responseJSON);
+            return new Promise(function (resolve){
+                resolve(transactionBOs)
+            })
+        })
+  }
+
+  getGehenTransactionsOfAccount(account_id){
+        return this.#fetchAdvanced(this.#getGehenTransactionsOfAccountURL(account_id)).then((responseJSON) => {
+            let transactionBOs = GehenBuchungBO.fromJSON(responseJSON);
+            return new Promise(function (resolve){
+                resolve(transactionBOs)
+            })
+        })
+  }
+
+  getPauseTransactionsOfAccount(account_id){
+        return this.#fetchAdvanced(this.#getPauseTransactionsOfAccountURL(account_id)).then((responseJSON) => {
+            let transactionBOs = PauseBuchungBO.fromJSON(responseJSON);
+            return new Promise(function (resolve){
+                resolve(transactionBOs)
+            })
+        })
+  }
+
+  getPauseTimeOfAccount(account_id){
+        return this.#fetchAdvanced(this.#getPauseTimeOfAccountURL(account_id)).then((responseJSON) => {
+            let pause_time = responseJSON;
+            return new Promise(function (resolve){
+                resolve(pause_time)
+            })
+        })
+  }
+
+  getWorktimeTransactionsOfAccount(account_id){
+        return this.#fetchAdvanced(this.#getWorktimeTransactionsOfAccountURL(account_id)).then((responseJSON) => {
+            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON);
+            return new Promise(function (resolve){
+                resolve(transactionBOs)
+            })
+        })
+  }
+
+  getWorktimeTransactionsOfAccountOnActivity(account_id, activity_id){
+        return this.#fetchAdvanced(this.#getWorktimeTransactionsOfAccountOnActivityURL(account_id, activity_id)).then((responseJSON) => {
+            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON);
+            return new Promise(function (resolve){
+                resolve(transactionBOs)
+            })
+        })
+  }
+
+  getWorktimeOfAccountOnActivity(account_id, activity_id){
+        return this.#fetchAdvanced(this.#getWorktimeOfAccountOnActivityURL(account_id, activity_id)).then((responseJSON) => {
+            let worktime = responseJSON;
+            return new Promise(function (resolve){
+                resolve(worktime)
+            })
+        })
+  }
+
+  //Commit-Transaction related Functions
+
+  commitKommenTransaction(account_id, kommenBO) {
+        return this.#fetchAdvanced(this.#commitKommenTransactionURL(account_id), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(kommenBO)
+        }).then((responseJSON) => {
+            let responseKommmenBO = KommenBO.fromJSON(responseJSON)[0];
+            // console.info(personBO);
+            return new Promise(function (resolve) {
+                resolve(responseKommmenBO);
+            })
+        })
+  }
+
+  commitGehenTransaction(account_id, gehenBO) {
+        return this.#fetchAdvanced(this.#commitGehenTransactionURL(account_id), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(gehenBO)
+        }).then((responseJSON) => {
+            let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+            // console.info(personBO);
+            return new Promise(function (resolve) {
+                resolve(responseGehenBO);
+            })
+        })
+  }
+
+  commitPauseTransaction(account_id, name, start_time, end_time) {
+        return this.#fetchAdvanced(this.#commitPauseTransactionURL(account_id, name, start_time, end_time), {
+            method: 'POST',
+        })
+  }
+
+  commitProjectWorktimeTransaction(account_id, name, activity_id, start_time, end_time) {
+        return this.#fetchAdvanced(this.#commitProjectWorktimeTransactionURL(account_id, name, activity_id, start_time, end_time), {
+            method: 'POST',
+        })
+  }
+
+
+
+  //Start-Event related Functions
+
+  /**
+   * Returns a Promise, which resolves to a StartereignisBO.
+   *
+   * @param {Number} StartEvent_id to be retrieved
+   * @public
+   */
+
+    getStartEvent(StartEvent_id){
+        return this.#fetchAdvanced(this.#getStartEventURL(StartEvent_id)).then((responseJSON) => {
+            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseStartereignisBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of StartereignisBO.
+   *
+   * @param {Number} StartEvent_id to be deleted
+   * @public
+   */
+
+    deleteStartEvent(StartEvent_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventURL(StartEvent_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseStartereignisBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a StartereignisBO.
+   *
+   * @param {StartereignisBO} StartereignisBO to be updated
+   * @public
+   */
+  updateStartEvent(StartereignisBO) {
+    return this.#fetchAdvanced(this.#updateStartEventURL(StartereignisBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(StartereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of StartereignisBO.fromJSON
+      let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+      // console.info(StartereignisBO);
+      return new Promise(function (resolve) {
+        resolve(responseStartereignisBO);
+      })
+    })
+  }
+
+
+  //Start-Event-Transaction related Functions
+
+   /**
+   * Returns a Promise, which resolves to a EndereignisBuchungBO.
+   *
+   * @param {Number} StartEventTransaction_id to be retrieved
+   * @public
+   */
+
+    getStartEventTransaction(StartEventTransaction_id){
+        return this.#fetchAdvanced(this.#getStartEventTransactionURL(StartEventTransaction_id)).then((responseJSON) => {
+            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseStartereignisBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of StartereignisBuchungBO.
+   *
+   * @param {Number} StartEventTransaction_id to be deleted
+   * @public
+   */
+
+    deleteStartEventTransaction(StartEventTransaction_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventTransactionURL(StartEvent_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseStartereignisBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a StartereignisBuchungBO.
+   *
+   * @param {StartereignisBuchungBO} StartereignisBuchungBO to be updated
+   * @public
+   */
+  updateStartEventTransaction(StartereignisBuchungBO) {
+    return this.#fetchAdvanced(this.#updateStartEventTransactionURL(StartereignisBuchungBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(StartereignisBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of StartereignisBuchungBO.fromJSON
+      let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(StartereignisBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseStartereignisBuchungBO);
+      })
+    })
+  }
+
+
+
+  //End-Event related Functions
+
   /**
    * Returns a Promise, which resolves to a EndereignisBO.
    *
@@ -281,6 +786,9 @@ export default class SystemAPI {
             })
         })
     }
+
+
+
 
   /**
    * Returns a Promise, which resolves to an Array of EndereignisBO.
@@ -299,6 +807,7 @@ export default class SystemAPI {
             })
         })
     }
+
   /**
    * Updates a endevent and returns a Promise, which resolves to a EndereignisBO.
    *
@@ -306,7 +815,7 @@ export default class SystemAPI {
    * @public
    */
   updateEndEvent(EndereignisBO) {
-    return this.#fetchAdvanced(this.updateEndEventURL(EndereignisBO.getId()), {
+    return this.#fetchAdvanced(this.#updateEndEventURL(EndereignisBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -322,6 +831,8 @@ export default class SystemAPI {
       })
     })
   }
+
+  //End-Event-Transaction related Functions
 
   /**
    * Returns a Promise, which resolves to a EndereignisBuchungBO.
@@ -363,7 +874,7 @@ export default class SystemAPI {
    * @public
    */
   updateEndEventTransaction(EndereignisBuchungBO) {
-    return this.#fetchAdvanced(this.updateEndEventTransactionURL(EndereignisBuchungBO.getId()), {
+    return this.#fetchAdvanced(this.#updateEndEventTransactionURL(EndereignisBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -379,6 +890,9 @@ export default class SystemAPI {
       })
     })
   }
+
+
+  //Gehen-Event related Functions
 
     /**
    * Returns a Promise, which resolves to a GehenBO.
@@ -420,7 +934,7 @@ export default class SystemAPI {
    * @public
    */
   updateGehen(GehenBO) {
-    return this.#fetchAdvanced(this.updateGehenURL(GehenBO.getId()), {
+    return this.#fetchAdvanced(this.#updateGehenURL(GehenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -436,6 +950,9 @@ export default class SystemAPI {
       })
     })
   }
+
+  //Gehen-Event-Transaction related Functions
+
       /**
    * Returns a Promise, which resolves to a GehenBuchungBO.
    *
@@ -476,7 +993,7 @@ export default class SystemAPI {
    * @public
    */
   updateGehenTransaction(GehenBuchungBO) {
-    return this.#fetchAdvanced(this.updateGehenTransactionURL(GehenBuchungBO.getId()), {
+    return this.#fetchAdvanced(this.#updateGehenTransactionURL(GehenBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -492,6 +1009,8 @@ export default class SystemAPI {
       })
     })
   }
+
+  //Gehen-Event related Functions
 
       /**
    * Returns a Promise, which resolves to a KommenBO.
@@ -533,7 +1052,7 @@ export default class SystemAPI {
    * @public
    */
   updateKommen(KommenBO) {
-    return this.#fetchAdvanced(this.updateKommenURL(KommenBO.getId()), {
+    return this.#fetchAdvanced(this.#updateKommenURL(KommenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -557,14 +1076,14 @@ export default class SystemAPI {
    * @public
    */
 
-    getKommenTransaction(KommenTransaction_id){
+  getKommenTransaction(KommenTransaction_id){
         return this.#fetchAdvanced(this.#getKommenTransactionURL(KommenTransaction_id)).then((responseJSON) => {
             let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseKommenBuchungBO)
             })
         })
-    }
+  }
 
   /**
    * Returns a Promise, which resolves to an Array of KommenBuchungBO.
@@ -590,7 +1109,7 @@ export default class SystemAPI {
    * @public
    */
   updateKommenTransaction(KommenBuchungBO) {
-    return this.#fetchAdvanced(this.updateKommenTransactionURL(KommenBuchungBO.getId()), {
+    return this.#fetchAdvanced(this.#updateKommenTransactionURL(KommenBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -607,8 +1126,9 @@ export default class SystemAPI {
     })
   }
 
+  //Pause related Functions
 
-      /**
+  /**
    * Returns a Promise, which resolves to a PauseBO.
    *
    * @param {Number} Pause_id to be retrieved
@@ -648,7 +1168,7 @@ export default class SystemAPI {
    * @public
    */
   updatePause(PauseBO) {
-    return this.#fetchAdvanced(this.updatePauseURL(PauseBO.getId()), {
+    return this.#fetchAdvanced(this.#updatePauseURL(PauseBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -664,10 +1184,13 @@ export default class SystemAPI {
       })
     })
   }
+
+  //Pause-Transaction related Functions
+
    /**
    * Returns a Promise, which resolves to a KommenBuchungBO.
    *
-   * @param {Number} KommenTransaction_id to be retrieved
+   * @param {Number} PauseTransaction_id to be retrieved
    * @public
    */
 
@@ -704,7 +1227,7 @@ export default class SystemAPI {
    * @public
    */
   updatePauseTransaction(PauseBuchungBO) {
-    return this.#fetchAdvanced(this.updatePauseTransactionURL(PauseBuchungBO.getId()), {
+    return this.#fetchAdvanced(this.#updatePauseTransactionURL(PauseBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -721,121 +1244,10 @@ export default class SystemAPI {
     })
   }
 
-      /**
-   * Returns a Promise, which resolves to a StartereignisBO.
-   *
-   * @param {Number} StartEvent_id to be retrieved
-   * @public
-   */
 
-    getStartEvent(StartEvent_id){
-        return this.#fetchAdvanced(this.#getStartEventURL(StartEvent_id)).then((responseJSON) => {
-            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve){
-                resolve(responseStartereignisBO)
-            })
-        })
-    }
+  //Project-Worktime related Functions
 
   /**
-   * Returns a Promise, which resolves to an Array of StartereignisBO.
-   *
-   * @param {Number} StartEvent_id to be deleted
-   * @public
-   */
-
-    deleteStartEvent(StartEvent_id) {
-        return this.#fetchAdvanced(this.#deleteStartEventURL(StartEvent_id), {
-            method: 'DELETE'
-        }).then((responseJSON) => {
-            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve) {
-                resolve(responseStartereignisBO);
-            })
-        })
-    }
-  /**
-   * Updates a endevent and returns a Promise, which resolves to a StartereignisBO.
-   *
-   * @param {StartereignisBO} StartereignisBO to be updated
-   * @public
-   */
-  updateStartEvent(StartereignisBO) {
-    return this.#fetchAdvanced(this.updateStartEventURL(StartereignisBO.getId()), {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(StartereignisBO)
-    }).then((responseJSON) => {
-      // We always get an array of StartereignisBO.fromJSON
-      let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
-      // console.info(StartereignisBO);
-      return new Promise(function (resolve) {
-        resolve(responseStartereignisBO);
-      })
-    })
-  }
-
-   /**
-   * Returns a Promise, which resolves to a EndereignisBuchungBO.
-   *
-   * @param {Number} EndEventTransaction_id to be retrieved
-   * @public
-   */
-
-    getStartEventTransaction(StartEventTransaction_id){
-        return this.#fetchAdvanced(this.#getStartEventTransactionURL(StartEventTransaction_id)).then((responseJSON) => {
-            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve){
-                resolve(responseStartereignisBuchungBO)
-            })
-        })
-    }
-
-  /**
-   * Returns a Promise, which resolves to an Array of StartereignisBuchungBO.
-   *
-   * @param {Number} StartEventTransaction_id to be deleted
-   * @public
-   */
-
-    deleteStartEventTransaction(StartEventTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteStartEventTransactionURL(StartEvent_id), {
-            method: 'DELETE'
-        }).then((responseJSON) => {
-            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
-            return new Promise(function (resolve) {
-                resolve(responseStartereignisBuchungBO);
-            })
-        })
-    }
-  /**
-   * Updates a endevent and returns a Promise, which resolves to a StartereignisBuchungBO.
-   *
-   * @param {StartereignisBuchungBO} StartereignisBuchungBO to be updated
-   * @public
-   */
-  updateStartEventTransaction(StartereignisBuchungBO) {
-    return this.#fetchAdvanced(this.updateStartEventTransactionURL(StartereignisBuchungBO.getId()), {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(StartereignisBuchungBO)
-    }).then((responseJSON) => {
-      // We always get an array of StartereignisBuchungBO.fromJSON
-      let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(StartereignisBuchungBO);
-      return new Promise(function (resolve) {
-        resolve(responseStartereignisBuchungBO);
-      })
-    })
-  }
-
-     /**
    * Returns a Promise, which resolves to a ProjektarbeitBO.
    *
    * @param {Number} Worktime_id to be retrieved
@@ -875,7 +1287,7 @@ export default class SystemAPI {
    * @public
    */
   updateWorktime(ProjektarbeitBO) {
-    return this.#fetchAdvanced(this.updateWorktimeURL(ProjektarbeitBO.getId()), {
+    return this.#fetchAdvanced(this.#updateWorktimeURL(ProjektarbeitBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -908,6 +1320,9 @@ export default class SystemAPI {
         })
     }
 
+
+  //Project-Worktime-Transaction related Functions
+
   /**
    * Returns a Promise, which resolves to an Array of ProjektarbeitBuchungBO.
    *
@@ -926,13 +1341,13 @@ export default class SystemAPI {
         })
     }
   /**
-   * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBuchungBO.
+   * Updates a Project-Worktime-Transaction and returns a Promise, which resolves to a ProjektarbeitBuchungBO.
    *
    * @param {ProjektarbeitBuchungBO} ProjektarbeitBuchungBO to be updated
    * @public
    */
   updateWorktimeTransaction(ProjektarbeitBuchungBO) {
-    return this.#fetchAdvanced(this.updateWorktimeTransactionURL(ProjektarbeitBuchungBO.getId()), {
+    return this.#fetchAdvanced(this.#updateWorktimeTransactionURL(ProjektarbeitBuchungBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -949,7 +1364,10 @@ export default class SystemAPI {
     })
   }
 
-      /**
+
+  //Project-Deadline related Functions
+
+  /**
    * Returns a Promise, which resolves to a ProjektDeadlineBO.
    *
    * @param {Number} ProjectDeadline_id to be retrieved
@@ -989,7 +1407,7 @@ export default class SystemAPI {
    * @public
    */
   updateProjectDeadline(ProjektDeadlineBO) {
-    return this.#fetchAdvanced(this.updateProjectDeadlineURL(ProjektDeadlineBO.getId()), {
+    return this.#fetchAdvanced(this.#updateProjectDeadlineURL(ProjektDeadlineBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -1005,7 +1423,8 @@ export default class SystemAPI {
       })
     })
   }
-    /**
+
+  /**
    * Adds a ProjektDeadline and returns a Promise
    *
    * @param ProjektDeadlineBO to be added
@@ -1029,10 +1448,13 @@ export default class SystemAPI {
         })
     }
 
-     /**
+
+   //Project-Duration related Functions
+
+    /**
    * Returns a Promise, which resolves to a ProjektDeadlineBO.
    *
-   * @param {Number} ProjectDeadline_id to be retrieved
+   * @param {Number} ProjectDuration_id to be retrieved
    * @public
    */
 
@@ -1069,7 +1491,7 @@ export default class SystemAPI {
    * @public
    */
   updateProjectDuration(ProjektlaufzeitBO) {
-    return this.#fetchAdvanced(this.updateProjectDurationURL(ProjektlaufzeitBO.getId), {
+    return this.#fetchAdvanced(this.#updateProjectDurationURL(ProjektlaufzeitBO.getId), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',

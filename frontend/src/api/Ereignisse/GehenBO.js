@@ -19,7 +19,7 @@ export default class GehenBO extends EreignisBO{
             })
         } else {
             let g = gehen;
-            Object.setPrototypeOf(g, Gehen.prototype);
+            Object.setPrototypeOf(g, GehenBO.prototype);
             result.push(g);
         }
 

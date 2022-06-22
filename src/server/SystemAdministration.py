@@ -220,11 +220,14 @@ class SystemAdministration(object):
     def delete_activity(self, activity):
         """Die gegebene Aktivität löschen"""
         with AktivitaetMapper() as mapper:
+            project = self.get_project_by_activity_key(activity.get_id())
             responsible_list = self.get_persons_by_activity_key(activity.get_id())
             if not (responsible_list is None):
                 for person in responsible_list:
                     self.delete_person_responsible_from_activity(activity, person)
+            self.delete_activity_from_project(project, activity)
             mapper.delete(activity)
+
 
     """
     Zeitkonto spezifische Methoden
@@ -474,7 +477,14 @@ class SystemAdministration(object):
 
     def get_project_by_activity_key(self, activity_key):
         with ProjektMapper() as mapper:
-            mapper.find_by_activity_key(activity_key)
+            project = mapper.find_by_activity_key(activity_key)
+            creator = self.get_creator_by_project_key(project.get_id())
+            responsible = self.get_persons_by_project_key(project.get_id())
+            activities = self.get_activity_by_project_key(project.get_id())
+            project.set_creator(creator.get_id())
+            project.set_person_responsible(responsible)
+            project.set_activities(activities)
+            return project
 
     def add_activity_to_project(self, project, activity):
         with ProjektMapper() as mapper:
