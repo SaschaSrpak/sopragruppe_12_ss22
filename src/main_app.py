@@ -45,7 +45,7 @@ bo = api.model('BusinessObject', {
 person = api.inherit('Person', {
     'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
     'last_modified_date': fields.DateTime(attribute='_last_modified_date', description='Zeitpunkt der letzten Änder',
-                                          dt_format='rfc822'),
+                                          dt_format='ISO8601'),
     'name': fields.String(attribute='_name', description='Vorname der Person'),
     'surname': fields.String(attribute='_surname', description='Nachname der Person'),
     'mail_address': fields.String(attribute='_mail_address', description='Mail-Adresse der Person'),
@@ -131,6 +131,9 @@ start_event_transaction = api.inherit('StartereignisBuchung', bo, transaction, e
 
 end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event_transaction)
 
+response_worktime_transaction = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
+
+
 
 @timesystem.route('/persons')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -140,7 +143,6 @@ class AllPersonListOperations(Resource):
     def get(self):
         s_adm = SystemAdministration()
         all_persons = s_adm.get_all_persons()
-
         return all_persons
 
     @timesystem.marshal_with(person, code=200)
@@ -739,12 +741,12 @@ class StartEventTransactionOperations(Resource):
     @timesystem.marshal_with(start_event_transaction)
     def get(self, id):
         s_adm = SystemAdministration()
-        st = s_adm.get_start_by_transaction_key(id)
+        st = s_adm.get_start_event_transaction_by_key(id)
         return st
 
     def delete(self, id):
         s_adm = SystemAdministration()
-        st = s_adm.get_start_by_transaction_key(id)
+        st = s_adm.get_start_event_transaction_by_key(id)
         s_adm.delete_start_event_transaction(st)
         return '', 200
 
@@ -872,7 +874,7 @@ class KommenTransactionOperations(Resource):
 
     def delete(self, id):
         s_adm = SystemAdministration()
-        k = s_adm.get_kommen_by_transaction_key(id)
+        k = s_adm.get_kommen_transaction_by_key(id)
         s_adm.delete_kommen_transaction(k)
         return '', 200
 
@@ -950,12 +952,12 @@ class GehenTransactionOperations(Resource):
     @timesystem.marshal_with(gehen_transaction)
     def get(self, id):
         s_adm = SystemAdministration()
-        gh = s_adm.get_gehen_by_transaction_key(id)
+        gh = s_adm.get_gehen_transaction_by_key(id)
         return gh
 
     def delete(self, id):
         s_adm = SystemAdministration()
-        gh = s_adm.get_gehen_by_transaction_key(id)
+        gh = s_adm.get_gehen_transaction_by_key(id)
         s_adm.delete_gehen_transaction(gh)
         return '', 200
 
@@ -1035,12 +1037,12 @@ class PauseTransactionOperations(Resource):
     @timesystem.marshal_with(pause_transaction)
     def get(self, id):
         s_adm = SystemAdministration()
-        pt = s_adm.get_pause_by_transaction_key(id)
+        pt = s_adm.get_pause_transaction_by_key(id)
         return pt
 
     def delete(self, id):
         s_adm = SystemAdministration()
-        pt = s_adm.get_pause_by_transaction_key(id)
+        pt = s_adm.get_pause_transaction_by_key(id)
         s_adm.delete_pause_transaction(pt)
         return '', 200
 
@@ -1122,7 +1124,7 @@ class WorktimeTransactionOperations(Resource):
 
     def delete(self, id):
         s_adm = SystemAdministration()
-        pt = s_adm.get_project_worktime_by_transaction_key(id)
+        pt = s_adm.get_project_work_transaction_by_key(id)
         s_adm.delete_project_work_transaction(pt)
         return '', 200
 
@@ -1151,6 +1153,7 @@ class WorktimeTransactionOperations(Resource):
 @timesystem.param('start_time', 'Startzeitpunkt der Pause')
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class CommitWorktimeTransaction(Resource):
+    @timesystem.marshal_with(response_worktime_transaction, code=200)
     def post(self, account_id, name, activity_id, start_time, end_time):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)

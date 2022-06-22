@@ -803,8 +803,9 @@ class SystemAdministration(object):
             return mapper.find_by_key(interval_key)
 
     def get_pause_by_transaction_key(self, transaction_key):
-        transaction = self.get_pause_by_transaction_key(transaction_key)
-        return self.get_pause_by_key(transaction.get_time_interval_id())
+        transaction = self.get_pause_transaction_by_key(transaction_key)
+        pause = self.get_pause_by_key(transaction.get_time_interval_id())
+        return pause
 
     def save_pause(self, interval):
         start_event_id = interval.get_start()
@@ -898,16 +899,25 @@ class SystemAdministration(object):
         gehen_events = []
         for transaction in gehen_transactions:
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
-        last_gehen_event = gehen_events[-1]
+        if len(gehen_events):
+            last_gehen_event = gehen_events[-1]
+            last_gehen_time = last_gehen_event.get_time_of_event()
+        else:
+            last_gehen_time = 0
 
         kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         kommen_events = []
         for transaction in kommen_transactions:
             kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
-        last_kommen_event = kommen_events[-1]
 
-        last_kommen_time = last_kommen_event.get_time_of_event()
-        last_gehen_time = last_gehen_event.get_time_of_event()
+        if len(kommen_events) != 0:
+            last_kommen_event = kommen_events[-1]
+            last_kommen_time = last_kommen_event.get_time_of_event()
+        else:
+            event = self.create_kommen_event(name, time)
+            account_id = account.get_id()
+            self.create_kommen_transaction(account_id, event)
+            return event
 
         if time <= last_gehen_time or time <= last_kommen_time or last_gehen_time <= last_kommen_time:
             return False
@@ -959,16 +969,28 @@ class SystemAdministration(object):
         kommen_events = []
         for transaction in kommen_transactions:
             kommen_events.append(self.get_kommen_event_by_key(transaction.get_event_id()))
-        last_kommen_event = kommen_events[-1]
+        if len(kommen_events) != 0:
+            last_kommen_event = kommen_events[-1]
+            last_kommen_time = last_kommen_event.get_time_of_event()
+        else:
+            return False
 
         gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         gehen_events = []
         for transaction in gehen_transactions:
             gehen_events.append(self.get_gehen_event_by_key(transaction.get_event_id()))
-        last_gehen_event = gehen_events[-1]
+        if len(gehen_events) != 0:
+            last_gehen_event = gehen_events[-1]
+            last_gehen_time = last_gehen_event.get_time_of_event()
+        else:
+            if time >= last_kommen_time:
+                event = self.create_gehen_event(name, time)
+                account_id = account.get_id()
+                self.create_gehen_transaction(account_id, event)
+                return event
+            else:
+                return False
 
-        last_kommen_time = last_kommen_event.get_time_of_event()
-        last_gehen_time = last_gehen_event.get_time_of_event()
 
         if time <= last_kommen_time or time <= last_gehen_time or not last_gehen_time <= last_kommen_time <= time:
             return False
@@ -1135,9 +1157,10 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_pause_transaction(self, transaction):
+        pause_id = transaction.get_time_interval_id()
         with PauseBuchungMapper() as mapper:
             mapper.delete(transaction)
-        self.delete_pause(self.get_pause_by_key(transaction.get_time_interval_id()))
+        self.delete_pause(self.get_pause_by_key(pause_id))
 
     """ProjektarbeitBuchung spezifische Methoden"""
 
@@ -1153,6 +1176,8 @@ class SystemAdministration(object):
             return mapper.insert(interval)
 
     def book_project_work_transaction(self, account, name, activity_id, start_event_time, end_event_time):
+        start_event_time = datetime.strptime(start_event_time, '%Y-%m-%d %H:%M:%S')
+        end_event_time = datetime.strptime(end_event_time, '%Y-%m-%d %H:%M:%S')
         start_event_date = dt.datetime.date(start_event_time)
         daily_transactions = self.show_daily_worktime_transactions_for_account(account.get_id(), start_event_date)
         daily_worktime_intervals = []
@@ -1178,21 +1203,6 @@ class SystemAdministration(object):
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         daily_worktime_hours += duration_hours
 
-        if daily_worktime_hours >= 6.0:
-            if daily_pause_hours < 0.5:
-                t = 0.5 - daily_pause_hours
-                pause_end_event_time = end_event_time
-                td = dt.timedelta(hours=t, seconds=1)
-                end_event_time = end_event_time - td
-                td2 = dt.timedelta(seconds=1)
-                pause_start_event_time = end_event_time + td2
-                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name,
-                                            pause_start_event_time, pause_end_event_time)
-                daily_worktime_hours -= t
-        """Es muss dringend noch gecheckt werden wie viel Pause auf den account täglich gebucht wurde ansonsten ist
-                die Funktion fehlerhaft, da immer wenn die Arbeitszeit über 6h ist, eine Pause gebucht wird, obwohl möglicherweise
-                schon eine halbe Stunde Pause gebucht wurde"""
-
         if daily_worktime_hours >= 9.0:
             if daily_pause_hours < 0.75:
                 t = 0.75 - daily_pause_hours
@@ -1205,25 +1215,68 @@ class SystemAdministration(object):
                                             pause_start_event_time, pause_end_event_time)
                 daily_worktime_hours -= t
 
-        if daily_worktime_hours >= 10:
-            t = abs(10 - daily_worktime_hours)
-            td = dt.timedelta(hours=t)
-            end_event_time = end_event_time - td
-            book_gehen = self.book_gehen_event(account, "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit",
-                                  end_event_time)
-            if book_gehen:
+            if daily_worktime_hours >= 10:
+                t = abs(10 - daily_worktime_hours)
+                td = dt.timedelta(hours=t)
+                end_event_time = end_event_time - td
+                end_event_time_str = datetime.strftime(end_event_time, '%Y-%m-%dT%H:%M:%S.%fZ')
+                book_gehen = self.book_gehen_event(account.get_id(),
+                                                       "Automatische Buchung aufgrund von Überschreitung der Arbeitszeit",
+                                                       end_event_time_str)
+
+                if book_gehen:
+                    start_event = self.book_start_event(account, "Start", start_event_time)
+                    end_event = self.book_end_event(account, "Ende", end_event_time)
+                    project_worktime = self.create_project_worktime(name, start_event, end_event)
+                    account_id = account.get_id()
+                    self.create_project_work_transaction(account_id, activity_id, project_worktime)
+                    response = {'response': '10 hours worktime for the day is reached gehen was booked'}
+                    return response
+                else:
+                    response = {'response': '10 hours worktime would be overreached but gehen could not be booked'}
+                    return response
+
+            start_event = self.book_start_event(account, "Start", start_event_time)
+            end_event = self.book_end_event(account, "Ende", end_event_time)
+            project_worktime = self.create_project_worktime(name, start_event, end_event)
+            account_id = account.get_id()
+            self.create_project_work_transaction(account_id, activity_id, project_worktime)
+            response = {'response': '9 hours worktime without 45 min of pause'}
+            print(response)
+            return response
+
+        if daily_worktime_hours >= 6.0:
+            if daily_pause_hours < 0.5:
+                t = 0.5 - daily_pause_hours
+                pause_end_event_time = end_event_time
+                td = dt.timedelta(hours=t, seconds=1)
+                end_event_time = end_event_time - td
+                td2 = dt.timedelta(seconds=1)
+                pause_start_event_time = end_event_time + td2
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name,
+                                            pause_start_event_time, pause_end_event_time)
+                daily_worktime_hours -= t
+
                 start_event = self.book_start_event(account, "Start", start_event_time)
                 end_event = self.book_end_event(account, "Ende", end_event_time)
                 project_worktime = self.create_project_worktime(name, start_event, end_event)
                 account_id = account.get_id()
                 self.create_project_work_transaction(account_id, activity_id, project_worktime)
-            return False
+                response = {'response': '6 hours worktime without 30 min of pause'}
+                return response
 
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)
         project_worktime = self.create_project_worktime(name, start_event, end_event)
         account_id = account.get_id()
         self.create_project_work_transaction(account_id, activity_id, project_worktime)
+        response = {'response': 'worktime transaction booked successfully'}
+        return response
+
+
+
+
+
 
     def get_all_project_work_transactions(self):
         with ProjektarbeitBuchungMapper() as mapper:
