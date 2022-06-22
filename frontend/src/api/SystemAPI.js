@@ -835,4 +835,117 @@ export default class SystemAPI {
     })
   }
 
+     /**
+   * Returns a Promise, which resolves to a ProjektarbeitBO.
+   *
+   * @param {Number} Worktime_id to be retrieved
+   * @public
+   */
+
+    getWorktime(Worktime_id){
+        return this.#fetchAdvanced(this.#getWorktimeURL(Worktime_id)).then((responseJSON) => {
+            let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseProjektarbeitBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of ProjektarbeitBO.
+   *
+   * @param {Number} Worktime_id to be deleted
+   * @public
+   */
+
+    deleteWorktime(Worktime_id) {
+        return this.#fetchAdvanced(this.#deleteWorktimeURL(Worktime_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseProjektarbeitBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBO.
+   *
+   * @param {Number} StartEvent_id to be updated
+   * @public
+   */
+  updateWorktime(Worktime_id) {
+    return this.#fetchAdvanced(this.updateWorktimeURL(Worktime_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ProjektarbeitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjektarbeitBO.fromJSON
+      let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+      // console.info(ProjektarbeitBO);
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBO);
+      })
+    })
+  }
+
+     /**
+   * Returns a Promise, which resolves to a EndereignisBuchungBO.
+   *
+   * @param {Number} EndEventTransaction_id to be retrieved
+   * @public
+   */
+
+    getWorktimeTransaction(WorktimeTransaction_id){
+        return this.#fetchAdvanced(this.#getWorktimeTransactionURL(WorktimeTransaction_id)).then((responseJSON) => {
+            let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseProjektarbeitBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of ProjektarbeitBuchungBO.
+   *
+   * @param {Number} WorktimeTransaction_id to be deleted
+   * @public
+   */
+
+    deleteWorktimeTransaction(WorktimeTransaction_id) {
+        return this.#fetchAdvanced(this.#deleteWorktimeTransactionURL(Worktime_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseProjektarbeitBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBuchungBO.
+   *
+   * @param {Number} WorktimeTransaction_id to be updated
+   * @public
+   */
+  updateWorktimeTransaction(WorktimeTransaction_id) {
+    return this.#fetchAdvanced(this.updateWorktimeTransactionURL(WorktimeTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ProjektarbeitBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjektarbeitBuchungBO.fromJSON
+      let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(ProjektarbeitBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBuchungBO);
+      })
+    })
+  }
 }
