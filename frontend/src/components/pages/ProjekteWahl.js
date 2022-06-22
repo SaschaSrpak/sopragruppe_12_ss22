@@ -35,15 +35,17 @@ export class Projektwahl extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>Projektwahl</Typography>
-{/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
+{/** Projektauswahl -> Mapping aus Datenbank help pls */}
                 <Box>
                     <FormControl sx={{ minWidth: 200 }}>
-                        <InputLabel id="demo-simple-select-label">Projekte</InputLabel>
+                        <InputLabel>Projekte</InputLabel>
                         <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
                             label="Projekte"
                         >
+                            <MenuItem>{TestProjekte[0]}</MenuItem>
+                            <MenuItem>{TestProjekte[1]}</MenuItem>
+                            <MenuItem>{TestProjekte[2]}</MenuItem>
+                            <MenuItem>{TestProjekte[3]}</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
