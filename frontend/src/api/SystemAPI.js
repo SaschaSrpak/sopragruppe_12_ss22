@@ -81,11 +81,15 @@ export default class SystemAPI {
     #getWorktimeOfAccountOnActivity = (id, activity_id) =>`${this.#bankServerBaseURL}/accounts/
                                                             worktime/${id}/activities/${activity_id}`;
 
-    #getWorktimeTransactionsOfAccount= (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
+    #getWorktimeTransactionsOfAccount = (id) =>`${this.#bankServerBaseURL}/accounts/worktime-transactions/${id}`;
 
     //Commit-Transaction related
 
-    #
+    #commitKommenTransaction = (account_id) =>`${this.#bankServerBaseURL}/commit-kommen-transaction/${account_id}`
+    #commitGehenTransaction = (account_id) =>`${this.#bankServerBaseURL}/commit-gehen-transaction/${account_id}`
+    #commitPauseTransaction = (account_id, name, start_time, end_time) =>`${this.#bankServerBaseURL}/commit-pause-transaction/${account_id}/${name}/${start_time}/${end_time}`
+    #commitProjectWorktimeTransaction = (account_id, name, activity_id, start_time, end_time) =>`${this.#bankServerBaseURL}/commit-pause-transaction/${account_id}/${name}/${activity_id}/${start_time}/${end_time}`
+
 
     // End-Event related
 
@@ -207,8 +211,60 @@ export default class SystemAPI {
     }
 
     getPerson(person_id){
-        return this.#fetchAdvancend(this.#getCustomerURL(person_id)).then((responseJSON))
+        return this.#fetchAdvancend(this.#getCustomerURL(person_id)).then((responseJSON) => {
+            let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responsePersonBO)
+            })
+        })
     }
+
+
+    addPerson(personBO) {
+        return this.#fetchAdvancend(this.#addPersonURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(personBO)
+        }).then((responseJSON) => {
+            let responseCustomerBO = PersonBO.fromJSON(responseJSON)[0];
+            // console.info(personBO);
+            return new Promise(function (resolve) {
+                resolve(responseCustomerBO);
+            })
+        })
+    }
+
+    updatePerson(personBO) {
+    return this.#fetchAdvancend(this.#updatePersonURL(personBO.getId()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(personBO)
+    }).then((responseJSON) => {
+        
+      let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+      // console.info(personBO);
+      return new Promise(function (resolve) {
+        resolve(responsePersonBO);
+      })
+    })
+  }
+
+  deletePerson(person_id) {
+        return this.#fetchAdvancend(this.#deletePersonURL(person_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responsePersonBO);
+            })
+        })
+  }
 
 
 }
