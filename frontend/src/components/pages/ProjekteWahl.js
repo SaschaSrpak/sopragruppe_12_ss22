@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl } from "@mui/material";
+import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl, Menu } from "@mui/material";
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
@@ -13,6 +13,9 @@ const TestProjekte = [
     'Projekt 2',
     'Projekt 3',
     'Projekt 4',
+    'Projekt 5',
+    'Projekt 6',
+    'Projekt 7',
 ];
 
 
@@ -35,17 +38,21 @@ export class Projektwahl extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>Projektwahl</Typography>
-{/** Projektauswahl -> Mapping aus Datenbank help pls */}
+{/** Projektauswahl -> Mapping aus TestArray */}
                 <Box>
                     <FormControl sx={{ minWidth: 200 }}>
                         <InputLabel>Projekte</InputLabel>
                         <Select
                             label="Projekte"
                         >
-                            <MenuItem>{TestProjekte[0]}</MenuItem>
-                            <MenuItem>{TestProjekte[1]}</MenuItem>
-                            <MenuItem>{TestProjekte[2]}</MenuItem>
-                            <MenuItem>{TestProjekte[3]}</MenuItem>
+                            {
+                                TestProjekte.map((projekt) => {
+                                    return (
+                                        <MenuItem key={projekt} value={projekt}>{projekt}</MenuItem>
+                                    )
+                                }
+                            )}
+                        
                         </Select>
                     </FormControl>
                 </Box>
