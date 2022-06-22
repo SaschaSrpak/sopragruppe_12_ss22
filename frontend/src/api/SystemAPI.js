@@ -141,15 +141,15 @@ export default class SystemAPI {
 
     //Start-event related
 
-    #getstartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
-    #deletestartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
-    #updatestartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+    #getStartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+    #deleteStartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
+    #updateStartEventURL = (id) => `${this.#bankServerBaseURL}/start-event/${id}`;
 
     //Start-event Transaction relate
 
-    #getstartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
-    #deletestartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
-    #updatestartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    #getStartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    #deleteStartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
+    #updateStartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
 
     //Worktime related
 
@@ -186,7 +186,7 @@ export default class SystemAPI {
         return this.#api;
     }
 
-    #fetchAdvancend = (url, init) => fetch(url, init)
+    #fetchAdvanced = (url, init) => fetch(url, init)
         .then(res=> {
             if (!res.ok){
                 throw Error(`${res.status} ${res.statusText}`)
@@ -202,7 +202,7 @@ export default class SystemAPI {
      */
 
     getPersons() {
-        return this.#fetchAdvancend(this.#getPersonsURL()).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getPersonsURL()).then((responseJSON) => {
             let personBOs = PersonBO.fromJSON(responseJSON);
             return new Promise ( function (resolve){
                 resolve(personBOs);
@@ -211,7 +211,7 @@ export default class SystemAPI {
     }
 
     getPerson(person_id){
-        return this.#fetchAdvancend(this.#getCustomerURL(person_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getCustomerURL(person_id)).then((responseJSON) => {
             let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePersonBO)
@@ -221,7 +221,7 @@ export default class SystemAPI {
 
 
     addPerson(personBO) {
-        return this.#fetchAdvancend(this.#addPersonURL(), {
+        return this.#fetchAdvanced(this.#addPersonURL(), {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain',
@@ -238,7 +238,7 @@ export default class SystemAPI {
     }
 
     updatePerson(personBO) {
-    return this.#fetchAdvancend(this.#updatePersonURL(personBO.getId()), {
+    return this.#fetchAdvanced(this.#updatePersonURL(personBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -256,7 +256,7 @@ export default class SystemAPI {
   }
 
   deletePerson(person_id) {
-        return this.#fetchAdvancend(this.#deletePersonURL(person_id), {
+        return this.#fetchAdvanced(this.#deletePersonURL(person_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
@@ -274,7 +274,7 @@ export default class SystemAPI {
    */
 
     getEndEvent(EndEvent_id){
-        return this.#fetchAdvancend(this.#getEndEventURL(EndEvent_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getEndEventURL(EndEvent_id)).then((responseJSON) => {
             let responseEndereignisBO = EndereignisBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseEndereignisBO)
@@ -290,7 +290,7 @@ export default class SystemAPI {
    */
 
     deleteEndEvent(EndEvent_id) {
-        return this.#fetchAdvancend(this.#deleteEndEventURL(EndEvent_id), {
+        return this.#fetchAdvanced(this.#deleteEndEventURL(EndEvent_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseEndereignisBO = EndereignisBO.fromJSON(responseJSON)[0];
@@ -324,40 +324,40 @@ export default class SystemAPI {
   }
 
   /**
-   * Returns a Promise, which resolves to a EreignisbuchungBO.
+   * Returns a Promise, which resolves to a EndereignisBuchungBO.
    *
    * @param {Number} EndEventTransaction_id to be retrieved
    * @public
    */
 
     getEndEventTransaction(EndEventTransaction_id){
-        return this.#fetchAdvancend(this.#getEndEventTransactionURL(EndEventTransaction_id)).then((responseJSON) => {
-            let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+        return this.#fetchAdvanced(this.#getEndEventTransactionURL(EndEventTransaction_id)).then((responseJSON) => {
+            let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
-                resolve(responseEreignisbuchungBO)
+                resolve(responseEndereignisBuchungBO)
             })
         })
     }
 
   /**
-   * Returns a Promise, which resolves to an Array of EreignisbuchungBO.
+   * Returns a Promise, which resolves to an Array of EndereignisBuchungBO.
    *
    * @param {Number} EndEventTransaction_id to be deleted
    * @public
    */
 
     deleteEndEventTransaction(EndEventTransaction_id) {
-        return this.#fetchAdvancend(this.#deleteEndEventTransactionURL(EndEvent_id), {
+        return this.#fetchAdvanced(this.#deleteEndEventTransactionURL(EndEvent_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
-            let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+            let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve) {
-                resolve(responseEreignisbuchungBO);
+                resolve(responseEndereignisBuchungBO);
             })
         })
     }
   /**
-   * Updates a endevent and returns a Promise, which resolves to a EreignisbuchungBO.
+   * Updates a endevent and returns a Promise, which resolves to a EndereignisBuchungBO.
    *
    * @param {Number} EndEventTransaction_id to be updated
    * @public
@@ -369,13 +369,13 @@ export default class SystemAPI {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(EreignisbuchungBO)
+      body: JSON.stringify(EndereignisBuchungBO)
     }).then((responseJSON) => {
-      // We always get an array of EreignisbuchungBO.fromJSON
-      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
-      // console.info(EreignisbuchungBO);
+      // We always get an array of EndereignisBuchungBO.fromJSON
+      let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(EndereignisBuchungBO);
       return new Promise(function (resolve) {
-        resolve(responseEreignisbuchungBO);
+        resolve(responseEndereignisBuchungBO);
       })
     })
   }
@@ -388,7 +388,7 @@ export default class SystemAPI {
    */
 
     getGehen(Gehen_id){
-        return this.#fetchAdvancend(this.#getGehenURL(Gehen_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getGehenURL(Gehen_id)).then((responseJSON) => {
             let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseGehenBO)
@@ -404,7 +404,7 @@ export default class SystemAPI {
    */
 
     deleteGehen(Gehen_id) {
-        return this.#fetchAdvancend(this.#deleteGehenURL(Gehen_id), {
+        return this.#fetchAdvanced(this.#deleteGehenURL(Gehen_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
@@ -444,7 +444,7 @@ export default class SystemAPI {
    */
 
     getGehenTransaction(GehenTransaction_id){
-        return this.#fetchAdvancend(this.#getGehenTransactionURL(GehenTransaction_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getGehenTransactionURL(GehenTransaction_id)).then((responseJSON) => {
             let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseGehenBuchungBO)
@@ -460,7 +460,7 @@ export default class SystemAPI {
    */
 
     deleteGehenTransaction(GehenTransaction_id) {
-        return this.#fetchAdvancend(this.#deleteGehenTransactionURL(GehenTransaction_id), {
+        return this.#fetchAdvanced(this.#deleteGehenTransactionURL(GehenTransaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
@@ -501,7 +501,7 @@ export default class SystemAPI {
    */
 
     getKommen(Kommen_id){
-        return this.#fetchAdvancend(this.#getKommenURL(Kommen_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getKommenURL(Kommen_id)).then((responseJSON) => {
             let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseKommenBO)
@@ -517,7 +517,7 @@ export default class SystemAPI {
    */
 
     deleteKommen(Kommen_id) {
-        return this.#fetchAdvancend(this.#deleteKommenURL(Kommen_id), {
+        return this.#fetchAdvanced(this.#deleteKommenURL(Kommen_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
@@ -558,7 +558,7 @@ export default class SystemAPI {
    */
 
     getKommenTransaction(KommenTransaction_id){
-        return this.#fetchAdvancend(this.#getKommenTransactionURL(KommenTransaction_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getKommenTransactionURL(KommenTransaction_id)).then((responseJSON) => {
             let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseKommenBuchungBO)
@@ -574,7 +574,7 @@ export default class SystemAPI {
    */
 
     deleteKommenTransaction(KommenTransaction_id) {
-        return this.#fetchAdvancend(this.#deleteKommenTransactionURL(KommenTransaction_id), {
+        return this.#fetchAdvanced(this.#deleteKommenTransactionURL(KommenTransaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
@@ -616,7 +616,7 @@ export default class SystemAPI {
    */
 
     getPause(Pause_id){
-        return this.#fetchAdvancend(this.#getPauseURL(Pause_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getPauseURL(Pause_id)).then((responseJSON) => {
             let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePauseBO)
@@ -632,7 +632,7 @@ export default class SystemAPI {
    */
 
     deletePause(Pause_id) {
-        return this.#fetchAdvancend(this.#deletePauseURL(Pause_id), {
+        return this.#fetchAdvanced(this.#deletePauseURL(Pause_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
@@ -672,7 +672,7 @@ export default class SystemAPI {
    */
 
     getPauseTransaction(PauseTransaction_id){
-        return this.#fetchAdvancend(this.#getPauseTransactionURL(PauseTransaction_id)).then((responseJSON) => {
+        return this.#fetchAdvanced(this.#getPauseTransactionURL(PauseTransaction_id)).then((responseJSON) => {
             let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePauseBuchungBO)
@@ -688,7 +688,7 @@ export default class SystemAPI {
    */
 
     deletePauseTransaction(PauseTransaction_id) {
-        return this.#fetchAdvancend(this.#deletePauseTransactionURL(PauseTransaction_id), {
+        return this.#fetchAdvanced(this.#deletePauseTransactionURL(PauseTransaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
@@ -720,4 +720,119 @@ export default class SystemAPI {
       })
     })
   }
+
+      /**
+   * Returns a Promise, which resolves to a StartereignisBO.
+   *
+   * @param {Number} StartEvent_id to be retrieved
+   * @public
+   */
+
+    getStartEvent(StartEvent_id){
+        return this.#fetchAdvanced(this.#getStartEventURL(StartEvent_id)).then((responseJSON) => {
+            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseStartereignisBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of StartereignisBO.
+   *
+   * @param {Number} StartEvent_id to be deleted
+   * @public
+   */
+
+    deleteStartEvent(StartEvent_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventURL(StartEvent_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseStartereignisBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a StartereignisBO.
+   *
+   * @param {Number} StartEvent_id to be updated
+   * @public
+   */
+  updateStartEvent(StartEvent_id) {
+    return this.#fetchAdvanced(this.updateStartEventURL(StartEvent_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(StartereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of StartereignisBO.fromJSON
+      let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
+      // console.info(StartereignisBO);
+      return new Promise(function (resolve) {
+        resolve(responseStartereignisBO);
+      })
+    })
+  }
+
+   /**
+   * Returns a Promise, which resolves to a EndereignisBuchungBO.
+   *
+   * @param {Number} EndEventTransaction_id to be retrieved
+   * @public
+   */
+
+    getStartEventTransaction(StartEventTransaction_id){
+        return this.#fetchAdvanced(this.#getStartEventTransactionURL(StartEventTransaction_id)).then((responseJSON) => {
+            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseStartereignisBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of StartereignisBuchungBO.
+   *
+   * @param {Number} StartEventTransaction_id to be deleted
+   * @public
+   */
+
+    deleteStartEventTransaction(StartEventTransaction_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventTransactionURL(StartEvent_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseStartereignisBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a StartereignisBuchungBO.
+   *
+   * @param {Number} StartEventTransaction_id to be updated
+   * @public
+   */
+  updateStartEventTransaction(StartEventTransaction_id) {
+    return this.#fetchAdvanced(this.updateStartEventTransactionURL(StartEventTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(StartereignisBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of StartereignisBuchungBO.fromJSON
+      let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(StartereignisBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseStartereignisBuchungBO);
+      })
+    })
+  }
+
 }
