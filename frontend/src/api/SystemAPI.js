@@ -129,15 +129,15 @@ export default class SystemAPI {
 
     //Pause related
 
-    #getpauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
-    #deletepauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
-    #updatepauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+    #getPauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+    #deletePauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
+    #updatePauseURL = (id) => `${this.#bankServerBaseURL}/pause/${id}`;
 
     //Pause Transaction relate
 
-    #getpauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
-    #deletepauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
-    #updatepauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+    #getPauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+    #deletePauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
+    #updatePauseTransactionURL = (id) => `${this.#bankServerBaseURL}/pause-transaction/${id}`;
 
     //Start-event related
 
@@ -608,5 +608,116 @@ export default class SystemAPI {
   }
 
 
+      /**
+   * Returns a Promise, which resolves to a PauseBO.
+   *
+   * @param {Number} Pause_id to be retrieved
+   * @public
+   */
 
+    getPause(Pause_id){
+        return this.#fetchAdvancend(this.#getPauseURL(Pause_id)).then((responseJSON) => {
+            let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responsePauseBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of PauseBO.
+   *
+   * @param {Number} Pause_id to be deleted
+   * @public
+   */
+
+    deletePause(Pause_id) {
+        return this.#fetchAdvancend(this.#deletePauseURL(Pause_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responsePauseBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a PauseBO.
+   *
+   * @param {Number} Pause_id to be updated
+   * @public
+   */
+  updatePause(Pause_id) {
+    return this.#fetchAdvanced(this.updatePauseURL(Pause_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(PauseBO)
+    }).then((responseJSON) => {
+      // We always get an array of PauseBO.fromJSON
+      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+      // console.info(PauseBO);
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+      })
+    })
+  }
+   /**
+   * Returns a Promise, which resolves to a KommenBuchungBO.
+   *
+   * @param {Number} KommenTransaction_id to be retrieved
+   * @public
+   */
+
+    getPauseTransaction(PauseTransaction_id){
+        return this.#fetchAdvancend(this.#getPauseTransactionURL(PauseTransaction_id)).then((responseJSON) => {
+            let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responsePauseBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of PauseBuchungBO.
+   *
+   * @param {Number} PauseTransaction_id to be deleted
+   * @public
+   */
+
+    deletePauseTransaction(PauseTransaction_id) {
+        return this.#fetchAdvancend(this.#deletePauseTransactionURL(PauseTransaction_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responsePauseBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a PauseBuchungBO.
+   *
+   * @param {Number} PauseTransaction_id to be updated
+   * @public
+   */
+  updatePauseTransaction(PauseTransaction_id) {
+    return this.#fetchAdvanced(this.updatePauseTransactionURL(PauseTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(PauseBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of PauseBO.fromJSON
+      let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(PauseBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responsePauseBuchungBO);
+      })
+    })
+  }
 }
