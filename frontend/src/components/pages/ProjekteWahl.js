@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button, Divider } from "@mui/material";
+import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl } from "@mui/material";
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
@@ -36,15 +36,17 @@ export class Projektwahl extends Component {
                     margin: "5px",
                 }}>Projektwahl</Typography>
 {/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
-                <form>
-                    <TextField label="Projektwahl">
-                        {TestProjekte.map((projekt) => (
-                            <MenuItem
-                                key={projekt}>
-                            </MenuItem>  
-                        ))}
-                    </TextField>
-                </form>
+                <Box>
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel id="demo-simple-select-label">Projekte</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Projekte"
+                        >
+                        </Select>
+                    </FormControl>
+                </Box>
                 <Button variant="contained" sx={{
                     margin: "20px",
                 }}>
