@@ -2,19 +2,14 @@ import PersonBO from './PersonBO'
 import ProjektBO from './ProjektBO'
 import AktivitaetBO from './AktivitätBO'
 import ZeitkontoBO from './ZeitkontoBO'
-import EreignisBO from './Ereignisse/EreignisBO'
 import StartereignisBO from './Ereignisse/StartereignisBO'
 import EndereignisBO from './Ereignisse/EndereignisBO'
 import KommenBO from './Ereignisse/KommenBO'
-import GehenTransactionBO from './Ereignisse/GehenBO'
+import GehenBO from './Ereignisse/GehenBO'
 import ProjektDeadlineBO from './Ereignisse/ProjektDeadlineBO'
-import ZeitintervallBO from './Zeitintervall/ZeitintervallBO'
 import PauseBO from './Zeitintervall/PauseBO'
 import ProjektlaufzeitBO from './Zeitintervall/ProjektlaufzeitBO'
 import ProjektarbeitBO from './Zeitintervall/ProjektarbeitBO'
-import Buchung from './Buchungen/BuchungBO'
-import EreignisbuchungBO from './Buchungen/EreignisbuchungBO'
-import ZeitintervallbuchungBO from './Buchungen/ZeitintervallbuchungBO'
 import StartereignisBuchungBO from './Buchungen/StartereignisBuchungBO'
 import EndereignisBuchungBO from './Buchungen/EndereignisBuchungBO'
 import KommenBuchungBO from './Buchungen/KommenBuchungBO'
@@ -55,8 +50,8 @@ export default class SystemAPI {
     #updateProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}`;
     #getActivitiesOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/activity`;
     #getPersonsOnProjectURL = (id) => `${this.#bankServerBaseURL}/projects/${id}/persons`;
-    #addActivitiyToProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
-    #deleteActivitiyFromProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
+    #addActivityToProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
+    #deleteActivityFromProjectURL = (id, activity_id) => `${this.#bankServerBaseURL}/projects/${id}/activity/${activity_id}`;
     #addPersonResponsibleToProjectURL = (id, person_id) => `${this.#bankServerBaseURL}/projects/${id}/persons/${person_id}`;
     #deletePersonResponsibleFromProjectURL = (id, person_id) => `${this.#bankServerBaseURL}/projects/${id}/persons/${person_id}`;
 
@@ -375,13 +370,13 @@ export default class SystemAPI {
   }
 
   addActivityToProject(project_id, activity_id) {
-        return this.#fetchAdvanced(this.#addActivitiyToProjectURL(project_id, activity_id), {
+        return this.#fetchAdvanced(this.#addActivityToProjectURL(project_id, activity_id), {
             method: 'POST'
         })
   }
 
   deleteActivityToProject(project_id, activity_id) {
-        return this.#fetchAdvanced(this.#deleteActivitiyFromProjectURL(project_id, activity_id), {
+        return this.#fetchAdvanced(this.#deleteActivityFromProjectURL(project_id, activity_id), {
             method: 'DELETE'
         })
   }
@@ -609,10 +604,10 @@ export default class SystemAPI {
             },
             body: JSON.stringify(kommenBO)
         }).then((responseJSON) => {
-            let responseKommmenBO = KommenBO.fromJSON(responseJSON)[0];
+            let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
             // console.info(personBO);
             return new Promise(function (resolve) {
-                resolve(responseKommmenBO);
+                resolve(responseKommenBO);
             })
         })
   }
@@ -653,12 +648,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a StartereignisBO.
    *
-   * @param {Number} StartEvent_id to be retrieved
+   * @param {Number} start_event_id to be retrieved
    * @public
    */
 
-    getStartEvent(StartEvent_id){
-        return this.#fetchAdvanced(this.#getStartEventURL(StartEvent_id)).then((responseJSON) => {
+    getStartEvent(start_event_id){
+        return this.#fetchAdvanced(this.#getStartEventURL(start_event_id)).then((responseJSON) => {
             let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseStartereignisBO)
@@ -669,12 +664,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of StartereignisBO.
    *
-   * @param {Number} StartEvent_id to be deleted
+   * @param {Number} start_event_id to be deleted
    * @public
    */
 
-    deleteStartEvent(StartEvent_id) {
-        return this.#fetchAdvanced(this.#deleteStartEventURL(StartEvent_id), {
+    deleteStartEvent(start_event_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventURL(start_event_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
@@ -686,17 +681,17 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a StartereignisBO.
    *
-   * @param {StartereignisBO} StartereignisBO to be updated
+   * @param {StartereignisBO} start_eventBO to be updated
    * @public
    */
-  updateStartEvent(StartereignisBO) {
-    return this.#fetchAdvanced(this.#updateStartEventURL(StartereignisBO.getId()), {
+  updateStartEvent(start_eventBO) {
+    return this.#fetchAdvanced(this.#updateStartEventURL(start_eventBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(StartereignisBO)
+      body: JSON.stringify(start_eventBO)
     }).then((responseJSON) => {
       // We always get an array of StartereignisBO.fromJSON
       let responseStartereignisBO = StartereignisBO.fromJSON(responseJSON)[0];
@@ -713,12 +708,12 @@ export default class SystemAPI {
    /**
    * Returns a Promise, which resolves to a EndereignisBuchungBO.
    *
-   * @param {Number} StartEventTransaction_id to be retrieved
+   * @param {Number} start_eventTransaction_id to be retrieved
    * @public
    */
 
-    getStartEventTransaction(StartEventTransaction_id){
-        return this.#fetchAdvanced(this.#getStartEventTransactionURL(StartEventTransaction_id)).then((responseJSON) => {
+    getStartEventTransaction(start_eventTransaction_id){
+        return this.#fetchAdvanced(this.#getStartEventTransactionURL(start_eventTransaction_id)).then((responseJSON) => {
             let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseStartereignisBuchungBO)
@@ -729,12 +724,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of StartereignisBuchungBO.
    *
-   * @param {Number} StartEventTransaction_id to be deleted
+   * @param {Number} start_event_transaction_id to be deleted
    * @public
    */
 
-    deleteStartEventTransaction(StartEventTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteStartEventTransactionURL(StartEvent_id), {
+    deleteStartEventTransaction(start_event_transaction_id) {
+        return this.#fetchAdvanced(this.#deleteStartEventTransactionURL(start_event_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
@@ -746,17 +741,17 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a StartereignisBuchungBO.
    *
-   * @param {StartereignisBuchungBO} StartereignisBuchungBO to be updated
+   * @param {StartereignisBuchungBO} start_event_transactionBO to be updated
    * @public
    */
-  updateStartEventTransaction(StartereignisBuchungBO) {
-    return this.#fetchAdvanced(this.#updateStartEventTransactionURL(StartereignisBuchungBO.getId()), {
+  updateStartEventTransaction(start_event_transactionBO) {
+    return this.#fetchAdvanced(this.#updateStartEventTransactionURL(start_event_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(StartereignisBuchungBO)
+      body: JSON.stringify(start_event_transactionBO)
     }).then((responseJSON) => {
       // We always get an array of StartereignisBuchungBO.fromJSON
       let responseStartereignisBuchungBO = StartereignisBuchungBO.fromJSON(responseJSON)[0];
@@ -774,12 +769,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a EndereignisBO.
    *
-   * @param {Number} EndEvent_id to be retrieved
+   * @param {Number} end_event_id to be retrieved
    * @public
    */
 
-    getEndEvent(EndEvent_id){
-        return this.#fetchAdvanced(this.#getEndEventURL(EndEvent_id)).then((responseJSON) => {
+    getEndEvent(end_event_id){
+        return this.#fetchAdvanced(this.#getEndEventURL(end_event_id)).then((responseJSON) => {
             let responseEndereignisBO = EndereignisBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseEndereignisBO)
@@ -793,12 +788,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of EndereignisBO.
    *
-   * @param {Number} EndEvent_id to be deleted
+   * @param {Number} end_event_id to be deleted
    * @public
    */
 
-    deleteEndEvent(EndEvent_id) {
-        return this.#fetchAdvanced(this.#deleteEndEventURL(EndEvent_id), {
+    deleteEndEvent(end_event_id) {
+        return this.#fetchAdvanced(this.#deleteEndEventURL(end_event_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseEndereignisBO = EndereignisBO.fromJSON(responseJSON)[0];
@@ -811,21 +806,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a EndereignisBO.
    *
-   * @param {EndereignisBO} EndereignisBO to be updated
+   * @param {EndereignisBO} end_eventBO to be updated
    * @public
    */
-  updateEndEvent(EndereignisBO) {
-    return this.#fetchAdvanced(this.#updateEndEventURL(EndereignisBO.getId()), {
+  updateEndEvent(end_eventBO) {
+    return this.#fetchAdvanced(this.#updateEndEventURL(end_eventBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(EndereignisBO)
+      body: JSON.stringify(end_eventBO)
     }).then((responseJSON) => {
       // We always get an array of EndereignisBO.fromJSON
       let responseEndereignisBO = EndereignisBO.fromJSON(responseJSON)[0];
-      // console.info(EndereignisBO);
+      // console.info(end_eventBO);
       return new Promise(function (resolve) {
         resolve(responseEndereignisBO);
       })
@@ -837,12 +832,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a EndereignisBuchungBO.
    *
-   * @param {Number} EndEventTransaction_id to be retrieved
+   * @param {Number} end_event_transaction_id to be retrieved
    * @public
    */
 
-    getEndEventTransaction(EndEventTransaction_id){
-        return this.#fetchAdvanced(this.#getEndEventTransactionURL(EndEventTransaction_id)).then((responseJSON) => {
+    getEndEventTransaction(end_event_transaction_id){
+        return this.#fetchAdvanced(this.#getEndEventTransactionURL(end_event_transaction_id)).then((responseJSON) => {
             let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseEndereignisBuchungBO)
@@ -853,12 +848,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of EndereignisBuchungBO.
    *
-   * @param {Number} EndEventTransaction_id to be deleted
+   * @param {Number} end_event_transaction_id to be deleted
    * @public
    */
 
-    deleteEndEventTransaction(EndEventTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteEndEventTransactionURL(EndEvent_id), {
+    deleteEndEventTransaction(end_event_transaction_id) {
+        return this.#fetchAdvanced(this.#deleteEndEventTransactionURL(end_event_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
@@ -870,21 +865,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a EndereignisBuchungBO.
    *
-   * @param {EndereignisBuchungBO} EndereignisBuchungBO to be updated
+   * @param {EndereignisBuchungBO} end_event_transactionBO to be updated
    * @public
    */
-  updateEndEventTransaction(EndereignisBuchungBO) {
-    return this.#fetchAdvanced(this.#updateEndEventTransactionURL(EndereignisBuchungBO.getId()), {
+  updateEndEventTransaction(end_event_transactionBO) {
+    return this.#fetchAdvanced(this.#updateEndEventTransactionURL(end_event_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(EndereignisBuchungBO)
+      body: JSON.stringify(end_event_transactionBO)
     }).then((responseJSON) => {
-      // We always get an array of EndereignisBuchungBO.fromJSON
+      // We always get an array of EndereignisBuchung.fromJSON
       let responseEndereignisBuchungBO = EndereignisBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(EndereignisBuchungBO);
+      // console.info(end_event_transactionBO);
       return new Promise(function (resolve) {
         resolve(responseEndereignisBuchungBO);
       })
@@ -897,12 +892,12 @@ export default class SystemAPI {
     /**
    * Returns a Promise, which resolves to a GehenBO.
    *
-   * @param {Number} Gehen_id to be retrieved
+   * @param {Number} gehen_id to be retrieved
    * @public
    */
 
-    getGehen(Gehen_id){
-        return this.#fetchAdvanced(this.#getGehenURL(Gehen_id)).then((responseJSON) => {
+    getGehen(gehen_id){
+        return this.#fetchAdvanced(this.#getGehenURL(gehen_id)).then((responseJSON) => {
             let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseGehenBO)
@@ -913,12 +908,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of GehenBO.
    *
-   * @param {Number} Gehen_id to be deleted
+   * @param {Number} gehen_id to be deleted
    * @public
    */
 
-    deleteGehen(Gehen_id) {
-        return this.#fetchAdvanced(this.#deleteGehenURL(Gehen_id), {
+    deleteGehen(gehen_id) {
+        return this.#fetchAdvanced(this.#deleteGehenURL(gehen_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
@@ -930,17 +925,17 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a GehenBO.
    *
-   * @param {GehenBO} GehenBO to be updated
+   * @param {GehenBO} gehenBO to be updated
    * @public
    */
-  updateGehen(GehenBO) {
-    return this.#fetchAdvanced(this.#updateGehenURL(GehenBO.getId()), {
+  updateGehen(gehenBO) {
+    return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(GehenBO)
+      body: JSON.stringify(gehenBO)
     }).then((responseJSON) => {
       // We always get an array of GehenBO.fromJSON
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
@@ -956,12 +951,12 @@ export default class SystemAPI {
       /**
    * Returns a Promise, which resolves to a GehenBuchungBO.
    *
-   * @param {Number} GehenTransaction_id to be retrieved
+   * @param {Number} gehen_transaction_id to be retrieved
    * @public
    */
 
-    getGehenTransaction(GehenTransaction_id){
-        return this.#fetchAdvanced(this.#getGehenTransactionURL(GehenTransaction_id)).then((responseJSON) => {
+    getGehenTransaction(gehen_transaction_id){
+        return this.#fetchAdvanced(this.#getGehenTransactionURL(gehen_transaction_id)).then((responseJSON) => {
             let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseGehenBuchungBO)
@@ -972,12 +967,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of GehenBuchungBO.
    *
-   * @param {Number} GehenTransaction_id to be deleted
+   * @param {Number} gehen_transaction_id to be deleted
    * @public
    */
 
-    deleteGehenTransaction(GehenTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteGehenTransactionURL(GehenTransaction_id), {
+    deleteGehenTransaction(gehen_transaction_id) {
+        return this.#fetchAdvanced(this.#deleteGehenTransactionURL(gehen_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
@@ -989,21 +984,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a GehenBuchungBO.
    *
-   * @param {GehenBuchungBO} GehenBuchungBO to be updated
+   * @param {GehenBuchungBO} gehen_transactionBO to be updated
    * @public
    */
-  updateGehenTransaction(GehenBuchungBO) {
-    return this.#fetchAdvanced(this.#updateGehenTransactionURL(GehenBuchungBO.getId()), {
+  updateGehenTransaction(gehen_transactionBO) {
+    return this.#fetchAdvanced(this.#updateGehenTransactionURL(gehen_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(GehenBuchungBO)
+      body: JSON.stringify(gehen_transactionBO)
     }).then((responseJSON) => {
       // We always get an array of GehenBO.fromJSON
       let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(GehenBuchungBO);
+      // console.info(gehen_transactionBO);
       return new Promise(function (resolve) {
         resolve(responseGehenBuchungBO);
       })
@@ -1015,12 +1010,12 @@ export default class SystemAPI {
       /**
    * Returns a Promise, which resolves to a KommenBO.
    *
-   * @param {Number} Kommen_id to be retrieved
+   * @param {Number} kommen_id to be retrieved
    * @public
    */
 
-    getKommen(Kommen_id){
-        return this.#fetchAdvanced(this.#getKommenURL(Kommen_id)).then((responseJSON) => {
+    getKommen(kommen_id){
+        return this.#fetchAdvanced(this.#getKommenURL(kommen_id)).then((responseJSON) => {
             let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseKommenBO)
@@ -1031,12 +1026,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of KommenBO.
    *
-   * @param {Number} Kommen_id to be deleted
+   * @param {Number} kommen_id to be deleted
    * @public
    */
 
-    deleteKommen(Kommen_id) {
-        return this.#fetchAdvanced(this.#deleteKommenURL(Kommen_id), {
+    deleteKommen(kommen_id) {
+        return this.#fetchAdvanced(this.#deleteKommenURL(kommen_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
@@ -1048,21 +1043,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a KommenBO.
    *
-   * @param {KommenBO} KommenBO to be updated
+   * @param {KommenBO} kommenBO to be updated
    * @public
    */
-  updateKommen(KommenBO) {
-    return this.#fetchAdvanced(this.#updateKommenURL(KommenBO.getId()), {
+  updateKommen(kommenBO) {
+    return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(KommenBO)
+      body: JSON.stringify(kommenBO)
     }).then((responseJSON) => {
       // We always get an array of KommenBO.fromJSON
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
-      // console.info(KommenBO);
+      // console.info(kommenBO);
       return new Promise(function (resolve) {
         resolve(responseKommenBO);
       })
@@ -1072,12 +1067,12 @@ export default class SystemAPI {
      /**
    * Returns a Promise, which resolves to a KommenBuchungBO.
    *
-   * @param {Number} KommenTransaction_id to be retrieved
+   * @param {Number} kommen_transaction_id to be retrieved
    * @public
    */
 
-  getKommenTransaction(KommenTransaction_id){
-        return this.#fetchAdvanced(this.#getKommenTransactionURL(KommenTransaction_id)).then((responseJSON) => {
+  getKommenTransaction(kommen_transaction_id){
+        return this.#fetchAdvanced(this.#getKommenTransactionURL(kommen_transaction_id)).then((responseJSON) => {
             let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseKommenBuchungBO)
@@ -1088,12 +1083,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of KommenBuchungBO.
    *
-   * @param {Number} KommenTransaction_id to be deleted
+   * @param {Number} kommen_transaction_id to be deleted
    * @public
    */
 
-    deleteKommenTransaction(KommenTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteKommenTransactionURL(KommenTransaction_id), {
+    deleteKommenTransaction(kommen_transaction_id) {
+        return this.#fetchAdvanced(this.#deleteKommenTransactionURL(kommen_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
@@ -1105,21 +1100,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a KommenBuchungBO.
    *
-   * @param {KommenBuchungBO} KommenBuchungBO to be updated
+   * @param {KommenBuchungBO} kommen_transactionBO to be updated
    * @public
    */
-  updateKommenTransaction(KommenBuchungBO) {
-    return this.#fetchAdvanced(this.#updateKommenTransactionURL(KommenBuchungBO.getId()), {
+  updateKommenTransaction(kommen_transactionBO) {
+    return this.#fetchAdvanced(this.#updateKommenTransactionURL(kommen_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(KommenBuchungBO)
+      body: JSON.stringify(kommen_transactionBO)
     }).then((responseJSON) => {
       // We always get an array of KommenBuchungBO.fromJSON
       let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(KommenBuchungBO);
+      // console.info(kommen_transactionBO);
       return new Promise(function (resolve) {
         resolve(responseKommenBuchungBO);
       })
@@ -1131,12 +1126,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a PauseBO.
    *
-   * @param {Number} Pause_id to be retrieved
+   * @param {Number} pause_id to be retrieved
    * @public
    */
 
-    getPause(Pause_id){
-        return this.#fetchAdvanced(this.#getPauseURL(Pause_id)).then((responseJSON) => {
+    getPause(pause_id){
+        return this.#fetchAdvanced(this.#getPauseURL(pause_id)).then((responseJSON) => {
             let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePauseBO)
@@ -1147,12 +1142,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of PauseBO.
    *
-   * @param {Number} Pause_id to be deleted
+   * @param {Number} pause_id to be deleted
    * @public
    */
 
-    deletePause(Pause_id) {
-        return this.#fetchAdvanced(this.#deletePauseURL(Pause_id), {
+    deletePause(pause_id) {
+        return this.#fetchAdvanced(this.#deletePauseURL(pause_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
@@ -1164,21 +1159,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a PauseBO.
    *
-   * @param {PauseBO} PauseBO to be updated
+   * @param {PauseBO} pauseBO to be updated
    * @public
    */
-  updatePause(PauseBO) {
-    return this.#fetchAdvanced(this.#updatePauseURL(PauseBO.getId()), {
+  updatePause(pauseBO) {
+    return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(PauseBO)
+      body: JSON.stringify(pauseBO)
     }).then((responseJSON) => {
       // We always get an array of PauseBO.fromJSON
       let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      // console.info(PauseBO);
+      // console.info(pauseBO);
       return new Promise(function (resolve) {
         resolve(responsePauseBO);
       })
@@ -1190,12 +1185,12 @@ export default class SystemAPI {
    /**
    * Returns a Promise, which resolves to a KommenBuchungBO.
    *
-   * @param {Number} PauseTransaction_id to be retrieved
+   * @param {Number} pause_transaction_id to be retrieved
    * @public
    */
 
-    getPauseTransaction(PauseTransaction_id){
-        return this.#fetchAdvanced(this.#getPauseTransactionURL(PauseTransaction_id)).then((responseJSON) => {
+    getPauseTransaction(pause_transaction_id){
+        return this.#fetchAdvanced(this.#getPauseTransactionURL(pause_transaction_id)).then((responseJSON) => {
             let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responsePauseBuchungBO)
@@ -1206,12 +1201,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of PauseBuchungBO.
    *
-   * @param {Number} PauseTransaction_id to be deleted
+   * @param {Number} pause_transaction_id to be deleted
    * @public
    */
 
-    deletePauseTransaction(PauseTransaction_id) {
-        return this.#fetchAdvanced(this.#deletePauseTransactionURL(PauseTransaction_id), {
+    deletePauseTransaction(pause_transaction_id) {
+        return this.#fetchAdvanced(this.#deletePauseTransactionURL(pause_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
@@ -1223,21 +1218,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a PauseBuchungBO.
    *
-   * @param {PauseBuchungBO} PauseBuchungBO to be updated
+   * @param {PauseBuchungBO} pause_transactionBO to be updated
    * @public
    */
-  updatePauseTransaction(PauseBuchungBO) {
-    return this.#fetchAdvanced(this.#updatePauseTransactionURL(PauseBuchungBO.getId()), {
+  updatePauseTransaction(pause_transactionBO) {
+    return this.#fetchAdvanced(this.#updatePauseTransactionURL(pause_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(PauseBuchungBO)
+      body: JSON.stringify(pause_transactionBO)
     }).then((responseJSON) => {
       // We always get an array of PauseBO.fromJSON
       let responsePauseBuchungBO = PauseBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(PauseBuchungBO);
+      // console.info(pause_transactionBO);
       return new Promise(function (resolve) {
         resolve(responsePauseBuchungBO);
       })
@@ -1250,12 +1245,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a ProjektarbeitBO.
    *
-   * @param {Number} Worktime_id to be retrieved
+   * @param {Number} project_worktime_id to be retrieved
    * @public
    */
 
-    getWorktime(Worktime_id){
-        return this.#fetchAdvanced(this.#getWorktimeURL(Worktime_id)).then((responseJSON) => {
+    getProjectWorktime(project_worktime_id){
+        return this.#fetchAdvanced(this.#getWorktimeURL(project_worktime_id)).then((responseJSON) => {
             let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseProjektarbeitBO)
@@ -1266,12 +1261,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of ProjektarbeitBO.
    *
-   * @param {Number} Worktime_id to be deleted
+   * @param {Number} project_worktime_id to be deleted
    * @public
    */
 
-    deleteWorktime(Worktime_id) {
-        return this.#fetchAdvanced(this.#deleteWorktimeURL(Worktime_id), {
+    deleteProjectWorktime(project_worktime_id) {
+        return this.#fetchAdvanced(this.#deleteWorktimeURL(project_worktime_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
@@ -1283,36 +1278,38 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektarbeitBO.
    *
-   * @param {ProjektarbeitBO} ProjektarbeitBO to be updated
+   * @param {ProjektarbeitBO} project_worktimeBO to be updated
    * @public
    */
-  updateWorktime(ProjektarbeitBO) {
-    return this.#fetchAdvanced(this.#updateWorktimeURL(ProjektarbeitBO.getId()), {
+  updateProjectWorktime(project_worktimeBO) {
+    return this.#fetchAdvanced(this.#updateWorktimeURL(project_worktimeBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(ProjektarbeitBO)
+      body: JSON.stringify(project_worktimeBO)
     }).then((responseJSON) => {
       // We always get an array of ProjektarbeitBO.fromJSON
       let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
-      // console.info(ProjektarbeitBO);
+      // console.info(project_worktimeBO);
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBO);
       })
     })
   }
 
-     /**
+  //Project-Worktime-Transaction related Functions
+
+  /**
    * Returns a Promise, which resolves to a EndereignisBuchungBO.
    *
-   * @param {Number} EndEventTransaction_id to be retrieved
+   * @param {Number} project_worktime_transaction_id to be retrieved
    * @public
    */
 
-    getWorktimeTransaction(WorktimeTransaction_id){
-        return this.#fetchAdvanced(this.#getWorktimeTransactionURL(WorktimeTransaction_id)).then((responseJSON) => {
+    getProjectWorktimeTransaction(project_worktime_transaction_id){
+        return this.#fetchAdvanced(this.#getWorktimeTransactionURL(project_worktime_transaction_id)).then((responseJSON) => {
             let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseProjektarbeitBuchungBO)
@@ -1321,17 +1318,15 @@ export default class SystemAPI {
     }
 
 
-  //Project-Worktime-Transaction related Functions
-
   /**
    * Returns a Promise, which resolves to an Array of ProjektarbeitBuchungBO.
    *
-   * @param {Number} WorktimeTransaction_id to be deleted
+   * @param {Number} project_worktime_transaction_id to be deleted
    * @public
    */
 
-    deleteWorktimeTransaction(WorktimeTransaction_id) {
-        return this.#fetchAdvanced(this.#deleteWorktimeTransactionURL(Worktime_id), {
+    deleteProjectWorktimeTransaction(project_worktime_transaction_id) {
+        return this.#fetchAdvanced(this.#deleteWorktimeTransactionURL(project_worktime_transaction_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
@@ -1343,21 +1338,21 @@ export default class SystemAPI {
   /**
    * Updates a Project-Worktime-Transaction and returns a Promise, which resolves to a ProjektarbeitBuchungBO.
    *
-   * @param {ProjektarbeitBuchungBO} ProjektarbeitBuchungBO to be updated
+   * @param {ProjektarbeitBuchungBO} project_worktime_transactionBO to be updated
    * @public
    */
-  updateWorktimeTransaction(ProjektarbeitBuchungBO) {
-    return this.#fetchAdvanced(this.#updateWorktimeTransactionURL(ProjektarbeitBuchungBO.getId()), {
+  updateProjectWorktimeTransaction(project_worktime_transactionBO) {
+    return this.#fetchAdvanced(this.#updateWorktimeTransactionURL(project_worktime_transactionBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(ProjektarbeitBuchungBO)
+      body: JSON.stringify(project_worktime_transactionBO)
     }).then((responseJSON) => {
       // We always get an array of ProjektarbeitBuchungBO.fromJSON
       let responseProjektarbeitBuchungBO = ProjektarbeitBuchungBO.fromJSON(responseJSON)[0];
-      // console.info(ProjektarbeitBuchungBO);
+      // console.info(project_worktime_transactionBO);
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBuchungBO);
       })
@@ -1370,12 +1365,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to a ProjektDeadlineBO.
    *
-   * @param {Number} ProjectDeadline_id to be retrieved
+   * @param {Number} project_deadline_id to be retrieved
    * @public
    */
 
-    getProjectDeadline(ProjectDeadline_id){
-        return this.#fetchAdvanced(this.#getProjectDeadlineURL(ProjectDeadline_id)).then((responseJSON) => {
+    getProjectDeadline(project_deadline_id){
+        return this.#fetchAdvanced(this.#getProjectDeadlineURL(project_deadline_id)).then((responseJSON) => {
             let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseProjektDeadlineBO)
@@ -1386,12 +1381,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of ProjektDeadlineBO.
    *
-   * @param {Number} ProjectDeadline_id to be deleted
+   * @param {Number} project_deadline_id to be deleted
    * @public
    */
 
-    deleteProjectDeadline(ProjectDeadline_id) {
-        return this.#fetchAdvanced(this.#deleteProjectDeadlineURL(ProjectDeadline_id), {
+    deleteProjectDeadline(project_deadline_id) {
+        return this.#fetchAdvanced(this.#deleteProjectDeadlineURL(project_deadline_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
@@ -1403,21 +1398,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektDeadlineBO.
    *
-   * @param {ProjektDeadlineBO} ProjektDeadlineBO to be updated
+   * @param {ProjektDeadlineBO} project_deadlineBO to be updated
    * @public
    */
-  updateProjectDeadline(ProjektDeadlineBO) {
-    return this.#fetchAdvanced(this.#updateProjectDeadlineURL(ProjektDeadlineBO.getId()), {
+  updateProjectDeadline(project_deadlineBO) {
+    return this.#fetchAdvanced(this.#updateProjectDeadlineURL(project_deadlineBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(ProjektDeadlineBO)
+      body: JSON.stringify(project_deadlineBO)
     }).then((responseJSON) => {
       // We always get an array of ProjektDeadlineBO.fromJSON
       let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
-      // console.info(ProjektDeadlineBO);
+      // console.info(project_deadlineBO);
       return new Promise(function (resolve) {
         resolve(responseProjektDeadlineBO);
       })
@@ -1427,21 +1422,21 @@ export default class SystemAPI {
   /**
    * Adds a ProjektDeadline and returns a Promise
    *
-   * @param ProjektDeadlineBO to be added
+   * @param project_deadlineBO to be added
    * @public
    */
 
-      addProjectDeadline(ProjektDeadlineBO) {
+      addProjectDeadline(project_deadlineBO) {
         return this.#fetchAdvanced(this.#addProjectDeadlineURL(), {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain',
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify(ProjektDeadlineBO)
+            body: JSON.stringify(project_deadlineBO)
         }).then((responseJSON) => {
             let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
-            // console.info(ProjektDeadlineBO);
+            // console.info(project_deadlineBO);
             return new Promise(function (resolve) {
                 resolve(responseProjektDeadlineBO);
             })
@@ -1454,12 +1449,12 @@ export default class SystemAPI {
     /**
    * Returns a Promise, which resolves to a ProjektDeadlineBO.
    *
-   * @param {Number} ProjectDuration_id to be retrieved
+   * @param {Number} project_duration_id to be retrieved
    * @public
    */
 
-    getProjectDuration(ProjectDuration_id){
-        return this.#fetchAdvanced(this.#getProjectDurationURL(ProjectDuration_id)).then((responseJSON) => {
+    getProjectDuration(project_duration_id){
+        return this.#fetchAdvanced(this.#getProjectDurationURL(project_duration_id)).then((responseJSON) => {
             let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
             return new Promise(function (resolve){
                 resolve(responseProjektlaufzeitBO)
@@ -1470,12 +1465,12 @@ export default class SystemAPI {
   /**
    * Returns a Promise, which resolves to an Array of ProjektlaufzeitBO.
    *
-   * @param {Number} ProjectDuration_id to be deleted
+   * @param {Number} project_duration_id to be deleted
    * @public
    */
 
-    deleteProjectDuration(ProjectDuration_id) {
-        return this.#fetchAdvanced(this.#deleteProjectDurationURL(ProjectDuration_id), {
+    deleteProjectDuration(project_duration_id) {
+        return this.#fetchAdvanced(this.#deleteProjectDurationURL(project_duration_id), {
             method: 'DELETE'
         }).then((responseJSON) => {
             let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
@@ -1487,21 +1482,21 @@ export default class SystemAPI {
   /**
    * Updates a endevent and returns a Promise, which resolves to a ProjektlaufzeitBO.
    *
-   * @param {ProjektlaufzeitBO} ProjektlaufzeitBO to be updated
+   * @param {ProjektlaufzeitBO} project_durationBO to be updated
    * @public
    */
-  updateProjectDuration(ProjektlaufzeitBO) {
-    return this.#fetchAdvanced(this.#updateProjectDurationURL(ProjektlaufzeitBO.getId), {
+  updateProjectDuration(project_durationBO) {
+    return this.#fetchAdvanced(this.#updateProjectDurationURL(project_durationBO.getId), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(ProjektlaufzeitBO)
+      body: JSON.stringify(project_durationBO)
     }).then((responseJSON) => {
       // We always get an array of ProjektlaufzeitBO.fromJSON
       let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
-      // console.info(ProjektlaufzeitBO);
+      // console.info(project_durationBO);
       return new Promise(function (resolve) {
         resolve(responseProjektlaufzeitBO);
       })
@@ -1510,21 +1505,21 @@ export default class SystemAPI {
     /**
    * Adds a ProjektDuration and returns a Promise
    *
-   * @param ProjektlaufzeitBO to be added
+   * @param project_durationBO to be added
    * @public
    */
 
-      addProjectDuration(ProjektlaufzeitBO) {
+      addProjectDuration(project_durationBO) {
         return this.#fetchAdvanced(this.#addProjectDurationURL(), {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain',
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify(ProjektlaufzeitBO)
+            body: JSON.stringify(project_durationBO)
         }).then((responseJSON) => {
             let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
-            // console.info(ProjektlaufzeitBO);
+            // console.info(project_durationBO);
             return new Promise(function (resolve) {
                 resolve(responseProjektlaufzeitBO);
             })
