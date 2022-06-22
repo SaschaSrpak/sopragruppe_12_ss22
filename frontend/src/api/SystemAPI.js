@@ -380,4 +380,60 @@ export default class SystemAPI {
     })
   }
 
+    /**
+   * Returns a Promise, which resolves to a GehenBO.
+   *
+   * @param {Number} Gehen_id to be retrieved
+   * @public
+   */
+
+    getGehen(Gehen_id){
+        return this.#fetchAdvancend(this.#getGehenURL(Gehen_id)).then((responseJSON) => {
+            let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseGehenBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of GehenBO.
+   *
+   * @param {Number} Gehen_id to be deleted
+   * @public
+   */
+
+    deleteGehen(Gehen_id) {
+        return this.#fetchAdvancend(this.#deleteGehenURL(Gehen_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseGehenBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a GehenBO.
+   *
+   * @param {Number} Gehen_id to be updated
+   * @public
+   */
+  updateGehen(Gehen_id) {
+    return this.#fetchAdvanced(this.updateGehenURL(Gehen_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(GehenBO)
+    }).then((responseJSON) => {
+      // We always get an array of GehenBO.fromJSON
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // console.info(GehenBO);
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+      })
+    })
+  }
 }
