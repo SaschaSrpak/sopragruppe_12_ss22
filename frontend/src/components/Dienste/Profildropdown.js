@@ -57,14 +57,7 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
-    handleProfilButtonClicked = () => {
-        const navigate = useNavigate();
-
-    }
-
-    
-
-
+  
     render() {
         const { user } = this.props;
         const { open } = this.state;
@@ -85,7 +78,7 @@ class ProfileDropDown extends Component {
                             vertical: 'top',
                             horizontal: 'right'
                         }}>
-                        <ClickAwayListener onClickAway={this.handleClose}>
+                        <ClickAwayListener >
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
 
                                 <Grid container justifyContent='center'>

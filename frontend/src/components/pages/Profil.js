@@ -10,6 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
 
 
 class Profil extends Component {
@@ -17,15 +18,23 @@ class Profil extends Component {
     constructor(props) {
         super(props);
 
-        let fn = '', ln = '';
-        if (props.customer) {
-            fn = props.customer.getFirstName();
-            ln = props.customer.getLastName();
+
+        let n = '', sn = '', ma = '',un = '',ms = '';
+        if (props.person) {
+            n = props.person.getName();
+            sn = props.person.getSurename();
+            ma = props.person.getMail_adress();
+            un = props.person.getUser_name();
+            ms = props.person.getManager_status();
+
         }
 
         this.state = {
-            firstname: fn,
-            lastname: ln,
+            name: n,
+            surename: sn,
+            mail_adress: ma,
+            user_name: un,
+            manager_status: ms,
             open: false
         }
     }
@@ -48,18 +57,20 @@ class Profil extends Component {
             open: !this.state.open
         });
     }
-    
+
     handleSave = () => {
-        
-        }
-    
+
+    }
+
 
     render() {
 
         const { open } = this.state;
+        const { name, surname, mail_adress, user_name, manager_status } = this.state;
 
         return (
-            <div>
+
+            <React.Fragment>
                 <Button onClick={this.handleClickOpen}>
                     Profil
                 </Button>
@@ -75,56 +86,62 @@ class Profil extends Component {
                             margin="dense"
                             id="name"
                             label="Username"
-                            type="Username"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={user_name}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             label="Vorname"
-                            type="Vorname"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={name}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             label="Nachname"
-                            type="Nachname"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={surname}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             label="Email Address"
-                            type="email"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={mail_adress}
                         />
-                        <FormControl variant="filled" fullWidth>
+                        <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-filled-label">Personenstatus</InputLabel>
                             <Select
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
-                                /* value={age} */
-                                onChange={this.handleClickOpen}
+                                value={manager_status}
+                            /* onChange={this.handleChange} */
                             >
+
                                 <MenuItem value={1}>Projektmanager</MenuItem>
                                 <MenuItem value={0}>Projektmitarbeiter</MenuItem>
                             </Select>
                         </FormControl>
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>
                         <Button onClick={this.handleSave}>Save</Button>
                     </DialogActions>
                 </Dialog >
-            </div >
+            </React.Fragment >
         );
     }
 
