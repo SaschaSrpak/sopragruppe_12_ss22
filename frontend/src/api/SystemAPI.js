@@ -266,6 +266,12 @@ export default class SystemAPI {
         })
   }
 
+  /**
+   * Returns a Promise, which resolves to a EndereignisBO.
+   *
+   * @param {Number} EndEvent_id to be retrieved
+   * @public
+   */
 
     getEndEvent(EndEvent_id){
         return this.#fetchAdvancend(this.#getEndEventURL(EndEvent_id)).then((responseJSON) => {
@@ -276,6 +282,12 @@ export default class SystemAPI {
         })
     }
 
+  /**
+   * Returns a Promise, which resolves to an Array of EndereignisBO.
+   *
+   * @param {Number} EndEvent_id to be deleted
+   * @public
+   */
 
     deleteEndEvent(EndEvent_id) {
         return this.#fetchAdvancend(this.#deleteEndEventURL(EndEvent_id), {
@@ -287,7 +299,12 @@ export default class SystemAPI {
             })
         })
     }
-
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a EndereignisBO.
+   *
+   * @param {Number} EndEvent_id to be updated
+   * @public
+   */
   updateEndEvent(EndEvent_id) {
     return this.#fetchAdvanced(this.updateEndEventURL(EndEvent_id), {
       method: 'PUT',
@@ -306,6 +323,61 @@ export default class SystemAPI {
     })
   }
 
+  /**
+   * Returns a Promise, which resolves to a EreignisbuchungBO.
+   *
+   * @param {Number} EndEventTransaction_id to be retrieved
+   * @public
+   */
 
+    getEndEventTransaction(EndEventTransaction_id){
+        return this.#fetchAdvancend(this.#getEndEventTransactionURL(EndEventTransaction_id)).then((responseJSON) => {
+            let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseEreignisbuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of EreignisbuchungBO.
+   *
+   * @param {Number} EndEventTransaction_id to be deleted
+   * @public
+   */
+
+    deleteEndEventTransaction(EndEventTransaction_id) {
+        return this.#fetchAdvancend(this.#deleteEndEventTransactionURL(EndEvent_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseEreignisbuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a EreignisbuchungBO.
+   *
+   * @param {Number} EndEventTransaction_id to be updated
+   * @public
+   */
+  updateEndEventTransaction(EndEventTransaction_id) {
+    return this.#fetchAdvanced(this.updateEndEventTransactionURL(EndEventTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(EreignisbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBO.fromJSON
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      // console.info(EreignisbuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+      })
+    })
+  }
 
 }
