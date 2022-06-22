@@ -6,7 +6,7 @@ import EreignisBO from './Ereignisse/EreignisBO'
 import StartereignisBO from './Ereignisse/StartereignisBO'
 import EndereignisBO from './Ereignisse/EndereignisBO'
 import KommenBO from './Ereignisse/KommenBO'
-import GehenBO from './Ereignisse/GehenBO'
+import GehenTransactionBO from './Ereignisse/GehenBO'
 import ProjektDeadlineBO from './Ereignisse/ProjektDeadlineBO'
 import ZeitintervallBO from './Zeitintervall/ZeitintervallBO'
 import PauseBO from './Zeitintervall/PauseBO'
@@ -150,7 +150,7 @@ export default class SystemAPI {
     #getstartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
     #deletestartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
     #updatestartEventTransactionURL = (id) => `${this.#bankServerBaseURL}/start-event-transaction/${id}`;
-    
+
     //Worktime related
 
     #getWorktimeURL = (id) => `${this.#bankServerBaseURL}/worktime/${id}`;
@@ -178,7 +178,7 @@ export default class SystemAPI {
     #addProjectDurationURL = () => `${this.#bankServerBaseURL}/project_duration`;
 
 
-    
+
     static getApi() {
         if (this.#api == null) {
             this.#api = new SystemAPI();
@@ -246,7 +246,7 @@ export default class SystemAPI {
       },
       body: JSON.stringify(personBO)
     }).then((responseJSON) => {
-        
+
       let responsePersonBO = PersonBO.fromJSON(responseJSON)[0];
       // console.info(personBO);
       return new Promise(function (resolve) {
@@ -436,4 +436,177 @@ export default class SystemAPI {
       })
     })
   }
+      /**
+   * Returns a Promise, which resolves to a GehenBuchungBO.
+   *
+   * @param {Number} GehenTransaction_id to be retrieved
+   * @public
+   */
+
+    getGehenTransaction(GehenTransaction_id){
+        return this.#fetchAdvancend(this.#getGehenTransactionURL(GehenTransaction_id)).then((responseJSON) => {
+            let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseGehenBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of GehenBuchungBO.
+   *
+   * @param {Number} GehenTransaction_id to be deleted
+   * @public
+   */
+
+    deleteGehenTransaction(GehenTransaction_id) {
+        return this.#fetchAdvancend(this.#deleteGehenTransactionURL(GehenTransaction_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseGehenBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a GehenBuchungBO.
+   *
+   * @param {Number} GehenTransaction_id to be updated
+   * @public
+   */
+  updateGehenTransaction(GehenTransaction_id) {
+    return this.#fetchAdvanced(this.updateGehenTransactionURL(GehenTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(GehenBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of GehenBO.fromJSON
+      let responseGehenBuchungBO = GehenBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(GehenBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseGehenBuchungBO);
+      })
+    })
+  }
+
+      /**
+   * Returns a Promise, which resolves to a KommenBO.
+   *
+   * @param {Number} Kommen_id to be retrieved
+   * @public
+   */
+
+    getKommen(Kommen_id){
+        return this.#fetchAdvancend(this.#getKommenURL(Kommen_id)).then((responseJSON) => {
+            let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseKommenBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of KommenBO.
+   *
+   * @param {Number} Kommen_id to be deleted
+   * @public
+   */
+
+    deleteKommen(Kommen_id) {
+        return this.#fetchAdvancend(this.#deleteKommenURL(Kommen_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseKommenBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a KommenBO.
+   *
+   * @param {Number} Kommen_id to be updated
+   * @public
+   */
+  updateKommen(Kommen_id) {
+    return this.#fetchAdvanced(this.updateKommenURL(Kommen_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(KommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of KommenBO.fromJSON
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // console.info(KommenBO);
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+      })
+    })
+  }
+
+     /**
+   * Returns a Promise, which resolves to a KommenBuchungBO.
+   *
+   * @param {Number} KommenTransaction_id to be retrieved
+   * @public
+   */
+
+    getKommenTransaction(KommenTransaction_id){
+        return this.#fetchAdvancend(this.#getKommenTransactionURL(KommenTransaction_id)).then((responseJSON) => {
+            let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseKommenBuchungBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of KommenBuchungBO.
+   *
+   * @param {Number} KommenTransaction_id to be deleted
+   * @public
+   */
+
+    deleteKommenTransaction(KommenTransaction_id) {
+        return this.#fetchAdvancend(this.#deleteKommenTransactionURL(KommenTransaction_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseKommenBuchungBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a KommenBuchungBO.
+   *
+   * @param {Number} KommenTransaction_id to be updated
+   * @public
+   */
+  updateKommenTransaction(KommenTransaction_id) {
+    return this.#fetchAdvanced(this.updateKommenTransactionURL(KommenTransaction_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(KommenBuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of KommenBO.fromJSON
+      let responseKommenBuchungBO = KommenBuchungBO.fromJSON(responseJSON)[0];
+      // console.info(KommenBuchungBO);
+      return new Promise(function (resolve) {
+        resolve(responseKommenBuchungBO);
+      })
+    })
+  }
+
+
+
 }
