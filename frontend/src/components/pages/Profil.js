@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
+import PersonBO from '../../api/PersonBO';
 
 
 class Profil extends Component {
@@ -35,8 +36,12 @@ class Profil extends Component {
             mail_adress: ma,
             user_name: un,
             manager_status: ms,
-            open: false
+            open: false,
+            updatingInProgress: false,
+            updatingError: null
         }
+
+        this.baseState = this.state;
     }
 
     handleClickOpen = () => {
@@ -58,8 +63,16 @@ class Profil extends Component {
         });
     }
 
-    handleSave = () => {
-
+    updatePerson = () => {
+       let updatedPerson = Object.assign(new PersonBO(), this.props.person)
+        updatedPerson.setUser_name(this.state.user_name);
+        SystemAPI.updatePerson(updatedPerson).then(person =>{
+            this.setState({
+                    
+            })
+        });
+        this.baseState.user_name = this.state.user_name;
+        this.props.onClose(updatedPerson);
     }
 
 
@@ -79,7 +92,7 @@ class Profil extends Component {
 
                     <DialogContent>
                         <DialogContentText>
-                            Profil anschauen und bearbeiten
+                            Profil anschauen und deinen Username bearbeiten.
                         </DialogContentText>
                         <TextField
                             autoFocus
