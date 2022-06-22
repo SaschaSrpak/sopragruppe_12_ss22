@@ -948,4 +948,164 @@ export default class SystemAPI {
       })
     })
   }
+
+      /**
+   * Returns a Promise, which resolves to a ProjektDeadlineBO.
+   *
+   * @param {Number} ProjectDeadline_id to be retrieved
+   * @public
+   */
+
+    getProjectDeadline(ProjectDeadline_id){
+        return this.#fetchAdvanced(this.#getProjectDeadlineURL(ProjectDeadline_id)).then((responseJSON) => {
+            let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseProjektDeadlineBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of ProjektDeadlineBO.
+   *
+   * @param {Number} ProjectDeadline_id to be deleted
+   * @public
+   */
+
+    deleteProjectDeadline(ProjectDeadline_id) {
+        return this.#fetchAdvanced(this.#deleteProjectDeadlineURL(ProjectDeadline_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseProjektDeadlineBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a ProjektDeadlineBO.
+   *
+   * @param {Number} StartEvent_id to be updated
+   * @public
+   */
+  updateProjectDeadline(ProjectDeadline_id) {
+    return this.#fetchAdvanced(this.updateProjectDeadlineURL(ProjectDeadline_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ProjektDeadlineBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjektDeadlineBO.fromJSON
+      let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
+      // console.info(ProjektDeadlineBO);
+      return new Promise(function (resolve) {
+        resolve(responseProjektDeadlineBO);
+      })
+    })
+  }
+    /**
+   * Adds a ProjektDeadline and returns a Promise
+   *
+   * @param ProjektDeadlineBO to be added
+   * @public
+   */
+
+      addProjectDeadline(ProjektDeadlineBO) {
+        return this.#fetchAdvanced(this.#addProjectDeadlineURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(ProjektDeadlineBO)
+        }).then((responseJSON) => {
+            let responseProjektDeadlineBO = ProjektDeadlineBO.fromJSON(responseJSON)[0];
+            // console.info(ProjektDeadlineBO);
+            return new Promise(function (resolve) {
+                resolve(responseProjektDeadlineBO);
+            })
+        })
+    }
+
+     /**
+   * Returns a Promise, which resolves to a ProjektDeadlineBO.
+   *
+   * @param {Number} ProjectDeadline_id to be retrieved
+   * @public
+   */
+
+    getProjectDuration(ProjectDuration_id){
+        return this.#fetchAdvanced(this.#getProjectDurationURL(ProjectDuration_id)).then((responseJSON) => {
+            let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve){
+                resolve(responseProjektlaufzeitBO)
+            })
+        })
+    }
+
+  /**
+   * Returns a Promise, which resolves to an Array of ProjektlaufzeitBO.
+   *
+   * @param {Number} ProjectDuration_id to be deleted
+   * @public
+   */
+
+    deleteProjectDuration(ProjectDuration_id) {
+        return this.#fetchAdvanced(this.#deleteProjectDurationURL(ProjectDuration_id), {
+            method: 'DELETE'
+        }).then((responseJSON) => {
+            let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
+            return new Promise(function (resolve) {
+                resolve(responseProjektlaufzeitBO);
+            })
+        })
+    }
+  /**
+   * Updates a endevent and returns a Promise, which resolves to a ProjektlaufzeitBO.
+   *
+   * @param {Number} StartEvent_id to be updated
+   * @public
+   */
+  updateProjectDuration(ProjectDuration_id) {
+    return this.#fetchAdvanced(this.updateProjectDurationURL(ProjectDuration_id), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ProjektlaufzeitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjektlaufzeitBO.fromJSON
+      let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
+      // console.info(ProjektlaufzeitBO);
+      return new Promise(function (resolve) {
+        resolve(responseProjektlaufzeitBO);
+      })
+    })
+  }
+    /**
+   * Adds a ProjektDuration and returns a Promise
+   *
+   * @param ProjektlaufzeitBO to be added
+   * @public
+   */
+
+      addProjectDuration(ProjektlaufzeitBO) {
+        return this.#fetchAdvanced(this.#addProjectDurationURL(), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(ProjektlaufzeitBO)
+        }).then((responseJSON) => {
+            let responseProjektlaufzeitBO = ProjektlaufzeitBO.fromJSON(responseJSON)[0];
+            // console.info(ProjektlaufzeitBO);
+            return new Promise(function (resolve) {
+                resolve(responseProjektlaufzeitBO);
+            })
+        })
+    }
 }
