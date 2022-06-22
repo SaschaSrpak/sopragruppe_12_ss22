@@ -95,7 +95,8 @@ class Profil extends Component {
         this.state = {
             firstname: fn,
             lastname: ln,
-            open: false
+            open: false,
+            menuIsOpen: false
         }
     }
 
@@ -111,12 +112,23 @@ class Profil extends Component {
         });
     }
 
-    handleRoleChange = e => {
-        e.stopPropagation();
-        this.setState({
+    handleRoleChange = event => {
+        event.stopPropagation();
+        this.state({
             open: true
         });
     }
+
+    openMenu = () => {
+        this.refs.focus();
+        this.setState({ menuIsOpen: true });
+      };
+
+    onInputChange = (options, { action }) => {
+    if (action === "menu-close") {
+        this.setState({ menuIsOpen: false });
+    }
+    };
 
     render() {
 
@@ -162,12 +174,10 @@ class Profil extends Component {
                             variant="standard"
                         />
                         <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Rolle</InputLabel>
+                            <InputLabel>Projektrolle</InputLabel>
                             <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="Age"
-                                defaultOpen={true}
+                                label="Projektrolle"
+                                onClick={this.handleRoleChange}
                             >
                                 <MenuItem value={1}>Projektmanager</MenuItem>
                                 <Divider sx={{ margin: 1 }} />
