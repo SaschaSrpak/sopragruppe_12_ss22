@@ -19,12 +19,6 @@ import {Link} from "react-router-dom";
 
 export default function TemporaryDrawer() {
 
-  const useStyles = makeStyles({
-    drawer: {
-      width: "200px"
-    }
-  });
-
   const navigate = useNavigate();
 
   const [state, setState] = React.useState({

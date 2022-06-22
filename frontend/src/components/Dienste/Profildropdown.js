@@ -5,6 +5,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { Navigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Profil from '../pages/Profil';
 
 /**
  * @author
@@ -110,7 +111,7 @@ class ProfileDropDown extends Component {
                                         <Divider sx={{ margin: 1 }} />
                                         <Typography align='center' variant='body2'>{user.email}</Typography> 
                                         <Divider sx={{ margin: 1 }} />
-                                        <Button color='primary' style={{position:"relative", left: 2}} onClick={this.handleSignOutButtonClicked}>Profil</Button> <br />
+                                        <Profil/>
                                         <Divider sx={{ margin: 1 }} />
                                         <LogoutIcon style={{position:"relative", bottom: -8, right: 27}}/>
                                         <Button color='primary' style={{position:"relative", right: 10}} onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
