@@ -15,7 +15,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 /** 
- *@fileOverview Infos zu Aktivitäten werden angezeigt.
+ *@fileOverview Infos zu Aktivitäten werden angezeigt --> Wird in Projektanzeige angezeigt
  *@author Sascha Srpak
 */
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button, Divider } from "@mui/material";
+import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl, Menu } from "@mui/material";
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
@@ -13,6 +13,9 @@ const TestProjekte = [
     'Projekt 2',
     'Projekt 3',
     'Projekt 4',
+    'Projekt 5',
+    'Projekt 6',
+    'Projekt 7',
 ];
 
 
@@ -34,17 +37,25 @@ export class Projektwahl extends Component {
                 <Typography variant="h4" sx={{
                     textAlign: 'center',
                     margin: "5px",
-                }}>"Projektwahl"</Typography>
-{/** Projektauswahl -> Mapping aus Datenbank. -------> "Select" Komponenten  */}
-                <form>
-                    <TextField label="Projektwahl">
-                        {TestProjekte.map((projekt) => (
-                            <MenuItem
-                                key={projekt}>
-                            </MenuItem>  
-                        ))}
-                    </TextField>
-                </form>
+                }}>Projektwahl</Typography>
+{/** Projektauswahl -> Mapping aus TestArray */}
+                <Box>
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel>Projekte</InputLabel>
+                        <Select
+                            label="Projekte"
+                        >
+                            {
+                                TestProjekte.map((projekt) => {
+                                    return (
+                                        <MenuItem key={projekt} value={projekt}>{projekt}</MenuItem>
+                                    )
+                                }
+                            )}
+                        
+                        </Select>
+                    </FormControl>
+                </Box>
                 <Button variant="contained" sx={{
                     margin: "20px",
                 }}>
