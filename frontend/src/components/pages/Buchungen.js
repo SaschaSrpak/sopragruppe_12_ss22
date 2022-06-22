@@ -21,16 +21,17 @@ import { breakpoints } from '@mui/system';
 */
 
 export class Buchungen extends Component{
+  
+  constructor(props){
+    super(props);
+    this.kommen = null;
+    this.gehen = null;
 
-/*     constructor(props){
-        super(props);
-        this.kommen = null;
-        this.gehen = null;
+    this.state = {btnText: "Kommen",};
+  }
 
-        this.state = {btnText: "Kommen",};
-
-    }
-
+  aktivitätBuchen
+/* 
     getZeitkonto(){
 
     }
@@ -82,7 +83,7 @@ export class Buchungen extends Component{
                         <MenuItem value={10}>Eins</MenuItem>
                         <MenuItem value={20}>Zwei</MenuItem>
                         <MenuItem value={30}>Drei</MenuItem>
-                      </Select>  
+                      </Select>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn"/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende"/>
                     <Button variant="contained" > Buchen </Button>
@@ -95,8 +96,7 @@ export class Buchungen extends Component{
                   direction={{ sm: 'row' }}
                   >
                     <FormControl fullWidth>
-                    <Typography style={{position:"relative", left: 10}} id="outlined-basic"> Pause</Typography>
-                    <p></p>
+                    <h2>Pause</h2>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
                     <Button variant="contained"> Buchen </Button>

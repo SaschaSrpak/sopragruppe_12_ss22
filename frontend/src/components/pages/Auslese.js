@@ -23,30 +23,9 @@ export class Auslese extends Component {
             <h1 style={{textAlign: "center"}}>Buchungen Auslesen</h1>
             <Accordion>
               <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header" 
+              expandIcon={<ExpandMoreIcon />} 
               >
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                  <Grid item>
-                    <Typography variant='body1' sx={{typography: 'heading'}}>
-                    </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup variant='text' size='small'>
-                    <Button color='primary' >
-                      edit
-                    </Button>
-                    <Button color='secondary' >
-                      delete
-                      </Button>
-                  </ButtonGroup>
-                </Grid>
-                <Grid item xs />
-                <Grid item>
-                  <Typography>Projektarbeitszeiten</Typography>
-                </Grid>
-                </Grid>
+                <Typography> Arbeitszeiten</Typography>
               </AccordionSummary>
               <AccordionDetails>
               </AccordionDetails>
@@ -54,30 +33,9 @@ export class Auslese extends Component {
 
             <Accordion>
               <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header" 
+              expandIcon={<ExpandMoreIcon />} 
               >
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                  <Grid item>
-                    <Typography variant='body1' sx={{typography: 'heading'}}>
-                    </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup variant='text' size='small'>
-                    <Button color='primary' >
-                      edit
-                    </Button>
-                    <Button color='secondary' >
-                      delete
-                      </Button>
-                  </ButtonGroup>
-                </Grid>
-                <Grid item xs />
-                <Grid item>
-                  <Typography>Pausen</Typography>
-                </Grid>
-                </Grid>
+                <Typography>Pause</Typography>
               </AccordionSummary>
               <AccordionDetails>
               </AccordionDetails>
@@ -87,29 +45,8 @@ export class Auslese extends Component {
             <Accordion>
               <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header" 
               >
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                  <Grid item>
-                    <Typography variant='body1' sx={{typography: 'heading'}}>
-                    </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup variant='text' size='small'>
-                    <Button color='primary' >
-                      edit
-                    </Button>
-                    <Button color='secondary' >
-                      delete
-                      </Button>
-                  </ButtonGroup>
-                </Grid>
-                <Grid item xs />
-                <Grid item>
-                  <Typography>Kommen</Typography>
-                </Grid>
-                </Grid>
+                <Typography>Kommen</Typography>
               </AccordionSummary>
               <AccordionDetails>
               </AccordionDetails>
@@ -117,30 +54,9 @@ export class Auslese extends Component {
 
             <Accordion>
               <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header" 
+              expandIcon={<ExpandMoreIcon />} 
               >
-                <Grid container spacing={1} justify='flex-start' alignItems='center'>
-                  <Grid item>
-                    <Typography variant='body1' sx={{typography: 'heading'}}>
-                    </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup variant='text' size='small'>
-                    <Button color='primary' >
-                      edit
-                    </Button>
-                    <Button color='secondary' >
-                      delete
-                      </Button>
-                  </ButtonGroup>
-                </Grid>
-                <Grid item xs />
-                <Grid item>
-                  <Typography>Gehen</Typography>
-                </Grid>
-                </Grid>
+               <Typography>Gehen</Typography>
               </AccordionSummary>
               <AccordionDetails>
               </AccordionDetails>
