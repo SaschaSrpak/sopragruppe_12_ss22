@@ -79,7 +79,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import { Divider } from '@mui/material';
+import { Divider, useRadioGroup } from '@mui/material';
 
 class Profil extends Component {
 
@@ -96,7 +96,6 @@ class Profil extends Component {
             firstname: fn,
             lastname: ln,
             open: false,
-            menuIsOpen: false
         }
     }
 
@@ -112,27 +111,10 @@ class Profil extends Component {
         });
     }
 
-    handleRoleChange = event => {
-        event.stopPropagation();
-        this.state({
-            open: true
-        });
-    }
-
-    openMenu = () => {
-        this.refs.focus();
-        this.setState({ menuIsOpen: true });
-      };
-
-    onInputChange = (options, { action }) => {
-    if (action === "menu-close") {
-        this.setState({ menuIsOpen: false });
-    }
-    };
-
     render() {
 
         const { open } = this.state;
+        const { user } = this.props;
 
         return (
             <div>
@@ -150,16 +132,7 @@ class Profil extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Username"
-                            type="Username"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Vorname"
+                            defaultValue={user.displayName}
                             type="Vorname"
                             fullWidth
                             variant="standard"
@@ -168,8 +141,8 @@ class Profil extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Email Address"
-                            type="email"
+                            label="Nachname"
+                            type="Nachname"
                             fullWidth
                             variant="standard"
                         />
@@ -177,7 +150,6 @@ class Profil extends Component {
                             <InputLabel>Projektrolle</InputLabel>
                             <Select
                                 label="Projektrolle"
-                                onClick={this.handleRoleChange}
                             >
                                 <MenuItem value={1}>Projektmanager</MenuItem>
                                 <Divider sx={{ margin: 1 }} />

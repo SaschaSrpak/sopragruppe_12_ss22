@@ -101,7 +101,7 @@ class ProfileDropDown extends Component {
                             vertical: 'top',
                             horizontal: 'right'
                         }}>
-                        <ClickAwayListener onClickAway={this.handleClose}>
+                        <ClickAwayListener /* onClickAway={this.handleClose} */>
                             <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
 
                                 <Grid container justifyContent='center' align='center'>
