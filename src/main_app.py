@@ -44,8 +44,7 @@ bo = api.model('BusinessObject', {
 
 person = api.inherit('Person', {
     'id': fields.Integer(attribute='_id', description='Die ID eines Business Object'),
-    'last_modified_date': fields.DateTime(attribute='_last_modified_date', description='Zeitpunkt der letzten Änder',
-                                          dt_format='ISO8601'),
+    'last_modified_date': fields.DateTime(attribute='_last_modified_date', description='Zeitpunkt der letzten Änder'),
     'name': fields.String(attribute='_name', description='Vorname der Person'),
     'surname': fields.String(attribute='_surname', description='Nachname der Person'),
     'mail_address': fields.String(attribute='_mail_address', description='Mail-Adresse der Person'),
