@@ -1,72 +1,3 @@
-// import * as React from 'react';
-// import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
-// import Dialog from '@mui/material/Dialog';
-// import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
-
-// export default function FormDialog() {
-//   const [open, setOpen] = React.useState(false);
-
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
-
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-
-//   return (
-//     <div>
-//       <Button onClick={handleClickOpen}>
-//         Profil
-//       </Button>
-//       <Dialog open={open} onClose={handleClose}>
-//         <DialogTitle>Ihr Profil</DialogTitle>
-//         <DialogContent>
-//           <DialogContentText>
-//             Änderungen in Ihrem Profil können hier vorgenommen werden.
-//           </DialogContentText>
-//           <TextField
-//             autoFocus
-//             margin="dense"
-//             id="name"
-//             label="Email Address"
-//             type="email"
-//             fullWidth
-//             variant="standard"
-//           />
-//           <TextField
-//             autoFocus
-//             margin="dense"
-//             id="name"
-//             label="Email Address"
-//             type="email"
-//             fullWidth
-//             variant="standard"
-//           />
-//           <TextField
-//             autoFocus
-//             margin="dense"
-//             id="name"
-//             label="Email Address"
-//             type="email"
-//             fullWidth
-//             variant="standard"
-//           />
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleClose}>Cancel</Button>
-//           <Button onClick={handleClose}>Save</Button>
-//         </DialogActions>
-//       </Dialog>
-//     </div>
-//   );
-// }
-
-
 import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -79,27 +10,44 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import { Divider, useRadioGroup } from '@mui/material';
+import Box from '@mui/material/Box';
+import PersonBO from '../../api/PersonBO';
+import SystemAPI from '../../api/SystemAPI';
+
 
 class Profil extends Component {
 
     constructor(props) {
         super(props);
 
-        let fn = '', ln = '';
-        if (props.customer) {
-            fn = props.customer.getFirstName();
-            ln = props.customer.getLastName();
+
+        let n = '', sn = '', ma = '', un = '', ms = '';
+        if (props.person) {
+            n = props.person.getName();
+            sn = props.person.getSurename();
+            ma = props.person.getMail_adress();
+            un = props.person.getUser_name();
+            ms = props.person.getManager_status();
+
         }
 
         this.state = {
-            firstname: fn,
-            lastname: ln,
+            name: n,
+            surename: sn,
+            mail_adress: ma,
+            user_name: un,
+            manager_status: ms,
             open: false,
+            updatingInProgress: false,
+            updatingError: null,
+
         }
+
+        this.baseState = this.state;
     }
 
     handleClickOpen = () => {
+
         this.setState({
             open: !this.state.open
         });
@@ -111,13 +59,43 @@ class Profil extends Component {
         });
     }
 
+    handleChange = (event) => {
+        console.log(event.target.value)
+        this.setState({
+            [event.target.id]: event.target.value,
+        })
+
+    }
+
+    handleChangeDrop = (event) => {
+        console.log(event.target)
+        this.setState({
+            manager_status: event.target.value,
+        })
+    }
+
+    updatePerson = () => {
+        let updatedPerson = Object.assign(new PersonBO(), this.props.person)
+        updatedPerson.setName(this.state.name);
+        updatedPerson.setSurname(this.state.surename);
+        SystemAPI.updatePerson(updatedPerson).then(person => {
+            this.setState({
+
+            })
+        });
+        this.baseState.name = this.state.name;
+        this.props.onClose(updatedPerson);
+    }
+
+
     render() {
 
         const { open } = this.state;
-        const { user } = this.props;
+        const { name, surname, mail_adress, user_name, manager_status } = this.state;
 
         return (
-            <div>
+
+            <React.Fragment>
                 <Button onClick={this.handleClickOpen}>
                     Profil
                 </Button>
@@ -126,43 +104,90 @@ class Profil extends Component {
 
                     <DialogContent>
                         <DialogContentText>
-                            Profil anschauen und bearbeiten
+                            Profil anschauen und deinen Username bearbeiten.
                         </DialogContentText>
+                        
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            type="Vorname"
+                            label="Vorname"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={name}
+                            onChange={this.handleChange}
                         />
                         <TextField
-                            autoFocus
+
                             margin="dense"
-                            id="name"
+                            id="surname"
                             label="Nachname"
-                            type="Nachname"
+                            type="text"
                             fullWidth
                             variant="standard"
+                            value={surname}
+                            onChange={this.handleChange}
                         />
+                        <TextField
+                            margin="dense"
+                            id="user_name"
+                            label="Username"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={user_name}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.handleChange}
+
+                        />
+                        <TextField
+
+                            margin="dense"
+                            id="mail_adress"
+                            label="Email Address"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={mail_adress}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+
+                            onChange={this.handleChange}
+                        />
+                        
                         <FormControl fullWidth>
-                            <InputLabel>Projektrolle</InputLabel>
+                            <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
                             <Select
-                                label="Projektrolle"
+                                label="Managerstatus"
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                value={manager_status}
+                                disabled
+                                onChange={this.handleChangeDrop}
                             >
+
                                 <MenuItem value={1}>Projektmanager</MenuItem>
-                                <Divider sx={{ margin: 1 }} />
                                 <MenuItem value={0}>Projektmitarbeiter</MenuItem>
                             </Select>
                         </FormControl>
-                    </DialogContent>
 
+                    </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button>Save</Button>
+                        <Button onClick={this.handleSave}>Save</Button>
                     </DialogActions>
-                </Dialog>
-            </div>
+                </Dialog >
+            </React.Fragment >
         );
     }
 

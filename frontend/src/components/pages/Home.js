@@ -14,7 +14,10 @@ export class Home extends Component {
         return (
             <div>
                 <Toolbar />
-                  <h1>Willkommen</h1> 
+                <div style={{textAlign: "center"}}>
+                <h1>Willkommen</h1>
+                </div>
+                   
         
             </div>
                 

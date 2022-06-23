@@ -33,11 +33,7 @@ class Login extends Component {
 
 					</Grid>
 					<br/>
-					<Grid container justify='center'>
-						<Button variant='contained' color='primary'>Registrieren</Button>
-
-					</Grid>
-					<br />
+					
 				</div>
 			);
 		}
