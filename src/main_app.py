@@ -259,7 +259,7 @@ class ProjectDeadlineOperations(Resource):
 
 @timesystem.route('/project_duration')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectDurationGetOperation(Resource):
+class ProjectDurationOperation(Resource):
     @timesystem.marshal_with(project_duration, code=200)
     @timesystem.expect(project_duration)
     def post(self):
@@ -272,6 +272,22 @@ class ProjectDurationGetOperation(Resource):
             return pd, 200
         else:
             return '', 500
+
+
+@timesystem.route('/project_duration/<string:name>/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('name', 'Name der Projektlaufzeit')
+@timesystem.param('start_time', 'Startzeitpunkt der Pause')
+@timesystem.param('end_time', 'Endzeitpunkt der Pause')
+class ProjectDurationWithTimeStempsOperation(Resource):
+    @timesystem.marshal_with(project_duration, code=200)
+    def post(self, name, start_time, end_time):
+        s_adm = SystemAdministration()
+
+        pd = s_adm.add_project_duration_with_timestemps(name, start_time, end_time)
+
+        return pd, 200
+
 
 
 @timesystem.route('/project_duration/<int:id>')

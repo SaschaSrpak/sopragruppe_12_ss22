@@ -844,6 +844,15 @@ class SystemAdministration(object):
             mapper.insert(project_duration)
             return project_duration.get_id()
 
+    def add_project_duration_with_timestemps(self, name, start_time, end_time):
+        start_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+        end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+        start_event = self.create_start_event( "Start", start_time)
+        end_event = self.create_end_event("Ende", end_time)
+        project_duration = self.create_project_duration(name, start_event, end_event)
+        return project_duration
+
+
     def get_all_project_duration(self):
         with ProjektlaufzeitMapper() as mapper:
             return mapper.find_all()
