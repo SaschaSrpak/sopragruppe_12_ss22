@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl, Menu } from "@mui/material";
-import ProjektBO from ".../api/ProjektBO";
+// import ProjektBO from ".../api/ProjektBO";
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
@@ -36,14 +36,14 @@ export class Projektwahl extends Component {
     }
 
     // componentDidMount funktion zum Laden der Projekte
-    componentDidMount() {
-        ProjektBO.getName().then((response) => {
-                this.setState({
-                    name: response
-                })
-            }
-        )
-    }
+    // componentDidMount() {
+    //     ProjektBO.getName().then((response) => {
+    //             this.setState({
+    //                 name: response
+    //             })
+    //         }
+    //     )
+    // }
 
 // rendert die Projekte aus der Liste
     render () {
@@ -102,3 +102,5 @@ export class Projektwahl extends Component {
         )
     }
 }
+
+export default Projektwahl;

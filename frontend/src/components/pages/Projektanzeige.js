@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import {Paper, Typography, Card, CardContent, Divider, Box } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -50,52 +50,73 @@ const rows = [
 ];
 
 // Projektanzeige + Projektbeschreibung + AktivitätAnzeige
-export default function Projektanzeige() {
-    return (
-        <Box sx={{
-            margin: "auto",
-            maxWidth: 1000
-            }}>
-            <Paper>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 300 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow sx={{}}>
-                                <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
-                                <TableCell align="center">Detail Value</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <TableRow key={row.detailName}>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">
-                                        {row.detailName}
-                                    </TableCell>
-                                    <TableCell align="center">{row.detailValue}</TableCell>
+export class Projektanzeige extends Component {
+
+    //constructor für die Projektdaten
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: null,
+            creator: null,
+            client: null,
+            deadline: null,
+            project_duration: null,
+            description: null,
+            activities: null,
+            ersons_responsible: null,
+        }
+    }
+
+
+    render() {
+        return (
+            <Box sx={{
+                margin: "auto",
+                maxWidth: 1000
+                }}>
+                <Paper>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 300 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow sx={{}}>
+                                    <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
+                                    <TableCell align="center">Detail Value</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow key={row.detailName}>
+                                        <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">
+                                            {row.detailName}
+                                        </TableCell>
+                                        <TableCell align="center">{row.detailValue}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 {/* Projektbeschreibung */}
-                <Card> 
-                    <Typography sx={{
-                        margin: "15px",
-                    }}>
-                        <h4>Projektbeschreibung:</h4>
-                    </Typography>
-                    <CardContent>
-                        <Typography>
-                            dies ist eine beschriebung dies das lalala wer das liest ist super
+                    <Card> 
+                        <Typography sx={{
+                            margin: "15px",
+                        }}>
+                            <h4>Projektbeschreibung:</h4>
                         </Typography>
-                    </CardContent>
-                </Card>
-            </Paper>
-            <Divider variant="fullWidth" sx={{
-                margin: "20px"
-            }}/>
+                        <CardContent>
+                            <Typography>
+                                dies ist eine beschriebung dies das lalala wer das liest ist super
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Paper>
+                <Divider variant="fullWidth" sx={{
+                    margin: "20px"
+                }}/>
 {/* AktivitätAnzeige als Komponente ausgelagert */}
-            <AktivitätAnzeige/>
-        </Box>
-    );
+                <AktivitätAnzeige/>
+            </Box>
+        );
+    }
 }
+
+export default Projektanzeige;
