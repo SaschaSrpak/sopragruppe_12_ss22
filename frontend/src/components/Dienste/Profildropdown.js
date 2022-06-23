@@ -57,7 +57,7 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
-  
+
     render() {
         const { user } = this.props;
         const { open } = this.state;
@@ -78,32 +78,32 @@ class ProfileDropDown extends Component {
                             vertical: 'top',
                             horizontal: 'right'
                         }}>
-                        <ClickAwayListener >
-                            <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
 
-                                <Grid container justifyContent='center'>
+                        <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
 
-                                    <Grid item align='center'>
-                                        <Typography align='center'>Hallo {user.displayName}</Typography>
-                                        <Divider sx={{ margin: 1 }} />
-                                        <Typography align='center' variant='body2'>{user.email}</Typography>
-                                        <Divider sx={{ margin: 1 }} />
-                                        <Profil/>
-                                        <Divider sx={{ margin: 1 }} />
-                                        {/* <Button color='primary'>Profil</Button> */}
-                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+                            <Grid container justifyContent='center'>
 
-                                    </Grid>
+                                <Grid item align='center'>
+                                    <Typography align='center'>Hallo {user.displayName}</Typography>
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Typography align='center' variant='body2'>{user.email}</Typography>
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Profil />
+                                    <Divider sx={{ margin: 1 }} />
+                                    {/* <Button color='primary'>Profil</Button> */}
+                                    <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+
                                 </Grid>
-                                {/* <Grid container justifyContent='center'>
+                            </Grid>
+                            {/* <Grid container justifyContent='center'>
                                 
                                     <Grid item>
                                         <LogoutIcon/>
                                         <Button color='primary' style={{position:"relative", bottom:7}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
                                     </Grid>
                                 </Grid> */}
-                            </Paper>
-                        </ClickAwayListener>
+                        </Paper>
+
                     </Popover>
                 </div>
                 : null

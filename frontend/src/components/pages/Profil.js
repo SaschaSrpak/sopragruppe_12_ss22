@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import PersonBO from '../../api/PersonBO';
+import SystemAPI from '../../api/SystemAPI';
 
 
 class Profil extends Component {
@@ -38,7 +39,8 @@ class Profil extends Component {
             manager_status: ms,
             open: false,
             updatingInProgress: false,
-            updatingError: null
+            updatingError: null,
+
         }
 
         this.baseState = this.state;
@@ -57,13 +59,22 @@ class Profil extends Component {
         });
     }
 
-    handleChange = () => {
+    handleChange = (event) => {
+        console.log(event.target.value)
         this.setState({
-            open: !this.state.open
-        });
+            [event.target.id]: event.target.value,
+        })
+
     }
 
-     updatePerson = () => {
+    handleChangeDrop = (event) => {
+        console.log(event.target)
+        this.setState({
+            manager_status: event.target.value,
+        })
+    }
+
+    updatePerson = () => {
         let updatedPerson = Object.assign(new PersonBO(), this.props.person)
         updatedPerson.setName(this.state.name);
         updatedPerson.setSurname(this.state.surename);
@@ -74,7 +85,7 @@ class Profil extends Component {
         });
         this.baseState.name = this.state.name;
         this.props.onClose(updatedPerson);
-    } 
+    }
 
 
     render() {
@@ -95,16 +106,7 @@ class Profil extends Component {
                         <DialogContentText>
                             Profil anschauen und deinen Username bearbeiten.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="user_name"
-                            label="Username"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                            value={user_name}
-                        />
+                        
                         <TextField
                             autoFocus
                             margin="dense"
@@ -114,9 +116,10 @@ class Profil extends Component {
                             fullWidth
                             variant="standard"
                             value={name}
+                            onChange={this.handleChange}
                         />
                         <TextField
-                            autoFocus
+
                             margin="dense"
                             id="surname"
                             label="Nachname"
@@ -124,9 +127,27 @@ class Profil extends Component {
                             fullWidth
                             variant="standard"
                             value={surname}
+                            onChange={this.handleChange}
                         />
                         <TextField
-                            autoFocus
+                            margin="dense"
+                            id="user_name"
+                            label="Username"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={user_name}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.handleChange}
+
+                        />
+                        <TextField
+
                             margin="dense"
                             id="mail_adress"
                             label="Email Address"
@@ -134,14 +155,25 @@ class Profil extends Component {
                             fullWidth
                             variant="standard"
                             value={mail_adress}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+
+                            onChange={this.handleChange}
                         />
+                        
                         <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-filled-label">Personenstatus</InputLabel>
+                            <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
                             <Select
+                                label="Managerstatus"
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
                                 value={manager_status}
-                            /* onChange={this.handleChange} */
+                                disabled
+                                onChange={this.handleChangeDrop}
                             >
 
                                 <MenuItem value={1}>Projektmanager</MenuItem>
