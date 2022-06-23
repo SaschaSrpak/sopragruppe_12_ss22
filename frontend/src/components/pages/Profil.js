@@ -20,7 +20,7 @@ class Profil extends Component {
         super(props);
 
 
-        let n = '', sn = '', ma = '',un = '',ms = '';
+        let n = '', sn = '', ma = '', un = '', ms = '';
         if (props.person) {
             n = props.person.getName();
             sn = props.person.getSurename();
@@ -63,17 +63,18 @@ class Profil extends Component {
         });
     }
 
-   /*  updatePerson = () => {
-       let updatedPerson = Object.assign(new PersonBO(), this.props.person)
-        updatedPerson.setUser_name(this.state.user_name);
-        SystemAPI.updatePerson(updatedPerson).then(person =>{
+     updatePerson = () => {
+        let updatedPerson = Object.assign(new PersonBO(), this.props.person)
+        updatedPerson.setName(this.state.name);
+        updatedPerson.setSurname(this.state.surename);
+        SystemAPI.updatePerson(updatedPerson).then(person => {
             this.setState({
-                    
+
             })
         });
-        this.baseState.user_name = this.state.user_name;
+        this.baseState.name = this.state.name;
         this.props.onClose(updatedPerson);
-    } */
+    } 
 
 
     render() {
@@ -97,7 +98,7 @@ class Profil extends Component {
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="name"
+                            id="user_name"
                             label="Username"
                             type="text"
                             fullWidth
@@ -117,7 +118,7 @@ class Profil extends Component {
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="name"
+                            id="surname"
                             label="Nachname"
                             type="text"
                             fullWidth
@@ -127,7 +128,7 @@ class Profil extends Component {
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="name"
+                            id="mail_adress"
                             label="Email Address"
                             type="text"
                             fullWidth
