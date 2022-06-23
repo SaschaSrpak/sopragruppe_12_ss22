@@ -32,7 +32,7 @@ export class Buchungen extends Component{
   }
 
 
-  kommenButtonClicked = (event) =>{
+  kommenButtonClicked = event =>{
     SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID()).then(personBO =>
       this.setState({
 
@@ -96,6 +96,7 @@ export class Buchungen extends Component{
                         <MenuItem value={20}>Zwei</MenuItem>
                         <MenuItem value={30}>Drei</MenuItem>
                       </Select>
+                    <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung"/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained" > Buchen </Button>
@@ -109,6 +110,7 @@ export class Buchungen extends Component{
                   >
                     <FormControl fullWidth>
                     <h2>Pause</h2>
+                    <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained"> Buchen </Button>
