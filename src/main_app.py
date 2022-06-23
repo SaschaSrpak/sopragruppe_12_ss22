@@ -131,8 +131,7 @@ start_event_transaction = api.inherit('StartereignisBuchung', bo, transaction, e
 
 end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event_transaction)
 
-response_worktime_transaction = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
-
+interval_transaction_response = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
 
 
 @timesystem.route('/persons')
@@ -209,7 +208,6 @@ class PersonRelatedActivityOperations(Resource):
             return 'Person not found', 500
 
 
-
 @timesystem.route('/project_deadline')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectDeadlineGetOperation(Resource):
@@ -257,6 +255,7 @@ class ProjectDeadlineOperations(Resource):
             return '', 200
         else:
             return '', 500
+
 
 @timesystem.route('/project_duration')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -666,7 +665,6 @@ class WorktimeTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-
 @timesystem.route('/accounts/worktime/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -830,7 +828,6 @@ class EndEventTransactionOperations(Resource):
             return '', 500
 
 
-
 @timesystem.route('/kommen/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des Kommen-Objekts')
@@ -861,6 +858,7 @@ class KommenOperations(Resource):
             return '', 200
         else:
             return '', 500
+
 
 @timesystem.route('/kommen-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -893,6 +891,7 @@ class KommenTransactionOperations(Resource):
         else:
             return '', 500
 
+
 @timesystem.route('/commit-kommen-transaction/<int:account_id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
@@ -908,11 +907,13 @@ class KommenOperations(Resource):
             if account is not None:
                 b = s_adm.book_kommen_event(account_id, proposal.get_event_name(),
                                             proposal.get_time_of_event())
-                return b, 200
+                event = s_adm.get_kommen_by_transaction_key(b)
+                return event, 200
             else:
                 return 'Account not found', 500
         else:
             return '', 500
+
 
 @timesystem.route('/gehen/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -945,6 +946,7 @@ class GehenOperations(Resource):
         else:
             return '', 500
 
+
 @timesystem.route('/gehen-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des GehenBuchungs-Objekt')
@@ -976,6 +978,7 @@ class GehenTransactionOperations(Resource):
         else:
             return '', 500
 
+
 @timesystem.route('/commit-gehen-transaction/<int:account_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
@@ -991,11 +994,13 @@ class GehenOperations(Resource):
             if account is not None:
                 b = s_adm.book_gehen_event(account_id, proposal.get_event_name(),
                                            proposal.get_time_of_event())
-                return b, 200
+                event = s_adm.get_gehen_by_transaction_key(b)
+                return event, 200
             else:
                 return 'Account not found', 500
         else:
             return '', 500
+
 
 @timesystem.route('/pause/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1029,6 +1034,7 @@ class PauseOperations(Resource):
             return '', 200
         else:
             return '', 500
+
 
 @timesystem.route('/pause-transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1069,6 +1075,7 @@ class PauseTransactionOperations(Resource):
 @timesystem.param('start_time', 'Startzeitpunkt der Pause')
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class CommitPauseTransaction(Resource):
+    @timesystem.marshal_with(interval_transaction_response)
     def post(self, account_id, name, start_time, end_time):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
@@ -1077,6 +1084,7 @@ class CommitPauseTransaction(Resource):
             return a, 200
         else:
             return 'Account not found', 200
+
 
 @timesystem.route('/worktime/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1145,7 +1153,8 @@ class WorktimeTransactionOperations(Resource):
             return '', 500
 
 
-@timesystem.route('/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
+@timesystem.route(
+    '/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
 @timesystem.param('name', 'Name der Pause')
@@ -1153,7 +1162,7 @@ class WorktimeTransactionOperations(Resource):
 @timesystem.param('start_time', 'Startzeitpunkt der Pause')
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class CommitWorktimeTransaction(Resource):
-    @timesystem.marshal_with(response_worktime_transaction, code=200)
+    @timesystem.marshal_with(interval_transaction_response, code=200)
     def post(self, account_id, name, activity_id, start_time, end_time):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)

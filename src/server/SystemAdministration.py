@@ -66,7 +66,6 @@ class SystemAdministration(object):
             self.create_time_account_for_person(person)
             return
 
-
     def get_all_persons(self):
         """Gibt alle Benutzer aus die im System gespeichert sind"""
         with PersonMapper() as mapper:
@@ -305,11 +304,9 @@ class SystemAdministration(object):
 
         return full_work_time
 
-
     def get_all_pause_transactions_for_account(self, account):
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
         return all_pause_transactions
-
 
     def get_full_pause_time_for_account(self, account):
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
@@ -327,7 +324,6 @@ class SystemAdministration(object):
     def get_all_worktime_transactions_for_account(self, account):
         all_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         return all_worktime_transactions
-
 
     def get_worktime_transactions_on_activity(self, account, activity):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
@@ -991,7 +987,6 @@ class SystemAdministration(object):
             else:
                 return False
 
-
         if time <= last_kommen_time or time <= last_gehen_time or not last_gehen_time <= last_kommen_time <= time:
             return False
 
@@ -1119,11 +1114,18 @@ class SystemAdministration(object):
             return mapper.insert(interval)
 
     def book_pause_transaction(self, account, name, start_event_time, end_event_time):
+        if start_event_time > end_event_time:
+            response = {'response': 'interval start can not be later than interval end'}
+            return response
+        start_event_time = datetime.strptime(start_event_time, '%Y-%m-%d %H:%M:%S')
+        end_event_time = datetime.strptime(end_event_time, '%Y-%m-%d %H:%M:%S')
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)
         pause = self.create_pause(name, start_event, end_event)
         account_id = account.get_id()
         self.create_pause_transaction(account_id, pause)
+        response = {'response': 'pause transaction was booked successfully '}
+        return response
 
     def get_all_pause_transactions(self):
         with PauseBuchungMapper() as mapper:
@@ -1176,6 +1178,10 @@ class SystemAdministration(object):
             return mapper.insert(interval)
 
     def book_project_work_transaction(self, account, name, activity_id, start_event_time, end_event_time):
+        if start_event_time > end_event_time:
+            response = {'response': 'interval start can not be later than interval end'}
+            return response
+
         start_event_time = datetime.strptime(start_event_time, '%Y-%m-%d %H:%M:%S')
         end_event_time = datetime.strptime(end_event_time, '%Y-%m-%d %H:%M:%S')
         start_event_date = dt.datetime.date(start_event_time)
@@ -1242,7 +1248,6 @@ class SystemAdministration(object):
             account_id = account.get_id()
             self.create_project_work_transaction(account_id, activity_id, project_worktime)
             response = {'response': '9 hours worktime without 45 min of pause'}
-            print(response)
             return response
 
         if daily_worktime_hours >= 6.0:

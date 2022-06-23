@@ -632,12 +632,23 @@ export default class SystemAPI {
   commitPauseTransaction(account_id, name, start_time, end_time) {
         return this.#fetchAdvanced(this.#commitPauseTransactionURL(account_id, name, start_time, end_time), {
             method: 'POST',
+        }).then((responseJSON) => {
+            let transaction_response = responseJSON
+            return new Promise(function (resolve){
+                resolve(transaction_response);
+            })
         })
   }
 
   commitProjectWorktimeTransaction(account_id, name, activity_id, start_time, end_time) {
-        return this.#fetchAdvanced(this.#commitProjectWorktimeTransactionURL(account_id, name, activity_id, start_time, end_time), {
+        return this.#fetchAdvanced(this.#commitProjectWorktimeTransactionURL(account_id, name, activity_id,
+            start_time, end_time), {
             method: 'POST',
+        }).then((responseJSON) => {
+            let transaction_response = responseJSON
+            return new Promise(function (resolve) {
+                resolve(transaction_response);
+            })
         })
   }
 
