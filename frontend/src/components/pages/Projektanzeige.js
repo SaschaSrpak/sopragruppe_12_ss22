@@ -62,8 +62,8 @@ export class Projektanzeige extends Component {
             deadline: null,
             project_duration: null,
             description: null,
-            activities: null,
-            ersons_responsible: null,
+            activities: [],
+            persons_responsible: [],
         }
     }
 
