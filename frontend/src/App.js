@@ -108,9 +108,9 @@ export class App extends Component {
     } else {
       console.log(this.state.currentUser)
       return (
-        
+
         <div>
-          <Toolbar/>
+          <Toolbar />
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
