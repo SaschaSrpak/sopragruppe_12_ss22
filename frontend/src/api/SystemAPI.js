@@ -188,7 +188,7 @@ export default class SystemAPI {
 
 
 
-    static getApi() {
+    static getAPI() {
         if (this.#api == null) {
             this.#api = new SystemAPI();
         }

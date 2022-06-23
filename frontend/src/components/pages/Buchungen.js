@@ -33,7 +33,8 @@ export class Buchungen extends Component{
 
 
   kommenButtonClicked = event =>{
-    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID()).then(personBO =>
+    let newKommen = new KommenBO("kommen", this.state.currentDateTime);
+    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
       this.setState({
 
       })
@@ -75,7 +76,7 @@ export class Buchungen extends Component{
           <div>
                   <div style={{textAlign: "center"}}>
                   <h1>Buchungen</h1>
-                  <Button variant="contained" onClick={() => this.handleClick()} > Kommen </Button>
+                  <Button variant="contained" onClick={() => this.kommenButtonClicked()} > Kommen </Button>
                   <p></p>
                   <Button variant="contained" onClick={() => this.handleClick()} > Gehen </Button>
                   </div>
