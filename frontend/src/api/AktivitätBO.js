@@ -27,8 +27,8 @@ export default class AktivitaetBO extends BO{
         return this.persons_responsible;
     }
 
-    setPersons_Responsible(){
-        this.persons_responsible;
+    setPersons_Responsible(persons_responsible){
+        this.persons_responsible = persons_responsible;
     }
 
     setMan_day_capacity(man_day_capacity){

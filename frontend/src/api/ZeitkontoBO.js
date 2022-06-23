@@ -1,5 +1,4 @@
 import BO from './BO';
-import ZeitkontoBO from './ZeitkontoBO';
 import PersonBO from './PersonBO';
 /** 
  *@fileOverview 
@@ -30,7 +29,7 @@ export default class ZeitkontoBO extends BO{
             })
         } else {
             let a = account;
-            Object.setPrototypeOf(a, Account.prototype);
+            Object.setPrototypeOf(a, account.prototype);
             result.push(a);
         }
 

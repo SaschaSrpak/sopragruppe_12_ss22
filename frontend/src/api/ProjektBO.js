@@ -68,16 +68,16 @@ export default class ProjektBO extends BO{
         return this.activities;
     }
     
-    setActivities(){
-        this.activities;
+    setActivities(activities){
+        this.activities = activities;
     }
 
     getPersons_Responsible(){
         return this.persons_responsible;
     }
 
-    setPersons_Responsible(){
-        this.persons_responsible;
+    setPersons_Responsible(persons_responsible){
+        this.persons_responsible = persons_responsible;
     }
 
     static fromJSON(projekt){
