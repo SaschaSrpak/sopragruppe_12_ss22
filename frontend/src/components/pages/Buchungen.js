@@ -14,6 +14,7 @@ import Loader from '../Zwischenelemente/Loader'
 import { touchRippleClasses } from '@mui/material';
 import { applyActionCode } from 'firebase/auth';
 import { breakpoints } from '@mui/system';
+import SystemAPI from '../../api/SystemAPI';
 
 /** 
  *@fileOverview 
@@ -30,7 +31,18 @@ export class Buchungen extends Component{
     this.state = {btnText: "Kommen",};
   }
 
-  aktivitätBuchen
+
+  kommenButtonClicked = (event) =>{
+    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID()).then(personBO =>
+      this.setState({
+
+      })
+      )
+  }
+
+  aktivitätBuchen = () => {
+
+  }
 /* 
     getZeitkonto(){
 
@@ -84,8 +96,8 @@ export class Buchungen extends Component{
                         <MenuItem value={20}>Zwei</MenuItem>
                         <MenuItem value={30}>Drei</MenuItem>
                       </Select>
-                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn"/>
-                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende"/>
+                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained" > Buchen </Button>
                     </FormControl>
                     </Stack>
@@ -97,8 +109,8 @@ export class Buchungen extends Component{
                   >
                     <FormControl fullWidth>
                     <h2>Pause</h2>
-                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
-                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
+                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained"> Buchen </Button>
                     </FormControl>
                   </Stack>
