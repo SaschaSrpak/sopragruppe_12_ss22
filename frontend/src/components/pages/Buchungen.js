@@ -7,14 +7,10 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import SystemAPI from '../../api/SystemAPI';
 import PropTypes from 'prop-types';
 import Error from '../Zwischenelemente/Error';
 import Loader from '../Zwischenelemente/Loader'
-import { touchRippleClasses } from '@mui/material';
-import { applyActionCode } from 'firebase/auth';
-import { breakpoints } from '@mui/system';
-import SystemAPI from '../../api/SystemAPI';
 
 /** 
  *@fileOverview 
@@ -32,45 +28,20 @@ export class Buchungen extends Component{
   }
 
 
-  kommenButtonClicked = event =>{
-    let newKommen = new KommenBO("kommen", this.state.currentDateTime);
-    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
-      this.setState({
+  // kommenButtonClicked = event =>{
+  //   let newKommen = new KommenBO("kommen", this.state.currentDateTime);
+  //   SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
+  //     this.setState({
 
-      })
-      )
-  }
+  //     })
+  //     )
+  // }
 
-  aktivitätBuchen = () => {
+ // aktivitätBuchen = () => {
+  //  SystemAPI.getAPI().getActivitiesForPersonURL = (id) => `${this.#bankServerBaseURL}/persons/${id}/activity`
 
-  }
-/* 
-    getZeitkonto(){
+  //}
 
-    }
-
-    getZeitintervall(){
-
-    }
-
-    handleClick = () => {
-      let btnText = this.state.btnText == "Kommen" ? "Gehen" : "Kommen"
-      this.setState({btnText: btnText})
-      this.changeState();
-      let zeitstempel = new Date();
-      
-      switch(this.state.changeState){
-        case false:
-          this.Kommen = new KommenBuchungBO(zeitstempel);
-          break;
-        case true:
-          this.Gehen = new GehenBuchungBO(zeitstempel);
-          break;
-          default: 
-          break;
-        }
-
-    } */
     render(){
       return(
           <div>
