@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import Error from '../Zwischenelemente/Error';
 import Loader from '../Zwischenelemente/Loader'
 import { touchRippleClasses } from '@mui/material';
 import { applyActionCode } from 'firebase/auth';
 import { breakpoints } from '@mui/system';
+import SystemAPI from '../../api/SystemAPI';
 
 /** 
  *@fileOverview 
@@ -21,16 +22,28 @@ import { breakpoints } from '@mui/system';
 */
 
 export class Buchungen extends Component{
+  
+  constructor(props){
+    super(props);
+    this.kommen = null;
+    this.gehen = null;
 
-/*     constructor(props){
-        super(props);
-        this.kommen = null;
-        this.gehen = null;
+    this.state = {btnText: "Kommen",};
+  }
 
-        this.state = {btnText: "Kommen",};
 
-    }
+  kommenButtonClicked = (event) =>{
+    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID()).then(personBO =>
+      this.setState({
 
+      })
+      )
+  }
+
+  aktivitätBuchen = () => {
+
+  }
+/* 
     getZeitkonto(){
 
     }
@@ -58,57 +71,52 @@ export class Buchungen extends Component{
 
     } */
     render(){
-        return(
-        <div>
-            <h1>Buchungen</h1>
-            <Button variant="contained" onClick={() => this.handleClick()} > Kommen </Button>
-            <p>Letzte Kommen Buchung um </p>
-            <Button variant="contained" > Gehen </Button>
-            <p>Letzte Gehen Buchung um </p>
-            <Divider sx={{margin:"20px"}}/>
-
-            <Stack display="flex" flex-direction="row">
-            <Box sx={{ maxWidth: 120}}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Aktivität</InputLabel>
-                <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-                >
-                  <MenuItem value={10}>Eins</MenuItem>
-                  <MenuItem value={20}>Zwei</MenuItem>
-                  <MenuItem value={30}>Drei</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
-              <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
-              <Button variant="contained" > Buchen </Button>
-            </Box>
-            </Stack>
-
-            <Divider sx={{margin:"20px"}}/>
-
-            <Box sx={{ maxWidth: 120}}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Pause</InputLabel>
-                <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-                >
-                  <MenuItem value={10}>Eins</MenuItem>
-                  <MenuItem value={20}>Zwei</MenuItem>
-                  <MenuItem value={30}>Drei</MenuItem>
-                </Select>
-                <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time"/>
-              <TextField id="outlined-basic" label="Ende" variant="outlined" type="time"/>
-              <Button variant="contained" > Buchen </Button>
-              </FormControl>
-            </Box>
-        </div>
-    )
-  }
+      return(
+          <div>
+                  <div style={{textAlign: "center"}}>
+                  <h1>Buchungen</h1>
+                  <Button variant="contained" onClick={() => this.handleClick()} > Kommen </Button>
+                  <p></p>
+                  <Button variant="contained" onClick={() => this.handleClick()} > Gehen </Button>
+                  </div>
+  
+                  <Divider sx={{margin:"20px"}}/>
+              
+              
+                  <Stack 
+                  direction={{ sm: 'row' }}
+                  >
+                    <FormControl fullWidth>
+                      <InputLabel >Aktivität</InputLabel>
+                      <Select 
+                      id="Aktivität"
+                      label="Aktivität"
+                      >
+                        <MenuItem value={10}>Eins</MenuItem>
+                        <MenuItem value={20}>Zwei</MenuItem>
+                        <MenuItem value={30}>Drei</MenuItem>
+                      </Select>
+                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
+                    <Button variant="contained" > Buchen </Button>
+                    </FormControl>
+                    </Stack>
+              
+                  <Divider sx={{margin:"20px"}}/>
+  
+                  <Stack 
+                  direction={{ sm: 'row' }}
+                  >
+                    <FormControl fullWidth>
+                    <h2>Pause</h2>
+                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
+                    <Button variant="contained"> Buchen </Button>
+                    </FormControl>
+                  </Stack>
+          </div>
+      )
+    }
     
 }
 

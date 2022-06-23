@@ -1,4 +1,4 @@
-import ZeitintervallBO from './Zeitintervall/ZeitintervallBO';
+
 import BO from '../BO';
 
 /** 
@@ -8,12 +8,12 @@ import BO from '../BO';
 
 export default class ZeitintervallBO extends BO {
 
-    constructor() {
+    constructor(Name, start_id, end_id) {
         super()
         this.name = Name;
-        this.start = start;
-        this.end = end;
-        this.duration = duration;
+        this.start = start_id;
+        this.end = end_id;
+        this.duration = null;
     }
 /**
  * Sets a new name
@@ -63,13 +63,13 @@ export default class ZeitintervallBO extends BO {
         let result = [];
         if (Array.isArray(zeit)) {
             zeit.forEach((z) => {
-                Object.setPrototypeOF(z, ZeitintervallBO.prototype);
+                Object.setPrototypeOf(z, ZeitintervallBO.prototype);
                 result.push(z);
             })
-        }   else {
+        }  else{
             // es handelt sich um ein einzelnes Objekt
-            let z = zeit;
-            Object.setPrototypeOf(z, ZeitintervallBO.prototype);
+                let z = zeit;
+                Object.setPrototypeOf(z, ZeitintervallBO.prototype);
         return result;
     }
 

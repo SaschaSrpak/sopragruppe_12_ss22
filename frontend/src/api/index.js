@@ -33,11 +33,13 @@ export {default as ZeitintervallBO} from "./Zeitintervall/ZeitintervallBO";
 
 
 /* restliche BO */
-export {default as AktivitätBO} from "./AktivitätBO";
+export {default as SystemAPI} from "./SystemAPI"
+export {default as AktivitaetBO} from "./AktivitätBO";
 export {default as BO} from "./BO";
 export {default as PersonBO} from "./PersonBO";
 export {default as ProjektBO} from "./ProjektBO";
 export {default as ZeitkontoBO} from "./ZeitkontoBO";
+
 
 
 

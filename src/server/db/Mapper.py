@@ -12,7 +12,7 @@ class Mapper(AbstractContextManager, ABC):
     def __enter__(self):
         """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
         self._cnx = connector.connect(host='localhost', user='root', password='roottoor',
-                                      database='SoPra_MySQL_DB_V2')
+                                      database='SoPra_MySQL_DB')
 
         return self
 

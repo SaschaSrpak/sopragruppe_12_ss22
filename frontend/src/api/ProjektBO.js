@@ -1,20 +1,20 @@
-import ProjektBO from './ProjektBO';
+import BO from './BO';
 
 /** 
  *@fileOverview 
  *@author Luca Trautmann
 */
 
-export default class ProjektBO{
+export default class ProjektBO extends BO{
 
-    constructor() {
+    constructor(pName, pCreator, pClient, pDescription, pSet_Deadline, pProject_Duration) {
         super()
-        this.name = null;
-        this.creator = null;
-        this.client = null;
-        this.description = null;
-        this.set_deadline = null;
-        this.project_duration = null;
+        this.name = pName;
+        this.creator = pCreator;
+        this.client = pClient;
+        this.description = pDescription;
+        this.set_deadline = pSet_Deadline;
+        this.project_duration = pProject_Duration;
         this.activities = ([]);
         this.persons_responsible = ([]);
     }
@@ -55,21 +55,29 @@ export default class ProjektBO{
         return this.set_deadline;
     }
 
+    getProject_Duration(){
+        return this.project_duration
+    }
+
+    setProject_Duration(){
+        return this.project_duration
+    }
+
 
     getActivites(){
         return this.activities;
     }
     
-    setActivities(){
-        this.activities;
+    setActivities(activities){
+        this.activities = activities;
     }
 
     getPersons_Responsible(){
         return this.persons_responsible;
     }
 
-    setPersons_Responsible(){
-        this.persons_responsible;
+    setPersons_Responsible(persons_responsible){
+        this.persons_responsible = persons_responsible;
     }
 
     static fromJSON(projekt){
