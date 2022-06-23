@@ -1,74 +1,124 @@
 
 
 
-INSERT INTO Person VALUES (10001,'Klaus','Kleber','klaus.kleber@gmail.com','UhuKlaus','2022-05-02 19:45:44',0),
-                          (10002,'Beathe','Use','beathe.use@gmail.com','AtheBuse','2022-05-02 19:47:48',1),
-                          (10003,'Marie','Blauh','marie.blauh@gmail.com','MaBlauh','2022-05-02 19:48:25',0),
-                          (10004,'Benedick','Schleicher','benedick.schleicher@gmail.com','DickerSchleicher','2022-05-02 19:49:00',0),
-                          (10005,'Heffrey','Yee','yee.heffrey@gmail.com','Yeeeee','2022-05-02 19:49:47',0),
-                          (10006,'Truca','Lautmann','tr.lautmann@gmail.com','SuperLautmann','2022-05-02 19:50:39',1),
-                          (10007,'Kaum','Kisler','kaum.kisler@gmail.com','KislerMisler','2022-05-02 19:52:14',0),
-                          (10008,'Sriracha','Spak','sriracha.spak@gmail.com','SrirachaSpak','2022-05-02 19:53:42',0),
-                          (10009,'Wiam','Lilke','wiam.lilke@gmail.com','Lolke','2022-05-02 19:54:32',1),
-                          (100010,'Jeonard','Lustus','jenni.lustus@gmail.com','BWL-Lustus','2022-05-02 19:55:14',0);
+INSERT INTO Person VALUES (10001,'Klaus','Kleber','klaus.kleber@gmail.com','KlausKleber','fHivivUZIvVuzivuiVZUIvzuivZUivuziVUZIvUZivuziVzuivhhIOhoiph','2022-06-22 16:00:00',1),
+                          (10002,'Gundula','Gause','gundula.gause@gmail.com','GundulaGause','BIUObibiobiuoOPJjjiogERtsterzVUIuvi','2022-06-22 16:00:00',1),
+                          (10003,'Jasmin','Wagner','jasmin.wagner@gmail.com','Blümchen','fbewuiqbfeuwiqfiobouUOzvuzovUOvhuoVUZVuo','2022-06-22 16:00:00',0),
+                          (10004,'Hans','Müller','hans.müller@gmail.com','MüllerHans','fewhuqibfeuiwqbfueanjifbeiouqwbusbahuofwqbu','2022-05-02 19:49:00',0),
+                          (10005,'Thomas','Lokomotive','thomas.lokomotive@gmail.com','TankEngine','buhiPopjPItzZRSEvhkNJoiZi','2022-05-02 19:49:47',0);
 
 
-insert into SoPra_MySQL_DB.Aktivitaet (Activity_ID, Name, Man_Day_Capacity, Last_modified_date)
-values  (10001, 'Anforderungen erfassen', 2, '2022-05-03 16:02:44'),
-        (10002, 'Prototyp erstellen', 8, '2022-05-03 16:02:46'),
-        (10003, 'Funktionen programmieren', 20, '2022-05-03 16:02:47'),
-        (10004, 'Design optimieren', 10, '2022-05-03 16:02:47');
-
-insert into SoPra_MySQL_DB.Projekt (Project_ID, Name, Client, Description, Last_modified_date)
-values  (10001, 'Website', 'Tante_Emma_Laden', 'Erstellen einer kleinen Website für den örtlichen Tante Emma Laden.', '2022-05-03 15:58:10'),
-        (10002, 'Hausputz', 'Örtliche_WG', 'Die WG muss mal wieder geputzt werden!', '2022-05-03 15:59:04');
+INSERT INTO Arbeitszeitkonto VALUES (10001, 10001),
+                                    (10002, 10002),
+                                    (10003, 10003),
+                                    (10004, 10004),
+                                    (10005, 10005);
 
 
-insert into SoPra_MySQL_DB.Aktivitaet (Activity_ID, Name, Man_Day_Capacity, Last_modified_date)
-values  (10001, 'Anforderungen erfassen', 2, '2022-05-03 16:02:44'),
-        (10002, 'Prototyp erstellen', 8, '2022-05-03 16:02:46'),
-        (10003, 'Funktionen programmieren', 20, '2022-05-03 16:02:47'),
-        (10004, 'Design optimieren', 10, '2022-05-03 16:02:47');
 
-insert into SoPra_MySQL_DB.Projekt_Ersteller (Project_ID, User_ID)
-values  (10001, 10002),
+insert into Aktivitaet VALUES (10001, 'Anforderungen erfassen', 2, '2022-06-22 16:00:00'),
+        (10002, 'Prototyp erstellen', 8, '2022-06-22 16:00:00'),
+        (10003, 'Funktionen programmieren', 20, '2022-06-22 16:00:00'),
+        (10004, 'Design optimieren', 10, '2022-06-22 16:00:00'),
+        (10005, 'Projektplan erstellen', 4, '2022-06-22 16:00:00'),
+        (10006, 'Literaturrecherche betreiben', 10, '2022-06-22 16:00:00'),
+        (10007, 'Recherche auswerten', 10, '2022-06-22 16:00:00'),
+        (10008, 'Bericht schreiben', 20, '2022-06-22 16:00:00'),
+        (10009, 'Korrektur lesen', 2, '2022-06-22 16:00:00');
+
+INSERT INTO Startereignis VALUES (10001,'Test Laufzeit Startereignis', '2022-06-22 16:00:00', '2022-06-22 16:00:00'),
+                                 (10002,'Test2 Laufzeit Startereignis', '2022-06-23 16:00:00', '2022-06-22 16:00:00');
+
+
+INSERT INTO Endereignis VALUES (10001, 'Test Projekt Laufzeit Endereignis', '2022-06-23 17:00:00', '2022-06-22 16:00:00'),
+                               (10002, 'Test2 Projekt Laufzeit Endereignis', '2022-06-24 17:00:00', '2022-06-22 16:00:00');
+
+
+INSERT INTO Projekt_deadline VALUES (10001, 'Test Projekt Deadline', '2022-06-23 17:00:00', '2022-06-22 17:00:00');
+
+INSERT INTO Projektlaufzeit VALUES (10001, 'Test Projekt Laufzeit', 25.0, 10001, 10001, '2022-06-22 16:00:00'),
+                                   (10002, 'Test Projekt Laufzeit', 25.0, 10002, 10002, '2022-06-22 16:00:00');
+
+insert into Projekt VALUES  (10001, 'Website', 'Tante_Emma_Laden', 'Erstellen einer kleinen Website für den örtlichen Tante Emma Laden.',10001, 10001, '2022-06-22 16:00:00'),
+        (10002, 'Hausarbeit', 'Professor Karlsen', 'Eine Hausarbeit im Modul X', 10002, 10002, '2022-06-22 16:00:00');
+
+insert into Projekt_Ersteller VALUES (10001, 10002),
+        (10002, 10001);
+
+insert into Projekt_Zustaendigkeit VALUES  (10001, 10002),
+        (10001, 10001),
+        (10001, 10003),
+        (10001, 10004),
+        (10001, 10005),
+        (10002, 10001),
+        (10002, 10003),
+        (10002, 10005);
+
+insert into Projekt_Aktivitaeten VALUES  (10001, 10001),
+        (10001, 10002),
+        (10001, 10003),
+        (10001, 10004),
+        (10002, 10005),
+        (10002, 10006),
+        (10002, 10007),
+        (10002, 10008),
         (10002, 10009);
 
-insert into SoPra_MySQL_DB.Projekt_Zustaendigkeit (Project_ID, User_ID)
-values  (10001, 10001),
-        (10001, 10002),
-        (10001, 10003),
-        (10001, 10004);
-
-insert into SoPra_MySQL_DB.Projekt_Aktivitaeten (Project_ID, Activity_ID)
-values  (10001, 10001),
-        (10001, 10002),
-        (10001, 10003),
-        (10001, 10004);
-
-insert into SoPra_MySQL_DB.Aktivitaet_Zustaendigkeit (Activity_ID, User_ID)
-values  (10001, 10001),
+insert into Aktivitaet_Zustaendigkeit VALUES  (10001, 10002),
         (10002, 10001),
         (10002, 10002),
         (10003, 10003),
         (10003, 10004),
-        (10004, 10004);
+        (10003, 10005),
+        (10004, 10004),
+        (10004, 10005),
+        (10005, 10001),
+        (10006, 10001),
+        (10006, 10003),
+        (10006, 10005),
+        (10007, 10001),
+        (10007, 10003),
+        (10007, 10005),
+        (10008, 10001),
+        (10008, 10003),
+        (10008, 10005),
+        (10009, 10003),
+        (10009, 10005);
 
-insert into SoPra_MySQL_DB.Ereignis (Event_ID, Name, Time, Last_modified_date)
-values  (10001, 'Gesprächsstart', '2022-05-03 08:15:41', '2022-05-03 16:11:55'),
-        (10002, 'Gesprächsende', '2022-05-03 10:01:16', '2022-05-03 16:12:27');
 
-insert into SoPra_MySQL_DB.Zeitintervall (Interval_ID, Name, Duration, Start_Event_ID, End_Event_ID, Last_modified_date)
-values  (10001, 'Gespräch zur Anforderungsaufnahme', 1.75, 10001, 10002, '2022-05-03 16:13:31');
+INSERT INTO Kommen VALUES (10001,'Test Kommen Ereignis', '2022-06-22 16:00:00', '2022-06-22 16:00:00');
 
-insert into SoPra_MySQL_DB.Buchung (Transaction_ID, Account_ID, Activity_ID, Last_modified_date)
-values  (10001, 10001, 10001, '2022-05-03 16:19:52');
+INSERT INTO KommenBuchung VALUES (10001, 10002, 10001, '2022-06-22 16:00:00');
 
-insert into SoPra_MySQL_DB.Buchungs_Bezug_Ereignis (Transaction_ID, Event_ID)
-values  (10001, 10001),
-        (10001, 10002);
+INSERT INTO Gehen VALUES (10001, 'Test Gehen Ereignis', '2022-06-22 17:00:00', '2022-06-22 17:00:00');
 
-insert into SoPra_MySQL_DB.Buchungs_Bezug_Zeitintervall (Transaction_ID, Interval_ID)
-values  (10001, 10001);
+INSERT INTO GehenBuchung VALUES (10001, 10002, 10001, '2022-06-22 16:00:00');
+
+
+
+INSERT INTO Startereignis VALUES (10003,'Test Pause Startereignis', '2022-06-22 17:00:00', '2022-06-22 16:00:00'),
+                                 (10004,'Test Projektarbeitszeit Startereignis', '2022-06-23 16:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO StartereignisBuchung VALUES (10001, 10001, 10003, '2022-06-22 16:00:00'),
+                                        (10001, 10002, 10004, '2022-06-22 16:00:00');
+
+
+INSERT INTO Endereignis VALUES (10003, 'Test Pause Laufzeit Endereignis', '2022-06-23 17:15:00', '2022-06-22 16:00:00'),
+                               (10004, 'Test2 Projektarbeitszeit Endereignis', '2022-06-23 17:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO EndereignisBuchung VALUES (10001, 10001, 10003, '2022-06-22 17:16:00'),
+                                        (10001, 10002, 10004, '2022-06-22 16:00:00');
+
+INSERT INTO Pause VALUES (10001, 'Test Kaffee Pause', 0.25, 10003, 10003, '2022-06-22 17:16:00');
+
+INSERT INTO PauseBuchung VALUES (10001, 10001, 10001,'2022-06-22 17:16:00');
+
+INSERT INTO Projektarbeit VALUES (10001, 'Test Projektarbeitszeit', 1.0, 10004, 10004, '2022-06-23 17:03:00');
+
+INSERT INTO ProjektarbeitBuchung VALUES (10001, 10002, 10001, 10001, '2022-06-23 17:03:00');
+
+
+
+
 
 

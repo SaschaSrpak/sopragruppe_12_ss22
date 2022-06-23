@@ -1,5 +1,5 @@
 import BuchungBO from './BuchungBO';
-import ZeitintervallbuchungBO from './Buchungen/ZeitintervallbuchungBO';
+
 /** 
  *@fileOverview 
  *@author Luca Trautmann
@@ -7,9 +7,9 @@ import ZeitintervallbuchungBO from './Buchungen/ZeitintervallbuchungBO';
 
 export default class ZeitintervallbuchungBO extends BuchungBO{
 
-    constructor() {
+    constructor(intervall_id) {
         super()
-        this.time_intervall_id = null;    
+        this.time_intervall_id = intervall_id;
     }
 
     setTime_intervall_id(time_intervall_id){

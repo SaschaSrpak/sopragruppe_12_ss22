@@ -6,11 +6,11 @@ import PersonBO from './PersonBO';
  *@author Luca Trautmann
 */
 
-export default class ZeitkontoBO{
+export default class ZeitkontoBO extends BO{
 
-    constructor() {
+    constructor(owner) {
         super()
-        this.owner = Person;
+        this.owner = owner;
     }
 
     getOwner(){
@@ -20,4 +20,23 @@ export default class ZeitkontoBO{
     setOwner(new_person){
         this.owner = new_person;
     }
+
+    static fromJSON(account) {
+        let result = []
+        if (Array.isArray(account)) {
+            account.forEach((a) => {
+                Object.setPrototypeOf(a, ZeitkontoBO.prototype);
+                result.push(a)
+            })
+        } else {
+            let a = account;
+            Object.setPrototypeOf(a, Account.prototype);
+            result.push(a);
+        }
+
+        return result;
+    }
 }
+
+
+
