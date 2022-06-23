@@ -21,14 +21,18 @@ def secured(function):
                     s_adm = SystemAdministration()
                     google_user_id = claims.get("user_id")
                     email = claims.get("email")
+                    user_name = claims.get("name")
 
                     user = s_adm.get_person_by_firebase_id(google_user_id)
 
                     if user is not None:
+                        user.set_user_name(user_name)
                         user.set_email(email)
                         s_adm.save_person(user)
 
-                    """else:
+                    else:
+
+                        user = s_adm.create_person("Vorname", "Nachname", email, user_name, 0)
                         return '', 401  # UNAUTHORIZED!"""
 
                     objects = function(*args, **kwargs)
