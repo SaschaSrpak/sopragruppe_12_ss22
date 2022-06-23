@@ -41,7 +41,7 @@ function createData(name, dauer, kapazität) {
 };
 }
 
-// Hier kommen Aktivitäten rein, die über .map aus der Datenbank gelesen werden
+// Testdaten für Aktivitäten
 const rows = [
     createData("Aktivität 1", 200, 150),
     createData("Aktivität 2", 200, 150),
@@ -126,25 +126,41 @@ Row.propTypes = {
 };
 
 
+// Aktivitätsanzeige
+export class AktivitätAnzeige extends React.Component {
 
-export default function AktivitätAnzeige() {
-    return (
-        <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell />
-                        <TableCell>Aktivität</TableCell>
-                        <TableCell align="right">Dauer</TableCell>
-                        <TableCell align="right">Kapazität</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <Row key={row.name} row={row} />
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+    // Constructor für die Aktivitätenanzeige
+    constructor(props) {
+        super(props);
+        this.state = {
+            activity_name: null,
+            persons_responsible: [],
+            man_day_capacity: null,
+        };
+    }
+
+
+    render() {
+        return (
+            <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell>Aktivität</TableCell>
+                            <TableCell align="right">Dauer</TableCell>
+                            <TableCell align="right">Kapazität</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <Row key={row.name} row={row} />
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
 }
+
+export default AktivitätAnzeige;
