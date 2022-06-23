@@ -7,6 +7,21 @@ import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Se
  */
 
 
+// get Projekte from backend in ProjektBO.js
+import ProjektBO from ".../api/ProjektBO";
+
+constructor(props) {
+    super(props);
+    this.state = {
+        name: "",
+    }
+}
+
+
+
+
+
+
 // Test Liste, um die Projektauswahl zu testen
 const TestProjekte = [
     'Projekt 1',
@@ -24,6 +39,14 @@ const TestProjekte = [
 
 
 export class Projektwahl extends Component {
+
+// Constructor für die Projekte, die ausgelesen werden
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: null,
+        }
+    }
 
 
     render () {
