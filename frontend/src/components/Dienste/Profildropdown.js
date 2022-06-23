@@ -1,10 +1,7 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
+import { Popover, IconButton, Avatar, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useNavigate } from 'react-router-dom';
 import Profil from '../pages/Profil';
 
 /**
@@ -95,14 +92,7 @@ class ProfileDropDown extends Component {
 
                                 </Grid>
                             </Grid>
-                            {/* <Grid container justifyContent='center'>
-                                
-                                    <Grid item>
-                                        <LogoutIcon/>
-                                        <Button color='primary' style={{position:"relative", bottom:7}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
-                                    </Grid>
-                                </Grid> */}
-                        </Paper>
+                           </Paper>
 
                     </Popover>
                 </div>
