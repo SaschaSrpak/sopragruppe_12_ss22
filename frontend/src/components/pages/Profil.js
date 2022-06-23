@@ -63,7 +63,7 @@ class Profil extends Component {
         });
     }
 
-    updatePerson = () => {
+   /*  updatePerson = () => {
        let updatedPerson = Object.assign(new PersonBO(), this.props.person)
         updatedPerson.setUser_name(this.state.user_name);
         SystemAPI.updatePerson(updatedPerson).then(person =>{
@@ -73,7 +73,7 @@ class Profil extends Component {
         });
         this.baseState.user_name = this.state.user_name;
         this.props.onClose(updatedPerson);
-    }
+    } */
 
 
     render() {
