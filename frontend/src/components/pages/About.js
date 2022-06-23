@@ -9,15 +9,25 @@ export class About extends Component {
     render (){
       return(
         <div>
-          <p variant='h6'>
-            Zeiterfassungsprojekt
-          </p>
+          <h2>
+            Softwareprojekt SS22
+          </h2>
+          <br />
+          <h4>
+            Zeiterfassungssystem
+          </h4>
           <br />
           <p>
-            React Frontend written by <Link href='https://www.youtube.com/watch?v=czTksCF6X8Y&t=15s'>Alle</Link>
+            React Frontend written by  
+            <Link href='https://github.com/LucaTrautmann'> Luca Trautmann, </Link>
+            <Link href='https://github.com/KimKausler'>Kim Kausler, </Link>
+            <Link href='https://github.com/SaschaSrpak'>Sascha Srpak, </Link>
+            <Link href='https://github.com/JeffreyHe0605'>Jeffrey He</Link>
           </p>
           <p>
-            Python Backend written by <Link href='https://www.youtube.com/watch?v=czTksCF6X8Y&t=15s'>Alle</Link>
+            Python Backend written by 
+            <Link href='https://github.com/LeonardJustus'> Leonard Justus, </Link>
+            <Link href='https://github.com/LiamWilke'>Liam Wilke </Link>
           </p>
           <br />
           <p variant='body2'>

@@ -97,7 +97,7 @@ export class App extends Component {
   }
 
   render() {
-    const { currentUser, authError, appError, loading } = this.state;
+    const { currentUser, authError, appError } = this.state;
 
 
 

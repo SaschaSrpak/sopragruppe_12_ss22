@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
-import { withRouter } from "../withRouter";
 
 /**
  *@fileOverview 
