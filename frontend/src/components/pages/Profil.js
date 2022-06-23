@@ -132,7 +132,6 @@ class Profil extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            defaultValue={user.displayName}
                             type="Vorname"
                             fullWidth
                             variant="standard"
