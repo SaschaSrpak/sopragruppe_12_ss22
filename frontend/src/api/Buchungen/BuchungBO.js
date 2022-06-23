@@ -1,6 +1,5 @@
 import BO from '../BO';
-import BuchungBO from './Buchungen/BuchungBO';
-import Zeitkonto from './Buchungen/Zeitkonto';
+
 /** 
  *@fileOverview 
  *@author Luca Trautmann
@@ -8,9 +7,9 @@ import Zeitkonto from './Buchungen/Zeitkonto';
 
 export default class BuchungBO extends BO{
 
-    constructor() {
+    constructor(account_id) {
         super()
-        this.target_user_account = Zeitkonto;
+        this.target_user_account = account_id;
     }
 
     setTarget_user_account(target_user_account){
