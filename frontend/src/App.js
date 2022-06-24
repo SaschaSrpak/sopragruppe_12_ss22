@@ -16,7 +16,8 @@ import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
-import {SystemAPI} from "./api";
+import { SystemAPI } from "./api";
+import ProfilRegistrierung from './components/pages/ProfilRegristrierung';
 
 
 
@@ -31,6 +32,7 @@ export class App extends Component {
       authError: null,
       newUser: false,
       authLoading: true,
+      open: false
     };
   }
 
@@ -68,9 +70,10 @@ export class App extends Component {
       });
   }
 
-  handleAuthStateChange = user => {
+  handleAuthStateChange = (user,person) => {
     if (user) {
 
+      person = SystemAPI.getApi().getPersonByFirebaseID(user.uid)
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
 
@@ -97,10 +100,20 @@ export class App extends Component {
     }
   }
 
+  checkNewUser = () => {
+    if (this.props.user.name === "Vorname");
+    this.setState({
+      open: true
+    })
+  }
+  
+
+
   render() {
-    const { currentUser, authError, appError } = this.state;
-    
-    
+    const { currentUser, authError, appError, open } = this.state;
+    const { user } = this.props;
+
+
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
@@ -115,6 +128,7 @@ export class App extends Component {
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
+              <ProfilRegistrierung user={currentUser} open={this.state.open}/>
               <Routes>
                 <Route path='/static/reactclient' element={
                   <Navigate replace to={'/home'} />
@@ -136,5 +150,6 @@ export class App extends Component {
     };
   }
 }
+
 
 export default App;
