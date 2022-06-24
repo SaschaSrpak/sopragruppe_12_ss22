@@ -22,7 +22,7 @@ import ProjektarbeitBuchungBO from './Buchungen/ProjektarbeitBuchungBO'
  * Abstracts the REST interface of the Python backend with convenient access methods.
  * The class is implemented as a singleton.
  *
- * @author Leonard Justus)
+ * @author Leonard Justus
  */
 
 export default class SystemAPI {
