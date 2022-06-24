@@ -49,7 +49,7 @@ class Profil extends Component {
     }
 
     handleClickOpen = () => {
-
+        this.getPerson();
         this.setState({
             open: !this.state.open
         });
@@ -90,7 +90,7 @@ class Profil extends Component {
     }
 
     componentDidMount() {
-        this.getPerson();
+
     }
 
     updatePerson = () => {
@@ -196,8 +196,8 @@ class Profil extends Component {
                                 onChange={this.handleChangeDrop}
                             >
 
-                                <MenuItem value={1}>Projektmanager</MenuItem>
-                                <MenuItem value={0}>Projektmitarbeiter</MenuItem>
+                                <MenuItem value={"1"}>Projektmanager</MenuItem>
+                                <MenuItem value={"0"}>Projektmitarbeiter</MenuItem>
                             </Select>
                         </FormControl>
 

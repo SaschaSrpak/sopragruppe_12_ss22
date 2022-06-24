@@ -32,7 +32,8 @@ export class App extends Component {
       authError: null,
       newUser: false,
       authLoading: true,
-      open: false
+      open: false,
+      person: null,
     };
   }
 
@@ -70,24 +71,33 @@ export class App extends Component {
       });
   }
 
-  handleAuthStateChange = (user,person) => {
+  handleAuthStateChange = (user) => {
     if (user) {
-
-      person = SystemAPI.getApi().getPersonByFirebaseID(user.uid)
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
+        SystemAPI.getApi().getPersonByFirebaseID(user.uid).then(person => {
 
-        this.setState({
-          currentUser: user,
-          authError: null,
-          authLoading: false
-        });
+          let open = false
+          console.log(person)
+          
+          if(person.name === "Vorname") {
+            console.log("checkuser")
+            open = true
+          }
+          this.setState({
+            currentUser: user,
+            open: open,
+            person: person,
+            authError: null,
+            authLoading: false
+          });
+        })
       }).catch(e => {
         this.setState({
           authError: e,
           authLoading: true
         });
-      });
+      })
     } else {
       // User has logged out, so clear the id token
       document.cookie = 'token=;path=/';
@@ -101,17 +111,19 @@ export class App extends Component {
   }
 
   checkNewUser = () => {
-    if (this.props.user.name === "Vorname");
-    this.setState({
-      open: true
-    })
+    if (this.state.person.name === "Vorname") {
+      console.log("checkuser")
+      this.setState({
+        open: true
+      })
+    }
   }
-  
+
 
 
   render() {
-    const { currentUser, authError, appError, open } = this.state;
-    const { user } = this.props;
+    const { currentUser, authError, appError, open, person } = this.state;
+
 
 
     if (this.state.authLoading === true) {
@@ -128,7 +140,7 @@ export class App extends Component {
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
-              <ProfilRegistrierung user={currentUser} open={this.state.open}/>
+              {person ? <ProfilRegistrierung user={currentUser} open={open} handleClose={() => this.setState({ open: false })} /> : null}
               <Routes>
                 <Route path='/static/reactclient' element={
                   <Navigate replace to={'/home'} />

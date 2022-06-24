@@ -37,7 +37,7 @@ class Profil extends Component {
             mail_address: ma,
             user_name: un,
             manager_status: ms,
-            open: false,
+            
             updatingInProgress: false,
             updatingError: null,
 
@@ -45,7 +45,7 @@ class Profil extends Component {
 
         this.baseState = this.state;
 
-        console.log("hallo")
+        console.log("hallo neuer Dude")
     }
 
     handleClickOpen = () => {
@@ -55,11 +55,7 @@ class Profil extends Component {
         });
     }
 
-    handleClose = () => {
-        this.setState({
-            open: false
-        });
-    }
+  
 
     handleChange = (event) => {
         console.log(event.target.value)
@@ -97,27 +93,29 @@ class Profil extends Component {
         let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
         updatedPerson.setSurname(this.state.surname);
+        updatedPerson.setManager_status(this.state.manager_status)
         SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
             this.setState({
 
             })
         });
         this.baseState.name = this.state.name;
-        this.handleClose();
+
+        this.props.handleClose();
     }
 
 
     render() {
 
-        const { open } = this.state;
-        const { user } = this.props;
+        
+        const { open } = this.props;
         const { name, surname, mail_address, user_name, manager_status } = this.state;
 
         return (
 
             <React.Fragment>
                
-                <Dialog open={open} onClose={this.handleClose}>
+                <Dialog open={open} onClose={this.props.handleClose}>
                     <DialogTitle>Profil</DialogTitle>
 
                     <DialogContent>
@@ -194,14 +192,14 @@ class Profil extends Component {
                                 onChange={this.handleChangeDrop}
                             >
 
-                                <MenuItem value={1}>Projektmanager</MenuItem>
-                                <MenuItem value={0}>Projektmitarbeiter</MenuItem>
+                                <MenuItem value={"1"}>Projektmanager</MenuItem>
+                                <MenuItem value={"0"}>Projektmitarbeiter</MenuItem>
                             </Select>
                         </FormControl>
 
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose}>Cancel</Button>
+                        <Button onClick={this.props.handleClose}>Cancel</Button>
                         <Button onClick={this.updatePerson}>Save</Button>
                     </DialogActions>
                 </Dialog >
