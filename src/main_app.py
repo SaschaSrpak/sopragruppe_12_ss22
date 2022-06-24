@@ -193,6 +193,19 @@ class PersonOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/persons/firebase/<string:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die Firebase_ID des Personen Objekts')
+class PersonFirebaseOperations(Resource):
+    @timesystem.marshal_with(person)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        p = s_adm.get_person_by_firebase_id(id)
+        if p is not None:
+            return p
+        else:
+            return 'Person not found', 500
 
 @timesystem.route('/persons/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
