@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
-import { withRouter } from "../withRouter";
 
 /**
  *@fileOverview 
@@ -33,11 +32,7 @@ class Login extends Component {
 
 					</Grid>
 					<br/>
-					<Grid container justify='center'>
-						<Button variant='contained' color='primary'>Registrieren</Button>
-
-					</Grid>
-					<br />
+					
 				</div>
 			);
 		}

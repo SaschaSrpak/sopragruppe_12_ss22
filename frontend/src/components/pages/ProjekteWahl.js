@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl, Menu } from "@mui/material";
+// import ProjektBO from ".../api/ProjektBO";
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
  * @author Sascha Srpak
  */
+
 
 
 // Test Liste, um die Projektauswahl zu testen
@@ -25,7 +27,25 @@ const TestProjekte = [
 
 export class Projektwahl extends Component {
 
+// Constructor für die Projekte, die ausgelesen werden
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: null,
+        }
+    }
 
+    // componentDidMount funktion zum Laden der Projekte
+    // componentDidMount() {
+    //     ProjektBO.getName().then((response) => {
+    //             this.setState({
+    //                 name: response
+    //             })
+    //         }
+    //     )
+    // }
+
+// rendert die Projekte aus der Liste
     render () {
         return (
             <Paper sx={{

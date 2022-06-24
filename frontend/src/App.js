@@ -16,6 +16,7 @@ import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
+import {SystemAPI} from "./api";
 
 
 
@@ -97,20 +98,20 @@ export class App extends Component {
   }
 
   render() {
-    const { currentUser, authError, appError, loading } = this.state;
-
-
-
+    const { currentUser, authError, appError } = this.state;
+    
+    
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
       )
     } else {
       console.log(this.state.currentUser)
+      console.log(SystemAPI.getApi().getPerson(10004))
       return (
-        
+
         <div>
-          <Toolbar/>
+          <Toolbar />
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />

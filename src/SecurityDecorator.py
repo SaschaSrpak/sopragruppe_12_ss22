@@ -5,6 +5,7 @@ from server.SystemAdministration import SystemAdministration
 
 
 def secured(function):
+
     firebase_request_adapter = requests.Request()
 
     def wrapper(*args, **kwargs):
@@ -27,25 +28,22 @@ def secured(function):
 
                     if user is not None:
                         user.set_user_name(user_name)
-                        user.set_email(email)
+                        user.set_mail_address(email)
                         s_adm.save_person(user)
 
                     else:
-
-                        user = s_adm.create_person("Vorname", "Nachname", email, user_name, 0)
-                        return '', 401  # UNAUTHORIZED!"""
+                        user = s_adm.create_person("Vorname", "Nachname", email, user_name, google_user_id, 0)
 
                     objects = function(*args, **kwargs)
                     return objects
 
-                """else:
-                    return '', 401  # UNAUTHORIZED!"""
+                else:
+                    return '', 401  # UNAUTHORIZED!
 
             except ValueError as exception:
                 error_message = str(exception)
+                return exception, 401  # UNAUTHORIZED!
 
-                """return exception, 401  # UNAUTHORIZED!"""
-
-        """return '', 401  # UNAUTHORIZED!"""
+        return '', 401  # UNAUTHORIZED!
 
     return wrapper

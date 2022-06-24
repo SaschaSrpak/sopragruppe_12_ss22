@@ -1,94 +1,216 @@
-/* import React, { Component } from 'react';
-import Appbar from '@mui/material/AppBar';
-import { Toolbar, Dropdown, Typography, Box, Drawer, List } from '@mui/material';
-import ProfileDropDown from '../Dienste/Profildropdown';
-import DrawerComponent from '../layout/DrawerComponent';
-import Container from '@mui/material/Container';
-import CustomPopup from "./components/CustomPopup";
-import { useState } from "react";
+import React, { Component } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import PersonBO from '../../api/PersonBO';
+import SystemAPI from '../../api/SystemAPI';
 
-/*
- *@fileOverview 
- *@author Luca Trautmann
-*
 
-class Profil extends React.Component {
+class Profil extends Component {
 
     constructor(props) {
-        super(props)
-        this.state = {
-            visibility: false,
-            setVisibility: false,
+        super(props);
+
+
+        let n = '', sn = '', ma = '', un = '', ms = '';
+        if (props.person) {
+            n = props.person.getName();
+            sn = props.person.getSurname();
+            ma = props.person.getMail_address();
+            un = props.person.getUser_name();
+            ms = props.person.getManager_status();
+
         }
+
+        this.state = {
+            person: null,
+            name: n,
+            surname: sn,
+            mail_address: ma,
+            user_name: un,
+            manager_status: ms,
+            open: false,
+            updatingInProgress: false,
+            updatingError: null,
+
+        }
+
+        this.baseState = this.state;
+
+        console.log("hallo")
     }
+
+    handleClickOpen = () => {
+
+        this.setState({
+            open: !this.state.open
+        });
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        });
+    }
+
+    handleChange = (event) => {
+        console.log(event.target.value)
+        this.setState({
+            [event.target.id]: event.target.value,
+        })
+
+    }
+
+    handleChangeDrop = (event) => {
+        console.log(event.target)
+        this.setState({
+            manager_status: event.target.value,
+        })
+    }
+
+    getPerson = () => {
+        SystemAPI.getApi().getPersonByFirebaseID(this.props.user.uid)
+            .then(PersonBO =>
+                this.setState({
+                    person: PersonBO,
+                    name: PersonBO.getName(),
+                    surname: PersonBO.getSurname(),
+                    mail_address: PersonBO.getMail_address(),
+                    user_name: PersonBO.getUser_name(),
+                    manager_status: PersonBO.getManager_status(),
+                }))
+    }
+
+    componentDidMount() {
+        this.getPerson();
+    }
+
+    updatePerson = () => {
+        let updatedPerson = Object.assign(new PersonBO(), this.state.person)
+        updatedPerson.setName(this.state.name);
+        updatedPerson.setSurname(this.state.surname);
+        SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
+            this.setState({
+
+            })
+        });
+        this.baseState.name = this.state.name;
+        this.handleClose();
+    }
+
 
     render() {
 
-        const { user, visibility, setVisibility, } = this.props;
-
-        popupCloseHandler = () => {
-            this.setState({
-                setVisibility: false,
-            })
-        };
-
-
-
-        DropdownExampleSelection = () => {
-            <Dropdown
-                placeholder='Personenstatus wählen'
-                fluid
-                selection
-                options={PersonenstatusOptions}
-            />
-        }
-
-        PersonenstatusOptions = [
-            {
-                key: 'Projektmanager',
-                text: 'Projektmanager',
-                value: '1',
-            },
-            {
-                key: 'Projektmitarbeiter',
-                text: 'Projektmitarbeiter',
-                value: '0',
-            }]
+        const { open } = this.state;
+        const { user } = this.props;
+        const { name, surname, mail_address, user_name, manager_status } = this.state;
 
         return (
-            <div>
-                <Toolbar />
-                <CustomPopup
-                    onClose={popupCloseHandler}
-                    show={visibility}
-                    title="Profildaten">
 
-                    <label>Name
-                        <input type="text" name="name" />
-                    </label>
+            <React.Fragment>
+                <Button onClick={this.handleClickOpen}>
+                    Profil
+                </Button>
+                <Dialog open={open} onClose={this.handleClose}>
+                    <DialogTitle>Profil</DialogTitle>
 
-                    <label>Nachname
-                        <input type="text" name="Nachname" />
-                    </label>
+                    <DialogContent>
+                        <DialogContentText>
+                            Profil anschauen und deinen Username bearbeiten.
+                        </DialogContentText>
 
-                    <label>Username
-                        <input type="text" name="Username" />
-                    </label>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Vorname"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={name}
+                            onChange={this.handleChange}
+                        />
+                        <TextField
 
-                    <label>E-Mail
-                        <input type="text" name="E-Mail" />
-                    </label>
-                    <label> Personenstatus
-                    </label>
+                            margin="dense"
+                            id="surname"
+                            label="Nachname"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={surname}
+                            onChange={this.handleChange}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="user_name"
+                            label="Username"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={user_name}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={this.handleChange}
 
-                    <button>Speicher</button>
+                        />
+                        <TextField
 
-                </CustomPopup>
-            </div>
-        )
+                            margin="dense"
+                            id="mail_address"
+                            label="Email Address"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={mail_address}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+
+                            onChange={this.handleChange}
+                        />
+
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
+                            <Select
+                                label="Managerstatus"
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                value={manager_status}
+                                disabled
+                                onChange={this.handleChangeDrop}
+                            >
+
+                                <MenuItem value={1}>Projektmanager</MenuItem>
+                                <MenuItem value={0}>Projektmitarbeiter</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose}>Cancel</Button>
+                        <Button onClick={this.updatePerson}>Save</Button>
+                    </DialogActions>
+                </Dialog >
+            </React.Fragment >
+        );
     }
+
+
 }
-
 export default Profil;
-
- */

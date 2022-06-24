@@ -145,6 +145,7 @@ class AllPersonListOperations(Resource):
 
     @timesystem.marshal_with(person, code=200)
     @timesystem.expect(person)
+    @secured
     def post(self):
         s_adm = SystemAdministration()
 
@@ -165,11 +166,13 @@ class AllPersonListOperations(Resource):
 @timesystem.param('id', 'Die ID des Personen Objekts')
 class PersonOperations(Resource):
     @timesystem.marshal_with(person)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_key(id)
         return p
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_key(id)
@@ -178,6 +181,7 @@ class PersonOperations(Resource):
 
     @timesystem.marshal_with(person)
     @timesystem.expect(person, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         p = Person.from_dict(api.payload)
@@ -189,12 +193,26 @@ class PersonOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/persons/firebase/<string:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die Firebase_ID des Personen Objekts')
+class PersonFirebaseOperations(Resource):
+    @timesystem.marshal_with(person)
+    @secured
+    def get(self, id):
+        s_adm = SystemAdministration()
+        p = s_adm.get_person_by_firebase_id(id)
+        if p is not None:
+            return p
+        else:
+            return 'Person not found', 500
 
 @timesystem.route('/persons/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Personen-Objekts')
 class PersonRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         person = s_adm.get_person_by_key(id)
@@ -212,6 +230,7 @@ class PersonRelatedActivityOperations(Resource):
 class ProjectDeadlineGetOperation(Resource):
     @timesystem.marshal_with(project_deadline, code=200)
     @timesystem.expect(project_deadline)
+    @secured
     def post(self):
         s_adm = SystemAdministration()
 
@@ -229,6 +248,7 @@ class ProjectDeadlineGetOperation(Resource):
 @timesystem.param('id', 'ID des ProjektDeadline-Objekts')
 class ProjectDeadlineOperations(Resource):
     @timesystem.marshal_with(project_deadline)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         pd = s_adm.get_project_deadline_by_key(id)
@@ -242,6 +262,7 @@ class ProjectDeadlineOperations(Resource):
 
     @timesystem.marshal_with(project_deadline)
     @timesystem.expect(project_deadline, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         pd = ProjektDeadline.from_dict(api.payload)
@@ -261,6 +282,7 @@ class ProjectDeadlineOperations(Resource):
 class ProjectDurationOperation(Resource):
     @timesystem.marshal_with(project_duration, code=200)
     @timesystem.expect(project_duration)
+    @secured
     def post(self):
         s_adm = SystemAdministration()
 
@@ -280,6 +302,7 @@ class ProjectDurationOperation(Resource):
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class ProjectDurationWithTimeStempsOperation(Resource):
     @timesystem.marshal_with(project_duration, code=200)
+    @secured
     def post(self, name, start_time, end_time):
         s_adm = SystemAdministration()
 
@@ -294,11 +317,13 @@ class ProjectDurationWithTimeStempsOperation(Resource):
 @timesystem.param('id', 'ID des Projektlaufzeit-Objekts')
 class ProjectDurationOperations(Resource):
     @timesystem.marshal_with(project_duration)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         pd = s_adm.get_project_duration_by_key(id)
         return pd
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         pd = s_adm.get_project_duration_by_key(id)
@@ -307,6 +332,7 @@ class ProjectDurationOperations(Resource):
 
     @timesystem.marshal_with(project_duration)
     @timesystem.expect(project_duration, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         pd = Projektlaufzeit.from_dict(api.payload)
@@ -326,6 +352,7 @@ class ProjectDurationOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllProjectListOperations(Resource):
     @timesystem.marshal_list_with(project)
+    @secured
     def get(self):
         s_adm = SystemAdministration()
         all_projects = s_adm.get_all_projects()
@@ -333,6 +360,7 @@ class AllProjectListOperations(Resource):
 
     @timesystem.marshal_with(project, code=200)
     @timesystem.expect(project)
+    @secured
     def post(self):
         s_adm = SystemAdministration()
 
@@ -353,11 +381,13 @@ class AllProjectListOperations(Resource):
 @timesystem.param('id', 'Die ID des Projekt Objekts')
 class ProjectOperations(Resource):
     @timesystem.marshal_with(project)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
         return pr
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
@@ -366,6 +396,7 @@ class ProjectOperations(Resource):
 
     @timesystem.marshal_with(project)
     @timesystem.expect(project, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         pr = Projekt.from_dict(api.payload)
@@ -383,6 +414,7 @@ class ProjectOperations(Resource):
 @timesystem.param('id', 'ID des Projekt Objekts')
 class PersonRelatedProjectOperations(Resource):
     @timesystem.marshal_with(person)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -400,7 +432,7 @@ class PersonRelatedProjectOperations(Resource):
 @timesystem.param('id', 'Die ID des Project-Objekts')
 @timesystem.param('person_id', 'Die ID des Personen-Objekts')
 class ProjectRelatedSpecificPersonOperations(Resource):
-
+    @secured
     def delete(self, id, person_id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -408,6 +440,7 @@ class ProjectRelatedSpecificPersonOperations(Resource):
         s_adm.delete_person_responsible_from_project(project, person)
         return '', 200
 
+    @secured
     def post(self, id, person_id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -421,6 +454,7 @@ class ProjectRelatedSpecificPersonOperations(Resource):
 @timesystem.param('id', 'Die ID des Projekt-Objekts')
 class ProjectRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -438,7 +472,7 @@ class ProjectRelatedActivityOperations(Resource):
 @timesystem.param('id', 'Die ID des Project-Objekts')
 @timesystem.param('activity_id', 'Die ID des Aktivität-Objekts')
 class ProjectRelatedSpecificActivityOperations(Resource):
-
+    @secured
     def delete(self, id, activity_id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -446,6 +480,7 @@ class ProjectRelatedSpecificActivityOperations(Resource):
         s_adm.delete_activity_from_project(project, activity)
         return '', 200
 
+    @secured
     def post(self, id, activity_id):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
@@ -458,6 +493,7 @@ class ProjectRelatedSpecificActivityOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllActivityListOperations(Resource):
     @timesystem.marshal_list_with(activity)
+    @secured
     def get(self):
         s_adm = SystemAdministration()
         all_activities = s_adm.get_all_activities()
@@ -466,6 +502,7 @@ class AllActivityListOperations(Resource):
 
     @timesystem.marshal_with(activity, code=200)
     @timesystem.expect(activity)
+    @secured
     def post(self):
         s_adm = SystemAdministration()
 
@@ -484,6 +521,7 @@ class AllActivityListOperations(Resource):
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 class ActivityOperations(Resource):
     @timesystem.marshal_with(activity)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
@@ -497,6 +535,7 @@ class ActivityOperations(Resource):
 
     @timesystem.marshal_with(activity)
     @timesystem.expect(activity, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         a = Aktivitaet.from_dict(api.payload)
@@ -514,6 +553,7 @@ class ActivityOperations(Resource):
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 class ActivityRelatedPersonOperations(Resource):
     @timesystem.marshal_with(person)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
@@ -530,7 +570,7 @@ class ActivityRelatedPersonOperations(Resource):
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
 @timesystem.param('person_id', 'Die ID des Personen-Objekts')
 class ActivityRelatedSpecificPersonOperations(Resource):
-
+    @secured
     def delete(self, id, person_id):
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
@@ -538,6 +578,7 @@ class ActivityRelatedSpecificPersonOperations(Resource):
         s_adm.delete_person_responsible_from_activity(activity, person)
         return '', 200
 
+    @secured
     def post(self, id, person_id):
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
@@ -550,6 +591,7 @@ class ActivityRelatedSpecificPersonOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AllAccountListOperations(Resource):
     @timesystem.marshal_list_with(account)
+    @secured
     def get(self):
         s_adm = SystemAdministration()
         all_accounts = s_adm.get_all_time_accounts()
@@ -561,6 +603,7 @@ class AllAccountListOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class AccountOperations(Resource):
     @timesystem.marshal_with(account)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         ac = s_adm.get_time_account_by_key(id)
@@ -574,6 +617,7 @@ class AccountOperations(Resource):
 
     @timesystem.marshal_with(account)
     @timesystem.expect(account, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         ac = Zeitkonto.from_dict(api.payload)
@@ -591,6 +635,7 @@ class AccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Person-Objekts')
 class PersonOfAccountOperations(Resource):
     @timesystem.marshal_list_with(account)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_person_key(id)
@@ -606,6 +651,7 @@ class PersonOfAccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class KommenTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(kommen_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -622,6 +668,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class KommenTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(gehen_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -637,6 +684,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class PauseTimeRelatedAccountOperations(Resource):
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -653,6 +701,7 @@ class PauseTimeRelatedAccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class PauseTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(pause_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -669,6 +718,7 @@ class PauseTransactionRelatedAccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class WorktimeTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(project_worktime_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -685,6 +735,7 @@ class WorktimeTransactionRelatedAccountOperations(Resource):
 @timesystem.param('id', 'Die ID des Account-Objekts')
 @timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
 class ActivityWorktimeRelatedAccountOperations(Resource):
+    @secured
     def get(self, id, activity_id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -703,6 +754,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
 @timesystem.param('activity_id', 'Die ID des Aktivitäts-Objekts')
 class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
+    @secured
     def get(self, id, activity_id):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
@@ -720,11 +772,13 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
 @timesystem.param('id', 'ID des StartEreignis-Objekts')
 class StartEventOperations(Resource):
     @timesystem.marshal_with(start_event)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         se = s_adm.get_start_event_by_key(id)
         return se
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         se = s_adm.get_start_event_by_key(id)
@@ -733,6 +787,7 @@ class StartEventOperations(Resource):
 
     @timesystem.marshal_with(start_event)
     @timesystem.expect(start_event, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         se = Startereignis.from_dict(api.payload)
@@ -752,11 +807,13 @@ class StartEventOperations(Resource):
 @timesystem.param('id', 'ID des StartEreignisBuchungs-Objekt')
 class StartEventTransactionOperations(Resource):
     @timesystem.marshal_with(start_event_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         st = s_adm.get_start_event_transaction_by_key(id)
         return st
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         st = s_adm.get_start_event_transaction_by_key(id)
@@ -765,6 +822,7 @@ class StartEventTransactionOperations(Resource):
 
     @timesystem.marshal_with(start_event_transaction)
     @timesystem.expect(start_event_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         st = StartereignisBuchung.from_dict(api.payload)
@@ -784,11 +842,13 @@ class StartEventTransactionOperations(Resource):
 @timesystem.param('id', 'ID des EndEreignis-Objekts')
 class EndEventOperations(Resource):
     @timesystem.marshal_with(end_event)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         e = s_adm.get_end_event_by_key(id)
         return e
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         e = s_adm.get_end_event_by_key(id)
@@ -797,6 +857,7 @@ class EndEventOperations(Resource):
 
     @timesystem.marshal_with(end_event)
     @timesystem.expect(end_event, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         e = Endereignis.from_dict(api.payload)
@@ -816,6 +877,7 @@ class EndEventOperations(Resource):
 @timesystem.param('id', 'ID des EndEreignisBuchungs-Objekt')
 class EndEventTransactionOperations(Resource):
     @timesystem.marshal_with(end_event_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         et = s_adm.get_end_event_transaction_by_key(id)
@@ -829,6 +891,7 @@ class EndEventTransactionOperations(Resource):
 
     @timesystem.marshal_with(end_event_transaction)
     @timesystem.expect(end_event_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         et = EndereignisBuchung.from_dict(api.payload)
@@ -848,11 +911,13 @@ class EndEventTransactionOperations(Resource):
 @timesystem.param('id', 'ID des Kommen-Objekts')
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
         return k
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
@@ -861,6 +926,7 @@ class KommenOperations(Resource):
 
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         k = Kommen.from_dict(api.payload)
@@ -880,6 +946,7 @@ class KommenOperations(Resource):
 @timesystem.param('id', 'ID des KommenBuchungs-Objekt')
 class KommenTransactionOperations(Resource):
     @timesystem.marshal_with(kommen_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_by_transaction_key(id)
@@ -893,6 +960,7 @@ class KommenTransactionOperations(Resource):
 
     @timesystem.marshal_with(kommen_transaction)
     @timesystem.expect(kommen_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         k = KommenBuchung.from_dict(api.payload)
@@ -913,6 +981,7 @@ class KommenTransactionOperations(Resource):
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen)
+    @secured
     def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
@@ -935,11 +1004,13 @@ class KommenOperations(Resource):
 @timesystem.param('id', 'ID des Gehen-Objekts')
 class GehenOperations(Resource):
     @timesystem.marshal_with(gehen)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_event_by_key(id)
         return gh
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_event_by_key(id)
@@ -948,6 +1019,7 @@ class GehenOperations(Resource):
 
     @timesystem.marshal_with(gehen)
     @timesystem.expect(gehen, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         gh = Gehen.from_dict(api.payload)
@@ -967,11 +1039,13 @@ class GehenOperations(Resource):
 @timesystem.param('id', 'ID des GehenBuchungs-Objekt')
 class GehenTransactionOperations(Resource):
     @timesystem.marshal_with(gehen_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_transaction_by_key(id)
         return gh
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_transaction_by_key(id)
@@ -980,6 +1054,7 @@ class GehenTransactionOperations(Resource):
 
     @timesystem.marshal_with(gehen_transaction)
     @timesystem.expect(gehen_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         gh = GehenBuchung.from_dict(api.payload)
@@ -1000,6 +1075,7 @@ class GehenTransactionOperations(Resource):
 class GehenOperations(Resource):
     @timesystem.marshal_with(gehen)
     @timesystem.expect(gehen)
+    @secured
     def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Gehen.from_dict(api.payload)
@@ -1022,11 +1098,13 @@ class GehenOperations(Resource):
 @timesystem.param('id', 'ID des Pausen-Objekt')
 class PauseOperations(Resource):
     @timesystem.marshal_with(pause)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         p = s_adm.get_pause_by_key(id)
         return p
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         p = s_adm.get_pause_by_key(id)
@@ -1035,6 +1113,7 @@ class PauseOperations(Resource):
 
     @timesystem.marshal_with(pause)
     @timesystem.expect(pause, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         p = Pause.from_dict(api.payload)
@@ -1056,11 +1135,13 @@ class PauseOperations(Resource):
 @timesystem.param('id', 'ID des PauseBuchungs-Objekt')
 class PauseTransactionOperations(Resource):
     @timesystem.marshal_with(pause_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         pt = s_adm.get_pause_transaction_by_key(id)
         return pt
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         pt = s_adm.get_pause_transaction_by_key(id)
@@ -1069,6 +1150,7 @@ class PauseTransactionOperations(Resource):
 
     @timesystem.marshal_with(pause_transaction)
     @timesystem.expect(pause_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         pt = PauseBuchung.from_dict(api.payload)
@@ -1091,6 +1173,7 @@ class PauseTransactionOperations(Resource):
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class CommitPauseTransaction(Resource):
     @timesystem.marshal_with(interval_transaction_response)
+    @secured
     def post(self, account_id, name, start_time, end_time):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
@@ -1106,11 +1189,13 @@ class CommitPauseTransaction(Resource):
 @timesystem.param('id', 'ID des ProjektArbeits-Objekt')
 class WorktimeOperations(Resource):
     @timesystem.marshal_with(project_worktime)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         wt = s_adm.get_project_worktime_by_key(id)
         return wt
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         wt = s_adm.get_project_worktime_by_key(id)
@@ -1119,6 +1204,7 @@ class WorktimeOperations(Resource):
 
     @timesystem.marshal_with(project_worktime)
     @timesystem.expect(project_worktime, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         wt = Projektarbeit.from_dict(api.payload)
@@ -1140,11 +1226,13 @@ class WorktimeOperations(Resource):
 @timesystem.param('id', 'ID des ProjektArbeitBuchungs-Objekt')
 class WorktimeTransactionOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
+    @secured
     def get(self, id):
         s_adm = SystemAdministration()
         pt = s_adm.get_project_worktime_by_transaction_key(id)
         return pt
 
+    @secured
     def delete(self, id):
         s_adm = SystemAdministration()
         pt = s_adm.get_project_work_transaction_by_key(id)
@@ -1153,6 +1241,7 @@ class WorktimeTransactionOperations(Resource):
 
     @timesystem.marshal_with(project_worktime_transaction)
     @timesystem.expect(project_worktime_transaction, validate=True)
+    @secured
     def put(self, id):
         s_adm = SystemAdministration()
         pt = ProjektarbeitBuchung.from_dict(api.payload)
@@ -1178,6 +1267,7 @@ class WorktimeTransactionOperations(Resource):
 @timesystem.param('end_time', 'Endzeitpunkt der Pause')
 class CommitWorktimeTransaction(Resource):
     @timesystem.marshal_with(interval_transaction_response, code=200)
+    @secured
     def post(self, account_id, name, activity_id, start_time, end_time):
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
