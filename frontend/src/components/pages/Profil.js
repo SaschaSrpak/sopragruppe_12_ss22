@@ -23,17 +23,18 @@ class Profil extends Component {
         let n = '', sn = '', ma = '', un = '', ms = '';
         if (props.person) {
             n = props.person.getName();
-            sn = props.person.getSurename();
-            ma = props.person.getMail_adress();
+            sn = props.person.getSurname();
+            ma = props.person.getMail_address();
             un = props.person.getUser_name();
             ms = props.person.getManager_status();
 
         }
 
         this.state = {
+            person: null,
             name: n,
-            surename: sn,
-            mail_adress: ma,
+            surname: sn,
+            mail_address: ma,
             user_name: un,
             manager_status: ms,
             open: false,
@@ -43,6 +44,8 @@ class Profil extends Component {
         }
 
         this.baseState = this.state;
+
+        console.log("hallo")
     }
 
     handleClickOpen = () => {
@@ -72,33 +75,43 @@ class Profil extends Component {
             manager_status: event.target.value,
         })
     }
-    
+
     getPerson = () => {
-        SystemAPI.getApi().getPersonbyfirebaseID()
-        .then(PersonBO =>
-            this.setState({
-                person: PersonBO,
-            }))
+        SystemAPI.getApi().getPersonByFirebaseID(this.props.user.uid)
+            .then(PersonBO =>
+                this.setState({
+                    person: PersonBO,
+                    name: PersonBO.getName(),
+                    surname: PersonBO.getSurname(),
+                    mail_address: PersonBO.getMail_address(),
+                    user_name: PersonBO.getUser_name(),
+                    manager_status: PersonBO.getManager_status(),
+                }))
+    }
+
+    componentDidMount() {
+        this.getPerson();
     }
 
     updatePerson = () => {
-        let updatedPerson = Object.assign(new PersonBO(), this.props.person)
+        let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
-        updatedPerson.setSurname(this.state.surename);
+        updatedPerson.setSurname(this.state.surname);
         SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
             this.setState({
 
             })
         });
         this.baseState.name = this.state.name;
-        this.props.onClose(updatedPerson);
+        this.handleClose();
     }
 
 
     render() {
 
         const { open } = this.state;
-        const { name, surname, mail_adress, user_name, manager_status } = this.state;
+        const { user } = this.props;
+        const { name, surname, mail_address, user_name, manager_status } = this.state;
 
         return (
 
@@ -113,7 +126,7 @@ class Profil extends Component {
                         <DialogContentText>
                             Profil anschauen und deinen Username bearbeiten.
                         </DialogContentText>
-                        
+
                         <TextField
                             autoFocus
                             margin="dense"
@@ -156,12 +169,12 @@ class Profil extends Component {
                         <TextField
 
                             margin="dense"
-                            id="mail_adress"
+                            id="mail_address"
                             label="Email Address"
                             type="text"
                             fullWidth
                             variant="standard"
-                            value={mail_adress}
+                            value={mail_address}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -171,7 +184,7 @@ class Profil extends Component {
 
                             onChange={this.handleChange}
                         />
-                        
+
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
                             <Select
@@ -191,7 +204,7 @@ class Profil extends Component {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleSave}>Save</Button>
+                        <Button onClick={this.updatePerson}>Save</Button>
                     </DialogActions>
                 </Dialog >
             </React.Fragment >

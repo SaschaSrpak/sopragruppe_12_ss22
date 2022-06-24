@@ -40,6 +40,7 @@ class ProfileDropDown extends Component {
             open: false
         });
     }
+    
 
     /** 
      * Handles the click event of the sign in button and uses the firebase.auth() component to sign in.
@@ -87,7 +88,7 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
                                     <Divider sx={{ margin: 1 }} />
-                                    <Profil />
+                                    <Profil user={user}/>
                                     <Divider sx={{ margin: 1 }} />
                                     {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
