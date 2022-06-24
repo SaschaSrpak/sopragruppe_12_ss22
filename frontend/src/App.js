@@ -98,15 +98,14 @@ export class App extends Component {
 
   render() {
     const { currentUser, authError, appError } = this.state;
-
-
-
+    
+    
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
       )
     } else {
-      console.log(this.state.currentUser)
+      
       return (
 
         <div>

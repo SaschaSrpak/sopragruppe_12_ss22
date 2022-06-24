@@ -77,7 +77,7 @@ class Profil extends Component {
         let updatedPerson = Object.assign(new PersonBO(), this.props.person)
         updatedPerson.setName(this.state.name);
         updatedPerson.setSurname(this.state.surename);
-        SystemAPI.updatePerson(updatedPerson).then(person => {
+        SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
             this.setState({
 
             })

@@ -59,6 +59,8 @@ class ProfileDropDown extends Component {
         const { user } = this.props;
         const { open } = this.state;
 
+        console.log(this.props.user)
+
         return (
             user ?
                 <div>
