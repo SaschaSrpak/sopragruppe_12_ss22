@@ -5,6 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SystemAPI from '../../api/SystemAPI';
 import Listen from '../pages/Listen'
 
 /** 
@@ -16,11 +17,31 @@ export class Auslese extends Component {
   constructor(props){
     super(props);
 
+    let KommenID = null;
+
+    if (this.state) {
+      KommenID = this.state.expandedKommenID;
+    }
+
     this.state ={
       Error: false,
       Loader: false,
+      expandedKommenID: KommenID,
     }
 
+  }
+
+  onExpandedStateChange = kommen => {
+    
+    let newID = null;
+
+    if (kommen.getKommen() !== this.state.expandedKommenID) {
+      
+      newID = kommen.getKommen();
+    }
+    this.setState({
+      expandedKommenID: newID,
+    });
   }
 
     render() {
@@ -71,6 +92,7 @@ export class Auslese extends Component {
                 <Typography>Kommen</Typography>
               </AccordionSummary>
               <AccordionDetails>
+              <Listen show={expandedState} kommen={kommen} />
               <ButtonGroup variant='text' size='small' style={{alignItems: "right"}}>
                   <Button color='primary' onClick={""}>
                     edit
