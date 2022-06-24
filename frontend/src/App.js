@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, } from 'react-router-dom';
 import { Container, Toolbar } from '@mui/material';
 import './App.css';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import firebaseConfig from './components/login/firebaseconfig';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import Header from './components/layout/Header';
 import Login from './components/login/Login';
 import About from './components/pages/About';
@@ -13,9 +13,9 @@ import Projektanzeige from './components/pages/Projektanzeige';
 import Buchungen from './components/pages/Buchungen';
 import Profil from './components/pages/Profil';
 import Error from './components/Zwischenelemente/Error';
-import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
+import SystemAPI from './api/SystemAPI'
 
 
 
@@ -33,39 +33,11 @@ export class App extends Component {
     };
   }
 
-  componentDidMount() {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, this.handleAuthStateChange)
+
+  static getDerivedStateFromError(error) {
+    return { appError: error };
   }
 
-  handleSignInButtonClicked = () => {
-    const auth = getAuth();
-    auth.languageCode = 'en';
-    const provider = new GoogleAuthProvider();
-
-    //funciton aufstellen onlcick
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        this.setState({ currentUser: user, authLoading: false })
-        // ...
-      }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
 
   handleAuthStateChange = user => {
     if (user) {
@@ -96,6 +68,23 @@ export class App extends Component {
     }
   }
 
+  handleSignIn = () => {
+    this.setState({
+      authLoading: true
+    });
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase.auth().signInWithRedirect(provider);
+  }
+
+  componentDidMount() {
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().languageCode = 'en';
+    firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
+  }
+
+
+
+
   render() {
     const { currentUser, authError, appError } = this.state;
 
@@ -103,10 +92,11 @@ export class App extends Component {
 
     if (this.state.authLoading === true) {
       return (
-        <Login google={this.handleSignInButtonClicked} />
+        <Login google={this.handleSignIn} />
       )
     } else {
       console.log(this.state.currentUser)
+      //console.log(SystemAPI.getApi().getPerson(10004))
       return (
 
         <div>
@@ -126,14 +116,15 @@ export class App extends Component {
                 <Route path={'/about'} element={<About />} />
                 <Route path={'/profil'} element={<Profil />} />
               </Routes>
-              <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+              <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignIn} />
               <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
             </Container>
           </Router>
         </div >
       );
-    };
+    }
   }
 }
+
 
 export default App;

@@ -28,7 +28,7 @@ def secured(function):
 
                     if user is not None:
                         user.set_user_name(user_name)
-                        user.set_email(email)
+                        user.set_mail_address(email)
                         s_adm.save_person(user)
 
                     else:
@@ -42,6 +42,7 @@ def secured(function):
 
             except ValueError as exception:
                 error_message = str(exception)
+                print(exception)
                 return exception, 401  # UNAUTHORIZED!
 
         return '', 401  # UNAUTHORIZED!

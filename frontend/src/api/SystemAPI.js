@@ -29,7 +29,7 @@ export default class SystemAPI {
 
     static #api = null;
 
-    #bankServerBaseURL = '/bank'
+    #bankServerBaseURL = '/timesystem'
 
 
 
