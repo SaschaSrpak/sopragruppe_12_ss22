@@ -40,7 +40,7 @@ export class Projektwahl extends Component {
 
     // componentDidMount funktion zum Laden der Projekte
     componentDidMount() {
-        SystemAPI.getApi().getProjects().then(projects => {
+        SystemAPI.getAPI().getProjects().then(projects => {
             this.setState({
                 projects: projects
             })
