@@ -9,6 +9,7 @@ export class Home extends Component {
 
 
     render() {
+
         return (
                 <div >
                 <p> wir sind auf der homepage</p>
