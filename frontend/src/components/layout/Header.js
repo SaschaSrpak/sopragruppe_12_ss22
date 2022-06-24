@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Appbar from '@mui/material/AppBar';
 import { Toolbar, Typography, Box, Drawer, List } from '@mui/material';
 import ProfileDropDown from '../Dienste/Profildropdown';

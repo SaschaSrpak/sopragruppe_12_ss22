@@ -1,11 +1,7 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
+import { Popover, IconButton, Avatar, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
-import { Navigate } from 'react-router-dom';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useNavigate } from 'react-router-dom';
 import Profil from '../pages/Profil';
 
 /**
@@ -52,6 +48,7 @@ class ProfileDropDown extends Component {
             open: false
         });
     }
+    
 
 
     /** 
@@ -71,6 +68,8 @@ class ProfileDropDown extends Component {
     render() {
         const { user } = this.props;
         const { open } = this.state;
+
+        console.log(this.props.user)
 
         return (
             user ?
@@ -98,12 +97,12 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
                                     <Divider sx={{ margin: 1 }} />
-                                    <Profil />
+                                    <Profil user={user}/>
                                     <Divider sx={{ margin: 1 }} />
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
                                 </Grid>
                             </Grid>
-                        </Paper>
+                           </Paper>
 
                     </Popover>
                 </div>

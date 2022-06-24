@@ -37,7 +37,7 @@ class Profil extends Component {
             mail_address: ma,
             user_name: un,
             manager_status: ms,
-            open: false,
+            
             updatingInProgress: false,
             updatingError: null,
 
@@ -45,21 +45,17 @@ class Profil extends Component {
 
         this.baseState = this.state;
 
-        console.log("hallo")
+        console.log("hallo neuer Dude")
     }
 
     handleClickOpen = () => {
-        this.getPerson();
+
         this.setState({
             open: !this.state.open
         });
     }
 
-    handleClose = () => {
-        this.setState({
-            open: false
-        });
-    }
+  
 
     handleChange = (event) => {
         console.log(event.target.value)
@@ -90,41 +86,41 @@ class Profil extends Component {
     }
 
     componentDidMount() {
-
+        this.getPerson();
     }
 
     updatePerson = () => {
         let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
         updatedPerson.setSurname(this.state.surname);
+        updatedPerson.setManager_status(this.state.manager_status)
         SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
             this.setState({
 
             })
         });
         this.baseState.name = this.state.name;
-        this.handleClose();
+
+        this.props.handleClose();
     }
 
 
     render() {
 
-        const { open } = this.state;
-        const { user } = this.props;
+        
+        const { open } = this.props;
         const { name, surname, mail_address, user_name, manager_status } = this.state;
 
         return (
 
             <React.Fragment>
-                <Button onClick={this.handleClickOpen}>
-                    Profil
-                </Button>
-                <Dialog open={open} onClose={this.handleClose}>
+               
+                <Dialog open={open} onClose={this.props.handleClose}>
                     <DialogTitle>Profil</DialogTitle>
 
                     <DialogContent>
                         <DialogContentText>
-                            Profil anschauen und deinen Username bearbeiten.
+                            Bitte Vervollständige dein Profil noch!
                         </DialogContentText>
 
                         <TextField
@@ -192,7 +188,7 @@ class Profil extends Component {
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
                                 value={manager_status}
-                                disabled
+                                
                                 onChange={this.handleChangeDrop}
                             >
 
@@ -203,7 +199,7 @@ class Profil extends Component {
 
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose}>Cancel</Button>
+                        <Button onClick={this.props.handleClose}>Cancel</Button>
                         <Button onClick={this.updatePerson}>Save</Button>
                     </DialogActions>
                 </Dialog >
