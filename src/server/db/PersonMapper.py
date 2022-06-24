@@ -66,7 +66,7 @@ class PersonMapper(Mapper):
 
         return result
 
-    def find_by_firebase_id(self, firebase_id):
+    def find_person_by_firebase_id(self, firebase_id):
         result = None
 
         cursor = self._cnx.cursor()
