@@ -15,6 +15,7 @@ import { touchRippleClasses } from '@mui/material';
 import { applyActionCode } from 'firebase/auth';
 import { breakpoints } from '@mui/system';
 import SystemAPI from '../../api/SystemAPI';
+import KommenBO from '../../api/Ereignisse/KommenBO';
 
 /** 
  *@fileOverview 
@@ -32,13 +33,17 @@ export class Buchungen extends Component{
   }
 
 
-  kommenButtonClicked = (event) =>{
-    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID()).then(personBO =>
+  kommenButtonClicked = event =>{
+    let newKommen = new KommenBO();
+    newKommen.event_name = "";
+    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
+    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
       this.setState({
 
       })
       )
   }
+
 
   aktivitätBuchen = () => {
 

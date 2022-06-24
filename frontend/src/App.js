@@ -146,7 +146,7 @@ export class App extends Component {
                   <Navigate replace to={'/home'} />
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
-                <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/buchungen'} element={<Buchungen person={this.state.person}/>} />
                 <Route path={'/auslese'} element={<Auslese />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
                 <Route path={'/projektewahl'} element={<Projektwahl />} />
