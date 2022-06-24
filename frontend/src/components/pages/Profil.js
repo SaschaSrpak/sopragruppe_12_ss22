@@ -72,6 +72,14 @@ class Profil extends Component {
             manager_status: event.target.value,
         })
     }
+    
+    getPerson = () => {
+        SystemAPI.getApi().getPersonbyfirebaseID()
+        .then(PersonBO =>
+            this.setState({
+                person: PersonBO,
+            }))
+    }
 
     updatePerson = () => {
         let updatedPerson = Object.assign(new PersonBO(), this.props.person)
