@@ -88,11 +88,11 @@ export default class SystemAPI {
 
     //Commit-Transaction related
 
-    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}`
-    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`
+    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}`;
+    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`;
     #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#SystemServerBaseURL}
                                                                              /commit-pause-transaction/${account_id}/
-                                                                             ${name}/${start_time}/${end_time}`
+                                                                             ${name}/${start_time}/${end_time}`;
 
     #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>
                                                                             `${this.#SystemServerBaseURL}

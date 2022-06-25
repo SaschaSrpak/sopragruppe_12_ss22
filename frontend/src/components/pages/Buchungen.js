@@ -40,7 +40,8 @@ export class Buchungen extends Component{
     newKommen.event_name = "kommen";
     newKommen.time_of_event = new Date().toISOString().slice(0, -5);
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
-        SystemAPI.getAPI().commitKommenTransaction(result , newKommen)
+        console.log(result.id)
+        SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
     })
 
 
