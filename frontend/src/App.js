@@ -107,7 +107,6 @@ export class App extends Component {
       )
     } else {
       console.log(this.state.currentUser)
-      console.log(SystemAPI.getApi().getPerson(10004))
       return (
 
         <div>

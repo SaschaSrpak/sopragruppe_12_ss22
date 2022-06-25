@@ -31,7 +31,7 @@ export class Auslese extends Component {
 
   }
 
-  onExpandedStateChange = kommen => {
+  /*onExpandedStateChange = kommen => {
     
     let newID = null;
 
@@ -42,7 +42,7 @@ export class Auslese extends Component {
     this.setState({
       expandedKommenID: newID,
     });
-  }
+    */
 
     render() {
         return (
@@ -92,7 +92,6 @@ export class Auslese extends Component {
                 <Typography>Kommen</Typography>
               </AccordionSummary>
               <AccordionDetails>
-              <Listen show={expandedState} kommen={kommen} />
               <ButtonGroup variant='text' size='small' style={{alignItems: "right"}}>
                   <Button color='primary' onClick={""}>
                     edit
