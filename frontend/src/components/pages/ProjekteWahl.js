@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl, Menu } from "@mui/material";
-// import ProjektBO from ".../api/ProjektBO";
+import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl } from "@mui/material";
+import SystemAPI from "../../api/SystemAPI";
+
 
 /**
  * @fileOverview Projekte können hier ausgewählt oder neue erstellt werden.
@@ -10,15 +11,15 @@ import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Se
 
 
 // Test Liste, um die Projektauswahl zu testen
-const TestProjekte = [
-    'Projekt 1',
-    'Projekt 2',
-    'Projekt 3',
-    'Projekt 4',
-    'Projekt 5',
-    'Projekt 6',
-    'Projekt 7',
-];
+// const TestProjekte = [
+//     'Projekt 1',
+//     'Projekt 2',
+//     'Projekt 3',
+//     'Projekt 4',
+//     'Projekt 5',
+//     'Projekt 6',
+//     'Projekt 7',
+// ];
 
 
 // Work in Progress
@@ -32,21 +33,32 @@ export class Projektwahl extends Component {
         super(props);
         this.state = {
             name: null,
+            projects: [],
+            selectedProjects: null,
         }
     }
 
     // componentDidMount funktion zum Laden der Projekte
-    // componentDidMount() {
-    //     ProjektBO.getName().then((response) => {
-    //             this.setState({
-    //                 name: response
-    //             })
-    //         }
-    //     )
-    // }
+    componentDidMount() {
+        SystemAPI.getAPI().getProjects().then(projects => {
+            this.setState({
+                projects: projects
+            })
+        })
+    }
+
+    handleChange = event => {
+        this.setState({
+            selectedProjects: event.target.value
+        })
+    }
 
 // rendert die Projekte aus der Liste
     render () {
+        const {projects, selectedProjects} = this.state;
+
+
+
         return (
             <Paper sx={{
                 textAlign: 'center',
@@ -63,19 +75,21 @@ export class Projektwahl extends Component {
                     <FormControl sx={{ minWidth: 200 }}>
                         <InputLabel>Projekte</InputLabel>
                         <Select
+                            value={selectedProjects}
+                            onChange={this.handleChange}
                             label="Projekte"
                         >
-                            {
-                                TestProjekte.map((projekt) => {
-                                    return (
-                                        <MenuItem key={projekt} value={projekt}>{projekt}</MenuItem>
-                                    )
-                                }
-                            )}
+                            {projects.map((project) => {
+                                return (
+                                <MenuItem key={project.id} value={project.id}>
+                                    {project.name}
+                                </MenuItem>)
+                            })}
                         
                         </Select>
                     </FormControl>
                 </Box>
+                
                 <Button variant="contained" sx={{
                     margin: "20px",
                 }}>
@@ -84,6 +98,9 @@ export class Projektwahl extends Component {
                     }}
                     >Auswählen</Typography>
                 </Button>
+
+
+
 {/** Trennlinie aus Material-UI, ähnlich <hr> */}
                 <Divider sx={{
                     margin: "10px",

@@ -16,7 +16,8 @@ import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
-import {SystemAPI} from "./api";
+import { SystemAPI } from "./api";
+import ProfilRegistrierung from './components/pages/ProfilRegristrierung';
 
 
 
@@ -31,6 +32,8 @@ export class App extends Component {
       authError: null,
       newUser: false,
       authLoading: true,
+      open: false,
+      person: null,
     };
   }
 
@@ -68,23 +71,33 @@ export class App extends Component {
       });
   }
 
-  handleAuthStateChange = user => {
+  handleAuthStateChange = (user) => {
     if (user) {
-
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
+        SystemAPI.getAPI().getPersonByFirebaseID(user.uid).then(person => {
 
-        this.setState({
-          currentUser: user,
-          authError: null,
-          authLoading: false
-        });
+          let open = false
+          console.log(person)
+          
+          if(person.name === "Vorname") {
+            console.log("checkuser")
+            open = true
+          }
+          this.setState({
+            currentUser: user,
+            open: open,
+            person: person,
+            authError: null,
+            authLoading: false
+          });
+        })
       }).catch(e => {
         this.setState({
           authError: e,
           authLoading: true
         });
-      });
+      })
     } else {
       // User has logged out, so clear the id token
       document.cookie = 'token=;path=/';
@@ -97,10 +110,22 @@ export class App extends Component {
     }
   }
 
+  checkNewUser = () => {
+    if (this.state.person.name === "Vorname") {
+      console.log("checkuser")
+      this.setState({
+        open: true
+      })
+    }
+  }
+
+
+
   render() {
-    const { currentUser, authError, appError } = this.state;
-    
-    
+    const { currentUser, authError, appError, open, person } = this.state;
+
+
+
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
@@ -114,12 +139,13 @@ export class App extends Component {
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
+              {person ? <ProfilRegistrierung user={currentUser} open={open} handleClose={() => this.setState({ open: false })} /> : null}
               <Routes>
                 <Route path='/static/reactclient' element={
                   <Navigate replace to={'/home'} />
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
-                <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/buchungen'} element={<Buchungen person={this.state.person}/>} />
                 <Route path={'/auslese'} element={<Auslese />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
                 <Route path={'/projektewahl'} element={<Projektwahl />} />
@@ -135,5 +161,6 @@ export class App extends Component {
     };
   }
 }
+
 
 export default App;
