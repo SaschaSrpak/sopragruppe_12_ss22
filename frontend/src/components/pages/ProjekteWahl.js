@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { MenuItem, Paper, TextField, Typography, Button, Divider, InputLabel, Select, Box, FormControl } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import Paper from "@mui/material/Paper";
 import SystemAPI from "../../api/SystemAPI";
 
 
@@ -35,10 +43,11 @@ export class Projektwahl extends Component {
             name: null,
             projects: [],
             selectedProjects: null,
+            projectChoice: null,
         }
     }
 
-    // componentDidMount funktion zum Laden der Projekte
+// componentDidMount funktion zum Laden der Projekte
     componentDidMount() {
         SystemAPI.getAPI().getProjects().then(projects => {
             this.setState({
@@ -47,11 +56,26 @@ export class Projektwahl extends Component {
         })
     }
 
+// Projektauswahl wird angezeigt
     handleChange = event => {
         this.setState({
             selectedProjects: event.target.value
         })
+        // console.log(this.state.selectedProjects)
     }
+
+// Beim betätigen von "Auswählen" wird das Projekt in projectChoice gespeichert (work in progress)
+    handleChoseClick = () => {
+        this.setState({
+            projectChoice: this.state.selectedProjects
+        })
+        // console.log(this.state.projectChoice)
+    }
+
+
+        ////// TO DO: Conditional Rendering -> Sobald ein Projekt mit "Auswählen" bestätigt wird,
+        ////// wird das Projekt in projectChoice gespeichert und das Projekt wird angezeigt.
+
 
 // rendert die Projekte aus der Liste
     render () {
@@ -70,7 +94,6 @@ export class Projektwahl extends Component {
                     textAlign: 'center',
                     margin: "5px",
                 }}>Projektwahl</Typography>
-{/** Projektauswahl -> Mapping aus TestArray */}
                 <Box>
                     <FormControl sx={{ minWidth: 200 }}>
                         <InputLabel>Projekte</InputLabel>
@@ -90,7 +113,11 @@ export class Projektwahl extends Component {
                     </FormControl>
                 </Box>
                 
-                <Button variant="contained" sx={{
+                <Button  
+                    onClick={this.handleChoseClick}
+                    id={this.state.selectedProjects}
+                    variant="contained" 
+                    sx={{
                     margin: "20px",
                 }}>
                     <Typography sx={{
@@ -98,15 +125,14 @@ export class Projektwahl extends Component {
                     }}
                     >Auswählen</Typography>
                 </Button>
-
-
-
-{/** Trennlinie aus Material-UI, ähnlich <hr> */}
                 <Divider sx={{
                     margin: "10px",
                 }}/>
                 
-{/** Button zum Erstellen eines neuen Projekts */}
+
+
+                
+{/** TO DO: Button zum Erstellen eines neuen Projekts */}
                 <Button variant="contained" sx={{
                     margin: "20px",
                 }}>
@@ -115,6 +141,9 @@ export class Projektwahl extends Component {
                     }}
                     >Neues Projekt</Typography>
                 </Button>
+
+
+
             </Paper>
         )
     }
