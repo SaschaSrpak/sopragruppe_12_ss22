@@ -607,6 +607,7 @@ export default class SystemAPI {
   //Commit-Transaction related Functions
 
   commitKommenTransaction(account_id, kommenBO) {
+        console.log(account_id, kommenBO)
         return this.#fetchAdvanced(this.#commitKommenTransactionURL(account_id), {
             method: 'POST',
             headers: {

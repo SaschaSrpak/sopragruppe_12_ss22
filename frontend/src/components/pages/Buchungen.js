@@ -16,6 +16,7 @@ import { applyActionCode } from 'firebase/auth';
 import { breakpoints } from '@mui/system';
 import SystemAPI from '../../api/SystemAPI';
 import KommenBO from '../../api/Ereignisse/KommenBO';
+import PersonBO from '../../api/PersonBO';
 
 /** 
  *@fileOverview 
@@ -33,15 +34,16 @@ export class Buchungen extends Component{
   }
 
 
+
   kommenButtonClicked = event =>{
     let newKommen = new KommenBO();
-    newKommen.event_name = "";
+    newKommen.event_name = "kommen";
     newKommen.time_of_event = new Date().toISOString().slice(0, -5);
-    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
-      this.setState({
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        SystemAPI.getAPI().commitKommenTransaction(result , newKommen)
+    })
 
-      })
-      )
+
   }
 
 

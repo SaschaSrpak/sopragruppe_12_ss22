@@ -983,6 +983,8 @@ class KommenOperations(Resource):
     @timesystem.expect(kommen)
     @secured
     def post(self, account_id):
+        print(account_id)
+        print(api.payload)
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
         account = s_adm.get_time_account_by_key(account_id)
@@ -1281,6 +1283,10 @@ class CommitWorktimeTransaction(Resource):
         else:
             return 'Account not found', 200
 
+sy = SystemAdministration()
+print(sy.get_all_persons())
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
