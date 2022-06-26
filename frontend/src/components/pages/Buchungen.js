@@ -9,7 +9,10 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import SystemAPI from '../../api/SystemAPI';
 import KommenBO from '../../api/Ereignisse/KommenBO';
+import GehenBO from '../../api/Ereignisse/GehenBO';
+import PersonBO from '../../api/PersonBO';
 import { PauseBO } from '../../api';
+
 
 /** 
  *@fileOverview 
@@ -44,12 +47,33 @@ export class Buchungen extends Component{
   kommenButtonClicked = event =>{
     let newKommen = new KommenBO();
     newKommen.event_name = "kommen";
-    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
-       SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+    newKommen.time_of_event = this.getLocalTime();
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
         console.log(result.id)
         SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
     })
+
+
   }
+
+    gehenButtonClicked = event =>{
+    let newGehen = new GehenBO();
+    newGehen.event_name = "gehen";
+    newGehen.time_of_event = this.getLocalTime();
+
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        console.log(result.id)
+        SystemAPI.getAPI().commitGehenTransaction(result.id , newGehen)
+    })
+
+
+  }
+    getLocalTime = () => {
+      var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+      var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
+      console.log(localISOTime)
+    return localISOTime
+    }
   
 
   componentDidMount() {
@@ -76,30 +100,7 @@ export class Buchungen extends Component{
     
 
   }
-
-    gehenButtonClicked = event =>{
-    let newKommen = new KommenBO();
-    newKommen.event_name = "kommen";
-    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
-
-    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
-        console.log(result.id)
-        SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
-    })
-
-
-  }
-
-
-
-
   
-  
-
-
-
-
-
     render(){
       const {activities, selectedActivities} = this.state;
       return(

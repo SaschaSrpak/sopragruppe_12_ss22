@@ -968,7 +968,7 @@ class SystemAdministration(object):
             return mapper.insert(transaction)
 
     def book_gehen_event(self, account, name, time):
-        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S')
         account = self.get_time_account_by_key(account)
         kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         kommen_events = []
