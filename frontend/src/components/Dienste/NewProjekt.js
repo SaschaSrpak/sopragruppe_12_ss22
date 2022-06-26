@@ -18,12 +18,12 @@ export class NewProjekt extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: null,
-            creator: null,
-            client: null,
-            description: null,
-            set_deadline: null,
-            project_duration: null,
+            name: "",
+            creator: "",
+            client: "",
+            description: "",
+            set_deadline: "2022-07-04T12:00",
+            project_duration: "",
             activities: [],
             persons_responsible: [],
         }
@@ -115,7 +115,6 @@ export class NewProjekt extends Component {
                         id="set_deadline"
                         label="Deadline"
                         type="datetime-local"
-                        defaultValue="2022-07-04T12:00"
                         fullWidth
                         variant="standard"
                         value={set_deadline} 

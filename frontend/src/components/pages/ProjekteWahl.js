@@ -46,6 +46,7 @@ export class Projektwahl extends Component {
             projects: [],
             selectedProjects: null,
             projectChoice: null,
+            open: false,
         }
     }
 
@@ -93,8 +94,7 @@ export class Projektwahl extends Component {
 
 // rendert die Projekte aus der Liste
     render () {
-        const {projects, selectedProjects} = this.state;
-        const {open} = this.state;
+        const {projects, selectedProjects, open} = this.state;
 
 
         return (
