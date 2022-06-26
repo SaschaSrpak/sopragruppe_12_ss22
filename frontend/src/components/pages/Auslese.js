@@ -1,21 +1,48 @@
 import React, { Component } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { Button, ButtonGroup } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
+import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PropTypes from 'prop-types';
+import SystemAPI from '../../api/SystemAPI';
+import Listen from '../pages/Listen'
 
 /** 
  *@fileOverview 
- *@author
+ *@author Kim Kausler
 */
 
 export class Auslese extends Component {
+  constructor(props){
+    super(props);
 
+    let KommenID = null;
 
+    if (this.state) {
+      KommenID = this.state.expandedKommenID;
+    }
+
+    this.state ={
+      Error: false,
+      Loader: false,
+      expandedKommenID: KommenID,
+    }
+
+  }
+
+  /*onExpandedStateChange = kommen => {
+    
+    let newID = null;
+
+    if (kommen.getKommen() !== this.state.expandedKommenID) {
+      
+      newID = kommen.getKommen();
+    }
+    this.setState({
+      expandedKommenID: newID,
+    });
+    */
 
     render() {
         return (
@@ -28,6 +55,14 @@ export class Auslese extends Component {
                 <Typography> Arbeitszeiten</Typography>
               </AccordionSummary>
               <AccordionDetails>
+              <ButtonGroup variant='text' size='small' style={{textAlign: "right"}}>
+                  <Button color='primary' onClick={""}>
+                    edit
+                  </Button>
+                  <Button color='secondary' onClick={""}>
+                    delete
+                  </Button>
+                </ButtonGroup>
               </AccordionDetails>
             </Accordion>
 
@@ -38,6 +73,14 @@ export class Auslese extends Component {
                 <Typography>Pause</Typography>
               </AccordionSummary>
               <AccordionDetails>
+              <ButtonGroup variant='text' size='small' style={{textAlign: "right"}}>
+                  <Button color='primary' onClick={""}>
+                    edit
+                  </Button>
+                  <Button color='secondary' onClick={""}>
+                    delete
+                  </Button>
+                </ButtonGroup>
               </AccordionDetails>
             </Accordion>
 
@@ -49,8 +92,17 @@ export class Auslese extends Component {
                 <Typography>Kommen</Typography>
               </AccordionSummary>
               <AccordionDetails>
+              <ButtonGroup variant='text' size='small' style={{alignItems: "right"}}>
+                  <Button color='primary' onClick={""}>
+                    edit
+                  </Button>
+                  <Button color='secondary' onClick={this.deleteKommenButtonClicked}>
+                    delete
+                  </Button>
+                </ButtonGroup>
               </AccordionDetails>
             </Accordion>
+            
 
             <Accordion>
               <AccordionSummary
@@ -59,6 +111,14 @@ export class Auslese extends Component {
                <Typography>Gehen</Typography>
               </AccordionSummary>
               <AccordionDetails>
+              <ButtonGroup variant='text' size='small' style={{textAlign: "right"}}>
+                  <Button color='primary' onClick={""}>
+                    edit
+                  </Button>
+                  <Button color='secondary' onClick={""}>
+                    delete
+                  </Button>
+                </ButtonGroup>
               </AccordionDetails>
             </Accordion>
             

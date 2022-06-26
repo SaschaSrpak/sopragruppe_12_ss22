@@ -7,17 +7,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import Error from '../Zwischenelemente/Error';
-import Loader from '../Zwischenelemente/Loader'
-import { touchRippleClasses } from '@mui/material';
-import { applyActionCode } from 'firebase/auth';
-import { breakpoints } from '@mui/system';
 import SystemAPI from '../../api/SystemAPI';
 import KommenBO from '../../api/Ereignisse/KommenBO';
 import GehenBO from '../../api/Ereignisse/GehenBO';
 import PersonBO from '../../api/PersonBO';
+import { PauseBO } from '../../api';
+
 
 /** 
  *@fileOverview 
@@ -30,8 +25,21 @@ export class Buchungen extends Component{
     super(props);
     this.kommen = null;
     this.gehen = null;
+    
 
-    this.state = {btnText: "Kommen",};
+    this.state = {
+      activities: [], 
+      selectedActivities: null,
+      activity: props.activity,
+      buchung: null,
+      beginnA: null, 
+      endeA: null,
+      pause: null,
+      beginnP: null, 
+      endeP: null, 
+    }
+
+    this.baseState = this.state;
   }
 
 
@@ -66,39 +74,33 @@ export class Buchungen extends Component{
       console.log(localISOTime)
     return localISOTime
     }
+  
 
+  componentDidMount() {
+    SystemAPI.getAPI().getActivities().then(activities => {
+        this.setState({
+            activities: activities
+        })
+    })
+  }
 
-  aktivitätBuchen = () => {
+  handleChange = event => {
+    this.setState({
+        selectedActivities: event.target.value
+    })
+  }
+
+  bookBuchung = () => {
+     
+  }
+
+  bookPauseBuchen = event => {
+    
 
   }
-/* 
-    getZeitkonto(){
-
-    }
-
-    getZeitintervall(){
-
-    }
-
-    handleClick = () => {
-      let btnText = this.state.btnText == "Kommen" ? "Gehen" : "Kommen"
-      this.setState({btnText: btnText})
-      this.changeState();
-      let zeitstempel = new Date();
-      
-      switch(this.state.changeState){
-        case false:
-          this.Kommen = new KommenBuchungBO(zeitstempel);
-          break;
-        case true:
-          this.Gehen = new GehenBuchungBO(zeitstempel);
-          break;
-          default: 
-          break;
-        }
-
-    } */
+  
     render(){
+      const {activities, selectedActivities} = this.state;
       return(
           <div>
                   <div style={{textAlign: "center"}}>
@@ -110,7 +112,6 @@ export class Buchungen extends Component{
   
                   <Divider sx={{margin:"20px"}}/>
               
-              
                   <Stack 
                   direction={{ sm: 'row' }}
                   >
@@ -120,13 +121,17 @@ export class Buchungen extends Component{
                       id="Aktivität"
                       label="Aktivität"
                       >
-                        <MenuItem value={10}>Eins</MenuItem>
-                        <MenuItem value={20}>Zwei</MenuItem>
-                        <MenuItem value={30}>Drei</MenuItem>
+                        {activities.map((activity) => {
+                        return (
+                        <MenuItem key={activity.id} value={activity.id}>
+                            {activity.name}
+                        </MenuItem>)
+                        })}
                       </Select>
+                    <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung"/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained" > Buchen </Button>
+                    <Button variant="contained" >  Aktivität Buchen </Button>
                     </FormControl>
                     </Stack>
               
@@ -137,9 +142,10 @@ export class Buchungen extends Component{
                   >
                     <FormControl fullWidth>
                     <h2>Pause</h2>
+                    <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained"> Buchen </Button>
+                    <Button variant="contained"> Pause Buchen </Button>
                     </FormControl>
                   </Stack>
           </div>
