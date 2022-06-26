@@ -88,13 +88,8 @@ componentDidMount() {
         })
 
     })})
-
-             console.log(activities)
-    })})
-
-
   }
-
+    
   handleChange = event => {
     this.setState({
         selectedActivities: event.target.value
@@ -109,10 +104,6 @@ componentDidMount() {
   }
 
 
-
-  
-
-  bookBuchung = () => {
     bookBuchung = event => {
     console.log(this.state.selectedActivities)
         console.log(this.state.beginnA)
@@ -123,8 +114,7 @@ componentDidMount() {
           SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA, this.state.endeA )
       })
     }
-
-
+  
   
     render(){
       const {activities, selectedActivities} = this.state;
@@ -157,7 +147,7 @@ componentDidMount() {
                         })}
                       </Select>
 
-                    <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung" onChange={(event) => this.setState({activitydescription: event.target.value})}/>
+                    <TextField required id="outlined-required" label="Aktivitätsbeschreibung"  onChange={(event) => this.setState({activitydescription: event.target.value})}/>
                     <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Beginn"  onChange={(event) => this.setState({beginnA: event.target.value})} InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Ende" onChange={(event) => this.setState({endeA: event.target.value})} InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained" onClick={() => this.bookBuchung()}>  Aktivität Buchen </Button>
@@ -172,7 +162,7 @@ componentDidMount() {
                   >
                     <FormControl fullWidth>
                     <h2>Pause</h2>
-                    <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
+                    <TextField required id="outlined-required" label="Pausenbeschreibung"/>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="datetime-local" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="datetime-local" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained"> Pause Buchen </Button>
