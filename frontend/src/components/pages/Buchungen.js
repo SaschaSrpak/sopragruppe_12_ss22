@@ -70,12 +70,8 @@ export class Buchungen extends Component{
      
   }
 
-  bookPause = () => {
-    SystemAPI.getAPI().getAccount().getPersonByFirebaseID(this.props.user.uid)
-      .then(PauseBO)
-        this.setState({
-          
-        })
+  bookPauseBuchen = event => {
+    
 
   }
 
@@ -134,7 +130,7 @@ export class Buchungen extends Component{
                     <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung"/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained" > Buchen </Button>
+                    <Button variant="contained" >  Aktivität Buchen </Button>
                     </FormControl>
                     </Stack>
               
@@ -148,7 +144,7 @@ export class Buchungen extends Component{
                     <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained"> Buchen </Button>
+                    <Button variant="contained"> Pause Buchen </Button>
                     </FormControl>
                   </Stack>
           </div>
