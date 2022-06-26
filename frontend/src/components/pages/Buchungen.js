@@ -39,8 +39,7 @@ export class Buchungen extends Component{
   kommenButtonClicked = event =>{
     let newKommen = new KommenBO();
     newKommen.event_name = "kommen";
-    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
-
+    newKommen.time_of_event = this.getLocalTime();
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
         console.log(result.id)
         SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
@@ -52,7 +51,7 @@ export class Buchungen extends Component{
     gehenButtonClicked = event =>{
     let newGehen = new GehenBO();
     newGehen.event_name = "gehen";
-    newGehen.time_of_event = new Date().toISOString().slice(0, -5);
+    newGehen.time_of_event = this.getLocalTime();
 
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
         console.log(result.id)
@@ -61,6 +60,13 @@ export class Buchungen extends Component{
 
 
   }
+    getLocalTime = () => {
+      var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+      var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
+      console.log(localISOTime)
+    return localISOTime
+    }
+
 
   aktivitätBuchen = () => {
 
