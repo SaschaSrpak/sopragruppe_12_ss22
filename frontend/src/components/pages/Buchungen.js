@@ -31,15 +31,8 @@ export class Buchungen extends Component{
       activities: [], 
       selectedActivities: null,
       activity: props.activity,
-      buchung: null,
-      beginnA: null, 
-      endeA: null,
-      pause: null,
-      beginnP: null, 
-      endeP: null, 
     }
 
-    this.baseState = this.state;
   }
 
 
@@ -67,7 +60,7 @@ export class Buchungen extends Component{
     })
 
 
-  }
+    }
     getLocalTime = () => {
       var tzoffset = (new Date()).getTimezoneOffset() * 60000;
       var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
@@ -93,6 +86,17 @@ export class Buchungen extends Component{
   }
 
   bookBuchung = () => {
+
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.selectedActivities)
+    })
+  }
+
+
+
+  
+
+  bookBuchung = () => {
      
   }
 
@@ -100,6 +104,8 @@ export class Buchungen extends Component{
     
 
   }
+
+  
   
     render(){
       const {activities, selectedActivities} = this.state;
@@ -123,16 +129,16 @@ export class Buchungen extends Component{
                       id="Aktivität"
                       label="Aktivität"
                       >
-                        {activities.map((activity) => {
+                        {activities.map((activities) => {
                         return (
-                        <MenuItem key={activity.id} value={activity.id}>
-                            {activity.name}
+                        <MenuItem key={activities.id} value={activities.id}>
+                            {activities.activity_name}
                         </MenuItem>)
                         })}
                       </Select>
                     <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung"/>
-                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Beginn" InputLabelProps={{shrink: true,}}/>
-                    <TextField id="outlined-basic"  variant="outlined" type="time" label="Ende" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Beginn" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Ende" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained" >  Aktivität Buchen </Button>
                     </FormControl>
                     </Stack>
@@ -145,8 +151,8 @@ export class Buchungen extends Component{
                     <FormControl fullWidth>
                     <h2>Pause</h2>
                     <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
-                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
-                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="datetime-local" InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="datetime-local" InputLabelProps={{shrink: true,}}/>
                     <Button variant="contained"> Pause Buchen </Button>
                     </FormControl>
                   </Stack>
