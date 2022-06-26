@@ -9,6 +9,8 @@ import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Paper from "@mui/material/Paper";
 import SystemAPI from "../../api/SystemAPI";
+import { Dialog } from "@mui/material";
+import NewProjekt from "../Dienste/NewProjekt";
 
 
 /**
@@ -36,7 +38,7 @@ import SystemAPI from "../../api/SystemAPI";
 
 export class Projektwahl extends Component {
 
-// Constructor für die Projekte, die ausgelesen werden
+// Constructor
     constructor(props) {
         super(props);
         this.state = {
@@ -72,6 +74,18 @@ export class Projektwahl extends Component {
         // console.log(this.state.projectChoice)
     }
 
+    handleClickOpen = () => {
+        this.setState({
+            open: true,
+        });
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false,
+        });
+    }
+
 
         ////// TO DO: Conditional Rendering -> Sobald ein Projekt mit "Auswählen" bestätigt wird,
         ////// wird das Projekt in projectChoice gespeichert und das Projekt wird angezeigt.
@@ -80,7 +94,7 @@ export class Projektwahl extends Component {
 // rendert die Projekte aus der Liste
     render () {
         const {projects, selectedProjects} = this.state;
-
+        const {open} = this.state;
 
 
         return (
@@ -133,14 +147,22 @@ export class Projektwahl extends Component {
 
                 
 {/** TO DO: Button zum Erstellen eines neuen Projekts */}
-                <Button variant="contained" sx={{
+                <Button variant="contained" 
+                    onClick={this.handleClickOpen}
+                    value={this.state.open}
+                    sx={{
                     margin: "20px",
-                }}>
+                    }}>
                     <Typography sx={{
                         fontWeight: "bold",
                     }}
                     >Neues Projekt</Typography>
                 </Button>
+                <Dialog open={open} onClose={this.handleClose}
+                >
+                    {/** open prop wird an "NewProject" übergeben */}
+                    <NewProjekt open={this.props} />
+                </Dialog>
 
 
 
