@@ -88,7 +88,7 @@ export default class SystemAPI {
 
     //Commit-Transaction related
 
-    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}`;
+    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}/`;
     #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`;
     #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#SystemServerBaseURL}
                                                                              /commit-pause-transaction/${account_id}/
@@ -104,7 +104,7 @@ export default class SystemAPI {
     // End-Event related
 
     #getEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
-    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
+    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;S
     #updateEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
 
     // End-Event Transaction related

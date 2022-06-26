@@ -981,7 +981,7 @@ class KommenTransactionOperations(Resource):
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen)
-    @secured
+    #@secured
     def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
