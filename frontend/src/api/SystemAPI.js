@@ -94,11 +94,7 @@ export default class SystemAPI {
                                                                              /commit-pause-transaction/${account_id}/
                                                                              ${name}/${start_time}/${end_time}`;
 
-    #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>
-                                                                            `${this.#SystemServerBaseURL}
-                                                                            /commit-pause-transaction/${account_id}/
-                                                                            ${name}/${activity_id}/${start_time}/
-                                                                            ${end_time}`
+    #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>`${this.#SystemServerBaseURL}/commit-worktime-transaction/${account_id}/${name}/${activity_id}/${start_time}/${end_time}`;
 
 
     // End-Event related
@@ -186,6 +182,7 @@ export default class SystemAPI {
     #deleteProjectDurationURL = (id) => `${this.#SystemServerBaseURL}/project_duration/${id}`;
     #updateProjectDurationURL = (id) => `${this.#SystemServerBaseURL}/project_duration/${id}`;
     #addProjectDurationURL = () => `${this.#SystemServerBaseURL}/project_duration`;
+
 
 
 
@@ -653,6 +650,7 @@ export default class SystemAPI {
   }
 
   commitProjectWorktimeTransaction(account_id, name, activity_id, start_time, end_time) {
+        console.log(account_id, name, activity_id, start_time, end_time)
         return this.#fetchAdvanced(this.#commitProjectWorktimeTransactionURL(account_id, name, activity_id,
             start_time, end_time), {
             method: 'POST',

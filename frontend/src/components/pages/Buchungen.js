@@ -25,15 +25,24 @@ export class Buchungen extends Component{
     super(props);
     this.kommen = null;
     this.gehen = null;
+
     
 
     this.state = {
       activities: [], 
       selectedActivities: null,
       activity: props.activity,
+      buchung: null,
+      beginnA: null, 
+      endeA: null,
+      pause: null,
+      beginnP: null, 
+      endeP: null,
+      activitydescription: null
     }
 
   }
+
 
 
 
@@ -67,16 +76,23 @@ export class Buchungen extends Component{
       console.log(localISOTime)
     return localISOTime
     }
-  
 
-  componentDidMount() {
+
+componentDidMount() {
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=> {
         console.log(result.id)
          SystemAPI.getAPI().getActivitiesForPerson(result.id).then((activities) => {
             this.setState({
             activities: activities
+
         })
+
     })})
+
+             console.log(activities)
+    })})
+
+
   }
 
   handleChange = event => {
@@ -84,7 +100,7 @@ export class Buchungen extends Component{
         selectedActivities: event.target.value
     })
   }
-
+  
   bookBuchung = () => {
 
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
@@ -97,15 +113,18 @@ export class Buchungen extends Component{
   
 
   bookBuchung = () => {
-     
-  }
+    bookBuchung = event => {
+    console.log(this.state.selectedActivities)
+        console.log(this.state.beginnA)
+        console.log(this.state.activitydescription)
+        console.log(this.state.endeA)
 
-  bookPauseBuchen = event => {
-    
+      SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+          SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA, this.state.endeA )
+      })
+    }
 
-  }
 
-  
   
     render(){
       const {activities, selectedActivities} = this.state;
@@ -128,6 +147,7 @@ export class Buchungen extends Component{
                       <Select 
                       id="Aktivität"
                       label="Aktivität"
+                      onChange={this.handleChange}
                       >
                         {activities.map((activities) => {
                         return (
@@ -136,10 +156,12 @@ export class Buchungen extends Component{
                         </MenuItem>)
                         })}
                       </Select>
-                    <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung"/>
-                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Beginn" InputLabelProps={{shrink: true,}}/>
-                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Ende" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained" >  Aktivität Buchen </Button>
+
+                    <TextField required id="outlined-required" label="Required" defaultValue="Aktivität Beschreibung" onChange={(event) => this.setState({activitydescription: event.target.value})}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Beginn"  onChange={(event) => this.setState({beginnA: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Ende" onChange={(event) => this.setState({endeA: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <Button variant="contained" onClick={() => this.bookBuchung()}>  Aktivität Buchen </Button>
+
                     </FormControl>
                     </Stack>
               
