@@ -53,11 +53,13 @@ export class Buchungen extends Component{
   
 
   componentDidMount() {
-    SystemAPI.getAPI().getActivities().then(activities => {
-        this.setState({
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=> {
+        console.log(result.id)
+         SystemAPI.getAPI().getActivitiesForPerson(result.id).then((activities) => {
+            this.setState({
             activities: activities
         })
-    })
+    })})
   }
 
   handleChange = event => {
