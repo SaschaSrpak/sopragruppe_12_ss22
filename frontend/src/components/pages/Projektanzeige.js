@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AktivitätAnzeige from "./AktivitätAnzeige";
+import SystemAPI from "../../api/SystemAPI";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -67,6 +68,15 @@ export class Projektanzeige extends Component {
         }
     }
 
+    // componentDidMount funktion zum Laden der Projektdaten
+    componentDidMount() {
+        SystemAPI.getAPI().getProjects().then(projects => {
+            this.setState({
+                projects: projects
+            })
+        })
+    }
+
 
     render() {
         return (
@@ -74,6 +84,7 @@ export class Projektanzeige extends Component {
                 margin: "auto",
                 maxWidth: 1000
                 }}>
+                    <h1>testprojekt:</h1>
                 <Paper>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 300 }} aria-label="simple table">
