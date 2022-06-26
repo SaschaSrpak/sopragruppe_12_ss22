@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
@@ -981,7 +983,7 @@ class KommenTransactionOperations(Resource):
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen)
-    @secured
+    #@secured
     def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
@@ -991,8 +993,15 @@ class KommenOperations(Resource):
             if account is not None:
                 b = s_adm.book_kommen_event(account_id, proposal.get_event_name(),
                                             proposal.get_time_of_event())
-                event = s_adm.get_kommen_by_transaction_key(b)
-                return event, 200
+                if b:
+                    event = s_adm.get_kommen_by_transaction_key(b)
+                    return event, 200
+                else:
+                    event = Kommen()
+                    event.set_id(0)
+                    event.set_time_of_event(datetime.datetime.now())
+                    event.set_last_modified_date(datetime.datetime.now())
+                    return event, 200
             else:
                 return 'Account not found', 500
         else:
@@ -1282,5 +1291,8 @@ class CommitWorktimeTransaction(Resource):
             return 'Account not found', 200
 
 
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+

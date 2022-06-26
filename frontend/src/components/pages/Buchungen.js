@@ -11,7 +11,6 @@ import SystemAPI from '../../api/SystemAPI';
 import KommenBO from '../../api/Ereignisse/KommenBO';
 import { PauseBO } from '../../api';
 
-
 /** 
  *@fileOverview 
  *@author Kim Kausler
@@ -41,14 +40,15 @@ export class Buchungen extends Component{
   }
 
 
+
   kommenButtonClicked = event =>{
     let newKommen = new KommenBO();
-    newKommen.event_name = "";
+    newKommen.event_name = "kommen";
     newKommen.time_of_event = new Date().toISOString().slice(0, -5);
-    SystemAPI.getAPI().commitKommenTransaction(this.props.person.getID(), newKommen).then(personBO =>
-      this.setState({
-      })
-    )
+       SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        console.log(result.id)
+        SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
+    })
   }
   
 
@@ -79,6 +79,18 @@ export class Buchungen extends Component{
 
   }
 
+    gehenButtonClicked = event =>{
+    let newKommen = new KommenBO();
+    newKommen.event_name = "kommen";
+    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
+
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        console.log(result.id)
+        SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
+    })
+
+
+  }
 
 
 
@@ -98,7 +110,7 @@ export class Buchungen extends Component{
                   <h1>Buchungen</h1>
                   <Button variant="contained" onClick={() => this.kommenButtonClicked()} > Kommen </Button>
                   <p></p>
-                  <Button variant="contained" onClick={() => this.handleClick()} > Gehen </Button>
+                  <Button variant="contained" onClick={() => this.gehenButtonClicked()} > Gehen </Button>
                   </div>
   
                   <Divider sx={{margin:"20px"}}/>

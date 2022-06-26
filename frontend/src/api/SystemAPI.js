@@ -88,11 +88,11 @@ export default class SystemAPI {
 
     //Commit-Transaction related
 
-    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}`
-    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`
+    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}/`;
+    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`;
     #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#SystemServerBaseURL}
                                                                              /commit-pause-transaction/${account_id}/
-                                                                             ${name}/${start_time}/${end_time}`
+                                                                             ${name}/${start_time}/${end_time}`;
 
     #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>
                                                                             `${this.#SystemServerBaseURL}
@@ -104,7 +104,7 @@ export default class SystemAPI {
     // End-Event related
 
     #getEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
-    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
+    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;S
     #updateEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
 
     // End-Event Transaction related
@@ -607,6 +607,7 @@ export default class SystemAPI {
   //Commit-Transaction related Functions
 
   commitKommenTransaction(account_id, kommenBO) {
+        console.log(account_id, kommenBO)
         return this.#fetchAdvanced(this.#commitKommenTransactionURL(account_id), {
             method: 'POST',
             headers: {
