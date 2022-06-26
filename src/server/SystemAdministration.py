@@ -1191,8 +1191,8 @@ class SystemAdministration(object):
             response = {'response': 'interval start can not be later than interval end'}
             return response
 
-        start_event_time = datetime.strptime(start_event_time, '%Y-%m-%d %H:%M:%S')
-        end_event_time = datetime.strptime(end_event_time, '%Y-%m-%d %H:%M:%S')
+        start_event_time = datetime.strptime(start_event_time, "%Y-%m-%dT%H:%M")
+        end_event_time = datetime.strptime(end_event_time, "%Y-%m-%dT%H:%M")
         start_event_date = dt.datetime.date(start_event_time)
         daily_transactions = self.show_daily_worktime_transactions_for_account(account.get_id(), start_event_date)
         daily_worktime_intervals = []

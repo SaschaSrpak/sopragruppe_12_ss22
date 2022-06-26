@@ -983,7 +983,7 @@ class KommenTransactionOperations(Resource):
 class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen)
-    #@secured
+    @secured
     def post(self, account_id):
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
@@ -1277,7 +1277,9 @@ class WorktimeTransactionOperations(Resource):
 class CommitWorktimeTransaction(Resource):
     @timesystem.marshal_with(interval_transaction_response, code=200)
     @secured
+
     def post(self, account_id, name, activity_id, start_time, end_time):
+        print(account_id, name, activity_id, start_time, end_time)
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
         activity = s_adm.get_activity_by_key(activity_id)
