@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import SystemAPI from '../../api/SystemAPI';
 import KommenBO from '../../api/Ereignisse/KommenBO';
+import { PauseBO } from '../../api';
 
 
 /** 
@@ -28,8 +29,10 @@ export class Buchungen extends Component{
       activities: [], 
       selectedActivities: null,
       activity: props.activity,
+      buchung: null,
       beginnA: null, 
       endeA: null,
+      pause: null,
       beginnP: null, 
       endeP: null, 
     }
@@ -68,7 +71,11 @@ export class Buchungen extends Component{
   }
 
   bookPause = () => {
-    SystemAPI.getAPI().getAccount()
+    SystemAPI.getAPI().getAccount().getPersonByFirebaseID(this.props.user.uid)
+      .then(PauseBO)
+        this.setState({
+          
+        })
 
   }
 
