@@ -28,7 +28,13 @@ export class Buchungen extends Component{
       activities: [], 
       selectedActivities: null,
       activity: props.activity,
+      beginnA: null, 
+      endeA: null,
+      beginnP: null, 
+      endeP: null, 
     }
+
+    this.baseState = this.state;
   }
 
 
@@ -57,8 +63,21 @@ export class Buchungen extends Component{
     })
   }
 
+  bookBuchung = () => {
+     
+  }
 
-  aktivitätBuchen = () => {}
+  bookPause = () => {
+    SystemAPI.getAPI().getAccount()
+
+  }
+
+
+
+
+
+  
+  
 
 
 
