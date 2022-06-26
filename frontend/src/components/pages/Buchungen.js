@@ -48,6 +48,18 @@ export class Buchungen extends Component{
 
   }
 
+    gehenButtonClicked = event =>{
+    let newKommen = new KommenBO();
+    newKommen.event_name = "kommen";
+    newKommen.time_of_event = new Date().toISOString().slice(0, -5);
+
+    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        console.log(result.id)
+        SystemAPI.getAPI().commitKommenTransaction(result.id , newKommen)
+    })
+
+
+  }
 
   aktivitätBuchen = () => {
 
@@ -86,7 +98,7 @@ export class Buchungen extends Component{
                   <h1>Buchungen</h1>
                   <Button variant="contained" onClick={() => this.kommenButtonClicked()} > Kommen </Button>
                   <p></p>
-                  <Button variant="contained" onClick={() => this.handleClick()} > Gehen </Button>
+                  <Button variant="contained" onClick={() => this.gehenButtonClicked()} > Gehen </Button>
                   </div>
   
                   <Divider sx={{margin:"20px"}}/>
