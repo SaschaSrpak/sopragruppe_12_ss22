@@ -38,7 +38,8 @@ export class Buchungen extends Component{
       pause: null,
       beginnP: null, 
       endeP: null,
-      activitydescription: null
+      activitydescription: null,
+      pausedescription: null
     }
 
     this.baseState = this.state;
@@ -68,9 +69,16 @@ export class Buchungen extends Component{
         console.log(result.id)
         SystemAPI.getAPI().commitGehenTransaction(result.id , newGehen)
     })
+    }
 
+    bookPauseClicked = event =>{
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
 
-  }
+            SystemAPI.getAPI().commitPauseTransaction(result.id, this.state.pausedescription, this.state.beginnP, this.state.endeP)
+        })
+
+    }
+
     getLocalTime = () => {
       var tzoffset = (new Date()).getTimezoneOffset() * 60000;
       var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
@@ -126,6 +134,7 @@ componentDidMount() {
                   <h1>Buchungen</h1>
                   <Button variant="contained" onClick={() => this.kommenButtonClicked()} > Kommen </Button>
                   <p></p>
+
                   <Button variant="contained" onClick={() => this.gehenButtonClicked()} > Gehen </Button>
                   </div>
   
@@ -133,6 +142,7 @@ componentDidMount() {
               
                   <Stack 
                   direction={{ sm: 'row' }}
+
                   >
                     <FormControl fullWidth>
                       <InputLabel >Aktivität</InputLabel>
@@ -162,10 +172,10 @@ componentDidMount() {
                   >
                     <FormControl fullWidth>
                     <h2>Pause</h2>
-                    <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung"/>
-                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
-                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="time" InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained"> Pause Buchen </Button>
+                    <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung" onChange={(event) => this.setState({pausedescription: event.target.value})}/>
+                    <TextField id="outlined-basic" label="Beginn" variant="outlined" type="datetime-local" onChange={(event) => this.setState({beginnP: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <TextField id="outlined-basic" label="Ende" variant="outlined" type="datetime-local" onChange={(event) => this.setState({endeP: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <Button variant="contained" onClick={() => this.bookPauseClicked()}> Pause Buchen </Button>
                     </FormControl>
                   </Stack>
           </div>
