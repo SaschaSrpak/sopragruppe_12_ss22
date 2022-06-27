@@ -1126,8 +1126,8 @@ class SystemAdministration(object):
         if start_event_time > end_event_time:
             response = {'response': 'interval start can not be later than interval end'}
             return response
-        start_event_time = datetime.strptime(start_event_time, '%Y-%m-%d %H:%M:%S')
-        end_event_time = datetime.strptime(end_event_time, '%Y-%m-%d %H:%M:%S')
+        start_event_time = datetime.strptime(start_event_time, "%Y-%m-%dT%H:%M")
+        end_event_time = datetime.strptime(end_event_time, "%Y-%m-%dT%H:%M")
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)
         pause = self.create_pause(name, start_event, end_event)
