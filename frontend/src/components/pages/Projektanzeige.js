@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import {Paper, Typography, Card, CardContent, Divider, Box } from "@mui/material";
+import {Paper, Typography, Card, CardContent, Divider, Box, Container } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import AktivitätAnzeige from "./AktivitätAnzeige";
+import ActivitätCard from "./AktivitätAnzeige";
 import SystemAPI from "../../api/SystemAPI";
 
 /** 
@@ -82,12 +82,11 @@ export class Projektanzeige extends Component {
         return (
             <Box sx={{
                 margin: "auto",
-                maxWidth: 1000
                 }}>
                     <h1>testprojekt:</h1>
                 <Paper>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 300 }} aria-label="simple table">
+                        <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow sx={{}}>
                                     <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
@@ -124,7 +123,7 @@ export class Projektanzeige extends Component {
                     margin: "20px"
                 }}/>
 {/* AktivitätAnzeige als Komponente ausgelagert */}
-                <AktivitätAnzeige/>
+                <ActivitätCard/>
             </Box>
         );
     }
