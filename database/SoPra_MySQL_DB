@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS `SoPra_MySQL_DB`;
 USE `SoPra_MySQL_DB`;
 
 
-
+DROP TABLE IF EXISTS `Person`;
 create table Person
 (
     User_ID            int          not null
@@ -16,6 +16,7 @@ create table Person
     Last_modified_date timestamp    not null
 );
 
+DROP TABLE IF EXISTS `Arbeitszeitkonto`;
 create table Arbeitszeitkonto
 (
     Account_ID int not null
@@ -25,6 +26,7 @@ create table Arbeitszeitkonto
         foreign key (User_ID) references Person (User_ID)
 );
 
+DROP TABLE IF EXISTS `Aktivitaet`;
 create table Aktivitaet
 (
     Activity_ID        int          not null
@@ -35,6 +37,7 @@ create table Aktivitaet
 );
 
 
+DROP TABLE IF EXISTS `Aktivitaet_Zustaendigkeit`;
 create table Aktivitaet_Zustaendigkeit
 (
     Activity_ID int not null,
@@ -46,6 +49,7 @@ create table Aktivitaet_Zustaendigkeit
 );
 
 
+DROP TABLE IF EXISTS `Startereignis`;
 create table Startereignis
 (
     Event_ID           int          not null
@@ -55,6 +59,7 @@ create table Startereignis
     Last_modified_date timestamp    not null
 );
 
+DROP TABLE IF EXISTS `Endereignis`;
 create table Endereignis
 (
     Event_ID           int          not null
@@ -65,7 +70,7 @@ create table Endereignis
 );
 
 
-
+DROP TABLE IF EXISTS `Kommen`;
 create table Kommen
 (
     Event_ID           int          not null
@@ -75,6 +80,7 @@ create table Kommen
     Last_modified_date timestamp    not null
 );
 
+DROP TABLE IF EXISTS `Gehen`;
 create table Gehen
 (
     Event_ID           int          not null
@@ -85,6 +91,7 @@ create table Gehen
 );
 
 
+DROP TABLE IF EXISTS `StartereignisBuchung`;
 create table StartereignisBuchung
 (
     Transaction_ID     int      not null
@@ -98,6 +105,7 @@ create table StartereignisBuchung
         foreign key (Event_ID) references Startereignis (Event_ID)
 );
 
+DROP TABLE IF EXISTS `EndereignisBuchung`;
 create table EndereignisBuchung
 (
     Transaction_ID     int      not null
@@ -111,7 +119,7 @@ create table EndereignisBuchung
         foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
 );
 
-
+DROP TABLE IF EXISTS `KommenBuchung`;
 create table KommenBuchung
 (
     Transaction_ID     int      not null
@@ -125,6 +133,7 @@ create table KommenBuchung
         foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
 );
 
+DROP TABLE IF EXISTS `GehenBuchung`;
 create table GehenBuchung
 (
     Transaction_ID     int      not null
@@ -138,6 +147,7 @@ create table GehenBuchung
         foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
 );
 
+DROP TABLE IF EXISTS `Projekt_deadline`;
 create table Projekt_deadline
 (
     Event_ID           int          not null
@@ -147,6 +157,7 @@ create table Projekt_deadline
     Last_modified_date timestamp    not null
 );
 
+DROP TABLE IF EXISTS `Projektlaufzeit`;
 create table Projektlaufzeit
 (
     Interval_ID        int          not null
@@ -158,6 +169,7 @@ create table Projektlaufzeit
     Last_modified_date timestamp    not null
 );
 
+DROP TABLE IF EXISTS `Projekt`;
 create table Projekt
 (
     Project_ID          int          not null
@@ -174,6 +186,7 @@ create table Projekt
         foreign key (Project_Duration_ID) references Projektlaufzeit (Interval_ID)
 );
 
+DROP TABLE IF EXISTS `Projekt_Aktivitaeten`;
 create table Projekt_Aktivitaeten
 (
     Project_ID  int not null,
@@ -184,6 +197,7 @@ create table Projekt_Aktivitaeten
         foreign key (Project_ID) references Projekt (Project_ID)
 );
 
+DROP TABLE IF EXISTS `Projekt_Ersteller`;
 create table Projekt_Ersteller
 (
     Project_ID int not null,
@@ -194,6 +208,7 @@ create table Projekt_Ersteller
         foreign key (Project_ID) references Projekt (Project_ID)
 );
 
+DROP TABLE IF EXISTS `Projekt_Zustaendigkeit`;
 create table Projekt_Zustaendigkeit
 (
     Project_ID int not null,
@@ -205,6 +220,7 @@ create table Projekt_Zustaendigkeit
 );
 
 
+DROP TABLE IF EXISTS `Pause`;
 create table Pause
 (
     Interval_ID        int          not null
@@ -220,6 +236,7 @@ create table Pause
         foreign key (Start_Event_ID) references Startereignis (Event_ID)
 );
 
+DROP TABLE IF EXISTS `PauseBuchung`;
 create table PauseBuchung
 (
     Transaction_ID     int      not null
@@ -233,6 +250,7 @@ create table PauseBuchung
         foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
 );
 
+DROP TABLE IF EXISTS `Projektarbeit`;
 create table Projektarbeit
 (
     Interval_ID        int          not null
@@ -248,6 +266,7 @@ create table Projektarbeit
         foreign key (Start_Event_ID) references Startereignis (Event_ID)
 );
 
+DROP TABLE IF EXISTS `ProjektarbeitBuchung`;
 create table ProjektarbeitBuchung
 (
     Transaction_ID     int      not null
