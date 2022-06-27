@@ -29,7 +29,7 @@ export class Buchungen extends Component{
     
 
     this.state = {
-      activities: [], 
+      activities: [],
       selectedActivities: null,
       activity: props.activity,
       buchung: null,
