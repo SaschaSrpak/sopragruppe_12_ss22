@@ -10,7 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import Paper from "@mui/material/Paper";
 import SystemAPI from "../../api/SystemAPI";
 import { Dialog } from "@mui/material";
-import NewProjekt from "../Dienste/NewProjekt";
+import {NewProjekt} from "../Dienste/NewProjekt";
 
 
 /**
