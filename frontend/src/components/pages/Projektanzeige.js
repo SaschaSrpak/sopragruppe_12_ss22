@@ -6,49 +6,17 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import ActivitätCard from "./AktivitätAnzeige";
+import AktivitätCard from "./AktivitätAnzeige";
 import SystemAPI from "../../api/SystemAPI";
+import IconButton from "@mui/material/IconButton";
+import BackspaceIcon from '@mui/icons-material/Backspace';
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
  *@author Sascha Srpak
 */
 
-/**
- * Projektdaten anzeige, drunter 
- */
 
-
-// export class Projektanzeige extends Component {
-//     render() {
-//         return (
-//             <div>
-//                 <h1>Projektanzeige Testpage</h1>
-//                 <p>Platzhalter für Projektdaten</p>
-//                 <Divider sx={{
-//                     margin: "10px",
-//                 }}/>
-//                 <AktivitätAnzeige/>
-//             </div>
-//         );
-//     }
-// }
-
-// export default Projektanzeige;
-
-
-function createData(detailName, detailValue) {
-    return { detailName, detailValue };
-}
-
-// Projektdaten
-const rows = [
-    createData("Name", "SoPra"),
-    createData("Creator", "God"),
-    createData("Client", "Peter Thies"),
-    createData("deadline", "31.07.2022"),
-    createData("Dauer in h", 1000)
-];
 
 // Projektanzeige + Projektbeschreibung + AktivitätAnzeige
 export class Projektanzeige extends Component {
@@ -65,43 +33,76 @@ export class Projektanzeige extends Component {
             description: null,
             activities: [],
             persons_responsible: [],
+            projectChoice: this.props.projectChoice,
+            projects: null,
         }
     }
 
+    // Projektdaten
+
+
+
     // componentDidMount funktion zum Laden der Projektdaten
     componentDidMount() {
-        SystemAPI.getAPI().getProjects().then(projects => {
+        SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
                 projects: projects
             })
         })
     }
 
+    // Back-Button setzt den State projectChoice zurück, damit die Projektwahl wieder angezeigt wird
+    handleBack = () => {
+        this.setState({
+            projectChoice: null,
+        })
+    }
 
+// Projektedaten des ausgewählten Projekts werden gerendert
     render() {
+        // const [projectChoice] = this.state;
+
         return (
             <Box sx={{
                 margin: "auto",
                 }}>
-                    <h1>testprojekt:</h1>
+                    <IconButton onClick={this.props.handleClose}
+                    aria-label="backspace" >
+                        <BackspaceIcon />
+                    </IconButton>
+                    <h1>testprojekt: {this.state.projects?this.state.projects.name:null}</h1>
                 <Paper>
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
-                            <TableHead>
+                            {/* <TableHead>
                                 <TableRow sx={{}}>
                                     <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
                                     <TableCell align="center">Detail Value</TableCell>
                                 </TableRow>
-                            </TableHead>
+                            </TableHead> */}
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.detailName}>
-                                        <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">
-                                            {row.detailName}
-                                        </TableCell>
-                                        <TableCell align="center">{row.detailValue}</TableCell>
-                                    </TableRow>
-                                ))}
+
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektname</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.name:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektersteller</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.creator:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Client</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.client:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.deadline:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.project_duration:null}</TableCell>
+                                </TableRow>
+
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -114,7 +115,7 @@ export class Projektanzeige extends Component {
                         </Typography>
                         <CardContent>
                             <Typography>
-                                dies ist eine beschriebung dies das lalala wer das liest ist super
+                                {this.state.projects?this.state.projects.description:null}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -123,7 +124,7 @@ export class Projektanzeige extends Component {
                     margin: "20px"
                 }}/>
 {/* AktivitätAnzeige als Komponente ausgelagert */}
-                <ActivitätCard/>
+                <AktivitätCard projectChoice= {this.state.selectedProjects}/>
             </Box>
         );
     }
