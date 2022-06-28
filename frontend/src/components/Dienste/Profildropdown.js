@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
 import Profil from '../pages/Profil';
+import SystemAPI from '../../api/SystemAPI';
+import PersonBO from '../../api/PersonBO';
 
 /**
  * @author
@@ -19,7 +21,8 @@ class ProfileDropDown extends Component {
         // Init the state
         this.state = {
             open: false,
-            show: false
+            show: false,
+            id: false
         }
     }
 
@@ -55,6 +58,20 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
+    
+    deletePerson = () =>{
+        console.log("wir löschen jetzt");    
+        SystemAPI.getApi().deletePerson()
+            
+    }
+    handledelete = () => {
+        console.log("löschen wurde angefordert")
+        alert("Dein Account und alle zusammenhängenden Daten werden nun gelöscht");
+        this.deletePerson();
+        console.log("löschung ist durch.");
+        this.handleSignOutButtonClicked()
+
+    }
 
     render() {
         const { user } = this.props;
@@ -92,6 +109,8 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Button onClick={this.handledelete}>Account löschen</Button>
 
                                 </Grid>
                             </Grid>

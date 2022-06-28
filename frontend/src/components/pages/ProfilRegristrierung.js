@@ -37,7 +37,7 @@ class Profil extends Component {
             mail_address: ma,
             user_name: un,
             manager_status: ms,
-            
+
             updatingInProgress: false,
             updatingError: null,
 
@@ -55,7 +55,7 @@ class Profil extends Component {
         });
     }
 
-  
+
 
     handleChange = (event) => {
         console.log(event.target.value)
@@ -107,14 +107,14 @@ class Profil extends Component {
 
     render() {
 
-        
+
         const { open } = this.props;
         const { name, surname, mail_address, user_name, manager_status } = this.state;
 
         return (
 
             <React.Fragment>
-               
+
                 <Dialog open={open} onClose={this.props.handleClose}>
                     <DialogTitle>Profil</DialogTitle>
 
@@ -180,7 +180,7 @@ class Profil extends Component {
 
                             onChange={this.handleChange}
                         />
-
+                        <div><br></br></div>
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
                             <Select
@@ -188,7 +188,7 @@ class Profil extends Component {
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
                                 value={manager_status}
-                                
+
                                 onChange={this.handleChangeDrop}
                             >
 
