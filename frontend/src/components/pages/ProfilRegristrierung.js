@@ -146,6 +146,7 @@ class Profil extends Component {
                             onChange={this.handleChange}
                         />
                         <TextField
+                            disabled
                             margin="dense"
                             id="user_name"
                             label="Username"
@@ -163,7 +164,7 @@ class Profil extends Component {
 
                         />
                         <TextField
-
+                            disabled
                             margin="dense"
                             id="mail_address"
                             label="Email Address"
