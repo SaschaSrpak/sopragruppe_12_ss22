@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
+from flask import request, redirect, url_for
 
 from server.SystemAdministration import SystemAdministration
 from server.business_objects.Person import Person
@@ -26,9 +27,22 @@ from server.business_objects.Buchungen.ProjektarbeitBuchung import Projektarbeit
 
 from SecurityDecorator import secured
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./build", static_url_path='/')
 
 CORS(app, resources=r'/zeiterfassung/*')
+
+"""app.config['ERROR_404_HELP'] = False
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/zeiterfaassung'):
+        return "Fehler", 404
+    else:
+        return redirect(url_for('index'))"""
 
 api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')

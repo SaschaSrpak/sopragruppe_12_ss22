@@ -1,0 +1,6 @@
+Flask
+Flask-Cors
+flask-restx
+google-auth
+mysql-connector-python
+requests
