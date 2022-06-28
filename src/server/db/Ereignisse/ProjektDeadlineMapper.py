@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.ProjektDeadline import ProjektDeadline
+from server.business_objects.Ereignisse.ProjektDeadline import ProjektDeadline
 from server.db.Mapper import Mapper
 
 

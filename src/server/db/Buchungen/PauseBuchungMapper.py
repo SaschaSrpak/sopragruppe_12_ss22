@@ -1,4 +1,4 @@
-from business_objects.Buchungen.PauseBuchung import PauseBuchung
+from server.business_objects.Buchungen.PauseBuchung import PauseBuchung
 from server.db.Mapper import Mapper
 import datetime
 

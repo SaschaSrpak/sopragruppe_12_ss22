@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.Gehen import Gehen
+from server.business_objects.Ereignisse.Gehen import Gehen
 from server.db.Mapper import Mapper
 
 

@@ -11,6 +11,7 @@ import Profil from '../pages/Profil';
 
 class ProfileDropDown extends Component {
 
+
     #avatarButtonRef = createRef();
 
     constructor(props) {
@@ -21,6 +22,13 @@ class ProfileDropDown extends Component {
             open: false,
             show: false
         }
+
+        this.routeChange = this.routeChange.bind(this);
+    }
+
+    routeChange() {
+        let path = '/Profil';
+        this.props.history.push(path);
     }
 
     /** Handles click events on the avatar button and toggels visibility */
@@ -41,6 +49,7 @@ class ProfileDropDown extends Component {
         });
     }
     
+
 
     /** 
      * Handles the click event of the sign in button and uses the firebase.auth() component to sign in.
@@ -90,9 +99,7 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Profil user={user}/>
                                     <Divider sx={{ margin: 1 }} />
-                                    {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
-
                                 </Grid>
                             </Grid>
                            </Paper>

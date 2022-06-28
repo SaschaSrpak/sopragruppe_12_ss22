@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.Kommen import Kommen
+from server.business_objects.Ereignisse.Kommen import Kommen
 from server.db.Mapper import Mapper
 
 

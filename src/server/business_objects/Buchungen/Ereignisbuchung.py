@@ -1,5 +1,5 @@
-from business_objects.Buchungen.Buchung import Buchung
-from business_objects.Ereignisse.Ereignis import Ereignis
+from server.business_objects.Buchungen.Buchung import Buchung
+from server.business_objects.Ereignisse.Ereignis import Ereignis
 
 
 class Ereignisbuchung(Buchung):
