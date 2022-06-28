@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import SystemAPI from "../../api/SystemAPI";
 import { Dialog } from "@mui/material";
 import NewProjekt from "../Dienste/NewProjekt";
+import Projektanzeige from "./Projektanzeige";
 
 
 /**
@@ -88,85 +89,95 @@ export class Projektwahl extends Component {
     }
 
 
+
         ////// TO DO: Conditional Rendering -> Sobald ein Projekt mit "Auswählen" bestätigt wird,
         ////// wird das Projekt in projectChoice gespeichert und das Projekt wird angezeigt.
 
 
 // rendert die Projekte aus der Liste
     render () {
-        const {projects, selectedProjects, open} = this.state;
+        const {projects, selectedProjects, open, projectChoice} = this.state;
 
 
         return (
-            <Paper sx={{
-                textAlign: 'center',
-                width: "50%",
-                height: "auto",
-                margin: "auto",
-                }}>
-                <Typography variant="h4" sx={{
+            <div>
+                {projectChoice
+                ? <Projektanzeige open={this.props} handleClose={() => this.setState({projectChoice:null})} 
+                projectChoice={projectChoice}
+                /> 
+                : 
+                <Paper sx={{
                     textAlign: 'center',
-                    margin: "5px",
-                }}>Projektwahl</Typography>
-                <Box>
-                    <FormControl sx={{ minWidth: 200 }}>
-                        <InputLabel>Projekte</InputLabel>
-                        <Select
-                            value={selectedProjects}
-                            onChange={this.handleChange}
-                            label="Projekte"
-                        >
-                            {projects.map((project) => {
-                                return (
-                                <MenuItem key={project.id} value={project.id}>
-                                    {project.name}
-                                </MenuItem>)
-                            })}
-                        
-                        </Select>
-                    </FormControl>
-                </Box>
-                
-                <Button  
-                    onClick={this.handleChoseClick}
-                    id={this.state.selectedProjects}
-                    variant="contained" 
-                    sx={{
-                    margin: "20px",
-                }}>
-                    <Typography sx={{
-                        fontWeight: "bold",
-                    }}
-                    >Auswählen</Typography>
-                </Button>
-                <Divider sx={{
-                    margin: "10px",
-                }}/>
-                
-
-
-                
-{/** TO DO: Button zum Erstellen eines neuen Projekts */}
-                <Button variant="contained" 
-                    onClick={this.handleClickOpen}
-                    value={this.state.open}
-                    sx={{
-                    margin: "20px",
+                    width: "50%",
+                    height: "auto",
+                    margin: "auto",
                     }}>
-                    <Typography sx={{
-                        fontWeight: "bold",
-                    }}
-                    >Neues Projekt</Typography>
-                </Button>
-                <Dialog open={open} onClose={this.handleClose}
-                >
-                    {/** open prop wird an "NewProject" übergeben */}
-                    <NewProjekt open={this.props} />
-                </Dialog>
+                    <Typography variant="h4" sx={{
+                        textAlign: 'center',
+                        margin: "5px",
+                    }}>Projektwahl</Typography>
+                    <Box>
+                        <FormControl sx={{ minWidth: 200 }}>
+                            <InputLabel>Projekte</InputLabel>
+                            <Select
+                                value={selectedProjects}
+                                onChange={this.handleChange}
+                                label="Projekte"
+                            >
+                                {projects.map((project) => {
+                                    return (
+                                    <MenuItem key={project.id} value={project.id}>
+                                        {project.name}
+                                    </MenuItem>)
+                                })}
+
+                            </Select>
+                        </FormControl>
+                    </Box>
+                            
+                    <Button  
+                        onClick={this.handleChoseClick}
+                        id={this.state.selectedProjects}
+                        variant="contained" 
+                        sx={{
+                        margin: "20px",
+                    }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Auswählen</Typography>
+                    </Button>
+                    <Divider sx={{
+                        margin: "10px",
+                    }}/>
 
 
 
-            </Paper>
+
+{/** TO DO: Button zum Erstellen eines neuen Projekts */}
+                    <Button variant="contained" 
+                        onClick={this.handleClickOpen}
+                        value={this.state.open}
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Neues Projekt</Typography>
+                    </Button>
+                    <Dialog open={open} onClose={this.handleClose}
+                    >
+                        {/** open prop wird an "NewProject" übergeben */}
+                        <NewProjekt open={this.props} />
+                    </Dialog>
+
+
+
+                </Paper>
+            }
+
+            </div>
         )
     }
 }
