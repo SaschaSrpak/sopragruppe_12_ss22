@@ -15,6 +15,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Divider from "@mui/material/Divider";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import UpdateDialog from '../Zwischenelemente/UpdateDialog';
 
 
 export class Auslese extends Component {
@@ -226,10 +232,28 @@ export class Auslese extends Component {
 
     }
 
+    editButtonClicked = (event) => {
+      event.stopPropagation();
+      this.setState({
+        showUpdateDialog: true
+      });
+  }
+
+  handleClickOpen = () => { 
+    this.setState({
+      open: !this.state.open
+    })
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false
+  });
+  };
 
 
     render() {
-
+      const { showUpdateDialog ,open } = this.state;
 
         if(this.state.loading === false) {
             return(
@@ -253,7 +277,6 @@ export class Auslese extends Component {
                         </AccordionSummary>
                           <KommenTable title=" " data={this.state.kommenname}/>
                       </Accordion>
-
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Gehen</Typography>
@@ -274,10 +297,33 @@ export class Auslese extends Component {
                           <WorkTimeTable title=" " data={this.state.worktimenamen}/>
                       </Accordion>
 
-
+                      <div>
+            <Button variant="outlined" onClick={this.handleClickOpen}>
+              Open form dialog
+            </Button>
+            
+            <Dialog open={open} onClose={this.handleClose}>
+                    <DialogTitle> Lösche deine Buchung</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Möchtest du die Buchung wirklich löschen?
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleClose}>Cancel</Button>
+                            <Button onClick={this.handleClose}>Löschen</Button>
+                        </DialogActions>
+                </Dialog>
+            
+            
+        </div>
             </div>
-        );
+        
+
+
+                
+        )
     }
-}
-}
+};
+
 export default Auslese;

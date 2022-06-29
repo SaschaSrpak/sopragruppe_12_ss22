@@ -25,12 +25,12 @@ class Delete extends Component {
     }
 
     deleteKommen = () => {
-        SystemAPI.getAPI().getKommenTransactionsOfAccount(this.props.kommen.getID()).then(kommen=>{
+        SystemAPI.getAPI().deleteKommen(this.props.kommen_id).then(kommen=>{
             this.setState({
                 deletingInProgress: false,                
                 deletingError: null                     
               });
-            this.props.onClose(this.props.kommen);
+            this.props.onClose(this.props.kommen_id);
         }).catch(e =>
             this.setState({
               deletingInProgress: false,              
@@ -45,13 +45,12 @@ class Delete extends Component {
     }
 
     handleClose = () => {
-        // console.log(event);
         this.props.onClose(null);
       }
 
     render(){
-        const { kommen, show } = this.props;
-        const { deletingInProgress, deletingError } = this.state;
+      const { kommen, show } = this.props;
+      const { deletingInProgress, deletingError } = this.state;
 
         return(
             show?
@@ -65,9 +64,6 @@ class Delete extends Component {
               <DialogContentText>
                 Really delete KommenBuchung'{kommen.getKommen()}?
               </DialogContentText>
-              <Loader show={deletingInProgress} />
-              <Error error={deletingError} contextErrorMsg={`Die Buchung '${kommen.getKommen()}  could not be deleted.`}
-                onReload={this.deleteKommen} />
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleClose} color='secondary'>

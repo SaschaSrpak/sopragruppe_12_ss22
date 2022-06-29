@@ -12,6 +12,7 @@ import SystemAPI from "../../api/SystemAPI";
 import { Dialog } from "@mui/material";
 import NewProjekt from "../Dienste/NewProjekt";
 import Projektanzeige from "./Projektanzeige";
+import {NewProjekt} from "../Dienste/NewProjekt";
 
 
 /**
