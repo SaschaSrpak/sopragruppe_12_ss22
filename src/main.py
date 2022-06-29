@@ -58,14 +58,17 @@ app = Flask(__name__, static_folder="./build", static_url_path='/')
 
 app.config['ERROR_404_HELP'] = False
 
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
+
 
 api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')
 
 CORS(app, resources=r'/timesystem/*')
+
 
 @app.errorhandler(404)
 def handle_404(e):
@@ -73,6 +76,7 @@ def handle_404(e):
         return "Fehler", 404
     else:
         return redirect(url_for('index'))
+
 
 timesystem = api.namespace('timesystem', description='Funktionen des Projektzeiterfassungssystem')
 
@@ -930,6 +934,31 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
+@timesystem.route('account/kommen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Kommen-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class AccountKommenDateOperations(Resource):
+    @timesystem.marshal_list_with(kommen)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Kommen-Ereignisse die auf ein bestimmtes Zeitkonto
+        gebucht wurden für einen bestimmten Zeitraum aus
+        :param id: ID des Zeitkontos
+        :param start_date: Anfangsdatum des Suchtzeitraums
+        :param end_date: Enddatum des Suchzeitraums
+        :return:
+        """
+        s_adm = SystemAdministration()
+        events = s_adm.get_all_kommen_events_for_account_between_dates(id, start_date, end_date)
+        if events:
+            return events
+        else:
+            return '', 500
+
+
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -952,6 +981,32 @@ class GehenTransactionRelatedAccountOperations(Resource):
             return transactions
         else:
             return 'Account not found', 500
+
+
+@timesystem.route('account/gehen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Kommen-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class AccountGehenDateOperations(Resource):
+    @timesystem.marshal_list_with(gehen)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Gehen-Ereignisse die auf ein bestimmtes Zeitkonto
+        gebucht wurden für einen bestimmten Zeitraum aus
+        :param id: ID des Zeitkontos
+        :param start_date: Anfangsdatum des Suchtzeitraums
+        :param end_date: Enddatum des Suchzeitraums
+        :return:
+        """
+        s_adm = SystemAdministration()
+        events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
+
+        if events:
+            return events
+        else:
+            return '', 500
 
 
 @timesystem.route('/accounts/pause/<int:id>/time')
