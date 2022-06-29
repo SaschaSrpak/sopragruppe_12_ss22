@@ -244,7 +244,7 @@ class PersonOperations(Resource):
         p = s_adm.get_person_by_key(id)
         return p
 
-    @secured
+    #@secured
     def delete(self, id):
         """
         Löscht eine bestimmte Person aus dem System.
