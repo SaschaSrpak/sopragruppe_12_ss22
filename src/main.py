@@ -953,16 +953,15 @@ class AccountKommenDateOperations(Resource):
         """
         s_adm = SystemAdministration()
         events = s_adm.get_all_kommen_events_for_account_between_dates(id, start_date, end_date)
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class GehenTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(gehen_transaction)
     @timesystem.marshal_list_with(gehen_transaction)
     @secured
     def get(self, id):
@@ -1003,10 +1002,8 @@ class AccountGehenDateOperations(Resource):
         s_adm = SystemAdministration()
         events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
 
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/pause/<int:id>/time')

@@ -13,7 +13,7 @@ import {Button} from "@mui/material";
 
 
 
-function KommenTable({ title, data}) {
+function PauseTable({ title, data}) {
     if (data.length > 0) {
         const headers = Object.keys(data[0]);
         const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"]
@@ -51,15 +51,15 @@ function KommenTable({ title, data}) {
         );
 
 
-        KommenTable.defaultProps = {
+        PauseTable.defaultProps = {
             title: "No Title"
         };
     } else {
 
         return (
 
-            <h1> No Kommen Data</h1>
+            <h1> No Pause Data</h1>
         )
     }
 }
-export default KommenTable;
+export default PauseTable;

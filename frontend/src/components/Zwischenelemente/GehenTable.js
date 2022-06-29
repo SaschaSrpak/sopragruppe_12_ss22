@@ -13,48 +13,53 @@ import {Button} from "@mui/material";
 
 
 
-function KommenTable({ title, data}) {
+function GehenTable({ title, data}) {
+    if (data.length > 0) {
+        const headers = Object.keys(data[0]);
+        const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"]
 
 
-  const headers = Object.keys(data[0]);
-  const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"]
+        return (
+            <Paper>
+                <Typography variant="h4" color="inherit">
+                    {title}
+                </Typography>
+
+                <hr/>
+
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            {headers2.map(header2 => (
+                                <TableCell align="left">{header2.toUpperCase()}</TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.map((emp, index) => (
+                            <TableRow key={index}>
+                                {headers.map(header => (
+                                    <TableCell align="left">{emp[header]}</TableCell>
+                                ))}
+                                <Button color='primary'>Edit</Button>
+                                <Button color='warning'>Delete</Button>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Paper>
+        );
 
 
+        GehenTable.defaultProps = {
+            title: "No Title"
+        };
+    } else {
 
-  return (
-    <Paper>
-      <Typography variant="h4" color="inherit">
-        {title}
-      </Typography>
+        return (
 
-      <hr />
-
-      <Table>
-        <TableHead>
-          <TableRow>
-            {headers2.map(header2 => (
-              <TableCell align="left">{header2.toUpperCase()}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((emp, index) => (
-            <TableRow key={index}>
-              {headers.map(header => (
-                <TableCell align="left">{emp[header]}</TableCell>
-              ))}
-                <Button color='primary' >Edit</Button>
-                <Button color='warning' >Delete</Button>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
+            <h1> No Gehen Data</h1>
+        )
+    }
 }
-
-KommenTable.defaultProps = {
-  title: "No Title"
-};
-
-export default KommenTable;
+export default GehenTable;
