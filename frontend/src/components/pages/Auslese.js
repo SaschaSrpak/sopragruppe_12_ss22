@@ -31,7 +31,7 @@ export class Auslese extends Component {
              this.setState({
                  userid: result.id
              })
-             SystemAPI.getAPI().getKommenTransactionsOfAccount(this.state.userid).then((result) => {
+             SystemAPI.getAPI().getKommenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
                  this.Test(result)
              })
@@ -57,29 +57,24 @@ export class Auslese extends Component {
 
     Test = (daten) => {
 
-        for (var i = 0; daten.length; i++) {
-            console.log(daten)
 
+            console.log(daten.map(Zeitpunkt=>{
+                //Change
+                 var ZeitpunktString = Zeitpunkt.time_of_event;
+                ZeitpunktString = ZeitpunktString.replace('T',' ');
+                console.log(ZeitpunktString)
+                Zeitpunkt.time_of_event = ZeitpunktString
 
+                var LastChangeString = Zeitpunkt.last_modified_date;
+                LastChangeString = LastChangeString.replace('T',' ');
+                console.log(LastChangeString)
+                Zeitpunkt.last_modified_date = LastChangeString
 
-            //console.log(this.state.kommenname)
-            let eventid = daten[i].getEvent_id()
-            let  accid = daten[i].getId()
-            let name = SystemAPI.getAPI().getKommen(eventid).then((result =>{
-                let kommenobj;
-                kommenobj = {Event_id: eventid, ID: accid, Name: name.getEventName}
-                return kommenobj
+                }))
 
-            }))
-            console.log(name)
-            this.state.kommenlist.push(name)
-
-
-
-
-
+            this.setState({kommenname: daten})
             this.setState({loading: true})
-        }
+
 
     }
 
@@ -95,7 +90,7 @@ export class Auslese extends Component {
         else {
         return (
             <div>
-                <DataTable  title="x" data={this.state.kommenlist}/>
+                <DataTable  title="x" data={this.state.kommenname}/>
                 <br/>
                 <br/>
 

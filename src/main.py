@@ -934,7 +934,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/account/kommen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.route('/account/kommen/date/<int:id>/<string:start_date>/<string:end_date>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des Kommen-Objekts')
 @timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')

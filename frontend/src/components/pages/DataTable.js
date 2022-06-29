@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import SystemAPI from "../../api/SystemAPI";
+import {Button} from "@mui/material";
 
 
 
@@ -16,6 +17,9 @@ function DataTable({ title, data}) {
 
 
   const headers = Object.keys(data[0]);
+  const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"]
+
+
 
   return (
     <Paper>
@@ -28,8 +32,8 @@ function DataTable({ title, data}) {
       <Table>
         <TableHead>
           <TableRow>
-            {headers.map(header => (
-              <TableCell align="right">{header.toUpperCase()}</TableCell>
+            {headers2.map(header2 => (
+              <TableCell align="left">{header2.toUpperCase()}</TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -37,8 +41,10 @@ function DataTable({ title, data}) {
           {data.map((emp, index) => (
             <TableRow key={index}>
               {headers.map(header => (
-                <TableCell align="right">{emp[header]}</TableCell>
+                <TableCell align="left">{emp[header]}</TableCell>
               ))}
+                <Button color='primary' >Edit</Button>
+                <Button color='warning' >Delete</Button>
             </TableRow>
           ))}
         </TableBody>
