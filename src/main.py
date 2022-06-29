@@ -561,7 +561,7 @@ class ProjectOperations(Resource):
         """
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
-        s_adm.delete_person(pr)
+        s_adm.delete_project(pr)
         return '', 200
 
     @timesystem.marshal_with(project)

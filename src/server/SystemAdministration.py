@@ -694,7 +694,6 @@ class SystemAdministration(object):
                     transaction_to_delete = self.get_project_work_transaction_by_activity_key(activity.get_id())
                     for transaction in transaction_to_delete:
                         self.delete_project_work_transaction(transaction)
-                    self.delete_activity_from_project(project, activity)
                     self.delete_activity(activity)
             responsible_list = self.get_persons_by_project_key(project.get_id())
             if not (responsible_list is None):
@@ -706,7 +705,7 @@ class SystemAdministration(object):
             self.delete_project_creator(project, projectcreator)
             mapper.delete(project)
             self.delete_project_duration(duration)
-            self.delete_project_duration(deadline)
+            self.delete_project_deadline(deadline)
 
     def delete_project_creator(self, project, person):
         with ProjektMapper() as mapper:
@@ -1074,13 +1073,11 @@ class SystemAdministration(object):
     def delete_project_duration(self, interval):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
-        start_transaction = self.get_start_transaction_by_event_key(start.get_id())
-        end_transaction = self.get_end_transaction_by_event_key(end.get_id())
 
         with ProjektlaufzeitMapper() as mapper:
             mapper.delete(interval)
-        self.delete_start_event_transaction(start_transaction)
-        self.delete_end_event_transaction(end_transaction)
+        self.delete_start_event(start)
+        self.delete_end_event(end)
 
     """
     KommenBuchung spezifische Methoden
