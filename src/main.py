@@ -1093,8 +1093,7 @@ class PauseTransactionValueBetweenDatesAccountOperations(Resource):
 
         if account is not None:
             return pauses_values[0]
-        else:
-            return 'Account not found', 500
+
 
 
 @timesystem.route('/accounts/worktime-transactions/<int:id>/')
@@ -1169,8 +1168,7 @@ class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
 
         if account is not None:
             return worktime_values[0]
-        else:
-            return 'Account not found', 500
+        
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
