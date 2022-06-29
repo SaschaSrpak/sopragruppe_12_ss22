@@ -1246,9 +1246,10 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_start_event_transaction(self, transaction):
+        self.delete_start_event(self.get_start_event_by_key(transaction.get_event_id()))
         with StartereignisBuchungMapper() as mapper:
             mapper.delete(transaction)
-        self.delete_start_event(self.get_start_event_by_key(transaction.get_event_id()))
+
 
     """
     EndereignisBuchung spezifische Methoden
@@ -1287,9 +1288,10 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def delete_end_event_transaction(self, transaction):
+        self.delete_end_event(self.get_end_event_by_key(transaction.get_event_id()))
         with EndereignisBuchungMapper() as mapper:
             mapper.delete(transaction)
-        self.delete_end_event(self.get_end_event_by_key(transaction.get_event_id()))
+
 
     """
     PauseBuchung spezifische Methoden
