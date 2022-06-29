@@ -294,10 +294,12 @@ class SystemAdministration(object):
         all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         return all_kommen_transactions
 
-    def get_all_kommen_transactions_for_account_between_dates(self, account, start_date_str, end_date_str):
+    def get_all_kommen_transactions_for_account_between_dates(self, account_id, start_date_str, end_date_str):
+        account = self.get_time_account_by_key(account_id)
         all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         start_date = dt.datetime.strptime(start_date_str, '%Y-%m-%d')
         end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d')
+        end_date += dt.timedelta(hours=23, minutes=59, seconds=59)
         selected_kommen_transactions = []
 
         for transaction in all_kommen_transactions:
@@ -328,6 +330,7 @@ class SystemAdministration(object):
         all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         start_date = dt.datetime.strptime(start_date_str, '%Y-%m-%d')
         end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d')
+        end_date += dt.timedelta(hours=23, minutes=59, seconds=59)
         selected_gehen_transactions = []
 
         for transaction in all_gehen_transactions:
