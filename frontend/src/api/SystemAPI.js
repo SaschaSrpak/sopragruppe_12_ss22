@@ -22,7 +22,7 @@ import ProjektarbeitBuchungBO from './Buchungen/ProjektarbeitBuchungBO'
  * Abstracts the REST interface of the Python backend with convenient access methods.
  * The class is implemented as a singleton.
  *
- * @author Leonard Justus)
+ * @author Leonard Justus
  */
 
 export default class SystemAPI {
@@ -76,7 +76,9 @@ export default class SystemAPI {
     #getAccountForPersonURL = (id) => `${this.#SystemServerBaseURL}/accounts/person/${id}`;
     #updateAccountURL = (id) => `${this.#SystemServerBaseURL}/accounts/${id}`;
     #getKommenTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/kommen/transactions/${id}`;
+    #getKommenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/kommen/${id}/${start_date}/${end_date}`
     #getGehenTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/gehen/transactions/${id}`;
+    #getGehenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/gehen/${id}/${start_date}/${end_date}`
     #getPauseTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/pause/${id}`;
     #getPauseTimeOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/pause/${id}/Time`;
     #getWorktimeTransactionsOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/
@@ -88,23 +90,17 @@ export default class SystemAPI {
 
     //Commit-Transaction related
 
-    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}`
-    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`
-    #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#SystemServerBaseURL}
-                                                                             /commit-pause-transaction/${account_id}/
-                                                                             ${name}/${start_time}/${end_time}`
+    #commitKommenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-kommen-transaction/${account_id}/`;
+    #commitGehenTransactionURL = (account_id) =>`${this.#SystemServerBaseURL}/commit-gehen-transaction/${account_id}`;
+    #commitPauseTransactionURL = (account_id, name, start_time, end_time) =>`${this.#SystemServerBaseURL}/commit-pause-transaction/${account_id}/${name}/${start_time}/${end_time}`;
 
-    #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>
-                                                                            `${this.#SystemServerBaseURL}
-                                                                            /commit-pause-transaction/${account_id}/
-                                                                            ${name}/${activity_id}/${start_time}/
-                                                                            ${end_time}`
+    #commitProjectWorktimeTransactionURL = (account_id, name, activity_id, start_time, end_time) =>`${this.#SystemServerBaseURL}/commit-worktime-transaction/${account_id}/${name}/${activity_id}/${start_time}/${end_time}`;
 
 
     // End-Event related
 
     #getEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
-    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
+    #deleteEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;S
     #updateEndEventURL = (id) => `${this.#SystemServerBaseURL}/end-event/${id}`;
 
     // End-Event Transaction related
@@ -189,7 +185,8 @@ export default class SystemAPI {
 
 
 
-    static getApi() {
+
+    static getAPI() {
         if (this.#api == null) {
             this.#api = new SystemAPI();
         }
@@ -550,6 +547,16 @@ export default class SystemAPI {
         })
   }
 
+  getKommenEventsOfAccountBetweenDates(account_id, start_date, end_date){
+        return this.#fetchAdvanced((this.#getKommenEventsOfAccountBetweenDatesURL(account_id, start_date, end_date)))
+            .then((responseJSON) => {
+                let eventBOs = KommenBO.fromJSON(responseJSON);
+                return new Promise(function (resolve){
+                    resolve(eventBOs)
+                })
+            })
+  }
+
   getGehenTransactionsOfAccount(account_id){
         return this.#fetchAdvanced(this.#getGehenTransactionsOfAccountURL(account_id)).then((responseJSON) => {
             let transactionBOs = GehenBuchungBO.fromJSON(responseJSON);
@@ -557,6 +564,16 @@ export default class SystemAPI {
                 resolve(transactionBOs)
             })
         })
+  }
+
+  getGehenEventsOfAccountBetweenDates(account_id, start_date, end_date){
+        return this.#fetchAdvanced((this.#getGehenEventsOfAccountBetweenDatesURL(account_id, start_date, end_date)))
+            .then((responseJSON) => {
+                let eventBOs = GehenBO.fromJSON(responseJSON);
+                return new Promise(function (resolve){
+                    resolve(eventBOs)
+                })
+            })
   }
 
   getPauseTransactionsOfAccount(account_id){
@@ -607,6 +624,7 @@ export default class SystemAPI {
   //Commit-Transaction related Functions
 
   commitKommenTransaction(account_id, kommenBO) {
+        console.log(account_id, kommenBO)
         return this.#fetchAdvanced(this.#commitKommenTransactionURL(account_id), {
             method: 'POST',
             headers: {
@@ -652,6 +670,7 @@ export default class SystemAPI {
   }
 
   commitProjectWorktimeTransaction(account_id, name, activity_id, start_time, end_time) {
+        console.log(account_id, name, activity_id, start_time, end_time)
         return this.#fetchAdvanced(this.#commitProjectWorktimeTransactionURL(account_id, name, activity_id,
             start_time, end_time), {
             method: 'POST',

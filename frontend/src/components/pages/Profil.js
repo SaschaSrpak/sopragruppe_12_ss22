@@ -76,7 +76,7 @@ class Profil extends Component {
     }
 
     getPerson = () => {
-        SystemAPI.getApi().getPersonByFirebaseID(this.props.user.uid)
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
             .then(PersonBO =>
                 this.setState({
                     person: PersonBO,
@@ -95,7 +95,7 @@ class Profil extends Component {
         let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
         updatedPerson.setSurname(this.state.surname);
-        SystemAPI.getApi().updatePerson(updatedPerson).then(person => {
+        SystemAPI.getAPI().updatePerson(updatedPerson).then(person => {
             this.setState({
             })
         });

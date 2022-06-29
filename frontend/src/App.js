@@ -75,7 +75,7 @@ export class App extends Component {
     if (user) {
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
-        SystemAPI.getApi().getPersonByFirebaseID(user.uid).then(person => {
+        SystemAPI.getAPI().getPersonByFirebaseID(user.uid).then(person => {
 
           let open = false
           console.log(person)
@@ -132,7 +132,6 @@ export class App extends Component {
       )
     } else {
       console.log(this.state.currentUser)
-      console.log(SystemAPI.getApi().getPerson(10004))
       return (
 
         <div>
@@ -146,7 +145,7 @@ export class App extends Component {
                   <Navigate replace to={'/home'} />
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
-                <Route path={'/buchungen'} element={<Buchungen />} />
+                <Route path={'/buchungen'} element={<Buchungen user={currentUser}/>} />
                 <Route path={'/auslese'} element={<Auslese />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige />} />
                 <Route path={'/projektewahl'} element={<Projektwahl />} />

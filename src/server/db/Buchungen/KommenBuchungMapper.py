@@ -1,4 +1,4 @@
-from business_objects.Buchungen.KommenBuchung import KommenBuchung
+from server.business_objects.Buchungen.KommenBuchung import KommenBuchung
 from server.db.Mapper import Mapper
 import datetime
 

@@ -1,4 +1,4 @@
-from business_objects.Zeitintervalle.Zeitintervall import Zeitintervall
+from server.business_objects.Zeitintervalle.Zeitintervall import Zeitintervall
 
 
 class Projektarbeit (Zeitintervall):

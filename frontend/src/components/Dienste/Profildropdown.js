@@ -13,6 +13,7 @@ import PersonBO from '../../api/PersonBO';
 
 class ProfileDropDown extends Component {
 
+
     #avatarButtonRef = createRef();
 
     constructor(props) {
@@ -24,6 +25,13 @@ class ProfileDropDown extends Component {
             show: false,
             person: null,
         }
+
+        this.routeChange = this.routeChange.bind(this);
+    }
+
+    routeChange() {
+        let path = '/Profil';
+        this.props.history.push(path);
     }
 
     /** Handles click events on the avatar button and toggels visibility */
@@ -43,6 +51,7 @@ class ProfileDropDown extends Component {
             open: false
         });
     }
+
 
 
     /** 
@@ -119,7 +128,6 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Profil user={user} />
                                     <Divider sx={{ margin: 1 }} />
-                                    {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
                                     <Divider sx={{ margin: 1 }} />
                                     <Button onClick={this.handledelete}>Account löschen</Button>
