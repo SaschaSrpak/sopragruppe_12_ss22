@@ -21,22 +21,6 @@ import Projektanzeige from "./Projektanzeige";
 
 
 
-// Test Liste, um die Projektauswahl zu testen
-// const TestProjekte = [
-//     'Projekt 1',
-//     'Projekt 2',
-//     'Projekt 3',
-//     'Projekt 4',
-//     'Projekt 5',
-//     'Projekt 6',
-//     'Projekt 7',
-// ];
-
-
-// Work in Progress
-// Mapping der Testliste funktioniert nicht
-
-
 export class Projektwahl extends Component {
 
 // Constructor
