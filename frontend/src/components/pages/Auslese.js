@@ -25,18 +25,17 @@ export class Auslese extends Component {
       }
 
      async componentDidMount() {
-          const response = await SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid);
-          this.setState({userid: response.id});
 
-          const kommentransactionofaccount = await SystemAPI.getAPI().getKommenTransactionsOfAccount(this.state.userid);
-          for (var i = 0; kommentransactionofaccount.length; i++) {
-          const eventid = kommentransactionofaccount[i].getEvent_id
-          const kommenevents = await SystemAPI.getAPI().getKommen(eventid);
-          this.setState({kommenlist: this.state.kommenlist.concat(kommenevents)});
-          }
-          console.log(this.state.kommenlist)
-          //this.Test(kommentransactionofaccount)
 
+         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
+             this.setState({
+                 userid: result.id
+             })
+             SystemAPI.getAPI().getKommenTransactionsOfAccount(this.state.userid).then((result) => {
+                // this.TestTwo(result)
+                 this.Test(result)
+             })
+         })
      }
 
 
@@ -54,31 +53,35 @@ export class Auslese extends Component {
 
          //}
          //return(kommenvents)
+     }
 
+    Test = (daten) => {
 
-    //Test = (daten) => {
-
-        //for (var i = 0; daten.length; i++) {
-        //    console.log(daten)
-
-
-         //   let eventid = daten[i].getEvent_id()
-        //    let  accid = daten[i].getId()
-         //   let kommenobj = {Event_id: eventid, ID: accid, Name: name.getEventName}
-
-
-            }
-        //    console.log(name)
-         //   this.state.kommenlist.push(name)
+        for (var i = 0; daten.length; i++) {
+            console.log(daten)
 
 
 
+            //console.log(this.state.kommenname)
+            let eventid = daten[i].getEvent_id()
+            let  accid = daten[i].getId()
+            let name = SystemAPI.getAPI().getKommen(eventid).then((result =>{
+                let kommenobj;
+                kommenobj = {Event_id: eventid, ID: accid, Name: name.getEventName}
+                return kommenobj
+
+            }))
+            console.log(name)
+            this.state.kommenlist.push(name)
 
 
-         //   this.setState({loading: true})
-        //}
 
 
+
+            this.setState({loading: true})
+        }
+
+    }
 
 
     render() {
