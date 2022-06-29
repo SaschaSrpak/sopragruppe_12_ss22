@@ -177,6 +177,21 @@ end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event
 
 interval_transaction_response = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
 
+pause_transaction_response_special = api.model('Spezielle Pausen Übergabe', {'transaction_id': fields.Integer(),
+                                                                             'intervall_id': fields.Integer(),
+                                                                             'intervall_name': fields.String(),
+                                                                             'start_time': fields.String(),
+                                                                             'end_time': fields.String()})
+
+project_worktime_transaction_response_special = api.model('Spezielle Projektarbeit '
+                                                          'Übergabe', {'transaction_id': fields.Integer(),
+                                                                       'intervall_id': fields.Integer(),
+                                                                       'intervall_name': fields.String(),
+                                                                       'project_name': fields.String(),
+                                                                       'activity_name': fields.String(),
+                                                                       'start_time': fields.String(),
+                                                                       'end_time': fields.String()})
+
 
 @timesystem.route('/persons')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
