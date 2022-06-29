@@ -94,6 +94,7 @@ export class Projektanzeige extends Component {
 // Function to get all the persons responsible for the Activity ID
             // not working yet idk why
 getPersonsOnActivity = () => {
+    console.log(this.state.activity.id)
     SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
         this.setState({
             persons: persons
@@ -203,11 +204,13 @@ getPersonsOnActivity = () => {
 
 
 
-{/** API abfrage einbauen help i wanna die*/}
+{/** API abfrage einbauen help i wanna die
+ * 
+*/}
 
                                             <TableBody>
                                                 <TableRow>
-                                                    <TableCell>Peter Thies</TableCell>
+                                                    <TableCell>{this.getPersonsOnActivity}</TableCell>
                                                     <TableCell>2</TableCell>
                                                     <TableCell>5</TableCell>
                                                 </TableRow>
@@ -220,6 +223,9 @@ getPersonsOnActivity = () => {
 
 
 
+{/** Buttons brauchen Funktionalität
+ * 
+ */}
 
                                         </Table>
                                     </TableContainer>
