@@ -83,8 +83,10 @@ class ProfileDropDown extends Component {
         if (window.confirm('Bist du dir sicher, dass du deinen Account löschen möchtest?')) {
             // Save it!
             console.log('Löschung findet statt.');
+            this.handleSignOutButtonClicked()
             this.deletePerson();
             console.log("löschung ist durch.");
+            alert("Account wurde gelöscht.")
             
         } else {
             // Do nothing!
