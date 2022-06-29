@@ -1,4 +1,4 @@
-from business_objects.Zeitintervalle.Projektlaufzeit import Projektlaufzeit
+from server.business_objects.Zeitintervalle.Projektlaufzeit import Projektlaufzeit
 from server.db.Mapper import Mapper
 
 

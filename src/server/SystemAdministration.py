@@ -82,7 +82,7 @@ class SystemAdministration(object):
             return mapper.find_by_project_key(project_key)
 
     def get_creator_by_project_key(self, project_key):
-
+        """Gibt den Ersteller eines Projekts wieder"""
         with PersonMapper() as mapper:
             return mapper.find_creator_by_project_key(project_key)
 
@@ -103,7 +103,10 @@ class SystemAdministration(object):
             mapper.update(person)
 
     def delete_person(self, person):
-        """Den angegebenen Benutzer aus dem System löschen"""
+        """Den angegebenen Benutzer aus dem System löschen.
+           Um die referentielle Integrität zu waren, muss
+           jedes von und für die Person erstellte Business
+           Object mit gelöscht werden."""
         person_account = self.get_time_account_by_person_key(person.get_id())
         self.delete_account(person_account)
         all_projects = self.get_project_by_person_key(person.get_id())
@@ -187,6 +190,7 @@ class SystemAdministration(object):
             return activities
 
     def add_person_responsible_to_activity(self, activity, person):
+        """Fügt der Aktivität eine verantwortliche Person hinzu."""
         with AktivitaetMapper() as mapper:
             return mapper.insert_person_responsible(activity, person)
 
@@ -254,11 +258,12 @@ class SystemAdministration(object):
             return mapper.find_by_key(account_key)
 
     def get_time_account_by_person_key(self, person_key):
+        """Gibt das Zeitkonto einer bestimmten Person aus."""
         with ZeitkontoMapper() as mapper:
             return mapper.find_by_person_key(person_key)
 
     def save_account(self, account):
-        """Speichert eine Zeitkonto-Instanz"""
+        """Speichert eine Zeitkonto-Instanz."""
         account.set_last_modified_date(dt.datetime.now())
         with ZeitkontoMapper() as mapper:
             mapper.update(account)
@@ -274,6 +279,7 @@ class SystemAdministration(object):
         gewährleisten"""
 
     def get_all_bookings_for_account(self, account):
+        """Gibt alle Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         all_start_event_transactions = self.get_start_event_transaction_by_account_key(account.get_id())
@@ -284,14 +290,70 @@ class SystemAdministration(object):
                all_end_event_transactions, all_pause_transactions, all_project_worktime_transactions
 
     def get_all_kommen_transactions_for_account(self, account):
+        """Gibt alle Kommen-Ereignis-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
         return all_kommen_transactions
 
+    def get_all_kommen_transactions_for_account_between_dates(self, account_id, start_date_str, end_date_str):
+        account = self.get_time_account_by_key(account_id)
+        all_kommen_transactions = self.get_kommen_transaction_by_account_key(account.get_id())
+        start_date = dt.datetime.strptime(start_date_str, '%Y-%m-%d')
+        end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d')
+        end_date += dt.timedelta(hours=23, minutes=59, seconds=59)
+        selected_kommen_transactions = []
+
+        for transaction in all_kommen_transactions:
+            event = self.get_kommen_event_by_key(transaction.get_event_id())
+            time_of_event = event.get_time_of_event()
+            if start_date <= time_of_event <= end_date:
+                selected_kommen_transactions.append(transaction)
+
+        return selected_kommen_transactions
+
+    def get_all_kommen_events_for_account_between_dates(self, account, start_date_str, end_date_str):
+        kommen_transactions = self.get_all_kommen_transactions_for_account_between_dates(account, start_date_str,
+                                                                                         end_date_str)
+        selected_kommen_events = []
+
+        for transaction in kommen_transactions:
+            event = self.get_kommen_event_by_key(transaction.get_event_id())
+            selected_kommen_events.append(event)
+
+        return selected_kommen_events
+
     def get_all_gehen_transactions_for_account(self, account):
+        """Gibt alle Gehen-Ereignis-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         return all_gehen_transactions
 
+    def get_all_gehen_transactions_for_account_between_dates(self, account, start_date_str, end_date_str):
+        all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
+        start_date = dt.datetime.strptime(start_date_str, '%Y-%m-%d')
+        end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d')
+        end_date += dt.timedelta(hours=23, minutes=59, seconds=59)
+        selected_gehen_transactions = []
+
+        for transaction in all_gehen_transactions:
+            event = self.get_gehen_event_by_key(transaction.get_event_id())
+            time_of_event = event.get_time_of_event()
+            if start_date <= time_of_event <= end_date:
+                selected_gehen_transactions.append(transaction)
+
+        return selected_gehen_transactions
+
+    def get_all_gehen_events_for_account_between_dates(self, account, start_date_str, end_date_str):
+        gehen_transactions = self.get_all_gehen_transactions_for_account_between_dates(account, start_date_str,
+                                                                                         end_date_str)
+        selected_gehen_events = []
+
+        for transaction in gehen_transactions:
+            event = self.get_gehen_event_by_key(transaction.get_event_id())
+            selected_gehen_events.append(event)
+
+        return selected_gehen_events
+
     def get_full_work_time(self, account):
+        """Gibt die gesamte Projekt-Arbeitszeit des Zeitkontos in Stunden aus."""
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         full_work_time = 0
         all_project_worktimes =[]
@@ -305,10 +367,12 @@ class SystemAdministration(object):
         return full_work_time
 
     def get_all_pause_transactions_for_account(self, account):
+        """Gibt alle Pausen-Intervall-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
         return all_pause_transactions
 
     def get_full_pause_time_for_account(self, account):
+        """Gibt die gesamte Pause-Zeit des Zeitkontos in Stunden aus."""
         all_pause_transactions = self.get_pause_transaction_by_account_key(account.get_id())
         full_pause_time = 0
         all_pauses = []
@@ -322,10 +386,13 @@ class SystemAdministration(object):
         return full_pause_time
 
     def get_all_worktime_transactions_for_account(self, account):
+        """Gibt alle Projekt-Arbeitszeit-Intervall-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         return all_worktime_transactions
 
     def get_worktime_transactions_on_activity(self, account, activity):
+        """Gibt alle Projekt-Arbeitszeit-Buchungen des Zeitkontos, welche auf eine bestimmte
+           Aktivität gebucht wurden aus."""
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         all_worktime_transactions_on_activity = []
         for transaction in all_project_worktime_transactions:
@@ -335,6 +402,8 @@ class SystemAdministration(object):
         return all_worktime_transactions_on_activity
 
     def get_worktime_on_activity(self, account, activity):
+        """Gibt die gesamte Projekt-Arbeitszeit des Zeitkontos, die auf eine bestimmte
+                   Aktivität gebucht wurden in Stunden aus."""
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         all_worktime_intervals_on_activity = []
         worktime_on_activity = 0
@@ -349,6 +418,8 @@ class SystemAdministration(object):
         return worktime_on_activity
 
     def get_work_time_on_project(self, account, project):
+        """Gibt die gesamte Projekt-Arbeitszeit des Zeitkontos, die auf ein bestimmtes
+           Projekt gebucht wurden in Stunden aus."""
         all_activities_on_project = project.get_activities()
         worktime_on_project = 0
         for activity in all_activities_on_project:
@@ -362,6 +433,7 @@ class SystemAdministration(object):
 
     def create_project(self, name, creator_id, client, description, deadline_id,
                        project_duration_id, activities, persons_responsible):
+        """Legt ein neues Projekt im System an."""
 
         project = Projekt()
         project.set_name(name)
@@ -392,6 +464,7 @@ class SystemAdministration(object):
             return
 
     def get_all_projects(self):
+        """Gibt alle im System gespeicherten Projekte aus."""
         with ProjektMapper() as mapper:
             all_projects = mapper.find_all()
             for project in all_projects:
@@ -404,6 +477,7 @@ class SystemAdministration(object):
             return all_projects
 
     def get_project_by_key(self, project_key):
+        """Gibt ein bestimmtes Projekt anhand dessen ID aus."""
         with ProjektMapper() as mapper:
             project = mapper.find_by_key(project_key)
             creator = self.get_creator_by_project_key(project.get_id())
@@ -415,6 +489,7 @@ class SystemAdministration(object):
             return project
 
     def get_project_by_client(self, client):
+        """Gibt ein bestimmtes Projekt anhand dessen Klienten aus."""
         with ProjektMapper() as mapper:
             projects = mapper.find_by_client(client)
             for project in projects:
@@ -427,6 +502,7 @@ class SystemAdministration(object):
             return projects
 
     def get_project_by_creator_key(self, creator_key):
+        """Gibt ein bestimmtes Projekt anhand dessen Erstellers aus."""
         with ProjektMapper() as mapper:
             projects = mapper.find_by_creator(creator_key)
             for project in projects:
@@ -438,6 +514,7 @@ class SystemAdministration(object):
             return projects
 
     def get_project_by_person_key(self, person_key):
+        """Gibt ein bestimmtes Projekt anhand einer für das Projekt verantwortlichen Person aus."""
         with ProjektMapper() as mapper:
             projects = mapper.find_by_person_key(person_key)
             for project in projects:
@@ -450,6 +527,7 @@ class SystemAdministration(object):
             return projects
 
     def add_person_responsible_to_project(self, project, person):
+        """Fügt dem Projekt eine verantwortliche Person hinzu."""
         with ProjektMapper() as mapper:
             return mapper.insert_person_responsible(project, person)
 
@@ -468,10 +546,12 @@ class SystemAdministration(object):
             mapper.update(project)
 
     def delete_person_responsible_from_project(self, project, person):
+        """Löscht eine für das Projekt verantwortliche Person vom Projekt"""
         with ProjektMapper() as mapper:
             mapper.delete_person_responsible(project, person)
 
     def get_project_by_activity_key(self, activity_key):
+        """Gibt ein Projekt anhand einer Aktivität aus, die zum Projekt gehört."""
         with ProjektMapper() as mapper:
             project = mapper.find_by_activity_key(activity_key)
             creator = self.get_creator_by_project_key(project.get_id())
@@ -483,6 +563,7 @@ class SystemAdministration(object):
             return project
 
     def add_activity_to_project(self, project, activity):
+        """Fügt dem Projekt eine Aktivität hinzu."""
         with ProjektMapper() as mapper:
             mapper.insert_activity(project, activity)
 
@@ -501,10 +582,12 @@ class SystemAdministration(object):
             mapper.update(project)
 
     def delete_activity_from_project(self, project, activity):
+        """Löscht eine Aktivität vom Projekt."""
         with ProjektMapper() as mapper:
             mapper.delete_activity(project, activity)
 
     def save_project(self, project):
+        """Speichert die Projekt-Instanz im System."""
         project.set_last_modified_date(dt.datetime.now())
         with ProjektMapper() as mapper:
             mapper.update(project)

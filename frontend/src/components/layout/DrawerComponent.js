@@ -15,14 +15,9 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from "react-router-dom"
 import { IconButton } from '@mui/material';
+import {Link} from "react-router-dom";
 
 export default function TemporaryDrawer() {
-
-  const useStyles = makeStyles({
-    drawer: {
-      width: "200px"
-    }
-  });
 
   const navigate = useNavigate();
 

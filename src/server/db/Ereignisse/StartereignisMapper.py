@@ -1,5 +1,5 @@
 
-from business_objects.Ereignisse.Startereignis import Startereignis
+from server.business_objects.Ereignisse.Startereignis import Startereignis
 from server.db.Mapper import Mapper
 
 

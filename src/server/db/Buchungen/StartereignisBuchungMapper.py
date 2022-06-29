@@ -1,4 +1,4 @@
-from business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
+from server.business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
 from server.db.Mapper import Mapper
 import datetime
 

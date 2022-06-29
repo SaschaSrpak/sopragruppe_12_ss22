@@ -1,4 +1,4 @@
-from business_objects.Zeitintervalle.Pause import Pause
+from server.business_objects.Zeitintervalle.Pause import Pause
 from server.db.Mapper import Mapper
 
 
