@@ -80,12 +80,11 @@ export default class SystemAPI {
     #getGehenTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/gehen/transactions/${id}`;
     #getGehenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/gehen/${id}/${start_date}/${end_date}`
     #getPauseTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/pause/${id}`;
+    #getPauseTransactionsValueBetweenDatesURL = (id, start_date, end_date) => `${this.#SystemServerBaseURL}/accounts/pause/values/${id}/${start_date}/${end_date}`
     #getPauseTimeOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/pause/${id}/Time`;
-    #getWorktimeTransactionsOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/
-                                                                         transactions/${id}/activities/${activity_id}`;
-    #getWorktimeOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/
-                                                            worktime/${id}/activities/${activity_id}`;
-
+    #getWorktimeTransactionsOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/transactions/${id}/activities/${activity_id}`;
+    #getWorktimeOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/worktime/${id}/activities/${activity_id}`;
+    #getWorktimeTransactionsValueBetweenDatesURL = (id, start_date, end_date) => `${this.#SystemServerBaseURL}/accounts/worktime/values/${id}/${start_date}/${end_date}`
     #getWorktimeTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/worktime-transactions/${id}`;
 
     //Commit-Transaction related
@@ -144,6 +143,8 @@ export default class SystemAPI {
     #getPauseTransactionURL = (id) => `${this.#SystemServerBaseURL}/pause-transaction/${id}`;
     #deletePauseTransactionURL = (id) => `${this.#SystemServerBaseURL}/pause-transaction/${id}`;
     #updatePauseTransactionURL = (id) => `${this.#SystemServerBaseURL}/pause-transaction/${id}`;
+    #updatePauseTransactionWithValuesURL = (id,  interval_id, interval_name, start_time, end_time) => `${this.#SystemServerBaseURL}/pause-transaction/values/${id}/${interval_id}/${interval_name}/${start_time}/${end_time}`;
+
 
     //Start-event related
 
@@ -168,6 +169,7 @@ export default class SystemAPI {
     #getWorktimeTransactionURL = (id) => `${this.#SystemServerBaseURL}/worktime-transaction/${id}`;
     #deleteWorktimeTransactionURL = (id) => `${this.#SystemServerBaseURL}/worktime-transaction/${id}`;
     #updateWorktimeTransactionURL = (id) => `${this.#SystemServerBaseURL}/worktime-transaction/${id}`;
+    #updateWorktimeTransactionWithValuesURL = (id, interval_id, interval_name, start_time, end_time) => `${this.#SystemServerBaseURL}/worktime-transaction/values/${id}/${interval_id}/${interval_name}/${start_time}/${end_time}`;
 
     //Project-deadline related
 
@@ -594,6 +596,15 @@ export default class SystemAPI {
         })
   }
 
+  getPauseTransactionsOfAccountBetweenDates(account_id, start_date, end_date){
+        return this.#fetchAdvanced(this.#getPauseTransactionsValueBetweenDatesURL(account_id, start_date, end_date)).then((responseJSON)=>{
+            let transaction_values = responseJSON;
+            return new Promise(function (resolve){
+                resolve(transaction_values)
+            })
+        })
+  }
+
   getWorktimeTransactionsOfAccount(account_id){
         return this.#fetchAdvanced(this.#getWorktimeTransactionsOfAccountURL(account_id)).then((responseJSON) => {
             let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON);
@@ -617,6 +628,15 @@ export default class SystemAPI {
             let worktime = responseJSON;
             return new Promise(function (resolve){
                 resolve(worktime)
+            })
+        })
+  }
+
+  getWorktimeTransactionsOfAccountBetweenDates(account_id, start_date, end_date){
+        return this.#fetchAdvanced(this.#getWorktimeTransactionsValueBetweenDatesURL(account_id, start_date, end_date)).then((responseJSON)=>{
+            let transaction_values = responseJSON;
+            return new Promise(function (resolve){
+                resolve(transaction_values)
             })
         })
   }
@@ -1280,6 +1300,19 @@ export default class SystemAPI {
     })
   }
 
+  updatePauseTransactionWithValues(transaction_id, interval_id, interval_name, start_time, end_time){
+      return this.#fetchAdvanced(this.#updatePauseTransactionWithValuesURL(transaction_id, interval_id, interval_name, start_time, end_time), {
+          method: 'PUT',
+
+      }).then((responseJSON) => {
+              let transaction_response = responseJSON;
+              return new Promise(function(resolve){
+                  resolve(transaction_response)
+              })
+      })
+
+  }
+
 
   //Project-Worktime related Functions
 
@@ -1399,6 +1432,21 @@ export default class SystemAPI {
       })
     })
   }
+
+  updateProjectWorktimeTransactionWithValues(transaction_id, interval_id, interval_name, start_time, end_time){
+      return this.#fetchAdvanced(this.#updateWorktimeTransactionWithValuesURL(transaction_id, interval_id, interval_name, start_time, end_time), {
+          method: 'PUT',
+
+      }).then((responseJSON) => {
+              let transaction_response = responseJSON;
+              return new Promise(function(resolve){
+                  resolve(transaction_response)
+              })
+      })
+
+  }
+
+
 
 
   //Project-Deadline related Functions
