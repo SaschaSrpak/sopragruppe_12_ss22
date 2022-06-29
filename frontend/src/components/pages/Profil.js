@@ -27,7 +27,6 @@ class Profil extends Component {
             ma = props.person.getMail_address();
             un = props.person.getUser_name();
             ms = props.person.getManager_status();
-
         }
 
         this.state = {
@@ -90,7 +89,6 @@ class Profil extends Component {
     }
 
     componentDidMount() {
-
     }
 
     updatePerson = () => {
@@ -99,12 +97,12 @@ class Profil extends Component {
         updatedPerson.setSurname(this.state.surname);
         SystemAPI.getAPI().updatePerson(updatedPerson).then(person => {
             this.setState({
-
             })
         });
         this.baseState.name = this.state.name;
         this.handleClose();
     }
+
 
 
     render() {
@@ -150,6 +148,7 @@ class Profil extends Component {
                             onChange={this.handleChange}
                         />
                         <TextField
+                            disabled
                             margin="dense"
                             id="user_name"
                             label="Username"
@@ -167,7 +166,7 @@ class Profil extends Component {
 
                         />
                         <TextField
-
+                            disabled
                             margin="dense"
                             id="mail_address"
                             label="Email Address"
@@ -184,7 +183,7 @@ class Profil extends Component {
 
                             onChange={this.handleChange}
                         />
-
+                        <div><br></br></div>
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-filled-label">Managerstatus</InputLabel>
                             <Select
@@ -203,8 +202,10 @@ class Profil extends Component {
 
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose}>Cancel</Button>
                         <Button onClick={this.updatePerson}>Save</Button>
+                        <Button onClick={this.handleClose}>Cancel</Button>
+
+
                     </DialogActions>
                 </Dialog >
             </React.Fragment >

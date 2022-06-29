@@ -177,6 +177,21 @@ end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event
 
 interval_transaction_response = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
 
+pause_transaction_response_special = api.model('Spezielle Pausen Übergabe', {'transaction_id': fields.Integer(),
+                                                                             'interval_id': fields.Integer(),
+                                                                             'interval_name': fields.String(),
+                                                                             'start_time': fields.String(),
+                                                                             'end_time': fields.String()})
+
+project_worktime_transaction_response_special = api.model('Spezielle Projektarbeit '
+                                                          'Übergabe', {'transaction_id': fields.Integer(),
+                                                                       'interval_id': fields.Integer(),
+                                                                       'interval_name': fields.String(),
+                                                                       'project_name': fields.String(),
+                                                                       'activity_name': fields.String(),
+                                                                       'start_time': fields.String(),
+                                                                       'end_time': fields.String()})
+
 
 @timesystem.route('/persons')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -229,7 +244,7 @@ class PersonOperations(Resource):
         p = s_adm.get_person_by_key(id)
         return p
 
-    @secured
+    #@secured
     def delete(self, id):
         """
         Löscht eine bestimmte Person aus dem System.
@@ -546,7 +561,7 @@ class ProjectOperations(Resource):
         """
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
-        s_adm.delete_person(pr)
+        s_adm.delete_project(pr)
         return '', 200
 
     @timesystem.marshal_with(project)
@@ -1053,7 +1068,32 @@ class PauseTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/accounts/worktime-transactions-of-account/<int:id>')
+@timesystem.route('/accounts/pause/values/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class PauseTransactionValueBetweenDatesAccountOperations(Resource):
+    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Pausen-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Pausen-Buchungen in JSON Form
+        """
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        pauses_values = s_adm.get_all_pause_transaction_values_for_account_between_dates(account, start_date, end_date)
+
+        if account is not None:
+            return pauses_values[0]
+
+
+
+@timesystem.route('/accounts/worktime-transactions/<int:id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class WorktimeTransactionRelatedAccountOperations(Resource):
@@ -1102,6 +1142,30 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
         else:
             return 'Activity not found', 500
 
+@timesystem.route('/accounts/worktime/values/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
+    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Werte einer Projekt-Buchung aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Pausen-Buchungen in JSON Form
+        """
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        worktime_values = s_adm.get_all_worktime_transaction_values_for_account_between_dates(account, start_date,
+                                                                                              end_date)
+
+        if account is not None:
+            return worktime_values[0]
+        
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1726,6 +1790,28 @@ class PauseTransactionOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>'
+                  '/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Buchungs-Objekts')
+@timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
+@timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
+@timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
+@timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
+class PauseTransactionValueOperations(Resource):
+    @timesystem.marshal_with(pause_transaction_response_special)
+    @timesystem.expect(pause_transaction_response_special, validate=True)
+    @secured
+    def put(self, id, interval_id, interval_name, start_time, end_time):
+        s_adm = SystemAdministration()
+        transaction = s_adm.get_pause_transaction_by_key(id)
+        if transaction:
+            s_adm.save_pause_transaction_with_values(id, interval_id, interval_name, start_time, end_time)
+            return '', 200
+        else:
+            return '', 500
+
+
 
 @timesystem.route('/commit-pause-transaction/<int:account_id>/<string:name>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1868,6 +1954,28 @@ class WorktimeTransactionOperations(Resource):
             pt.set_target_activity(pt.get_target_activity())
             pt.set_time_interval_id(pt.get_time_interval_id())
             s_adm.save_project_work_transaction(pt)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/worktime-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>'
+                  '/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Buchungs-Objekts')
+@timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
+@timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
+@timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
+@timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
+class WorktimeTransactionValueOperations(Resource):
+    @timesystem.marshal_with(project_worktime_transaction_response_special)
+    @timesystem.expect(project_worktime_transaction_response_special, validate=True)
+    @secured
+    def put(self, id, interval_id, interval_name, start_time, end_time):
+        s_adm = SystemAdministration()
+        transaction = s_adm.get_project_work_transaction_by_key(id)
+        if transaction:
+            s_adm.save_worktime_transaction_with_values(id, interval_id, interval_name, start_time, end_time)
             return '', 200
         else:
             return '', 500

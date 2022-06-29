@@ -113,10 +113,11 @@ create table EndereignisBuchung
     Account_ID         int      not null,
     Event_ID           int      null,
     Last_modified_date datetime not null,
-    constraint EndereignisBuchung_Endereignis_Event_ID_fk
-        foreign key (Event_ID) references Endereignis (Event_ID),
     constraint EndereignisBuchung_Arbeitszeitkonto_Account_ID_fk
-        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint EndereignisBuchung_Endereignis_Event_ID_fk
+        foreign key (Event_ID) references Endereignis (Event_ID)
+
 );
 
 DROP TABLE IF EXISTS `KommenBuchung`;
