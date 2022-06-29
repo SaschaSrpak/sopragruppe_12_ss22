@@ -228,6 +228,9 @@ class SystemAdministration(object):
                 for person in responsible_list:
                     self.delete_person_responsible_from_activity(activity, person)
             self.delete_activity_from_project(project, activity)
+            transactions_of_activity = self.get_all_worktime_transactions_for_activity(activity)
+            for transaction in transactions_of_activity:
+                self.delete_project_work_transaction(transaction)
             mapper.delete(activity)
 
     """
@@ -268,13 +271,34 @@ class SystemAdministration(object):
 
     def delete_account(self, account):
         """Das gegebene Zeitkonto löschen."""
+        all_kommen_transactions = self.get_all_kommen_transactions_for_account(account)
+        all_gehen_transactions = self.get_all_gehen_transactions_for_account(account)
+        all_start_transactions = self.get_all_start_transactions_for_account(account)
+        all_end_transactions = self.get_all_gehen_transactions_for_account(account)
+        all_pause_transactions = self.get_all_pause_transactions_for_account(account)
+        all_worktime_transactions = self.get_all_worktime_transactions_for_account(account)
+
+        for transaction in all_kommen_transactions:
+            self.delete_kommen_transaction(transaction)
+
+        for transaction in all_gehen_transactions:
+            self.delete_gehen_transaction(transaction)
+
+        for transaction in all_start_transactions:
+            self.delete_start_event_transaction(transaction)
+
+        for transaction in all_end_transactions:
+            self.delete_end_event_transaction(transaction)
+
+        for transaction in all_pause_transactions:
+            self.delete_pause_transaction(transaction)
+
+        for transaction in all_worktime_transactions:
+            self.delete_project_work_transaction(transaction)
+
         with ZeitkontoMapper() as mapper:
             mapper.delete(account)
-        """Wichtig!: Diese Funktion muss noch ausgebaut werden!
-        Es müssen alle Buchungen, welche auf dieses Konto
-        gebucht wurden auch wieder entfernt werden, um die 
-        referentielle Integrität des Gesamtsystems zu 
-        gewährleisten"""
+
 
     def get_all_bookings_for_account(self, account):
         """Gibt alle Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
@@ -286,6 +310,14 @@ class SystemAdministration(object):
         all_project_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         return all_kommen_transactions, all_gehen_transactions, all_start_event_transactions, \
                all_end_event_transactions, all_pause_transactions, all_project_worktime_transactions
+
+    def get_all_start_transactions_for_account(self, account):
+        all_start_event_transactions = self.get_start_event_transaction_by_account_key(account.get_id())
+        return all_start_event_transactions
+
+    def get_all_end_transactions_for_account(self, account):
+        all_end_event_transactions = self.get_end_event_transaction_by_account_key(account.get_id())
+        return all_end_event_transactions
 
     def get_all_kommen_transactions_for_account(self, account):
         """Gibt alle Kommen-Ereignis-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
@@ -378,20 +410,20 @@ class SystemAdministration(object):
         selected_pause_values = []
 
         for transaction in all_pause_transactions:
-            interval = self.get_pause_transaction_by_key(transaction.get_id())
+            interval = self.get_pause_by_transaction_key(transaction.get_id())
             start_event = self.get_start_event_by_key(interval.get_start())
             end_event = self.get_end_event_by_key(interval.get_end())
             time_of_start = start_event.get_time_of_event()
             time_of_end = end_event.get_time_of_event()
             if start_date <= time_of_start <= end_date:
                 if start_date <= time_of_end <= end_date:
-                    transaction_id = transaction.get_id()
-                    interval_id = interval.get_id()
-                    interval_name = interval.get_name()
-                    start_time = time_of_start
-                    end_time = time_of_end
-                    response = [transaction_id, interval_id,
-                                interval_name, start_time, end_time]
+                    response = {}
+                    response['transaction_id'] = transaction.get_id()
+                    response['interval_id'] = interval.get_id()
+                    response['interval_name'] = interval.get_name()
+                    response['start_time'] = time_of_start
+                    response['end_time'] = time_of_end
+
                     selected_pause_values.append(response)
 
         return selected_pause_values
@@ -414,6 +446,17 @@ class SystemAdministration(object):
         """Gibt alle Projekt-Arbeitszeit-Intervall-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
         all_worktime_transactions = self.get_project_work_transaction_by_account_key(account.get_id())
         return all_worktime_transactions
+
+    def get_all_worktime_transactions_for_activity(self, activity):
+        """Gibt alle Projekt-Arbeitszeit-Intervall-Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
+        all_worktime_transactions = self.get_all_project_work_transactions()
+        activity_id = activity.get_id()
+        all_worktime_transactions_activity = []
+        for transaction in all_worktime_transactions:
+            transaction_activity_id = transaction.get_target_activity()
+            if transaction_activity_id == activity_id:
+                all_worktime_transactions_activity.append(transaction)
+        return all_worktime_transactions_activity
 
     def get_worktime_transactions_on_activity(self, account, activity):
         """Gibt alle Projekt-Arbeitszeit-Buchungen des Zeitkontos, welche auf eine bestimmte
@@ -444,19 +487,18 @@ class SystemAdministration(object):
             time_of_end = end_event.get_time_of_event()
             if start_date <= time_of_start <= end_date:
                 if start_date <= time_of_end <= end_date:
-                    transaction_id = transaction.get_id()
-                    interval_id = interval.get_id()
-                    interval_name = interval.get_name()
-                    activity_name = activity.get_name()
-                    project_name = project.get_name()
-                    start_time = time_of_start
-                    end_time = time_of_end
-                    response = [transaction_id, interval_id, interval_name,
-                                project_name, activity_name, start_time, end_time]
+                    response = {}
+                    response['transaction_id'] = transaction.get_id()
+                    response['interval_id'] = interval.get_id()
+                    response['interval_name'] = interval.get_name()
+                    response['activity_name'] = activity.get_name()
+                    response['project_name'] = project.get_name()
+                    response['start_time'] = time_of_start
+                    response['end_time'] = time_of_end
+
                     selected_worktime_values.append(response)
 
         return selected_worktime_values
-
 
     def get_worktime_on_activity(self, account, activity):
         """Gibt die gesamte Projekt-Arbeitszeit des Zeitkontos, die auf eine bestimmte
