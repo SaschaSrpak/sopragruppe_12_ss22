@@ -5,8 +5,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SystemAPI from '../../api/SystemAPI';
-import Listen from '../pages/Listen'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import UpdateDialog from '../Zwischenelemente/UpdateDialog';
 
 /** 
  *@fileOverview 
@@ -17,34 +21,36 @@ export class Auslese extends Component {
   constructor(props){
     super(props);
 
-    let KommenID = null;
-
-    if (this.state) {
-      KommenID = this.state.expandedKommenID;
-    }
-
     this.state ={
       Error: false,
       Loader: false,
-      expandedKommenID: KommenID,
+      showUpdateDialog: false,
     }
 
   }
 
-  /*onExpandedStateChange = kommen => {
-    
-    let newID = null;
+  
+  editButtonClicked = (event) => {
+      event.stopPropagation();
+      this.setState({
+        showUpdateDialog: true
+      });
+  }
 
-    if (kommen.getKommen() !== this.state.expandedKommenID) {
-      
-      newID = kommen.getKommen();
-    }
+  handleClickOpen = () => { 
     this.setState({
-      expandedKommenID: newID,
-    });
-    */
+      open: !this.state.open
+    })
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false
+  });
+  };
 
     render() {
+      const { showUpdateDialog ,open } = this.state;
         return (
             <div>
             <h1 style={{textAlign: "center"}}>Buchungen Auslesen</h1>
@@ -59,7 +65,7 @@ export class Auslese extends Component {
                   <Button color='primary' onClick={""}>
                     edit
                   </Button>
-                  <Button color='secondary' onClick={""}>
+                  <Button color='secondary' onClick={this.deleteKommenButtonClicked}>
                     delete
                   </Button>
                 </ButtonGroup>
@@ -121,6 +127,28 @@ export class Auslese extends Component {
                 </ButtonGroup>
               </AccordionDetails>
             </Accordion>
+
+            <Button onClick={this.editButtonClicked}>
+                    Edit
+            </Button>
+
+            <Button variant="outlined" onClick={this.handleClickOpen}>
+              Open form dialog
+            </Button>
+            
+            <Dialog open={open} onClose={this.handleClose}>
+                    <DialogTitle> Lösche deine Buchung</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Möchtest du die Buchung wirklich löschen?
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleClose}>Cancel</Button>
+                            <Button onClick={this.handleClose}>Löschen</Button>
+                        </DialogActions>
+                </Dialog>
+            
             
         </div>
                 

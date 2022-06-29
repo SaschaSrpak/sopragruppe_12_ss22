@@ -1,4 +1,5 @@
 import mysql.connector as connector
+import os
 from contextlib import AbstractContextManager
 from abc import ABC, abstractmethod
 
@@ -10,8 +11,12 @@ class Mapper(AbstractContextManager, ABC):
         self._cnx = None
 
     def __enter__(self):
-        """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
-        self._cnx = connector.connect(host='localhost', user='root', password='roottoor',
+        if os.getenv('GAE_ENV','').startswith('standard'):
+            """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
+            self._cnx = connector.connect(user='root', password='roottoor', unix_socket='/cloudsql/pelagic-bonbon-354412:europe-west3:sopra-mysql-instanz',
+                                      database='SoPra_MySQL_DB')
+        else:
+            self._cnx = connector.connect(host='localhost', user='root', password='roottoor',
                                       database='SoPra_MySQL_DB')
 
         return self

@@ -23,10 +23,6 @@ export class Buchungen extends Component{
   
   constructor(props){
     super(props);
-    this.kommen = null;
-    this.gehen = null;
-
-    
 
     this.state = {
       activities: [],
@@ -123,8 +119,7 @@ componentDidMount() {
           SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA, this.state.endeA )
       })
     }
-  
-  
+
     render(){
       const {activities, selectedActivities} = this.state;
       return(
@@ -157,10 +152,14 @@ componentDidMount() {
                         </MenuItem>)
                         })}
                       </Select>
-
-                    <TextField required id="outlined-required" label="Aktivitätsbeschreibung"  onChange={(event) => this.setState({activitydescription: event.target.value})}/>
+                    
+                    <div><br></br></div>
+                    <TextField required id="outlined-required" label="Aktivitätsbeschreibung"  onChange={(event) => this.setState({activitydescription: event.target.value})} />
+                    <div><br></br></div>
                     <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Beginn"  onChange={(event) => this.setState({beginnA: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <div><br></br></div>
                     <TextField id="outlined-basic"  variant="outlined" type="datetime-local" label="Ende" onChange={(event) => this.setState({endeA: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <div><br></br></div>
                     <Button variant="contained" onClick={() => this.bookBuchung()}>  Aktivität Buchen </Button>
 
                     </FormControl>
@@ -175,9 +174,12 @@ componentDidMount() {
                     <h2>Pause</h2>
 
                     <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung" onChange={(event) => this.setState({pausedescription: event.target.value})}/>
+                    <div><br></br></div>
                     <TextField id="outlined-basic" label="Beginn" variant="outlined" type="datetime-local" onChange={(event) => this.setState({beginnP: event.target.value})} InputLabelProps={{shrink: true,}}/>
+                    <div><br></br></div>
                     <TextField id="outlined-basic" label="Ende" variant="outlined" type="datetime-local" onChange={(event) => this.setState({endeP: event.target.value})} InputLabelProps={{shrink: true,}}/>
-                    <Button variant="contained" onClick={() => this.bookPauseClicked()}> Pause Buchen </Button>
+                    <div><br></br></div>
+                    <Button variant="contained" onClick={() => this.bookPauseClicked()} >Pause Buchen </Button>
 
                     </FormControl>
                   </Stack>
