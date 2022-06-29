@@ -40,9 +40,6 @@ export class Buchungen extends Component{
 
   }
 
-
-
-
   kommenButtonClicked = event =>{
     let newKommen = new KommenBO();
     newKommen.event_name = "kommen";
@@ -101,15 +98,7 @@ componentDidMount() {
     })
   }
   
-  bookBuchung = () => {
-
-    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
-        SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.selectedActivities)
-    })
-  }
-
-
-    bookBuchung = event => {
+  bookBuchung = event => {
     console.log(this.state.selectedActivities)
         console.log(this.state.beginnA)
         console.log(this.state.activitydescription)
@@ -118,7 +107,7 @@ componentDidMount() {
       SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
           SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA, this.state.endeA )
       })
-    }
+  }
 
     render(){
       const {activities, selectedActivities} = this.state;
