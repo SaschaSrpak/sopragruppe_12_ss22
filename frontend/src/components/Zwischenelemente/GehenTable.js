@@ -13,7 +13,7 @@ import {Button} from "@mui/material";
 
 
 
-function DataTable({ title, data}) {
+function KommenTable({ title, data}) {
 
 
   const headers = Object.keys(data[0]);
@@ -53,8 +53,8 @@ function DataTable({ title, data}) {
   );
 }
 
-DataTable.defaultProps = {
+KommenTable.defaultProps = {
   title: "No Title"
 };
 
-export default DataTable;
+export default KommenTable;
