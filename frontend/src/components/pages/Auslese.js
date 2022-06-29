@@ -321,9 +321,9 @@ export class Auslese extends Component {
         
 
 
-                
-        )
-    }
-};
 
+        );
+    }
+}
+}
 export default Auslese;
