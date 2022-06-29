@@ -20,11 +20,15 @@ import { SystemAPI } from "./api";
 import ProfilRegistrierung from './components/pages/ProfilRegristrierung';
 
 
-
+/**
+ *@fileOverview 
+ *@author Luca Trautmann
+*/
 
 export class App extends Component {
 
   constructor(props) {
+    //Konstruiert alle für Funktionen benötigten Variablen
     super(props);
     this.state = {
       currentUser: null,
@@ -37,25 +41,28 @@ export class App extends Component {
     };
   }
 
+
   componentDidMount() {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     onAuthStateChanged(auth, this.handleAuthStateChange)
   }
 
+  //Sorgt bei Knopfdruck für einloggen des Nutzers
   handleSignInButtonClicked = () => {
+    console.log("login gedrückt")
     const auth = getAuth();
     auth.languageCode = 'en';
     const provider = new GoogleAuthProvider();
 
-    //funciton aufstellen onlcick
-
+   
+    //Login erfolgt durch ein Google-Auth Popup
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
+        // Teilt einen Google Access Token dem Nutzer zu.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
+        // Speichert die Userinfo des Users.
         const user = result.user;
         this.setState({ currentUser: user, authLoading: false })
         // ...
@@ -73,13 +80,14 @@ export class App extends Component {
 
   handleAuthStateChange = (user) => {
     if (user) {
+      //Ruft den Token und User auf
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
         SystemAPI.getAPI().getPersonByFirebaseID(user.uid).then(person => {
 
           let open = false
           console.log(person)
-          
+          //Prüft ob User Neu angelegt ist und offnet bei ===Vorname das Profilregistrierungs-Popup
           if(person.name === "Vorname") {
             console.log("checkuser")
             open = true
@@ -99,10 +107,10 @@ export class App extends Component {
         });
       })
     } else {
-      // User has logged out, so clear the id token
+      // User hat sich ausgeloggt also wir der Token gelöscht
       document.cookie = 'token=;path=/';
 
-      // Set the logged out user to null
+      // User-Status auf null setzen nach Logout
       this.setState({
         currentUser: null,
         authLoading: true
@@ -110,7 +118,9 @@ export class App extends Component {
     }
   }
 
+
   checkNewUser = () => {
+    //Prüft ob User Neu angelegt ist und offnet bei ===Vorname das Profilregistrierungs-Popup
     if (this.state.person.name === "Vorname") {
       console.log("checkuser")
       this.setState({
@@ -125,7 +135,7 @@ export class App extends Component {
     const { currentUser, authError, appError, open, person } = this.state;
 
 
-
+    //Prüft ob ein user eingeloggt ist und wenn nicht wird er zur Login-Page navigiert
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
@@ -139,6 +149,7 @@ export class App extends Component {
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
+              {/* Prüft nach neuer Person und übergibt Parameter an ProfilRegistrierung */}
               {person ? <ProfilRegistrierung user={currentUser} open={open} handleClose={() => this.setState({ open: false })} /> : null}
               <Routes>
                 <Route path='/static/reactclient' element={

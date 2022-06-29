@@ -13,13 +13,18 @@ import FormControl from '@mui/material/FormControl';
 import PersonBO from '../../api/PersonBO';
 import SystemAPI from '../../api/SystemAPI';
 
+/**
+ *@fileOverview Repersentiert ein Popup welche als Profilübersicht mit den Aktuellen Daten des Nutzers anzeigen. 
+ Änderungen können ebenso gemacht werden.
+ *@author Luca Trautmann
+*/
 
 class Profil extends Component {
 
     constructor(props) {
         super(props);
 
-
+        //Konstruiert alle Variablen für die Profilübersicht
         let n = '', sn = '', ma = '', un = '', ms = '';
         if (props.person) {
             n = props.person.getName();
@@ -28,7 +33,7 @@ class Profil extends Component {
             un = props.person.getUser_name();
             ms = props.person.getManager_status();
         }
-
+        //setzt alle Standartstates für die Variablen
         this.state = {
             person: null,
             name: n,
@@ -46,7 +51,7 @@ class Profil extends Component {
 
         console.log("hallo")
     }
-
+    // Bei Klick auf Profil-Button öffnet sich das Profil-Popup
     handleClickOpen = () => {
         this.getPerson();
         this.setState({
@@ -54,12 +59,14 @@ class Profil extends Component {
         });
     }
 
+    //Schließt das Popup Feld wieder
     handleClose = () => {
         this.setState({
             open: false
         });
     }
 
+        //Verarbeitet veränderte Werte der Eingabefelder
     handleChange = (event) => {
         console.log(event.target.value)
         this.setState({
@@ -68,6 +75,7 @@ class Profil extends Component {
 
     }
 
+     //Verarbeitet veränderten Wert des Dropdowns
     handleChangeDrop = (event) => {
         console.log(event.target)
         this.setState({
@@ -75,6 +83,7 @@ class Profil extends Component {
         })
     }
 
+    //Funktion um alle Daten einer Person aus dem Backend zu ziehen
     getPerson = () => {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
             .then(PersonBO =>
@@ -91,6 +100,7 @@ class Profil extends Component {
     componentDidMount() {
     }
 
+    //übergibt alle geupdateten Werte an das Backend
     updatePerson = () => {
         let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
@@ -100,6 +110,7 @@ class Profil extends Component {
             })
         });
         this.baseState.name = this.state.name;
+        //Auf klick wird das Fenster wieder geschlossen
         this.handleClose();
     }
 

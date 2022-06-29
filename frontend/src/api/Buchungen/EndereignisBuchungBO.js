@@ -2,7 +2,7 @@
 import EreignisbuchungBO from './EreignisbuchungBO';
 
 /** 
- *@fileOverview 
+ *@fileOverview Representiert eine Endereignisbuchung von Ereignisbuchungen
  *@author Luca Trautmann
 */
 
@@ -20,6 +20,7 @@ export default class EndereignisBuchungBO extends EreignisbuchungBO{
             })
         } else {
             let et = end_transaction;
+            // Konvertieren des JSON-Inhalts in ein EndereignisBuchungBO Objekt
             Object.setPrototypeOf(et, EndereignisBuchungBO.prototype);
             result.push(et);
         }

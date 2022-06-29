@@ -13,13 +13,19 @@ import FormControl from '@mui/material/FormControl';
 import PersonBO from '../../api/PersonBO';
 import SystemAPI from '../../api/SystemAPI';
 
+/**
+ *@fileOverview Repersentiert ein Popup welche als Popup nach einer Neuregistrierung 
+ die Aktuellen Daten des Nutzers anzeigt und es ermöglicht die Datenzuergänzen und den Managerstatus setzt
+
+ *@author Luca Trautmann
+*/
 
 class Profil extends Component {
 
     constructor(props) {
         super(props);
 
-
+        //Konstruiert alle Variablen für die Profilübersicht
         let n = '', sn = '', ma = '', un = '', ms = '';
         if (props.person) {
             n = props.person.getName();
@@ -29,7 +35,7 @@ class Profil extends Component {
             ms = props.person.getManager_status();
 
         }
-
+        //setzt alle Standartstates für die Variablen
         this.state = {
             person: null,
             name: n,
@@ -48,6 +54,7 @@ class Profil extends Component {
         console.log("hallo neuer Dude")
     }
 
+    // Öffnet  das ProfilRegistrierungs-Popup
     handleClickOpen = () => {
 
         this.setState({
@@ -56,7 +63,7 @@ class Profil extends Component {
     }
 
 
-
+    //Verarbeitet veränderte Werte der Eingabefelder
     handleChange = (event) => {
         console.log(event.target.value)
         this.setState({
@@ -65,6 +72,7 @@ class Profil extends Component {
 
     }
 
+    //Verarbeitet veränderten Wert des Dropdowns
     handleChangeDrop = (event) => {
         console.log(event.target)
         this.setState({
@@ -72,9 +80,11 @@ class Profil extends Component {
         })
     }
 
+    //Funktion um alle Daten einer Person aus dem Backend zu ziehen
     getPerson = () => {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
             .then(PersonBO =>
+                //setzt alle werde entsprechend der user-id
                 this.setState({
                     person: PersonBO,
                     name: PersonBO.getName(),
@@ -89,6 +99,7 @@ class Profil extends Component {
         this.getPerson();
     }
 
+    //übergibt alle geupdateten Werte an das Backend
     updatePerson = () => {
         let updatedPerson = Object.assign(new PersonBO(), this.state.person)
         updatedPerson.setName(this.state.name);
@@ -100,7 +111,7 @@ class Profil extends Component {
             })
         });
         this.baseState.name = this.state.name;
-
+        //Auf klick wird das Fenster wieder geschlossen
         this.props.handleClose();
     }
 
