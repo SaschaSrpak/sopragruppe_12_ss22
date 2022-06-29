@@ -22,7 +22,7 @@ class ProfileDropDown extends Component {
         this.state = {
             open: false,
             show: false,
-            id: false
+            person: null,
         }
     }
 
@@ -43,7 +43,7 @@ class ProfileDropDown extends Component {
             open: false
         });
     }
-    
+
 
     /** 
      * Handles the click event of the sign in button and uses the firebase.auth() component to sign in.
@@ -58,18 +58,30 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
-    
-    deletePerson = () =>{
-        console.log("wir löschen jetzt");    
-        SystemAPI.getApi().deletePerson()
-            
+    deletePerson = () => {
+        SystemAPI.getApi().getPersonByFirebaseID(this.props.user.uid)
+            .then(PersonBO => {
+                console.log(PersonBO.id);
+                SystemAPI.getApi().deletePerson(PersonBO.id)
+             }
+
+            )
     }
+  
+    
     handledelete = () => {
         console.log("löschen wurde angefordert")
-        alert("Dein Account und alle zusammenhängenden Daten werden nun gelöscht");
-        this.deletePerson();
-        console.log("löschung ist durch.");
-        this.handleSignOutButtonClicked()
+        if (window.confirm('Bist du dir sicher, dass du deinen Account löschen möchtest?')) {
+            // Save it!
+            console.log('Löschung findet statt.');
+            this.deletePerson();
+            console.log("löschung ist durch.");
+            this.handleSignOutButtonClicked()
+        } else {
+            // Do nothing!
+            console.log('Keine Löschung.');
+        }
+
 
     }
 
@@ -105,7 +117,7 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
                                     <Divider sx={{ margin: 1 }} />
-                                    <Profil user={user}/>
+                                    <Profil user={user} />
                                     <Divider sx={{ margin: 1 }} />
                                     {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
@@ -114,7 +126,7 @@ class ProfileDropDown extends Component {
 
                                 </Grid>
                             </Grid>
-                           </Paper>
+                        </Paper>
 
                     </Popover>
                 </div>
