@@ -636,7 +636,7 @@ export default class SystemAPI {
         })
   }
 
-  getWorktimeTransactionsOfAccountBetweenDates(account_id, start_date, end_date){
+  getWorktimeTransactionsValueBetweenDates(account_id, start_date, end_date){
         return this.#fetchAdvanced(this.#getWorktimeTransactionsValueBetweenDatesURL(account_id, start_date, end_date)).then((responseJSON)=>{
             let transaction_values = responseJSON;
             return new Promise(function (resolve){

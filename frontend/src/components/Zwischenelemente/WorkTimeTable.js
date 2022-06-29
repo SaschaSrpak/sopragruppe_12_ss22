@@ -13,10 +13,11 @@ import {Button} from "@mui/material";
 
 
 
-function PauseTable({ title, data}) {
+function WorkTimeTable({ title, data}) {
     if (data.length > 0) {
+        console.log(data)
         const headers = Object.keys(data[0]);
-        const headers2 = ["Transaktions ID", "Interval ID", "Pausen Beschreibung", "Start Zeitpunkt", "End Zeitpunkt"]
+        const headers2 = ["Interval ID",  "Transaktions ID", "Interval Name", "Projekt", "Aktivitäten", "Start", "Ende"]
 
 
         return (
@@ -51,15 +52,15 @@ function PauseTable({ title, data}) {
         );
 
 
-        PauseTable.defaultProps = {
+        WorkTimeTable.defaultProps = {
             title: "No Title"
         };
     } else {
 
         return (
 
-            <h1> No Pause Data</h1>
+            <h1> No Worktime Data</h1>
         )
     }
 }
-export default PauseTable;
+export default WorkTimeTable;

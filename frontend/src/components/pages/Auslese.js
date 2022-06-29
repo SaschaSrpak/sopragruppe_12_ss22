@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import KommenTable from "../Zwischenelemente/KommenTable";
 import GehenTable from "../Zwischenelemente/GehenTable";
 import PauseTable from "../Zwischenelemente/PauseTable";
+import WorkTimeTable from "../Zwischenelemente/WorkTimeTable";
 import Profil from "./ProfilRegristrierung";
 import SystemAPI from "../../api/SystemAPI";
 import KommenBO from '../../api/Ereignisse/KommenBO';
@@ -14,6 +15,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Divider from "@mui/material/Divider";
+
 
 export class Auslese extends Component {
       constructor(props) {
@@ -47,13 +49,21 @@ export class Auslese extends Component {
                  this.GehenDaten(result)
              })
 
-             SystemAPI.getAPI().getKommenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
+             SystemAPI.getAPI().getPauseTransactionsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
+                 console.log(result)
                  this.PauseDaten(result)
+             })
+
+             SystemAPI.getAPI().getWorktimeTransactionsValueBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
+                // this.TestTwo(result)
+                 console.log(result)
+                 this.WorkTimeDaten(result)
              })
 
              SystemAPI.getAPI().getKommenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
+                 console.log(result)
                  this.KommenDaten(result)
              })
 
@@ -75,8 +85,27 @@ export class Auslese extends Component {
                  if (result.length > 0){
                  this.GehenDaten(result)
                  }else{
-                     console.log("Juhu")
                      this.GehenDaten("")
+                 }
+             })
+
+             SystemAPI.getAPI().getPauseTransactionsOfAccountBetweenDates(this.state.userid, this.state.startFilter, this.state.endeFilter).then((result) => {
+                // this.TestTwo(result)
+                 console.log(result.length )
+                 if (result.length > 0){
+                 this.PauseDaten(result)
+                 }else{
+                     this.PauseDaten("")
+                 }
+             })
+
+             SystemAPI.getAPI().getWorktimeTransactionsValueBetweenDates(this.state.userid, this.state.startFilter, this.state.endeFilter).then((result) => {
+                // this.TestTwo(result)
+                 console.log(result.length )
+                 if (result.length > 0){
+                 this.WorkTimeDaten(result)
+                 }else{
+                     this.WorkTimeDaten("")
                  }
              })
 
@@ -86,10 +115,12 @@ export class Auslese extends Component {
                  if (result.length > 0){
                  this.KommenDaten(result)
                  }else{
-                     console.log("Juhu")
                      this.KommenDaten("")
                  }
              })
+
+
+
          })
      }
 
@@ -116,7 +147,7 @@ export class Auslese extends Component {
             this.setState({kommenname: daten})
 
             }
-            this.setState({loading: true})
+
      }
 
     GehenDaten = (daten) => {
@@ -148,24 +179,55 @@ export class Auslese extends Component {
                  daten = []
                 this.setState({pausennamen: daten})
             }else {
-
-                 (daten.map(Zeitpunkt => {
+                    console.log(daten)
+                 //(daten.map(Zeitpunkt => {
                      //Change
-                     var ZeitpunktString = Zeitpunkt.time_of_event;
-                     ZeitpunktString = ZeitpunktString.replace('T', ' ');
-                     Zeitpunkt.time_of_event = ZeitpunktString
+                 //    var ZeitpunktString = Zeitpunkt.end_time;
+                 //    ZeitpunktString = ZeitpunktString.replace('T', ' ');
+                 //    Zeitpunkt.end_time = ZeitpunktString
 
-                     var LastChangeString = Zeitpunkt.last_modified_date;
-                     LastChangeString = LastChangeString.replace('T', ' ');
-                     Zeitpunkt.last_modified_date = LastChangeString
+                 //    var LastChangeString = Zeitpunkt.start_time;
+                 //    LastChangeString = LastChangeString.replace('T', ' ');
+                  //   Zeitpunkt.start_time = LastChangeString
 
-                 }))
+                // }))
                  console.log(daten)
 
 
                  this.setState({pausennamen: daten})
              }
+
+
     }
+    WorkTimeDaten = (daten) => {
+             if (daten === ""){
+                 daten = []
+                this.setState({worktimenamen: daten})
+            }else {
+                    console.log(daten)
+                 //(daten.map(Zeitpunkt => {
+                     //Change
+                 //    var ZeitpunktString = Zeitpunkt.end_time;
+                 //    ZeitpunktString = ZeitpunktString.replace('T', ' ');
+                 //    Zeitpunkt.end_time = ZeitpunktString
+
+                 //    var LastChangeString = Zeitpunkt.start_time;
+                 //    LastChangeString = LastChangeString.replace('T', ' ');
+                  //   Zeitpunkt.start_time = LastChangeString
+
+                // }))
+
+
+
+                 this.setState({worktimenamen: daten})
+                 this.setState({loading: true})
+             }
+
+
+    }
+
+
+
     render() {
 
 
@@ -184,28 +246,33 @@ export class Auslese extends Component {
                 <Button variant="contained" onClick={() => this.Datenfilter()}> Daten Filtern</Button>
                 </div>
                 <br/>
-                <Divider sx={{margin:"20px"}}/>
+                <Divider sx={{margin:"40px"}}/>
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Kommen</Typography>
                         </AccordionSummary>
-                          <KommenTable title="Kommen" data={this.state.kommenname}/>
+                          <KommenTable title=" " data={this.state.kommenname}/>
                       </Accordion>
 
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Gehen</Typography>
                         </AccordionSummary>
-                          <GehenTable title="Gehen" data={this.state.gehennamen}/>
+                          <GehenTable title=" " data={this.state.gehennamen}/>
                       </Accordion>
 
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Pause</Typography>
                         </AccordionSummary>
-                          <PauseTable title="Pausen" data={this.state.pausennamen}/>
+                          <PauseTable title=" " data={this.state.pausennamen}/>
                       </Accordion>
-
+                      <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                             <Typography>Arbeitszeit</Typography>
+                        </AccordionSummary>
+                          <WorkTimeTable title=" " data={this.state.worktimenamen}/>
+                      </Accordion>
 
 
             </div>

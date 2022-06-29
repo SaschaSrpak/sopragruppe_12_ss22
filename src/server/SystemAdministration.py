@@ -477,8 +477,9 @@ class SystemAdministration(object):
             interval = self.get_project_work_transaction_by_key(transaction.get_id())
             activity = self.get_activity_by_key(transaction.get_target_activity())
             project = self.get_project_by_activity_key(activity.get_id())
-            start_event = self.get_start_event_by_key(interval.get_start())
-            end_event = self.get_end_event_by_key(interval.get_end())
+            projectarbeit = self.get_project_worktime_by_key(interval.get_time_interval_id())
+            start_event = self.get_start_event_by_key(projectarbeit.get_start())
+            end_event = self.get_end_event_by_key(projectarbeit.get_end())
             time_of_start = start_event.get_time_of_event()
             time_of_end = end_event.get_time_of_event()
             if start_date <= time_of_start <= end_date:
@@ -486,8 +487,8 @@ class SystemAdministration(object):
                     response = {}
                     response['transaction_id'] = transaction.get_id()
                     response['interval_id'] = interval.get_id()
-                    response['interval_name'] = interval.get_name()
-                    response['activity_name'] = activity.get_name()
+                    response['interval_name'] = projectarbeit.get_name()
+                    response['activity_name'] = activity.get_activity_name()
                     response['project_name'] = project.get_name()
                     response['start_time'] = time_of_start
                     response['end_time'] = time_of_end
