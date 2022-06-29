@@ -37,11 +37,10 @@ class UpdateDialog extends Component {
     };
    
     render(){
-        const { show } = this.props;
+        const { open} = this.this;
       
         return(
-            show ?
-                <Dialog open={show} onClose={this.handleClose}>
+                <Dialog open={open} onClose={this.handleClose}>
                     <DialogTitle>Aktualisiere deine Buchung</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -92,8 +91,8 @@ class UpdateDialog extends Component {
                             <Button onClick={this.handleClose}>Update</Button>
                         </DialogActions>
                 </Dialog>
-                :null
-        );  
+                
+        )
     }
 
 }
