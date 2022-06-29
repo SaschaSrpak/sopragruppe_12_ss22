@@ -19,7 +19,7 @@ class UpdateDialog extends Component {
       super(props);
 
       this.state = {
-       
+       open: true
       };
 
     }
@@ -37,11 +37,11 @@ class UpdateDialog extends Component {
     };
    
     render(){
-        const { show } = this.props;
-      
+
+        const { open } = this.state;
         return(
-            show ?
-                <Dialog open={show} onClose={this.handleClose}>
+
+                <Dialog open={false} onClose={this.handleClose}>
                     <DialogTitle>Aktualisiere deine Buchung</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -60,7 +60,7 @@ class UpdateDialog extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Name der  Buchung"
+                            label={this.props.id}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -92,9 +92,10 @@ class UpdateDialog extends Component {
                             <Button onClick={this.handleClose}>Update</Button>
                         </DialogActions>
                 </Dialog>
-                :null
-        );  
+
+        )
     }
+
 
 }
 

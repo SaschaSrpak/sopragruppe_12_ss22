@@ -314,6 +314,7 @@ export class Auslese extends Component {
                             <Button onClick={this.handleClose}>Löschen</Button>
                         </DialogActions>
                 </Dialog>
+
             
             
         </div>
