@@ -68,10 +68,10 @@ class ProfileDropDown extends Component {
     }
 
     deletePerson = () => {
-        SystemAPI.getApi().getPersonByFirebaseID(this.props.user.uid)
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
             .then(PersonBO => {
                 console.log(PersonBO.id);
-                SystemAPI.getApi().deletePerson(PersonBO.id)
+                SystemAPI.getAPI().deletePerson(PersonBO.id)
              }
 
             )
@@ -85,7 +85,7 @@ class ProfileDropDown extends Component {
             console.log('Löschung findet statt.');
             this.deletePerson();
             console.log("löschung ist durch.");
-            this.handleSignOutButtonClicked()
+            
         } else {
             // Do nothing!
             console.log('Keine Löschung.');

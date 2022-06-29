@@ -58,11 +58,11 @@ app = Flask(__name__, static_folder="./build", static_url_path='/')
 
 app.config['ERROR_404_HELP'] = False
 
-"""
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
-"""
+
 
 api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')
