@@ -84,7 +84,7 @@ export default class SystemAPI {
     #getWorktimeOfAccountOnActivityURL = (id, activity_id) =>`${this.#SystemServerBaseURL}/accounts/
                                                             worktime/${id}/activities/${activity_id}`;
 
-    #getWorktimeTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/worktime-transactions/${id}`;
+    #getWorktimeTransactionsOfAccountURL = (account_id) =>`${this.#SystemServerBaseURL}/accounts/worktime-transactions-of-account/${account_id}`;
 
     //Commit-Transaction related
 
@@ -537,6 +537,7 @@ export default class SystemAPI {
   }
 
   getKommenTransactionsOfAccount(account_id){
+        console.log(account_id)
         return this.#fetchAdvanced(this.#getKommenTransactionsOfAccountURL(account_id)).then((responseJSON) => {
             let transactionBOs = KommenBuchungBO.fromJSON(responseJSON);
             return new Promise(function (resolve){
@@ -573,8 +574,10 @@ export default class SystemAPI {
   }
 
   getWorktimeTransactionsOfAccount(account_id){
+        console.log("Test")
         return this.#fetchAdvanced(this.#getWorktimeTransactionsOfAccountURL(account_id)).then((responseJSON) => {
-            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON);
+            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON)
+            console.log("Test2")
             return new Promise(function (resolve){
                 resolve(transactionBOs)
             })

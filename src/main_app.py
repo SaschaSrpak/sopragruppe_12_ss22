@@ -648,7 +648,7 @@ class PersonOfAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/accounts/kommen/transaction/<int:id>')
+@timesystem.route('/accounts/kommen/transactions/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class KommenTransactionRelatedAccountOperations(Resource):
@@ -668,7 +668,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
-class KommenTransactionRelatedAccountOperations(Resource):
+class GehenTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(gehen_transaction)
     @secured
     def get(self, id):
@@ -715,13 +715,14 @@ class PauseTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/accounts/worktime-transactions/<int:id>/')
+@timesystem.route('/accounts/worktime-transactions-of-account/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class WorktimeTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(project_worktime_transaction)
     @secured
     def get(self, id):
+        print("bitte")
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         pwt = s_adm.get_all_worktime_transactions_for_account(account)
