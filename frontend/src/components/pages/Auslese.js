@@ -52,25 +52,41 @@ export class Auslese extends Component {
              })
              SystemAPI.getAPI().getGehenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
+                 if (result.length > 0){
                  this.GehenDaten(result)
+                 }else{
+                     this.GehenDaten("")
+                 }
              })
 
              SystemAPI.getAPI().getPauseTransactionsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
                  console.log(result)
+                 if (result.length > 0){
                  this.PauseDaten(result)
+                 }else{
+                     this.PauseDaten("")
+                 }
              })
 
              SystemAPI.getAPI().getWorktimeTransactionsValueBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
                  console.log(result)
+                 if (result.length > 0){
                  this.WorkTimeDaten(result)
+                 }else{
+                     this.WorkTimeDaten("")
+                 }
              })
 
              SystemAPI.getAPI().getKommenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
                  console.log(result)
+                 if (result.length > 0){
                  this.KommenDaten(result)
+                 }else{
+                     this.KommenDaten("")
+                 }
              })
 
 
