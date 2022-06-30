@@ -115,6 +115,14 @@ getPersonsOnActivity = () => {
     })
 }
 
+deletePersonResponsible = (personid) => {
+    console.log(personid)
+    //SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
+     //   this.setState({
+      //      persons: persons
+     //   })
+    //})
+}
 
     // Back-Button setzt den State projectChoice zurück, damit die Projektwahl wieder angezeigt wird
     handleBack = () => {
@@ -208,9 +216,11 @@ getPersonsOnActivity = () => {
                         <CardContent>
                             <Typography>
                                 {this.state.responsiblepersons.map(data => (
-                                    <p>{data.name}</p>
+                                    <p>ID: {data.id} - {data.surname} {data.name} <Button color='warning'  onClick={this.deletePersonResponsible} >Delete</Button> </p>
+
                                 ))}
                                 {this.state.projects?this.state.projects.responsiblepersons:null}
+                                <Button color='info'> Person Hinzufügen </Button>
                             </Typography>
                         </CardContent>
                     </Card>
