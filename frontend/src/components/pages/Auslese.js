@@ -302,18 +302,7 @@ export class Auslese extends Component {
               Open form dialog
             </Button>
             
-            <Dialog open={open} onClose={this.handleClose}>
-                    <DialogTitle> Lösche deine Buchung</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Möchtest du die Buchung wirklich löschen?
-                        </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.handleClose}>Cancel</Button>
-                            <Button onClick={this.handleClose}>Löschen</Button>
-                        </DialogActions>
-                </Dialog>
+
 
             
             

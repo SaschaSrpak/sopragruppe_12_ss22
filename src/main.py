@@ -1432,6 +1432,8 @@ class KommenOperations(Resource):
         """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
+        kb = s_adm.get_kommen_transaction_by_event_key(id)
+        s_adm.delete_kommen_transaction(kb)
         s_adm.delete_kommen_event(k)
         return '', 200
 

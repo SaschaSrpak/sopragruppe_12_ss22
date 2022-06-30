@@ -1143,6 +1143,10 @@ class SystemAdministration(object):
         with KommenBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
 
+    def get_kommen_transaction_by_event_key(self, event_key):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_by_event_key(event_key)
+
     def save_kommen_transaction(self, transaction):
         with KommenBuchungMapper() as mapper:
             mapper.update(transaction)

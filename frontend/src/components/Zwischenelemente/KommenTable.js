@@ -25,31 +25,58 @@ export class  KommenTable extends Component{
         super(props);
 
         this.state = {
-            open: false
+            openedit: false,
+            opendelete: false
         }
     }
-     handleClickOpen = (event) => {
+     handleClickOpenEdit = (event) => {
         let reihe = Number(event.target.parentNode.id)
          reihe += 1
 
-        console.log(document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML)
+        console.log(document.getElementById("kommenTable").rows[reihe].cells[0].innerHTML)
+         console.log(document.getElementById("kommenTable").rows[reihe].cells[1].innerHTML)
+         console.log(document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML)
+         console.log(document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML)
         this.setState({
-          open: !this.state.open,
-            id: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML
+          openEdit: !this.state.open,
+            id: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML,
+            lastchange: document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML,
+            eventname: document.getElementById("kommenTable").rows[reihe].cells[0].innerHTML,
+            timeofevent: document.getElementById("kommenTable").rows[reihe].cells[1].innerHTML
         })
       };
 
-    handleClose = () => {
+      handleClickOpenDelete = (event) => {
+          let reihe = Number(event.target.parentNode.id)
+         reihe += 1
+         let id = document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML
+    this.setState({
+      openDelete: !this.state.open,
+        deleteId: id
+    })
+  };
+    handleCloseEdit = () => {
         this.setState({
-          open: false
+          openEdit: false
       });
     };
+
+    handleCloseDelete= () => {
+        this.setState({
+          openDelete: false
+      });
+    };
+
+    DeleteKommen = (event) => {
+        console.log(this.state.deleteId)
+        SystemAPI.getAPI().deleteKommen('10013').then((result) => {})
+    }
 
     render() {
         if (this.props.data.length > 0) {
             const headers = Object.keys(this.props.data[0]);
-            const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"];
-            const { open } = this.state;
+            const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzte Änderung"];
+            const { openEdit, openDelete } = this.state;
 
                 return (
                     <Paper>
@@ -73,33 +100,37 @@ export class  KommenTable extends Component{
                                         {headers.map(header => (
                                             <TableCell align="left">{emp[header]}</TableCell>
                                         ))}
-                                        <Button color='primary' onClick={this.handleClickOpen} >Edit</Button>
-                                        <Button color='warning'>Delete</Button>
+                                        <Button color='primary' onClick={this.handleClickOpenEdit} >Edit</Button>
+                                        <Button color='warning' onClick={this.handleClickOpenDelete} >Delete</Button>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
 
-                        <Dialog open={open} onClose={this.handleClose}>
+                        <Dialog open={openEdit} onClose={this.handleCloseEdit}>
                     <DialogTitle>Aktualisiere deine Buchung</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Bearbeite deine Buchungen:
+                            Bearbeite deine Kommenbuchungen:
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="User"
+                            label={"Event Name"}
+                            defaultValue={this.state.eventname}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
                         />
                         <TextField
                             autoFocus
+                            editable = "false"
+                            inputProps={{readOnly: true}}
                             margin="dense"
                             id="name"
-                            label={this.state.id}
+                            label={"Event ID"}
+                            value ={this.state.id}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -107,9 +138,9 @@ export class  KommenTable extends Component{
                         <TextField
                             autoFocus
                             margin="dense"
-                            label="Startzeitpunkt"
+                            label="Zeitpunkt des Events"
                             type="datetime-local"
-                            defaultValue="2022-07-04T12:00"
+                            defaultValue={this.state.timeofevent}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -117,9 +148,10 @@ export class  KommenTable extends Component{
                         <TextField
                             autoFocus
                             margin="dense"
-                            label="Endzeitpunkt"
+                            label="Letzte Änderung"
                             type="datetime-local"
-                            defaultValue="2022-07-04T12:00"
+                            inputProps={{readOnly: true}}
+                            defaultValue={this.state.lastchange}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -127,8 +159,20 @@ export class  KommenTable extends Component{
 
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.handleClose}>Cancel</Button>
-                            <Button onClick={this.handleClose}>Update</Button>
+                            <Button onClick={this.handleCloseEdit}>Cancel</Button>
+                            <Button onClick={this.handleCloseEdit}>Update</Button>
+                        </DialogActions>
+                </Dialog>
+                  <Dialog open={openDelete} onClose={this.handleCloseDelete}>
+                    <DialogTitle> Lösche deine Buchung</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Möchtest du die Buchung wirklich löschen?
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleCloseDelete}>Cancel</Button>
+                            <Button onClick={this.DeleteKommen}>Löschen</Button>
                         </DialogActions>
                 </Dialog>
                     </Paper>
