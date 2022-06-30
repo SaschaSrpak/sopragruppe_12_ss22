@@ -262,35 +262,36 @@ export class Auslese extends Component {
         else {
         return (
 
-            <div >
+            <div style={{textAlign: "center"}}>
                 <div>
                 <br/>
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Beginn"  onChange={(event) => this.setState({startFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Ende" onChange={(event) => this.setState({endeFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
+                <p></p>
                 <Button variant="contained" onClick={() => this.Datenfilter()}> Daten Filtern</Button>
                 </div>
                 <br/>
                 <Divider sx={{margin:"40px"}}/>
-                      <Accordion>
+                      <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Kommen</Typography>
                         </AccordionSummary>
                           <KommenTable title=" " data={this.state.kommenname}/>
                       </Accordion>
-                      <Accordion>
+                      <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Gehen</Typography>
                         </AccordionSummary>
                           <GehenTable title=" " data={this.state.gehennamen}/>
                       </Accordion>
 
-                      <Accordion>
+                      <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Pause</Typography>
                         </AccordionSummary>
                           <PauseTable title=" " data={this.state.pausennamen}/>
                       </Accordion>
-                      <Accordion>
+                      <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Arbeitszeit</Typography>
                         </AccordionSummary>
