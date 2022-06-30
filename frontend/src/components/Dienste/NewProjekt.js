@@ -26,6 +26,7 @@ export class NewProjekt extends Component {
             project_duration: "",
             activities: [],
             persons_responsible: [],
+            open: true,
         }
     }
 
@@ -124,38 +125,16 @@ export class NewProjekt extends Component {
                         autoFocus
                         margin="dense"
                         id="project_duration"
-                        label="Projektdauer in Stunden"
+                        label="Projektdauer in Personentagen"
                         type="number"
                         fullWidth
                         variant="standard"
                         value={project_duration} 
                         onChange={this.handleChange}
                     />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="activities"
-                        label="Aktivitäten Innerhalb des Projekts"
-                        type="string"
-                        fullWidth
-                        variant="standard"
-                        value={activities} 
-                        onChange={this.handleChange}
-                    />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="persons_responsible"
-                        label="Zuständige Personen"
-                        type="string"
-                        fullWidth
-                        variant="standard"
-                        value={persons_responsible} 
-                        onChange={this.handleChange}
-                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.props.handleClose}>Abbrechen</Button>
+                    <Button onClick={this.handleClose}>Abbrechen</Button>
                     <Button>Speichern</Button>
                 </DialogActions>
             </div>

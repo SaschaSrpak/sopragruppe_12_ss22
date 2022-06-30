@@ -15,6 +15,9 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import { NewAktivität } from "../Dienste/NewAktivität";
 
 
 /** 
@@ -47,6 +50,7 @@ export class Projektanzeige extends Component {
             projectChoice: this.props.projectChoice,
             projects: null,
             persons: [],
+            openNewActivity: false
         }
     }
 
@@ -110,9 +114,23 @@ getPersonsOnActivity = () => {
         })
     }
 
+
+    handleClickOpen = () => {
+        this.setState({
+            openNewActivity: true
+        })
+    }
+
+    handleCloseClick = () => {
+        this.setState({
+            openNewActivity: false
+        })
+    }
+
+
 // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
-    const [activities] = this.state.activities; 
+    const {openNewActivity} = this.state;
 
         return (
             <Box sx={{
@@ -172,6 +190,32 @@ getPersonsOnActivity = () => {
                         </CardContent>
                     </Card>
                 </Paper>
+                <Divider variant="fullWidth" sx={{
+                    margin: "20px"
+                }}/>
+
+
+{/** TO DO: Button zum Erstellen einer neuen Aktivität */}
+                    <Button variant="contained" 
+                        onClick={this.handleClickOpen}
+                        value={this.state.openNewActivity}
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Neue Aktivität</Typography>
+                    </Button>
+
+            {/** why is this not workiiiing */}
+
+                    <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+                    >
+                        <NewAktivität openNewActivity={this.props} />
+                    </Dialog> 
+
+
                 <Divider variant="fullWidth" sx={{
                     margin: "20px"
                 }}/>
