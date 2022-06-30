@@ -16,6 +16,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import KommenBO from "../../api/Ereignisse/KommenBO";
 
 
 
@@ -26,7 +27,8 @@ export class  KommenTable extends Component{
 
         this.state = {
             openedit: false,
-            opendelete: false
+            opendelete: false,
+            kommen: KommenBO
         }
     }
      handleClickOpenEdit = (event) => {
@@ -39,7 +41,7 @@ export class  KommenTable extends Component{
          console.log(document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML)
         this.setState({
           openEdit: !this.state.open,
-            id: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML,
+            kommenid: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML,
             lastchange: document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML,
             eventname: document.getElementById("kommenTable").rows[reihe].cells[0].innerHTML,
             timeofevent: document.getElementById("kommenTable").rows[reihe].cells[1].innerHTML
@@ -69,9 +71,36 @@ export class  KommenTable extends Component{
 
     DeleteKommen = (event) => {
         console.log(this.state.deleteId)
-        SystemAPI.getAPI().deleteKommen('10013').then((result) => {})
+        SystemAPI.getAPI().deleteKommen(this.state.deleteId).then((result) => {this.setState({
+          openDelete: false
+      });
+            window.location.reload(false);
+        })
     }
 
+    UpdateKommen = () => {
+
+        let updateKommen = Object.assign(new KommenBO(), this.state.kommen)
+        updateKommen.setEventName(this.state.eventname);
+        updateKommen.setTimeOfEvent(this.state.timeofevent);
+        updateKommen.setId(Number(this.state.kommenid));
+        updateKommen.setLastModifiedDate(this.state.lastchange);
+        console.log(updateKommen)
+        console.log(this.state.timeofevent)
+        console.log(this.state.eventname)
+        SystemAPI.getAPI().updateKommen(updateKommen).then(person => {
+            this.setState({
+            })})
+        //////});
+          //  window.location.reload(false);
+       // })
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value,
+        })
+    }
     render() {
         if (this.props.data.length > 0) {
             const headers = Object.keys(this.props.data[0]);
@@ -116,7 +145,7 @@ export class  KommenTable extends Component{
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="name"
+                            id="eventname"
                             label={"Event Name"}
                             defaultValue={this.state.eventname}
                             fullWidth
@@ -130,14 +159,15 @@ export class  KommenTable extends Component{
                             margin="dense"
                             id="name"
                             label={"Event ID"}
-                            value ={this.state.id}
+                            value ={this.state.kommenid}
                             fullWidth
                             variant="standard"
-                            onChange={this.handleChange}
+
                         />
                         <TextField
                             autoFocus
                             margin="dense"
+                            id = "timeofevent"
                             label="Zeitpunkt des Events"
                             type="datetime-local"
                             defaultValue={this.state.timeofevent}
@@ -154,13 +184,13 @@ export class  KommenTable extends Component{
                             defaultValue={this.state.lastchange}
                             fullWidth
                             variant="standard"
-                            onChange={this.handleChange}
+
                         />
 
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={this.handleCloseEdit}>Cancel</Button>
-                            <Button onClick={this.handleCloseEdit}>Update</Button>
+                            <Button onClick={this.UpdateKommen}>Update</Button>
                         </DialogActions>
                 </Dialog>
                   <Dialog open={openDelete} onClose={this.handleCloseDelete}>

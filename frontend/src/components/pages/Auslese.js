@@ -175,7 +175,6 @@ export class Auslese extends Component {
                  }))
                  console.log(daten)
 
-
                  this.setState({gehennamen: daten})
              }
     }
@@ -210,18 +209,18 @@ export class Auslese extends Component {
                  daten = []
                 this.setState({worktimenamen: daten})
             }else {
-                    console.log(daten)
-                 //(daten.map(Zeitpunkt => {
-                     //Change
-                 //    var ZeitpunktString = Zeitpunkt.end_time;
-                 //    ZeitpunktString = ZeitpunktString.replace('T', ' ');
-                 //    Zeitpunkt.end_time = ZeitpunktString
+
+                 (daten.map(Duration => {
+
+                 var DuartionRunden = Duration.duration;
+                 DuartionRunden = Math.round(DuartionRunden * 100) /100
+                 Duration.duration = DuartionRunden
 
                  //    var LastChangeString = Zeitpunkt.start_time;
                  //    LastChangeString = LastChangeString.replace('T', ' ');
                   //   Zeitpunkt.start_time = LastChangeString
 
-                // }))
+                 }))
 
 
 
@@ -262,7 +261,8 @@ export class Auslese extends Component {
         }
         else {
         return (
-            <div>
+
+            <div >
                 <div>
                 <br/>
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Beginn"  onChange={(event) => this.setState({startFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
@@ -298,9 +298,7 @@ export class Auslese extends Component {
                       </Accordion>
 
                       <div>
-            <Button variant="outlined" onClick={this.handleClickOpen}>
-              Open form dialog
-            </Button>
+
             
 
 
@@ -308,7 +306,7 @@ export class Auslese extends Component {
             
         </div>
             </div>
-        
+
 
 
 

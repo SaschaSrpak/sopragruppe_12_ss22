@@ -18,6 +18,14 @@ export default class BO{
         this.id = new_id;   
     }
 
+    setLastModifiedDate(new_lastmodefieddate){
+        this.last_modified_date = new_lastmodefieddate;
+    }
+
+    getLastModifiedDate(){
+        return this.last_modified_date;
+    }
+
     toString() {
         let result = '';
         for (var prop in this) {
