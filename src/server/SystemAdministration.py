@@ -351,7 +351,8 @@ class SystemAdministration(object):
         all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         return all_gehen_transactions
 
-    def get_all_gehen_transactions_for_account_between_dates(self, account, start_date_str, end_date_str):
+    def get_all_gehen_transactions_for_account_between_dates(self, account_id, start_date_str, end_date_str):
+        account = self.get_time_account_by_key(account_id)
         all_gehen_transactions = self.get_gehen_transaction_by_account_key(account.get_id())
         start_date = dt.datetime.strptime(start_date_str, '%Y-%m-%d')
         end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d')
@@ -476,8 +477,9 @@ class SystemAdministration(object):
             interval = self.get_project_work_transaction_by_key(transaction.get_id())
             activity = self.get_activity_by_key(transaction.get_target_activity())
             project = self.get_project_by_activity_key(activity.get_id())
-            start_event = self.get_start_event_by_key(interval.get_start())
-            end_event = self.get_end_event_by_key(interval.get_end())
+            projectarbeit = self.get_project_worktime_by_key(interval.get_time_interval_id())
+            start_event = self.get_start_event_by_key(projectarbeit.get_start())
+            end_event = self.get_end_event_by_key(projectarbeit.get_end())
             time_of_start = start_event.get_time_of_event()
             time_of_end = end_event.get_time_of_event()
             if start_date <= time_of_start <= end_date:
@@ -485,11 +487,12 @@ class SystemAdministration(object):
                     response = {}
                     response['transaction_id'] = transaction.get_id()
                     response['interval_id'] = interval.get_id()
-                    response['interval_name'] = interval.get_name()
-                    response['activity_name'] = activity.get_name()
+                    response['interval_name'] = projectarbeit.get_name()
+                    response['activity_name'] = activity.get_activity_name()
                     response['project_name'] = project.get_name()
                     response['start_time'] = time_of_start
                     response['end_time'] = time_of_end
+                    response['duration'] = projectarbeit.get_duration()
 
                     selected_worktime_values.append(response)
 
@@ -1158,6 +1161,10 @@ class SystemAdministration(object):
         with KommenBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
 
+    def get_kommen_transaction_by_event_key(self, event_key):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_by_event_key(event_key)
+
     def save_kommen_transaction(self, transaction):
         with KommenBuchungMapper() as mapper:
             mapper.update(transaction)
@@ -1230,6 +1237,10 @@ class SystemAdministration(object):
     def get_gehen_transaction_by_account_key(self, account_key):
         with GehenBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
+
+    def get_gehen_transaction_by_event_key(self, event_key):
+        with GehenBuchungMapper() as mapper:
+            return mapper.find_by_event_key(event_key)
 
     def save_gehen_transaction(self, transaction):
         with GehenBuchungMapper() as mapper:
@@ -1403,8 +1414,8 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S')
+        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)
@@ -1574,8 +1585,8 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S')
+        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)

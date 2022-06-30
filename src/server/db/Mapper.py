@@ -12,6 +12,7 @@ class Mapper(AbstractContextManager, ABC):
 
     def __enter__(self):
 
+
         if os.getenv('GAE_ENV','').startswith('standard'):
             """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
             self._cnx = connector.connect(user='root', password='roottoor', unix_socket='/cloudsql/pelagic-bonbon-354412:europe-west3:sopra-mysql-instanz',

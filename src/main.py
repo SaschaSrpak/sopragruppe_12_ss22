@@ -190,7 +190,8 @@ project_worktime_transaction_response_special = api.model('Spezielle Projektarbe
                                                                        'project_name': fields.String(),
                                                                        'activity_name': fields.String(),
                                                                        'start_time': fields.String(),
-                                                                       'end_time': fields.String()})
+                                                                       'end_time': fields.String(),
+                                                                        'duration': fields.Float()})
 
 
 @timesystem.route('/persons')
@@ -926,7 +927,7 @@ class PersonOfAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/accounts/kommen/transaction/<int:id>')
+@timesystem.route('/accounts/kommen/transactions/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class KommenTransactionRelatedAccountOperations(Resource):
@@ -950,7 +951,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/account/kommen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.route('/account/kommen/date/<int:id>/<string:start_date>/<string:end_date>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des Kommen-Objekts')
 @timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
@@ -969,16 +970,15 @@ class AccountKommenDateOperations(Resource):
         """
         s_adm = SystemAdministration()
         events = s_adm.get_all_kommen_events_for_account_between_dates(id, start_date, end_date)
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class GehenTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(gehen_transaction)
     @timesystem.marshal_list_with(gehen_transaction)
     @secured
     def get(self, id):
@@ -1019,10 +1019,8 @@ class AccountGehenDateOperations(Resource):
         s_adm = SystemAdministration()
         events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
 
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/pause/<int:id>/time')
@@ -1093,7 +1091,7 @@ class PauseTransactionValueBetweenDatesAccountOperations(Resource):
         pauses_values = s_adm.get_all_pause_transaction_values_for_account_between_dates(account, start_date, end_date)
 
         if account is not None:
-            return pauses_values[0]
+            return pauses_values
 
 
 
@@ -1152,7 +1150,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
 @timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
 @timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
 class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
-    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @timesystem.marshal_list_with(project_worktime_transaction_response_special)
     @secured
     def get(self, id, start_date, end_date):
         """
@@ -1168,7 +1166,7 @@ class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
                                                                                               end_date)
 
         if account is not None:
-            return worktime_values[0]
+            return worktime_values
         
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
@@ -1436,7 +1434,8 @@ class KommenOperations(Resource):
         """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
-        s_adm.delete_kommen_event(k)
+        kb = s_adm.get_kommen_transaction_by_event_key(id)
+        s_adm.delete_kommen_transaction(kb)
         return '', 200
 
     @timesystem.marshal_with(kommen)
@@ -1517,7 +1516,7 @@ class KommenTransactionOperations(Resource):
 @timesystem.route('/commit-kommen-transaction/<int:account_id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
-class KommenOperations(Resource):
+class CommitKommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @timesystem.expect(kommen)
     @secured
@@ -1576,8 +1575,11 @@ class GehenOperations(Resource):
         :param id: ID des Gehen-Ereignisses
         :return: HTTP Response
         """
+
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_event_by_key(id)
+        ghb = s_adm.get_gehen_transaction_by_event_key(id)
+        s_adm.delete_gehen_transaction(ghb)
         s_adm.delete_gehen_event(gh)
         return '', 200
 
@@ -1794,19 +1796,18 @@ class PauseTransactionOperations(Resource):
         else:
             return '', 500
 
-@timesystem.route('/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>'
-                  '/<string:start_time>/<string:end_time>')
+@timesystem.route('/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Buchungs-Objekts')
 @timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
 @timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
 @timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
 @timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
+
 class PauseTransactionValueOperations(Resource):
     @timesystem.marshal_with(pause_transaction_response_special)
-    @timesystem.expect(pause_transaction_response_special, validate=True)
     @secured
-    def put(self, id, interval_id, interval_name, start_time, end_time):
+    def post(self, id, interval_id, interval_name, start_time, end_time):
         s_adm = SystemAdministration()
         transaction = s_adm.get_pause_transaction_by_key(id)
         if transaction:
@@ -1973,7 +1974,6 @@ class WorktimeTransactionOperations(Resource):
 @timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
 class WorktimeTransactionValueOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction_response_special)
-    @timesystem.expect(project_worktime_transaction_response_special, validate=True)
     @secured
     def put(self, id, interval_id, interval_name, start_time, end_time):
         s_adm = SystemAdministration()
