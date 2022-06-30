@@ -1,6 +1,6 @@
 from server.db.Mapper import Mapper
 from server.business_objects.Projekt import Projekt
-
+import datetime as dt
 
 class ProjektMapper(Mapper):
 
@@ -116,7 +116,7 @@ class ProjektMapper(Mapper):
 
         cursor = self._cnx.cursor()
         cursor.execute("INSERT INTO Projekt_Ersteller(Project_ID,"
-                       "User_ID) VALUES('{}', '{}')".format(project.get_id(), person.get_id()))
+                       "User_ID) VALUES('{}', '{}')".format(project, person))
         self._cnx.commit()
         cursor.close()
         return project
@@ -260,7 +260,7 @@ class ProjektMapper(Mapper):
             projekt.get_description(),
             projekt.get_deadline(),
             projekt.get_project_duration(),
-            projekt.get_last_modified_date()
+            projekt.get_last_modified_date(),
         )
         cursor.execute(command, data)
 

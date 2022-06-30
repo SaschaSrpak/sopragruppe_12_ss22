@@ -544,18 +544,30 @@ class SystemAdministration(object):
             for person in persons_responsible:
                 project.add_person_responsible(person.get_id(), person)
 
-        project.set_last_modified_date(dt.datetime.now)
+        project.set_last_modified_date(dt.datetime.now())
         project.set_id(1)
 
+
+        deadlineid = SystemAdministration.create_project_deadline(self, "name", deadline_id)
+        project.set_deadline(deadlineid)
+
+        startevent = SystemAdministration.create_start_event(self, "Start Projekt", dt.datetime.now())
+        endevent = SystemAdministration.create_end_event(self, "Deadline Projekt", deadline_id)
+        projectdurationid = SystemAdministration.create_project_duration(self, name, startevent, endevent)
+        project.set_project_duration(projectdurationid)
+
+
         with ProjektMapper() as mapper:
-            mapper.insert(project)
+            project = mapper.insert(project)
             activities = project.get_activities()
             responsibles = project.get_person_responsible()
             for activity in activities:
                 mapper.insert_activity(project, activity)
             for person in responsibles:
                 mapper.insert_person_responsible(project, person)
-            return
+
+        SystemAdministration.add_person_creator(self, creator_id, project.get_id())
+        return
 
     def get_all_projects(self):
         """Gibt alle im System gespeicherten Projekte aus."""
@@ -623,7 +635,12 @@ class SystemAdministration(object):
     def add_person_responsible_to_project(self, project, person):
         """Fügt dem Projekt eine verantwortliche Person hinzu."""
         with ProjektMapper() as mapper:
+
             return mapper.insert_person_responsible(project, person)
+    def add_person_creator(self, project, person):
+        """Fügt dem Projekt eine verantwortliche Person hinzu."""
+        with ProjektMapper() as mapper:
+            return mapper.insert_creator(project, person)
 
     def change_project_persons_responsible(self, project_key, persons_responsible):
         """Ändert die zuständigen Personen. Ähnliche funktionsweise wie in der
@@ -867,7 +884,7 @@ class SystemAdministration(object):
         projectdeadline.set_last_modified_date(dt.datetime.now())
         projectdeadline.set_id(1)
 
-        with KommenMapper() as mapper:
+        with ProjektDeadlineMapper() as mapper:
             mapper.insert(projectdeadline)
             return projectdeadline.get_id()
 

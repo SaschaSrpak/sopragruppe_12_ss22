@@ -31,6 +31,15 @@ export class NewProjekt extends Component {
             open: true,
         }
     }
+     componentDidMount() {
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+            console.log(result)
+            this.setState({
+                creator: result.name + " " + result.surname,
+                creatorid : result.id
+            })
+    })
+     }
 
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
@@ -53,7 +62,7 @@ export class NewProjekt extends Component {
         // Doesn't Work yet omg
         
     addProject = () => {
-        let newProject = new ProjektBO(this.state.name, this.state.creator, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.persons_responsible);
+        let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
         SystemAPI.getAPI().addProject(newProject).then(response => {
             console.log(response)
         })
