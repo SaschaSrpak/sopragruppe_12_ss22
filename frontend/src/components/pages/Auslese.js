@@ -30,6 +30,7 @@ export class Auslese extends Component {
           this.state = {
 
          data: [],
+
       selectedActivities: null,
       activity: props.activity,
       startFilter: '1999-01-01',
@@ -38,7 +39,7 @@ export class Auslese extends Component {
       kommenname: [],
       worktime: null,
 
-              loading: false,
+              loading: 0,
               kommenlist: []
     }
       }
@@ -168,8 +169,9 @@ export class Auslese extends Component {
             console.log(daten)
             this.setState({kommenname: daten})
 
+            console.log(this.state.loading)
             }
-
+        this.setState({loading: this.state.loading + 1})
      }
 
     GehenDaten = (daten) => {
@@ -192,7 +194,10 @@ export class Auslese extends Component {
                  console.log(daten)
 
                  this.setState({gehennamen: daten})
+
+
              }
+             this.setState({loading: this.state.loading + 1})
     }
 
     PauseDaten = (daten) => {
@@ -216,8 +221,10 @@ export class Auslese extends Component {
 
 
                  this.setState({pausennamen: daten})
-             }
 
+
+             }
+             this.setState({loading: this.state.loading + 1})
 
     }
     WorkTimeDaten = (daten) => {
@@ -241,9 +248,10 @@ export class Auslese extends Component {
 
 
                  this.setState({worktimenamen: daten})
-                 this.setState({loading: true})
-             }
 
+
+             }
+            this.setState({loading: this.state.loading + 1})
 
     }
 
@@ -270,7 +278,7 @@ export class Auslese extends Component {
     render() {
       const { showUpdateDialog ,open } = this.state;
 
-        if(this.state.loading === false) {
+        if(this.state.loading < 4) {
             return(
                 <h1>Page is loading...</h1>
             )
