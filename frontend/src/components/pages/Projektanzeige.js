@@ -50,7 +50,8 @@ export class Projektanzeige extends Component {
             projectChoice: this.props.projectChoice,
             projects: null,
             persons: [],
-            openNewActivity: false
+            openNewActivity: false,
+            responsiblepersons: []
         }
     }
 
@@ -89,8 +90,16 @@ export class Projektanzeige extends Component {
                         creator_new: newCreator.name,
                 })
             })
+// Projektzuständige aus der Datenbank laden
+            SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
+                console.log(responsiblepersons)
+                this.setState({
+                        responsiblepersons: responsiblepersons
+                })
+                    })
 
-        })
+            })
+
     }
 
 
@@ -186,6 +195,22 @@ getPersonsOnActivity = () => {
                         <CardContent>
                             <Typography>
                                 {this.state.projects?this.state.projects.description:null}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+{/* Projektzuständige */}
+                    <Card>
+                        <Typography sx={{
+                            margin: "15px",
+                        }}>
+                            <h4>Projektzuständige:</h4>
+                        </Typography>
+                        <CardContent>
+                            <Typography>
+                                {this.state.responsiblepersons.map(data => (
+                                    <p>{data.name}</p>
+                                ))}
+                                {this.state.projects?this.state.projects.responsiblepersons:null}
                             </Typography>
                         </CardContent>
                     </Card>
