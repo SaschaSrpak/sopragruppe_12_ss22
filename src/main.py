@@ -3,6 +3,7 @@ import datetime
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
+from flask import request, redirect, url_for
 
 from server.SystemAdministration import SystemAdministration
 from server.business_objects.Person import Person
@@ -28,12 +29,54 @@ from server.business_objects.Buchungen.ProjektarbeitBuchung import Projektarbeit
 
 from SecurityDecorator import secured
 
-app = Flask(__name__)
+"""
+Hinweise zu diesem Modul:
 
-CORS(app, resources=r'/zeiterfassung/*')
+    In diesem Modul befindet sich die Flask-App. Diese muss ausgeführt werden, damit der Backend-Server startet
+    und HTTP-Requests annehmen und verarbeiten kann. In den Funktionen der hier definierten App finden sich
+    die verschiedenen API-Methoden und deren URL's. Somit wird hier festgelegt, wie mit dem Backend interagiert
+    werden kann.
+
+
+HTTP response status codes:
+
+        Folgende Codes werden verwendet:
+        200 OK           :      bei erfolgreichen requests. Af die Verwendung von
+                                weiter differenzierenden Statusmeldungen wie etwa
+                                '204 No Content' für erfolgreiche requests, die
+                                außer evtl. im Header keine weiteren Daten zurückliefern,
+                                wird in dieser Fallstudie auch aus Gründen einer
+                                möglichst einfachen Umsetzung verzichtet.
+        401 Unauthorized :      falls der User sich nicht gegenüber dem System
+                                authentisiert hat und daher keinen Zugriff erhält.
+        404 Not Found    :      falls eine angefragte Resource nicht verfügbar ist
+        500 Internal Server Error : falls der Server einen Fehler erkennt,
+                                diesen aber nicht genauer zu bearbeiten weiß.
+"""
+
+app = Flask(__name__, static_folder="./build", static_url_path='/')
+
+app.config['ERROR_404_HELP'] = False
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 
 api = Api(app, version='1.0', title='Zeiterfassung API',
           description='API für das Projektzeiterfassungssystem')
+
+CORS(app, resources=r'/timesystem/*')
+
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/timesystem'):
+        return "Fehler", 404
+    else:
+        return redirect(url_for('index'))
+
 
 timesystem = api.namespace('timesystem', description='Funktionen des Projektzeiterfassungssystem')
 
@@ -134,6 +177,21 @@ end_event_transaction = api.inherit('EndereignisBuchung', bo, transaction, event
 
 interval_transaction_response = api.model('Projektarbeitszeit-Rückmeldung', {'response': fields.String()})
 
+pause_transaction_response_special = api.model('Spezielle Pausen Übergabe', {'transaction_id': fields.Integer(),
+                                                                             'interval_id': fields.Integer(),
+                                                                             'interval_name': fields.String(),
+                                                                             'start_time': fields.String(),
+                                                                             'end_time': fields.String()})
+
+project_worktime_transaction_response_special = api.model('Spezielle Projektarbeit '
+                                                          'Übergabe', {'transaction_id': fields.Integer(),
+                                                                       'interval_id': fields.Integer(),
+                                                                       'interval_name': fields.String(),
+                                                                       'project_name': fields.String(),
+                                                                       'activity_name': fields.String(),
+                                                                       'start_time': fields.String(),
+                                                                       'end_time': fields.String()})
+
 
 @timesystem.route('/persons')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -141,6 +199,8 @@ class AllPersonListOperations(Resource):
 
     @timesystem.marshal_list_with(person)
     def get(self):
+        """Diese Funktion gibt alle im System gespeicherten
+        Personen aus."""
         s_adm = SystemAdministration()
         all_persons = s_adm.get_all_persons()
         return all_persons
@@ -149,6 +209,10 @@ class AllPersonListOperations(Resource):
     @timesystem.expect(person)
     @secured
     def post(self):
+        """
+        Über diese Funktion kann man eine neue Person im System speichern.
+        :return: Person in JSON Form
+        """
         s_adm = SystemAdministration()
 
         proposal = Person.from_dict(api.payload)
@@ -170,12 +234,24 @@ class PersonOperations(Resource):
     @timesystem.marshal_with(person)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Person aus.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID des Person
+        :return: Person in JSON Form
+        """
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_key(id)
         return p
 
-    @secured
+    #@secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Person aus dem System.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID des Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_key(id)
         s_adm.delete_person(p)
@@ -185,6 +261,12 @@ class PersonOperations(Resource):
     @timesystem.expect(person, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichern einer bestimmten Person im System.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID des Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         p = Person.from_dict(api.payload)
 
@@ -195,6 +277,7 @@ class PersonOperations(Resource):
         else:
             return '', 500
 
+
 @timesystem.route('/persons/firebase/<string:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die Firebase_ID des Personen Objekts')
@@ -202,12 +285,19 @@ class PersonFirebaseOperations(Resource):
     @timesystem.marshal_with(person)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Person aus.
+        Die Person wird durch die Firebase-ID in der URI bestimmt.
+        :param id: Firebase_ID der Person
+        :return: Person in JSON Form
+        """
         s_adm = SystemAdministration()
         p = s_adm.get_person_by_firebase_id(id)
         if p is not None:
             return p
         else:
             return 'Person not found', 500
+
 
 @timesystem.route('/persons/<int:id>/activity')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -216,6 +306,12 @@ class PersonRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
     @secured
     def get(self, id):
+        """
+        Gibt die Aktivitäten aus, an welchen eine bestimmte Person
+        beteiligt ist. Die Person wird über die ID in der URI bestimmt.
+        :param id: ID der Person
+        :return: JSON-Liste der Aktivitätn in JSON Form
+        """
         s_adm = SystemAdministration()
         person = s_adm.get_person_by_key(id)
 
@@ -234,6 +330,10 @@ class ProjectDeadlineGetOperation(Resource):
     @timesystem.expect(project_deadline)
     @secured
     def post(self):
+        """
+        Legt eine neue Projekt-Deadline im System an.
+        :return: Projekt-Laufzeit in JSON Form
+        """
         s_adm = SystemAdministration()
 
         proposal = ProjektDeadline.from_dict(api.payload)
@@ -252,11 +352,23 @@ class ProjectDeadlineOperations(Resource):
     @timesystem.marshal_with(project_deadline)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Projekt-Deadline aus dem System aus.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID der Projekt-Deadline
+        :return: Projekt-Deadline in JSON Form
+        """
         s_adm = SystemAdministration()
         pd = s_adm.get_project_deadline_by_key(id)
         return pd
 
     def delete(self, id):
+        """
+        Löscht eine bestimmte Projekt-Deadline aus dem System.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID der Projekt-Deadline
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pd = s_adm.get_project_deadline_by_key(id)
         s_adm.delete_project_deadline(pd)
@@ -266,6 +378,12 @@ class ProjectDeadlineOperations(Resource):
     @timesystem.expect(project_deadline, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Projekt-Deadline aus dem System.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param id: ID der Projekt-Deadline
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pd = ProjektDeadline.from_dict(api.payload)
 
@@ -286,6 +404,10 @@ class ProjectDurationOperation(Resource):
     @timesystem.expect(project_duration)
     @secured
     def post(self):
+        """
+        Legt eine neue Projekt-Laufzeit im System an.
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
 
         proposal = Projektlaufzeit.from_dict(api.payload)
@@ -306,12 +428,20 @@ class ProjectDurationWithTimeStempsOperation(Resource):
     @timesystem.marshal_with(project_duration, code=200)
     @secured
     def post(self, name, start_time, end_time):
+        """
+        Über diese Funktion kann man eine Projekt-Laufzeit
+        anlegen, dei welcher man den Start- und Endzeitpunkt angibt.
+        Das Objekt wird durch die ID in der URI bestimmt.
+        :param name: Name des Zeitintervalls / Projektname
+        :param start_time: Startzeitpunkt im Datetime-Format
+        :param end_time: Endzeitpunkt im Datetime-Format
+        :return: Projekt-Laufzeit in JSON Form
+        """
         s_adm = SystemAdministration()
 
         pd = s_adm.add_project_duration_with_timestemps(name, start_time, end_time)
 
         return pd, 200
-
 
 
 @timesystem.route('/project_duration/<int:id>')
@@ -321,12 +451,24 @@ class ProjectDurationOperations(Resource):
     @timesystem.marshal_with(project_duration)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Projekt-Laufzeit aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Laufzeit
+        :return: Projekt-Laufzeit in JSON Form
+        """
         s_adm = SystemAdministration()
         pd = s_adm.get_project_duration_by_key(id)
         return pd
 
     @secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Projekt-Laufzeit aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Laufzeit
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pd = s_adm.get_project_duration_by_key(id)
         s_adm.delete_project_duration(pd)
@@ -336,6 +478,12 @@ class ProjectDurationOperations(Resource):
     @timesystem.expect(project_duration, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Projekt-Laufzeit aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Laufzeit
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pd = Projektlaufzeit.from_dict(api.payload)
 
@@ -356,6 +504,10 @@ class AllProjectListOperations(Resource):
     @timesystem.marshal_list_with(project)
     @secured
     def get(self):
+        """
+        Auslesen aller angelegten Projekte aus dem System.
+        :return: JSON-Liste mit allen Projekten in JSON Form
+        """
         s_adm = SystemAdministration()
         all_projects = s_adm.get_all_projects()
         return all_projects
@@ -364,6 +516,10 @@ class AllProjectListOperations(Resource):
     @timesystem.expect(project)
     @secured
     def post(self):
+        """
+        Anlegen eines neuen Projekts im System.
+        :return: Angelegtes Projekt in JSON Form
+        """
         s_adm = SystemAdministration()
 
         proposal = Projekt.from_dict(api.payload)
@@ -385,21 +541,39 @@ class ProjectOperations(Resource):
     @timesystem.marshal_with(project)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Projekt aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekts
+        :return: Projekt in JSON Form
+        """
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
         return pr
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Projekt aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekts
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pr = s_adm.get_project_by_key(id)
-        s_adm.delete_person(pr)
+        s_adm.delete_project(pr)
         return '', 200
 
     @timesystem.marshal_with(project)
     @timesystem.expect(project, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes Projekt aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekts
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pr = Projekt.from_dict(api.payload)
 
@@ -418,6 +592,12 @@ class PersonRelatedProjectOperations(Resource):
     @timesystem.marshal_with(person)
     @secured
     def get(self, id):
+        """
+        Gibt alle Personen aus, die an einem bestimmten Projekt
+        beteiligt sind. Das Projekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekts
+        :return: JSON-Liste der Personen in JSON Form
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
 
@@ -436,6 +616,13 @@ class PersonRelatedProjectOperations(Resource):
 class ProjectRelatedSpecificPersonOperations(Resource):
     @secured
     def delete(self, id, person_id):
+        """
+        Löscht eine bestimmte Person aus der Liste der verantwortlichen Personen
+        eines bestimmten Projekts.
+        :param id: ID des Projekts
+        :param person_id: ID der Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
         person = s_adm.get_person_by_key(person_id)
@@ -444,6 +631,13 @@ class ProjectRelatedSpecificPersonOperations(Resource):
 
     @secured
     def post(self, id, person_id):
+        """
+        Fügt eine bestimmte Person der Liste der verantwortlichen Personen eines
+        bestimmten Projekts hinzu.
+        :param id: ID des Projekts
+        :param person_id: ID der Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
         person = s_adm.get_person_by_key(person_id)
@@ -458,6 +652,11 @@ class ProjectRelatedActivityOperations(Resource):
     @timesystem.marshal_with(activity)
     @secured
     def get(self, id):
+        """
+        Gibt alle Aktivitäten eines bestimmten Projekts aus.
+        :param id: ID des Projekts
+        :return: JSON Liste der Aktivitäten in JSON Form
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
 
@@ -476,6 +675,12 @@ class ProjectRelatedActivityOperations(Resource):
 class ProjectRelatedSpecificActivityOperations(Resource):
     @secured
     def delete(self, id, activity_id):
+        """
+        Löscht eine Aktivität eines bestimmten Projekts.
+        :param id: ID des Projekts
+        :param activity_id: ID der Aktivität
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
         activity = s_adm.get_activity_by_key(activity_id)
@@ -484,6 +689,12 @@ class ProjectRelatedSpecificActivityOperations(Resource):
 
     @secured
     def post(self, id, activity_id):
+        """
+        Fügt eine Aktivität einem bestimmten Projekt hinzu.
+        :param id: ID des Projekts
+        :param activity_id: ID der Aktivität
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
         activity = s_adm.get_activity_by_key(activity_id)
@@ -497,15 +708,22 @@ class AllActivityListOperations(Resource):
     @timesystem.marshal_list_with(activity)
     @secured
     def get(self):
+        """
+        Gibt alle Aktivitäten aus dem System aus.
+        :return: JSON-Liste mit Aktivitäten in JSON Form
+        """
         s_adm = SystemAdministration()
         all_activities = s_adm.get_all_activities()
-        print(all_activities)
         return all_activities
 
     @timesystem.marshal_with(activity, code=200)
     @timesystem.expect(activity)
     @secured
     def post(self):
+        """
+        Anlegen einer Aktivität im System.
+        :return: Aktivität in JSON Form
+        """
         s_adm = SystemAdministration()
 
         proposal = Aktivitaet.from_dict(api.payload)
@@ -525,11 +743,23 @@ class ActivityOperations(Resource):
     @timesystem.marshal_with(activity)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Aktivität aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Aktivität
+        :return: Aktivität in JSON Form
+        """
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
         return a
 
     def delete(self, id):
+        """
+        Löscht eine bestimmte Aktivität aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Aktivität
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
         s_adm.delete_activity(a)
@@ -539,6 +769,12 @@ class ActivityOperations(Resource):
     @timesystem.expect(activity, validate=True)
     @secured
     def put(self, id):
+        """
+        Löscht eine bestimmte Aktivität aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Aktivität
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         a = Aktivitaet.from_dict(api.payload)
 
@@ -557,6 +793,11 @@ class ActivityRelatedPersonOperations(Resource):
     @timesystem.marshal_with(person)
     @secured
     def get(self, id):
+        """
+        Gibt alle für eine bestimmte Aktivität verantwortlichen Personen aus
+        :param id: ID der Aktivität
+        :return: JSON-Liste der Personen in JSON Form
+        """
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
 
@@ -574,6 +815,13 @@ class ActivityRelatedPersonOperations(Resource):
 class ActivityRelatedSpecificPersonOperations(Resource):
     @secured
     def delete(self, id, person_id):
+        """
+        Löscht eine bestimmte Person aus der Liste der verantwortlichen Personen
+        einer bestimmten Aktivität.
+        :param id: ID der Aktivität
+        :param person_id: ID der Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
         person = s_adm.get_person_by_key(person_id)
@@ -582,6 +830,13 @@ class ActivityRelatedSpecificPersonOperations(Resource):
 
     @secured
     def post(self, id, person_id):
+        """
+        Fügt eine bestimmte Person der Liste der verantwortlichen Personen
+        einer bestimmten Aktivität hinzu.
+        :param id: ID der Aktivität
+        :param person_id: ID der Person
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         activity = s_adm.get_activity_by_key(id)
         person = s_adm.get_person_by_key(person_id)
@@ -595,6 +850,10 @@ class AllAccountListOperations(Resource):
     @timesystem.marshal_list_with(account)
     @secured
     def get(self):
+        """
+        Gibt alle Zeitkontos aus dem System aus.
+        :return: JSON-Liste der Zeitkontos in JSON Form
+        """
         s_adm = SystemAdministration()
         all_accounts = s_adm.get_all_time_accounts()
         return all_accounts
@@ -607,11 +866,23 @@ class AccountOperations(Resource):
     @timesystem.marshal_with(account)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Zeitkonto aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkonto
+        :return: Zeitkonto in JSON Form
+        """
         s_adm = SystemAdministration()
         ac = s_adm.get_time_account_by_key(id)
         return ac
 
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Zeikonto aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         ac = s_adm.get_time_account_by_key(id)
         s_adm.delete_account(ac)
@@ -639,6 +910,12 @@ class PersonOfAccountOperations(Resource):
     @timesystem.marshal_list_with(account)
     @secured
     def get(self, id):
+        """
+        Gibt das der Person zugehörige Zeitkonto aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Person
+        :return: Zeitkonto in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_person_key(id)
 
@@ -655,6 +932,13 @@ class KommenTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(kommen_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt alle Kommen-Ereignis-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Kommen-Ereignis-Buchungen in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         transactions = s_adm.get_all_kommen_transactions_for_account(account)
@@ -665,13 +949,45 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
+@timesystem.route('/account/kommen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Kommen-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class AccountKommenDateOperations(Resource):
+    @timesystem.marshal_list_with(kommen)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Kommen-Ereignisse die auf ein bestimmtes Zeitkonto
+        gebucht wurden für einen bestimmten Zeitraum aus
+        :param id: ID des Zeitkontos
+        :param start_date: Anfangsdatum des Suchtzeitraums
+        :param end_date: Enddatum des Suchzeitraums
+        :return:
+        """
+        s_adm = SystemAdministration()
+        events = s_adm.get_all_kommen_events_for_account_between_dates(id, start_date, end_date)
+        if events:
+            return events
+        else:
+            return '', 500
+
+
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
-class KommenTransactionRelatedAccountOperations(Resource):
+class GehenTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(gehen_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt alle Gehen-Ereignis-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Gehen-Ereignis-Buchungen in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         transactions = s_adm.get_all_gehen_transactions_for_account(account)
@@ -682,12 +998,45 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
+@timesystem.route('/account/gehen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des Kommen-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class AccountGehenDateOperations(Resource):
+    @timesystem.marshal_list_with(gehen)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Gehen-Ereignisse die auf ein bestimmtes Zeitkonto
+        gebucht wurden für einen bestimmten Zeitraum aus
+        :param id: ID des Zeitkontos
+        :param start_date: Anfangsdatum des Suchtzeitraums
+        :param end_date: Enddatum des Suchzeitraums
+        :return:
+        """
+        s_adm = SystemAdministration()
+        events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
+
+        if events:
+            return events
+        else:
+            return '', 500
+
+
 @timesystem.route('/accounts/pause/<int:id>/time')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class PauseTimeRelatedAccountOperations(Resource):
     @secured
     def get(self, id):
+        """
+        Gibt die gesamte gebuchte Pausenzeit in Stunden aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: Pausenzeit in Stunden
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         pause_time = s_adm.get_full_pause_time_for_account(account)
@@ -705,6 +1054,13 @@ class PauseTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(pause_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt alle Pausen-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Pausen-Buchungen in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         pauses = s_adm.get_all_pause_transactions_for_account(account)
@@ -715,6 +1071,31 @@ class PauseTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
+@timesystem.route('/accounts/pause/values/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class PauseTransactionValueBetweenDatesAccountOperations(Resource):
+    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Pausen-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Pausen-Buchungen in JSON Form
+        """
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        pauses_values = s_adm.get_all_pause_transaction_values_for_account_between_dates(account, start_date, end_date)
+
+        if account is not None:
+            return pauses_values[0]
+
+
+
 @timesystem.route('/accounts/worktime-transactions/<int:id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -722,6 +1103,13 @@ class WorktimeTransactionRelatedAccountOperations(Resource):
     @timesystem.marshal_list_with(project_worktime_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt alle Projekt-Arbeitszeiten-Buchungen aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Projekt-Arbeitszeiten-Buchungen in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         pwt = s_adm.get_all_worktime_transactions_for_account(account)
@@ -739,6 +1127,14 @@ class WorktimeTransactionRelatedAccountOperations(Resource):
 class ActivityWorktimeRelatedAccountOperations(Resource):
     @secured
     def get(self, id, activity_id):
+        """
+        Gibt die gesamte Projekt-Arbeitszeit in Stunden aus, die auf ein bestimmtes
+        Konto und auf eine bestimmte Aktivität gebucht wurde.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :param activity_id: ID der Aktivität
+        :return: Projekt-Arbeitszeit in Stunden
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         activity = s_adm.get_activity_by_key(activity_id)
@@ -749,6 +1145,30 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
         else:
             return 'Activity not found', 500
 
+@timesystem.route('/accounts/worktime/values/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Account-Objekts')
+@timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
+@timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
+class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
+    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @secured
+    def get(self, id, start_date, end_date):
+        """
+        Gibt alle Werte einer Projekt-Buchung aus, die auf ein bestimmtes
+        Konto gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :return: JSON-Liste der Pausen-Buchungen in JSON Form
+        """
+        s_adm = SystemAdministration()
+        account = s_adm.get_time_account_by_key(id)
+        worktime_values = s_adm.get_all_worktime_transaction_values_for_account_between_dates(account, start_date,
+                                                                                              end_date)
+
+        if account is not None:
+            return worktime_values[0]
+        
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -758,6 +1178,14 @@ class ActivityWorktimeTransactionsRelatedAccountOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
     @secured
     def get(self, id, activity_id):
+        """
+        Gibt alle Projekt-Arbeitszeit-Buchungen aus, die auf ein bestimmtes
+        Konto und eine bestimmte Aktivität gebucht wurden.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Zeitkontos
+        :param activity_id: ID der Aktivität
+        :return: JSON-Liste der Projekt-Arbeitszeit-Buchungen in JSON Form
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(id)
         activity = s_adm.get_activity_by_key(activity_id)
@@ -776,12 +1204,24 @@ class StartEventOperations(Resource):
     @timesystem.marshal_with(start_event)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Start-Ereignis aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Start-Ereignisses
+        :return: Start_Ereignis in JSON-Form
+        """
         s_adm = SystemAdministration()
         se = s_adm.get_start_event_by_key(id)
         return se
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Start-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Start-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         se = s_adm.get_start_event_by_key(id)
         s_adm.delete_start_event(se)
@@ -791,6 +1231,12 @@ class StartEventOperations(Resource):
     @timesystem.expect(start_event, validate=True)
     @secured
     def put(self, id):
+        """
+        Speicht ein bestimmtes Start-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Start-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         se = Startereignis.from_dict(api.payload)
 
@@ -811,12 +1257,24 @@ class StartEventTransactionOperations(Resource):
     @timesystem.marshal_with(start_event_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Start-Ereignis-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Start-Ereignis-Buchung
+        :return: Start-Ereignis-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         st = s_adm.get_start_event_transaction_by_key(id)
-        return st
+        return st, 200
 
     @secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Start-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Start-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         st = s_adm.get_start_event_transaction_by_key(id)
         s_adm.delete_start_event_transaction(st)
@@ -826,6 +1284,12 @@ class StartEventTransactionOperations(Resource):
     @timesystem.expect(start_event_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Start-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Start-Ereignis-Buchung
+        :return: Start-Ereignis-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         st = StartereignisBuchung.from_dict(api.payload)
 
@@ -834,7 +1298,7 @@ class StartEventTransactionOperations(Resource):
             st.set_target_user_account(st.get_target_user_account())
             st.set_event_id(st.get_event_id())
             s_adm.save_start_event_transaction(st)
-            return '', 200
+            return st, 200
         else:
             return '', 500
 
@@ -846,12 +1310,24 @@ class EndEventOperations(Resource):
     @timesystem.marshal_with(end_event)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes End-Ereignis aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des End-Ereignisses
+        :return: End-Ereignis in JSON-Form
+        """
         s_adm = SystemAdministration()
         e = s_adm.get_end_event_by_key(id)
         return e
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes End-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des End-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         e = s_adm.get_end_event_by_key(id)
         s_adm.delete_end_event(e)
@@ -861,6 +1337,12 @@ class EndEventOperations(Resource):
     @timesystem.expect(end_event, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes End-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des End-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         e = Endereignis.from_dict(api.payload)
 
@@ -881,11 +1363,23 @@ class EndEventTransactionOperations(Resource):
     @timesystem.marshal_with(end_event_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte End-Ereignis-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der End-Ereignis-Buchung
+        :return: End-Ereignis-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         et = s_adm.get_end_event_transaction_by_key(id)
         return et
 
     def delete(self, id):
+        """
+        Löscht eine bestimmte End-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der End-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         et = s_adm.get_end_event_transaction_by_key(id)
         s_adm.delete_end_event_transaction(et)
@@ -895,6 +1389,12 @@ class EndEventTransactionOperations(Resource):
     @timesystem.expect(end_event_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte End-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der End-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         et = EndereignisBuchung.from_dict(api.payload)
 
@@ -915,12 +1415,24 @@ class KommenOperations(Resource):
     @timesystem.marshal_with(kommen)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Kommen-Ereignis aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Kommen-Ereignisses
+        :return: Kommen-Ereignis in JSON-Form
+        """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
         return k
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Kommen-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Kommen-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_event_by_key(id)
         s_adm.delete_kommen_event(k)
@@ -930,6 +1442,12 @@ class KommenOperations(Resource):
     @timesystem.expect(kommen, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes Kommen-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Kommen-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         k = Kommen.from_dict(api.payload)
 
@@ -950,11 +1468,23 @@ class KommenTransactionOperations(Resource):
     @timesystem.marshal_with(kommen_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Kommen-Ereignis-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Kommen-Ereignis-Buchung
+        :return: Kommen-Ereignis-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_by_transaction_key(id)
         return k
 
     def delete(self, id):
+        """
+        Löscht eine bestimmte Kommen-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Kommen-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         k = s_adm.get_kommen_transaction_by_key(id)
         s_adm.delete_kommen_transaction(k)
@@ -964,6 +1494,12 @@ class KommenTransactionOperations(Resource):
     @timesystem.expect(kommen_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Kommen-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Kommen-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         k = KommenBuchung.from_dict(api.payload)
 
@@ -985,6 +1521,12 @@ class KommenOperations(Resource):
     @timesystem.expect(kommen)
     @secured
     def post(self, account_id):
+        """
+        Über diese Methode kann für ein bestimmtes Zeitkonto
+        eine Kommen-Ereignis-Buchung angelegt werden
+        :param account_id: ID des Zeitkontos
+        :return: Kommen-Ereignis in JSON Form
+        """
         s_adm = SystemAdministration()
         proposal = Kommen.from_dict(api.payload)
         account = s_adm.get_time_account_by_key(account_id)
@@ -1015,12 +1557,24 @@ class GehenOperations(Resource):
     @timesystem.marshal_with(gehen)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Gehen-Ereignis aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Gehen-Ereignisses
+        :return: Gehen-Ereignis in JSON-Form
+        """
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_event_by_key(id)
         return gh
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Gehen-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Gehen-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_event_by_key(id)
         s_adm.delete_gehen_event(gh)
@@ -1030,6 +1584,12 @@ class GehenOperations(Resource):
     @timesystem.expect(gehen, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes Gehen-Ereignis aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Gehen-Ereignisses
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         gh = Gehen.from_dict(api.payload)
 
@@ -1050,12 +1610,24 @@ class GehenTransactionOperations(Resource):
     @timesystem.marshal_with(gehen_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Gehen-Ereignis-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Gehen-Ereignis-Buchung
+        :return: Gehen-Ereignis-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_transaction_by_key(id)
         return gh
 
     @secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Gehen-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Gehen-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         gh = s_adm.get_gehen_transaction_by_key(id)
         s_adm.delete_gehen_transaction(gh)
@@ -1065,6 +1637,12 @@ class GehenTransactionOperations(Resource):
     @timesystem.expect(gehen_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Gehen-Ereignis-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Gehen-Ereignis-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         gh = GehenBuchung.from_dict(api.payload)
 
@@ -1086,6 +1664,12 @@ class GehenOperations(Resource):
     @timesystem.expect(gehen)
     @secured
     def post(self, account_id):
+        """
+        Über diese Methode kann für ein bestimmtes Zeitkonto
+        eine Gehen-Ereignis-Buchung angelegt werden
+        :param account_id: ID des Zeitkontos
+        :return: Gehen-Ereignis in JSON Form
+        """
         s_adm = SystemAdministration()
         proposal = Gehen.from_dict(api.payload)
         account = s_adm.get_time_account_by_key(account_id)
@@ -1109,12 +1693,24 @@ class PauseOperations(Resource):
     @timesystem.marshal_with(pause)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Pausen-Intervall aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Pausen-Intervall
+        :return: Pausen-Intervall in JSON-Form
+        """
         s_adm = SystemAdministration()
         p = s_adm.get_pause_by_key(id)
         return p
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Pausen-Intervall aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Pausen-Intervall
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         p = s_adm.get_pause_by_key(id)
         s_adm.delete_pause(p)
@@ -1124,6 +1720,12 @@ class PauseOperations(Resource):
     @timesystem.expect(pause, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes Pausen-Intervall aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Pausen-Intervall
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         p = Pause.from_dict(api.payload)
 
@@ -1146,12 +1748,24 @@ class PauseTransactionOperations(Resource):
     @timesystem.marshal_with(pause_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Pausen-Intervall-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Pausen-Intervall-Buchung
+        :return: Pausen-Intervall-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         pt = s_adm.get_pause_transaction_by_key(id)
         return pt
 
     @secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Pausen-Intervall-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Pausen-Intervall-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pt = s_adm.get_pause_transaction_by_key(id)
         s_adm.delete_pause_transaction(pt)
@@ -1161,6 +1775,12 @@ class PauseTransactionOperations(Resource):
     @timesystem.expect(pause_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Pausen-Intervall-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Pausen-Intervall-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pt = PauseBuchung.from_dict(api.payload)
 
@@ -1173,6 +1793,28 @@ class PauseTransactionOperations(Resource):
         else:
             return '', 500
 
+@timesystem.route('/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>'
+                  '/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Buchungs-Objekts')
+@timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
+@timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
+@timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
+@timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
+class PauseTransactionValueOperations(Resource):
+    @timesystem.marshal_with(pause_transaction_response_special)
+    @timesystem.expect(pause_transaction_response_special, validate=True)
+    @secured
+    def put(self, id, interval_id, interval_name, start_time, end_time):
+        s_adm = SystemAdministration()
+        transaction = s_adm.get_pause_transaction_by_key(id)
+        if transaction:
+            s_adm.save_pause_transaction_with_values(id, interval_id, interval_name, start_time, end_time)
+            return '', 200
+        else:
+            return '', 500
+
+
 
 @timesystem.route('/commit-pause-transaction/<int:account_id>/<string:name>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1184,6 +1826,24 @@ class CommitPauseTransaction(Resource):
     @timesystem.marshal_with(interval_transaction_response)
     @secured
     def post(self, account_id, name, start_time, end_time):
+        """
+        Über diese Funktion kann man ein Pausen-Interval für ein
+        bestimmtes Zeitkonto buchen. Diese Funktion wurde so
+        geschrieben, dass man über den HTTP Request
+        Die ID des Zeitkontos, den Namen des Intervalls und
+        den Start- und Endzeitpunkt angibt. Durch diese Lösung
+        wird der Umgang mit der referentiellen Integrität erleichtert.
+        Die Logik der Intervalls-Buchung findet sich in dem Modul
+        "SystemAdministration.py" unter der Funktion "book_pause_transaction".
+
+        :param account_id: ID des Zeitkontos
+        :param name: Name des Zeitintervalls als String
+        :param start_time: Start-Zeitpunkt als Datetime
+        :param end_time: End-Zeitpunkt als Datetime
+
+        :return: Transaction-Response als JSON (Für Bedeutung der Response
+        Codierung siehe "SystemAdministration.py" unter der Funktion "book_pause_transaction")
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
         if account is not None:
@@ -1200,12 +1860,24 @@ class WorktimeOperations(Resource):
     @timesystem.marshal_with(project_worktime)
     @secured
     def get(self, id):
+        """
+        Gibt ein bestimmtes Projekt-Arbeitszeit-Intervall aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekt-Arbeitszeit-Intervall
+        :return: Projekt-Arbeitszeit-Intervall in JSON-Form
+        """
         s_adm = SystemAdministration()
         wt = s_adm.get_project_worktime_by_key(id)
         return wt
 
     @secured
     def delete(self, id):
+        """
+        Löscht ein bestimmtes Projekt-Arbeitszeit-Intervall aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekt-Arbeitszeit-Intervall
+        :return: HTTP Request
+        """
         s_adm = SystemAdministration()
         wt = s_adm.get_project_worktime_by_key(id)
         s_adm.delete_project_worktime(wt)
@@ -1215,6 +1887,12 @@ class WorktimeOperations(Resource):
     @timesystem.expect(project_worktime, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert ein bestimmtes Projekt-Arbeitszeit-Intervall aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID des Projekt-Arbeitszeit-Intervall
+        :return: HTTP Request
+        """
         s_adm = SystemAdministration()
         wt = Projektarbeit.from_dict(api.payload)
 
@@ -1237,12 +1915,24 @@ class WorktimeTransactionOperations(Resource):
     @timesystem.marshal_with(project_worktime_transaction)
     @secured
     def get(self, id):
+        """
+        Gibt eine bestimmte Projekt-Arbeitszeit-Intervall-Buchung aus dem System aus.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Arbeitszeit-Intervall-Buchung
+        :return: Projekt-Arbeitszeit-Intervall-Buchung in JSON-Form
+        """
         s_adm = SystemAdministration()
         pt = s_adm.get_project_worktime_by_transaction_key(id)
         return pt
 
     @secured
     def delete(self, id):
+        """
+        Löscht eine bestimmte Projekt-Arbeitszeit-Intervall-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Arbeitszeit-Intervall-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pt = s_adm.get_project_work_transaction_by_key(id)
         s_adm.delete_project_work_transaction(pt)
@@ -1252,6 +1942,12 @@ class WorktimeTransactionOperations(Resource):
     @timesystem.expect(project_worktime_transaction, validate=True)
     @secured
     def put(self, id):
+        """
+        Speichert eine bestimmte Projekt-Arbeitszeit-Intervall-Buchung aus dem System.
+        Das Objekt wird über die ID in der URI bestimmt.
+        :param id: ID der Projekt-Arbeitszeit-Intervall-Buchung
+        :return: HTTP Response
+        """
         s_adm = SystemAdministration()
         pt = ProjektarbeitBuchung.from_dict(api.payload)
 
@@ -1261,6 +1957,28 @@ class WorktimeTransactionOperations(Resource):
             pt.set_target_activity(pt.get_target_activity())
             pt.set_time_interval_id(pt.get_time_interval_id())
             s_adm.save_project_work_transaction(pt)
+            return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/worktime-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>'
+                  '/<string:start_time>/<string:end_time>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Buchungs-Objekts')
+@timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
+@timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
+@timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
+@timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
+class WorktimeTransactionValueOperations(Resource):
+    @timesystem.marshal_with(project_worktime_transaction_response_special)
+    @timesystem.expect(project_worktime_transaction_response_special, validate=True)
+    @secured
+    def put(self, id, interval_id, interval_name, start_time, end_time):
+        s_adm = SystemAdministration()
+        transaction = s_adm.get_project_work_transaction_by_key(id)
+        if transaction:
+            s_adm.save_worktime_transaction_with_values(id, interval_id, interval_name, start_time, end_time)
             return '', 200
         else:
             return '', 500
@@ -1277,9 +1995,25 @@ class WorktimeTransactionOperations(Resource):
 class CommitWorktimeTransaction(Resource):
     @timesystem.marshal_with(interval_transaction_response, code=200)
     @secured
-
     def post(self, account_id, name, activity_id, start_time, end_time):
-        print(account_id, name, activity_id, start_time, end_time)
+        """
+        Über diese Funktion kann man ein Projekt-Arbeitszeit-Interval für ein
+        bestimmtes Zeitkonto und eine bestimmte Aktivität buchen. Diese Funktion wurde so
+        geschrieben, dass man über den HTTP Request Die ID des Zeitkontos, den Namen des Intervalls,
+        die ID der Aktivität und den Start- und Endzeitpunkt angibt. Durch diese Lösung
+        wird der Umgang mit der referentiellen Integrität erleichtert.
+        Die Logik der Intervalls-Buchung findet sich in dem Modul
+        "SystemAdministration.py" unter der Funktion "book_project_work_transaction".
+
+        :param account_id: ID des Zeitkontos
+        :param name: Name des Zeitintervalls als String
+        :param activity_id: ID der Aktivität
+        :param start_time: Start-Zeitpunkt als Datetime
+        :param end_time: End-Zeitpunkt als Datetime
+
+        :return: Transaction-Response als JSON (Für Bedeutung der Response
+        Codierung siehe "SystemAdministration.py" unter der Funktion "book_project_work_transaction")
+        """
         s_adm = SystemAdministration()
         account = s_adm.get_time_account_by_key(account_id)
         activity = s_adm.get_activity_by_key(activity_id)
@@ -1293,8 +2027,5 @@ class CommitWorktimeTransaction(Resource):
             return 'Account not found', 200
 
 
-
-
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-

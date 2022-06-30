@@ -24,8 +24,8 @@ class Header extends React.Component {
         return (
             <Box sx={{ display: 'space-between' }}>
                 <Container align="center">
-                    <Appbar postion="static" sx={{ width: '100%' }}>
-                        <Toolbar variant="dense" align="center">
+                    <Appbar position="fixed" sx={{ width: '100%' }}>
+                        <Toolbar postion="fixed" variant="dense" align="center">
                             <DrawerComponent />
 
                             <div style={{ margin: '0 auto' }}>

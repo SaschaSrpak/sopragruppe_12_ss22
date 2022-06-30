@@ -6,6 +6,8 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import DialogContentText from '@mui/material/DialogContentText';
+import SystemAPI from '../../api/SystemAPI';
+import ProjektBO from '../../api/ProjektBO';
 
 /** 
  *@fileOverview Das ist der Dialog-Pup-Up, der beim Erstellen eines neuen Projekts angezeigt wird.
@@ -18,19 +20,18 @@ export class NewProjekt extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: null,
-            creator: null,
-            client: null,
-            description: null,
-            set_deadline: null,
-            project_duration: null,
+            name: "",
+            creator: "",
+            client: "",
+            description: "",
+            set_deadline: "2022-07-04T12:00",
+            project_duration: "",
             activities: [],
             persons_responsible: [],
+            open: true,
         }
     }
 
-// beim Betätigen des Buttons Speichern wird das Projekt in die Datenbank geschrieben
-    addProjekt = () => {}
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
@@ -48,8 +49,15 @@ export class NewProjekt extends Component {
         })
     }
 
-// schreibt die Projektdaten aus den Props in die Datenbank
-
+// schreibt die Projektdaten in die Datenbank
+        // Doesn't Work yet omg
+        
+    addProject = () => {
+        let newProject = new ProjektBO(this.state.name, this.state.creator, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.persons_responsible);
+        SystemAPI.getAPI().addProject(newProject).then(response => {
+            console.log(response)
+        })
+    }
 
 
 
@@ -115,7 +123,6 @@ export class NewProjekt extends Component {
                         id="set_deadline"
                         label="Deadline"
                         type="datetime-local"
-                        defaultValue="2022-07-04T12:00"
                         fullWidth
                         variant="standard"
                         value={set_deadline} 
@@ -125,39 +132,17 @@ export class NewProjekt extends Component {
                         autoFocus
                         margin="dense"
                         id="project_duration"
-                        label="Projektdauer in Stunden"
+                        label="Projektdauer in Personentagen"
                         type="number"
                         fullWidth
                         variant="standard"
                         value={project_duration} 
                         onChange={this.handleChange}
                     />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="activities"
-                        label="Aktivitäten Innerhalb des Projekts"
-                        type="string"
-                        fullWidth
-                        variant="standard"
-                        value={activities} 
-                        onChange={this.handleChange}
-                    />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="persons_responsible"
-                        label="Zuständige Personen"
-                        type="string"
-                        fullWidth
-                        variant="standard"
-                        value={persons_responsible} 
-                        onChange={this.handleChange}
-                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.props.handleClose}>Abbrechen</Button>
-                    <Button>Speichern</Button>
+                    <Button onClick={this.handleClose}>Abbrechen</Button>
+                    <Button onClick={this.addProject}>Speichern</Button>
                 </DialogActions>
             </div>
         )

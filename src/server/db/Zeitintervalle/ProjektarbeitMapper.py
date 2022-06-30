@@ -1,5 +1,5 @@
 
-from business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
+from server.business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
 from server.db.Mapper import Mapper
 
 

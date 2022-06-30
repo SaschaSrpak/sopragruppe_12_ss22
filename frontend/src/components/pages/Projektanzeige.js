@@ -1,54 +1,31 @@
 import React, {Component} from "react";
-import {Paper, Typography, Card, CardContent, Divider, Box } from "@mui/material";
+import {Paper, Typography, Card, Divider, Box, Container } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import AktivitätAnzeige from "./AktivitätAnzeige";
+// import AktivitätCard from "./AktivitätAnzeige";
 import SystemAPI from "../../api/SystemAPI";
+import IconButton from "@mui/material/IconButton";
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import Grid from "@mui/material/Grid";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import { NewAktivität } from "../Dienste/NewAktivität";
+
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
  *@author Sascha Srpak
 */
 
-/**
- * Projektdaten anzeige, drunter 
- */
 
-
-// export class Projektanzeige extends Component {
-//     render() {
-//         return (
-//             <div>
-//                 <h1>Projektanzeige Testpage</h1>
-//                 <p>Platzhalter für Projektdaten</p>
-//                 <Divider sx={{
-//                     margin: "10px",
-//                 }}/>
-//                 <AktivitätAnzeige/>
-//             </div>
-//         );
-//     }
-// }
-
-// export default Projektanzeige;
-
-
-function createData(detailName, detailValue) {
-    return { detailName, detailValue };
-}
-
-// Projektdaten
-const rows = [
-    createData("Name", "SoPra"),
-    createData("Creator", "God"),
-    createData("Client", "Peter Thies"),
-    createData("deadline", "31.07.2022"),
-    createData("Dauer in h", 1000)
-];
 
 // Projektanzeige + Projektbeschreibung + AktivitätAnzeige
 export class Projektanzeige extends Component {
@@ -59,50 +36,143 @@ export class Projektanzeige extends Component {
         this.state = {
             name: null,
             creator: null,
+            creator_new: null,
             client: null,
             deadline: null,
+            deadline_new: [],
             project_duration: null,
+            project_duration_new: null,
             description: null,
-            activities: [],
+            activity_name: null,
             persons_responsible: [],
+            man_day_capacity: null,
+            activities: [],
+            projectChoice: this.props.projectChoice,
+            projects: null,
+            persons: [],
+            openNewActivity: false
         }
     }
 
+    // Projektdaten
+
+
+
     // componentDidMount funktion zum Laden der Projektdaten
     componentDidMount() {
-        SystemAPI.getAPI().getProjects().then(projects => {
+// Projekte aus der Datenbank laden
+        SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
                 projects: projects
             })
+// Aktivitäten aus der Datenbank laden
+            SystemAPI.getAPI().getActivitiesOnProject(this.state.projectChoice).then(activities => {
+                this.setState({
+                    activities: activities,
+                })
+            })
+// Deadline aus der Datenbank laden -> von ID in Datum
+            SystemAPI.getAPI().getProjectDeadline(this.state.projectChoice).then(newDeadline => {
+                this.setState({
+                        deadline_new: newDeadline,
+                })
+            })
+// Projektdauer aus der Datenbank laden
+            SystemAPI.getAPI().getProjectDuration(this.state.projectChoice).then(newDuration => {
+                this.setState({
+                        project_duration_new: newDuration.duration,
+                })
+            })
+// Projektersteller aus der Datenbank laden
+            SystemAPI.getAPI().getPerson(this.state.projects.creator).then(newCreator => {
+                this.setState({
+                        creator_new: newCreator.name,
+                })
+            })
+
         })
     }
 
 
+
+// Function to get all the persons responsible for the Activity ID
+            // not working yet idk why
+getPersonsOnActivity = () => {
+    console.log(this.state.activity.id)
+    SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
+        this.setState({
+            persons: persons
+        })
+    })
+}
+
+
+    // Back-Button setzt den State projectChoice zurück, damit die Projektwahl wieder angezeigt wird
+    handleBack = () => {
+        this.setState({
+            projectChoice: null,
+        })
+    }
+
+
+    handleClickOpen = () => {
+        this.setState({
+            openNewActivity: true
+        })
+    }
+
+    handleCloseClick = () => {
+        this.setState({
+            openNewActivity: false
+        })
+    }
+
+
+// Projektedaten des ausgewählten Projekts werden gerendert
     render() {
+    const {openNewActivity} = this.state;
+
         return (
             <Box sx={{
                 margin: "auto",
-                maxWidth: 1000
                 }}>
-                    <h1>testprojekt:</h1>
+                    <IconButton onClick={this.props.handleClose}
+                    aria-label="backspace" >
+                        <BackspaceIcon />
+                    </IconButton>
+                    <h1>Projekt: {this.state.projects?this.state.projects.name:null}</h1>
                 <Paper>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 300 }} aria-label="simple table">
-                            <TableHead>
+                        <Table aria-label="simple table">
+                            {/* <TableHead>
                                 <TableRow sx={{}}>
                                     <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
                                     <TableCell align="center">Detail Value</TableCell>
                                 </TableRow>
-                            </TableHead>
+                            </TableHead> */}
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.detailName}>
-                                        <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">
-                                            {row.detailName}
-                                        </TableCell>
-                                        <TableCell align="center">{row.detailValue}</TableCell>
-                                    </TableRow>
-                                ))}
+
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektname</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.name:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektersteller</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.creator_new:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Client</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.projects.client:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.deadline_new.time_of_event:null}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null}</TableCell>
+                                </TableRow>
+
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -115,7 +185,7 @@ export class Projektanzeige extends Component {
                         </Typography>
                         <CardContent>
                             <Typography>
-                                dies ist eine beschriebung dies das lalala wer das liest ist super
+                                {this.state.projects?this.state.projects.description:null}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -123,8 +193,108 @@ export class Projektanzeige extends Component {
                 <Divider variant="fullWidth" sx={{
                     margin: "20px"
                 }}/>
-{/* AktivitätAnzeige als Komponente ausgelagert */}
-                <AktivitätAnzeige/>
+
+
+{/** TO DO: Button zum Erstellen einer neuen Aktivität */}
+                    <Button variant="contained" 
+                        onClick={this.handleClickOpen}
+                        value={this.state.openNewActivity}
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Neue Aktivität</Typography>
+                    </Button>
+
+            {/** why is this not workiiiing */}
+
+                    <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+                    >
+                        <NewAktivität openNewActivity={this.props} />
+                    </Dialog> 
+
+
+                <Divider variant="fullWidth" sx={{
+                    margin: "20px"
+                }}/>
+{/* AktivitätAnzeige als Komponente ausgelagert. Ok probably not nvm */}
+
+
+                <Grid>
+                    <Grid container justifyContent="space-around">
+                        
+                        {this.state.activities.map((activity, index) => {
+                            return (
+                                
+                                <Card variant="outlined" sx={{ maxWidth: 800 }}>
+                                <CardContent>
+                                    <Typography variant="h5" margin-top="10px" marginBottom="0px">
+                                        <b>{activity.activity_name}</b>
+                                    </Typography>
+                                    <Typography marginBottom="10px">Kapazität: {activity.man_day_capacity} Personentage</Typography>
+                                    <TableContainer>
+                                        <Table>
+                                            <TableHead sx={{
+                                                backgroundColor: "#f5f5f5",
+                                            }}>
+                                                <TableRow>
+                                                    <TableCell sx={{fontWeight: "bold",}}>Personen</TableCell>
+                                                    <TableCell sx={{fontWeight: "bold",}}>Ist</TableCell>
+                                                    <TableCell sx={{fontWeight: "bold",}}>Soll</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+
+
+
+{/** API abfrage einbauen help i wanna die
+ * 
+*/}
+
+                                            <TableBody>
+                                                <TableRow>
+                                                    <TableCell>{this.getPersonsOnActivity}</TableCell>
+                                                    <TableCell>2</TableCell>
+                                                    <TableCell>5</TableCell>
+                                                </TableRow>
+                                                <TableRow>
+                                                    <TableCell>Christoph Kunz</TableCell>
+                                                    <TableCell>3</TableCell>
+                                                    <TableCell>5</TableCell>
+                                                </TableRow>
+                                            </TableBody>
+
+
+
+{/** Buttons brauchen Funktionalität
+ * 
+ */}
+
+                                        </Table>
+                                    </TableContainer>
+                                </CardContent>
+                                <CardActions>
+                                    <IconButton aria-label="edit">
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="delete">
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </CardActions>
+                            </Card>
+
+
+
+
+                            )
+                        })}
+
+
+
+
+                    </Grid>
+                </Grid>
             </Box>
         );
     }

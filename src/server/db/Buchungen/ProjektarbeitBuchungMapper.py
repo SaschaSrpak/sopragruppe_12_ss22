@@ -1,4 +1,4 @@
-from business_objects.Buchungen.ProjektarbeitBuchung import ProjektarbeitBuchung
+from server.business_objects.Buchungen.ProjektarbeitBuchung import ProjektarbeitBuchung
 from server.db.Mapper import Mapper
 import datetime
 

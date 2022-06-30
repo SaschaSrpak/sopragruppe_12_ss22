@@ -1,167 +1,131 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-// import AktivitaetBO from ".../api/AktivitaetBO";
+// import React, { Component } from "react";
+// import Card from "@mui/material/Card";
+// import CardContent from "@mui/material/CardContent";
+// import CardActions from "@mui/material/CardActions";
+// import Typography from "@mui/material/Typography";
+// import EditIcon from "@mui/icons-material/Edit";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import IconButton from "@mui/material/IconButton";
+// import Grid from "@mui/material/Grid";
+// import TableContainer from "@mui/material/TableContainer";
+// import TableHead from "@mui/material/TableHead";
+// import Table from "@mui/material/Table";
+// import TableRow from "@mui/material/TableRow";
+// import TableCell from "@mui/material/TableCell";
+// import { TableBody } from "@mui/material";
+// import SystemAPI from "../../api/SystemAPI";
 
-/** 
- *@fileOverview Infos zu Aktivitäten werden angezeigt --> Wird in Projektanzeige angezeigt
- *@author Sascha Srpak
-*/
-
-
-// user auslagern, darin werden User gemapt aus der Datenbank, die zu einer Aktivität gehören
-function createData(name, dauer, kapazität) {
-    return {
-        name,
-        dauer,
-        kapazität,
-        user: [
-            {
-                customerId: "User 1",
-                soll: 100,
-                ist: 70
-        },
-        {
-            customerId: "User 2",
-            soll: 100,
-            ist: 80
-        }
-    ]
-};
-}
-
-// Testdaten für Aktivitäten
-const rows = [
-    createData("Aktivität 1", 200, 150),
-    createData("Aktivität 2", 200, 150),
-    createData("Aktivität 3", 200, 150),
-    createData("Aktivität 4", 200, 150),
-    createData("Aktivität 5", 200, 150)
-];
-
-/**
- * User rausziehen, über .map soll Userliste aus Datenbank geladen werden
- */
-
-function Row(props) {
-    const { row } = props;
-    const [open, setOpen] = React.useState(false);
-
-    return (
-        <React.Fragment>
-            <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-                <TableCell>
-                    <IconButton 
-                    aria-label="expand row"
-                    size="small"
-                    onClick={() => setOpen(!open)}
-                    >
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                    {row.name}
-                </TableCell>
-                <TableCell align="right">{row.dauer}</TableCell>
-                <TableCell align="right">{row.kapazität}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                Userliste zu {row.name}
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>User</TableCell>
-                                        <TableCell align="right">Soll-Zeit</TableCell>
-                                        <TableCell align="right">Ist-Zeit</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.user.map((userRow) => (
-                                        <TableRow>
-                                            <TableCell>{userRow.customerId}</TableCell>
-                                            <TableCell align="right">{userRow.soll}</TableCell>
-                                            <TableCell align="right">{userRow.ist}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    );
-}
-
-// --> User evtl raus in eigene Komponente
-Row.propTypes = {
-    row: PropTypes.shape({
-        dauer: PropTypes.number.isRequired,
-        kapazität: PropTypes.number.isRequired,
-        user: PropTypes.arrayOf(
-            PropTypes.shape({
-                userId: PropTypes.string.isRequired,
-                soll: PropTypes.number.isRequired,
-                ist: PropTypes.number.isRequired
-            })
-        ).isRequired,
-        name: PropTypes.string.isRequired
-    }).isRequired
-};
+// /** 
+//  *@fileOverview Nicht mehr ausgelagert diese nix gut, kann gelöscht werden
+//  *@author Sascha Srpak
+// */
 
 
-// Aktivitätsanzeige
-export class AktivitätAnzeige extends React.Component {
+// // rendert die Aktivitäten zu einem Projekt in Form einer Card Komponente
+// export class AktivitätCard extends Component {
 
-    // Constructor für die Aktivitätenanzeige
-    constructor(props) {
-        super(props);
-        this.state = {
-            activity_name: null,
-            persons_responsible: [],
-            man_day_capacity: null,
-        };
-    }
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             activity_name: null,
+//             persons_responsible: [],
+//             man_day_capacity: null,
+//             projectChoice: this.props.projectChoice,
+//             activities: [],
+//         };
+//     }
 
 
-    render() {
-        return (
-            <TableContainer component={Paper}>
-                <Table aria-label="collapsible table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell />
-                            <TableCell>Aktivität</TableCell>
-                            <TableCell align="right">Dauer</TableCell>
-                            <TableCell align="right">Kapazität</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <Row key={row.name} row={row} />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        );
-    }
-}
+// // getActivitiesOnProjeft(project_id) lädt die Aktivitäten zu einem Projekt
+//         // Problem: projectChoice wird als "undefined" übergeben.
+//         // help pls omg
+//     componentDidMount() {
+//         SystemAPI.getAPI().getActivitiesOnProject(this.state.projectChoice).then(activities => {
+//             this.setState({
+//                 activities: activities,
+//             })
+//         })
+//     }
 
-export default AktivitätAnzeige;
+// // Rendert die Aktivitäten als Card Komponenten
+//     render() {
+//         // const [activities] = this.state;
+
+//         return (
+//             <div>
+//                 <Grid>
+//                     <Grid container justifyContent="space-around">
+                        
+// {/** Prototyp einer Aktivitätskarte -> Soll mit .map für jede Aktivität erstellt werden */}
+//                     <Card variant="outlined" sx={{ maxWidth: 800 }}>
+//                             <CardContent>
+//                                 <Typography variant="h5" margin-top="10px" marginBottom="0px">
+//                                     <b>Aktivitätsname: {this.state.activities?this.state.activities.activity_name:null}</b>
+//                                 </Typography>
+//                                 <Typography marginBottom="10px">Kapazität: 10 Personentage</Typography>
+//                                 <TableContainer>
+//                                     <Table>
+//                                         <TableHead sx={{
+//                                             backgroundColor: "#f5f5f5",
+//                                         }}>
+//                                             <TableRow>
+//                                                 <TableCell sx={{fontWeight: "bold",}}>Personen</TableCell>
+//                                                 <TableCell sx={{fontWeight: "bold",}}>Ist</TableCell>
+//                                                 <TableCell sx={{fontWeight: "bold",}}>Soll</TableCell>
+//                                             </TableRow>
+//                                         </TableHead>
+//                                         <TableBody>
+//                                             <TableRow>
+//                                                 <TableCell>Peter Thies</TableCell>
+//                                                 <TableCell>2</TableCell>
+//                                                 <TableCell>5</TableCell>
+//                                             </TableRow>
+//                                             <TableRow>
+//                                                 <TableCell>Christoph Kunz</TableCell>
+//                                                 <TableCell>3</TableCell>
+//                                                 <TableCell>5</TableCell>
+//                                             </TableRow>
+//                                         </TableBody>
+//                                     </Table>
+//                                 </TableContainer>
+//                             </CardContent>
+//                             <CardActions>
+//                                 <IconButton aria-label="edit">
+//                                     <EditIcon />
+//                                 </IconButton>
+//                                 <IconButton aria-label="delete">
+//                                     <DeleteIcon />
+//                                 </IconButton>
+//                             </CardActions>
+//                         </Card>
+                        
+
+
+
+
+//                         {/* <Card variant="outlined" sx={{ maxWidth: 500 }}>
+//                             <CardContent>
+//                                 <Typography align="right">Peter Thies</Typography>
+//                                 <Typography variant="h5" margin-top="10px" marginBottom="10px">
+//                                     <b>Aktivitätsname</b>
+//                                 </Typography>
+//                                 <Typography>Kapazität: 10 Personentage</Typography>
+//                             </CardContent>
+//                             <CardActions>
+//                                 <IconButton aria-label="edit">
+//                                     <EditIcon />
+//                                 </IconButton>
+//                                 <IconButton aria-label="delete">
+//                                     <DeleteIcon />
+//                                 </IconButton>
+//                             </CardActions>
+//                         </Card> */}
+
+//                     </Grid>
+//                 </Grid>
+//             </div>
+//         );
+//     }
+// }
+
+// export default AktivitätCard;

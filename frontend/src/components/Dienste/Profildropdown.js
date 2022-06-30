@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
 import Profil from '../pages/Profil';
+import SystemAPI from '../../api/SystemAPI';
+import PersonBO from '../../api/PersonBO';
 
 /**
  * @author
@@ -10,6 +12,7 @@ import Profil from '../pages/Profil';
 
 
 class ProfileDropDown extends Component {
+
 
     #avatarButtonRef = createRef();
 
@@ -19,8 +22,16 @@ class ProfileDropDown extends Component {
         // Init the state
         this.state = {
             open: false,
-            show: false
+            show: false,
+            person: null,
         }
+
+        this.routeChange = this.routeChange.bind(this);
+    }
+
+    routeChange() {
+        let path = '/Profil';
+        this.props.history.push(path);
     }
 
     /** Handles click events on the avatar button and toggels visibility */
@@ -40,7 +51,8 @@ class ProfileDropDown extends Component {
             open: false
         });
     }
-    
+
+
 
     /** 
      * Handles the click event of the sign in button and uses the firebase.auth() component to sign in.
@@ -55,6 +67,34 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
+    deletePerson = () => {
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
+            .then(PersonBO => {
+                console.log(PersonBO.id);
+                SystemAPI.getAPI().deletePerson(PersonBO.id)
+             }
+
+            )
+    }
+  
+    
+    handledelete = () => {
+        console.log("löschen wurde angefordert")
+        if (window.confirm('Bist du dir sicher, dass du deinen Account löschen möchtest?')) {
+            // Save it!
+            console.log('Löschung findet statt.');
+            this.handleSignOutButtonClicked()
+            this.deletePerson();
+            console.log("löschung ist durch.");
+            alert("Account wurde gelöscht.")
+            
+        } else {
+            // Do nothing!
+            console.log('Keine Löschung.');
+        }
+
+
+    }
 
     render() {
         const { user } = this.props;
@@ -88,14 +128,15 @@ class ProfileDropDown extends Component {
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
                                     <Divider sx={{ margin: 1 }} />
-                                    <Profil user={user}/>
+                                    <Profil user={user} />
                                     <Divider sx={{ margin: 1 }} />
-                                    {/* <Button color='primary'>Profil</Button> */}
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Button onClick={this.handledelete}>Account löschen</Button>
 
                                 </Grid>
                             </Grid>
-                           </Paper>
+                        </Paper>
 
                     </Popover>
                 </div>

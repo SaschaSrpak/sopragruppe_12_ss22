@@ -1,4 +1,4 @@
-from business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
+from server.business_objects.Buchungen.StartereignisBuchung import StartereignisBuchung
 from server.db.Mapper import Mapper
 import datetime
 
@@ -35,6 +35,32 @@ class StartereignisBuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID, Account_ID, Event_ID, " \
                   "Last_modified_date FROM StartereignisBuchung WHERE Transaction_ID='{}'".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, target_user_account_id, event_id,
+             last_modified_date) = tuples[0]
+            transaction = StartereignisBuchung()
+            transaction.set_id(id)
+            transaction.set_target_user_account(target_user_account_id)
+            transaction.set_event_id(event_id)
+            transaction.set_last_modified_date(last_modified_date)
+            result = transaction
+        except IndexError:
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_event_key(self, event_key):
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT Transaction_ID, Account_ID, Event_ID, " \
+                  "Last_modified_date FROM StartereignisBuchung WHERE Event_ID='{}'".format(event_key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
