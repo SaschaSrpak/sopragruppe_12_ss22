@@ -72,6 +72,24 @@ export class Projektwahl extends Component {
         });
     }
 
+// Projekt aus Datenbank löschen
+    // deleteProject = () => {
+    //     SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
+    //         this.setState({
+    //             selectedProjects: null
+    //         })
+    //     }).catch(err => {
+    //         console.log(err)
+    //     }).finally(() => {
+    //         SystemAPI.getAPI().getProjects().then(projects => {
+    //             this.setState({
+    //                 projects: projects
+    //             })
+    //         })
+    //     }
+    //     )
+    // }
+
 
 
         ////// TO DO: Conditional Rendering -> Sobald ein Projekt mit "Auswählen" bestätigt wird,
@@ -130,6 +148,18 @@ export class Projektwahl extends Component {
                             fontWeight: "bold",
                         }}
                         >Auswählen</Typography>
+                    </Button>
+                    <Button  
+                        onClick={this.deleteProject}
+                        id={this.state.selectedProjects}
+                        variant="contained" 
+                        sx={{
+                        margin: "20px",
+                    }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Ausgewähltes Projekt löschen</Typography>
                     </Button>
                     <Divider sx={{
                         margin: "10px",
