@@ -183,7 +183,7 @@ export class Projektwahl extends Component {
                     <Dialog open={open} onClose={this.handleClose}
                     >
                         {/** open prop wird an "NewProject" übergeben */}
-                        <NewProjekt open={this.props} />
+                        <NewProjekt user={this.props.user} open={this.props} />
                     </Dialog>
 
 

@@ -528,7 +528,8 @@ class AllProjectListOperations(Resource):
             pr = s_adm.create_project(proposal.get_name(), proposal.get_creator(),
                                       proposal.get_client(), proposal.get_description(),
                                       proposal.get_deadline(), proposal.get_project_duration(),
-                                      proposal.get_activities(), proposal.get_person_responsible())
+                                      [],
+                                      proposal.get_person_responsible())
             return pr, 200
         else:
             return '', 500
