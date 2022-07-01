@@ -1575,7 +1575,7 @@ export default class SystemAPI {
    * @public
    */
   updateProjectDuration(project_durationBO) {
-    return this.#fetchAdvanced(this.#updateProjectDurationURL(project_durationBO.getId), {
+    return this.#fetchAdvanced(this.#updateProjectDurationURL(project_durationBO.getId()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',

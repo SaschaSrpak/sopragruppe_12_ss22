@@ -101,7 +101,13 @@ export class Projektanzeige extends Component {
                         creator_new: newCreator.name,
                 })
             })
-
+ // Managerstatus aus der Datenbank laden
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+            console.log(result)
+            this.setState({
+                managerstatus: result.manager_status
+            })
+            })
 // Projektzuständige aus der Datenbank laden
             SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
                 this.setState({
@@ -148,11 +154,14 @@ export class Projektanzeige extends Component {
     }
 
     handleDeletePersonResponsible = (personid) => {
+         if( this.state.managerstatus === "1"){
         SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
             this.setState({
                 persons: persons
             })
-        })
+        })}else{
+             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+         }
     }
 
     handlePersonAddResponsible = () => {
@@ -185,9 +194,12 @@ export class Projektanzeige extends Component {
     }
 
     handleClickOpenPersonResponsible = () => {
+         if(this.state.managerstatus === "1"){
         this.setState({
             openNewPersonResponsible: true
-        })
+        })}else{
+             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+         }
     }
 
     handleCloseClick = () => {

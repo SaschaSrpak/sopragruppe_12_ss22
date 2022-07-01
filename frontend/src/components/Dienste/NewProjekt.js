@@ -137,17 +137,7 @@ export class NewProjekt extends Component {
                         value={set_deadline} 
                         onChange={this.handleChange}
                     />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="project_duration"
-                        label="Projektdauer in Personentagen"
-                        type="number"
-                        fullWidth
-                        variant="standard"
-                        value={project_duration} 
-                        onChange={this.handleChange}
-                    />
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose}>Abbrechen</Button>

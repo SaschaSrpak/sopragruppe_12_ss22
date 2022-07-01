@@ -566,7 +566,7 @@ class ProjectOperations(Resource):
         return '', 200
 
     @timesystem.marshal_with(project)
-    @timesystem.expect(project, validate=True)
+    #@timesystem.expect(project, validate=True)
     @secured
     def put(self, id):
         """

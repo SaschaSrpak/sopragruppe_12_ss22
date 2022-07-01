@@ -8,6 +8,9 @@ import TextField from '@mui/material/TextField';
 import DialogContentText from '@mui/material/DialogContentText';
 import SystemAPI from '../../api/SystemAPI';
 import ProjektBO from '../../api/ProjektBO';
+import {ProjektDeadlineBO} from "../../api";
+import {EndereignisBO} from "../../api";
+import {ProjektlaufzeitBO} from "../../api";
 
 /** 
  *@fileOverview Das ist der Dialog-Pup-Up, der beim Erstellen eines neuen Projekts angezeigt wird.
@@ -29,38 +32,52 @@ export class UpdateProject extends Component {
             activities: [],
             persons_responsible: [],
             open: true,
+            last_modified_date: ''
         }
     }
      componentDidMount() {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+            console.log(result)
             this.setState({
                 creator: result.name + " " + result.surname,
-                creatorid : result.id
+                creatorid : result.id,
+                managerstatus: result.manager_status
             })
         SystemAPI.getAPI().getProject(this.props.projectdata).then((result) => {
+            console.log(result)
             this.setState({
                 client: result.client,
                 name: result.name,
                 description: result.description,
-                deadlineid: result.deadline,
+                deadlineid: result.set_deadline,
                 project_durationid: result.project_duration,
-                creator: result.creator
+                creator: result.creator,
+                projectid: result.id,
+
 
 
             })
             SystemAPI.getAPI().getProjectDeadline(result.set_deadline).then((result) => {
                 this.setState({
-                    deadline: result.time_of_event
+                    time_of_event: result.time_of_event,
+                    event_name: result.event_name,
+                    deadlineid: result.id
+
                 })
 
             })
             SystemAPI.getAPI().getProjectDuration(result.project_duration).then((result) => {
                 this.setState({
-                    project_duration: result.duration
+                    project_duration: result.duration,
+                    duration_start: result.start,
+                    duration_ende: result.end,
+                    duration_id: result.id,
+                    duration_name: result.name
                 })
 
 
             })
+
             console.log(result)
             console.log(result.creator)
         })
@@ -78,7 +95,7 @@ export class UpdateProject extends Component {
 
 // Setzt Props auf die State-Variablen für Projektdaten
     handleChange = (event) => {
-        console.log(event.target.value)
+        console.log(event.target.id)
         this.setState({
             [event.target.id]: event.target.value,
         })
@@ -86,24 +103,60 @@ export class UpdateProject extends Component {
 
 // schreibt die Projektdaten in die Datenbank
         // Doesn't Work yet omg
-        
-    updateProject = () => {
 
-        let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.deadlineid, this.state.project_durationid, this.state.deadlineid);
+    updateProject = () => {
+    if( this.state.managerstatus === "1"){
+        console.log(this.state.persons_responsible)
+        let newProject = new ProjektBO();
         newProject.setName(this.state.name);
-        newProject.setCreator(this.state.name);
-        newProject.setClient(this.state.name);
-        newProject.setDescription(this.state.name);
-        newProject.setProject_Duration(this.state.name);
-        newProject.setPersons_Responsible(this.state.name);
-        newProject.setId(this.state.name);
-        newProject.setLast(this.state.name);
+        newProject.setCreator(this.state.creator);
+        newProject.setClient(this.state.client);
+        newProject.setDescription(this.state.description);
+        newProject.setProject_Duration(this.state.project_durationid);
+        newProject.setSet_deadline(this.state.deadlineid);
+        newProject.setPersons_Responsible([]);
+        newProject.setActivities([]);
+        newProject.setId(this.state.projectid);
+        newProject.setLastModifiedDate(this.state.last_modified_date);
+
+        let newDeadline = new ProjektDeadlineBO();
+        newDeadline.setEventName(this.state.event_name);
+        newDeadline.setTimeOfEvent(this.state.time_of_event);
+        newDeadline.setId(this.state.deadlineid);
+        newDeadline.setLastModifiedDate("");
+
+        let newDuration = new ProjektlaufzeitBO();
+        newDuration.setDuration(this.state.project_duration);
+        newDuration.setStart(this.state.duration_start);
+        newDuration.setEnd(this.state.duration_ende);
+        newDuration.setName(this.state.duration_name);
+        newDuration.setId(this.state.duration_id);
+        newDuration.setLastModifiedDate("");
 
 
         console.log(newProject)
         SystemAPI.getAPI().updateProject(newProject).then(response => {
-            console.log(response)
         })
+        SystemAPI.getAPI().updateProjectDeadline(newDeadline).then(response => {
+        })
+        console.log(newDuration)
+        SystemAPI.getAPI().getEndEvent(this.state.duration_ende).then(response => {
+            let newendereignis = new EndereignisBO()
+            console.log(response)
+            console.log(response.event_name)
+            newendereignis.setEventName(response.event_name)
+            newendereignis.setTimeOfEvent(this.state.set_deadline)
+            newendereignis.setId(response.id)
+            newendereignis.setLastModifiedDate(response.last_modified_date)
+            SystemAPI.getAPI().updateEndEvent(newendereignis)
+            console.log(newendereignis)
+            console.log(newDuration)
+            SystemAPI.getAPI().updateProjectDuration(newDuration).then(response => {
+        })
+        })
+    }else{
+        alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+    }
     }
 
 
@@ -162,23 +215,13 @@ export class UpdateProject extends Component {
                         type="datetime-local"
                         fullWidth
                         variant="standard"
-                        value={this.state.deadline}
+                        //value={this.state.time_of_event}
                         onChange={this.handleChange}
                         InputLabelProps={{
                                 shrink: true,
                             }}
                     />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="project_duration"
-                        label="Projektdauer in Personentagen"
-                        type="number"
-                        fullWidth
-                        variant="standard"
-                        value={this.state.project_duration}
-                        onChange={this.handleChange}
-                    />
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose}>Abbrechen</Button>

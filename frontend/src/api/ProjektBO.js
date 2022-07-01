@@ -32,15 +32,15 @@ export default class ProjektBO extends BO{
     }
 
     setCreator(name){
-        this.name = name;
+        this.creator = name;
     }
 
     getClient(){
         return this.creator;
     }
 
-    setClient(name){
-        this.client = name;
+    setClient(newclient){
+        this.client = newclient;
     }
 
     getDescription(){
@@ -55,12 +55,15 @@ export default class ProjektBO extends BO{
         return this.set_deadline;
     }
 
+    setSet_deadline(new_set_deadline){
+        this.set_deadline = new_set_deadline;
+    }
     getProject_Duration(){
         return this.project_duration
     }
 
-    setProject_Duration(){
-        return this.project_duration
+    setProject_Duration(newduration){
+        this.project_duration = newduration;
     }
 
 
