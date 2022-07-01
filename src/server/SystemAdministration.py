@@ -1,5 +1,6 @@
 import datetime as dt
 from datetime import datetime
+
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
 from server.business_objects.Zeitkonto import Zeitkonto
@@ -521,6 +522,7 @@ class SystemAdministration(object):
 
         return worktime_on_project
 
+
     """
     Projekt spezifische Methoden
     """
@@ -677,6 +679,17 @@ class SystemAdministration(object):
         """Fügt dem Projekt eine Aktivität hinzu."""
         with ProjektMapper() as mapper:
             mapper.insert_activity(project, activity)
+
+    def get_full_work_time_on_project(self, project):
+        all_persons_responsible = project.get_person_responsible()
+        full_worktime = 0
+        for person in all_persons_responsible:
+            account = self.get_time_account_by_person_key(person.get_id())
+            full_worktime += self.get_work_time_on_project(account, project)
+
+        worktime_dict = {}
+        worktime_dict["full_worktime"] = full_worktime
+        return worktime_dict
 
     def change_project_activities(self, project_key, activities):
         """Ändert Aktivitäten des Projekts."""
@@ -1349,14 +1362,15 @@ class SystemAdministration(object):
             return mapper.insert(interval)
 
     def book_pause_transaction(self, account, name, start_event_time, end_event_time):
+
+        if start_event_time is str:
+            start_event_time = datetime.strptime(start_event_time, "%Y-%m-%dT%H:%M")
+        if end_event_time is str:
+            end_event_time = datetime.strptime(end_event_time, "%Y-%m-%dT%H:%M")
         if start_event_time > end_event_time:
             response = {'response': 'interval start can not be later than interval end'}
             return response
 
-        if start_event_time is dt.datetime:
-            start_event_time = datetime.strptime(start_event_time, "%Y-%m-%dT%H:%M")
-        if end_event_time is dt.datetime:
-            end_event_time = datetime.strptime(end_event_time, "%Y-%m-%dT%H:%M")
         start_event = self.book_start_event(account, "Start", start_event_time)
         end_event = self.book_end_event(account, "Ende", end_event_time)
         pause = self.create_pause(name, start_event, end_event)
