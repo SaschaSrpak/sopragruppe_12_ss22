@@ -180,10 +180,15 @@ export class Projektwahl extends Component {
                         }}
                         >Neues Projekt</Typography>
                     </Button>
-                    <Dialog open={open} onClose={this.handleClose}
+                    <Dialog 
+                        open={open} 
+                        onClose={this.handleClose}
                     >
                         {/** open prop wird an "NewProject" übergeben */}
-                        <NewProjekt user={this.props.user} open={this.props} />
+                        <NewProjekt user={this.props.user} 
+                                    handleClose={() => this.setState({open: false})}
+                                    open={open}
+                        />
                     </Dialog>
 
 

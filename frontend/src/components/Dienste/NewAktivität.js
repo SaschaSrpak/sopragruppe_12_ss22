@@ -29,9 +29,7 @@ export class NewAktivität extends Component {
 
 // Soll den Dialog schließen mit Abbrechen button why is this not working?
     handleCloseClick = () => {
-        this.setState({
-            openNewActivity: false
-        })
+        this.props.handleClose()
     }
 
 // Erlaubt das befüllen der Textfelder
@@ -48,6 +46,7 @@ export class NewAktivität extends Component {
         SystemAPI.getAPI().addActivity(newActivity).then(response => {
             SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id)
             console.log(response)
+            this.props.handleClose()
         })
     }
 

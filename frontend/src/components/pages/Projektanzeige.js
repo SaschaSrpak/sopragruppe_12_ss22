@@ -325,11 +325,11 @@ export class Projektanzeige extends Component {
             </Dialog >
 {/** TO DO: Button zum Erstellen einer neuen Aktivität */}
                     <Button variant="contained" 
-                        onClick={this.handleClickOpen}
-                        value={this.state.openNewActivity}
-                        sx={{
-                        margin: "20px",
-                        }}>
+                            onClick={this.handleClickOpen}
+                            value={this.state.openNewActivity}
+                            sx={{
+                            margin: "20px",
+                            }}>
                         <Typography sx={{
                             fontWeight: "bold",
                         }}
@@ -339,9 +339,14 @@ export class Projektanzeige extends Component {
 
             {/** why is this not workiiiing */}
 
-            <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+                    <Dialog 
+                        open={openNewActivity} 
+                        onClose={this.handleCloseClick}
                     >
-                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
+                        <NewAktivität 
+                        openNewActivity={this.state.openNewActivity} 
+                        handleClose={() => this.setState({openNewActivity:false})}  
+                        projectChoice={projectChoice} />
                     </Dialog> 
 
 {/** Button zum Bearbeiten eines Projektes */}

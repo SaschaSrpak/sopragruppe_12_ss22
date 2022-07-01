@@ -44,9 +44,7 @@ export class NewProjekt extends Component {
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
-        this.setState({
-            open: false
-        });
+        this.props.handleClose();
     }
     
 
