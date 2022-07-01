@@ -24,7 +24,7 @@ export class UpdateProject extends Component {
             creator: "",
             client: "",
             description: "",
-            set_deadline: "2022-07-04T12:00",
+            set_deadline: "",
             project_duration: "",
             activities: [],
             persons_responsible: [],
@@ -33,11 +33,33 @@ export class UpdateProject extends Component {
     }
      componentDidMount() {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
-            console.log(result)
             this.setState({
                 creator: result.name + " " + result.surname,
                 creatorid : result.id
             })
+        SystemAPI.getAPI().getProject(this.props.projectdata).then((result) => {
+            this.setState({
+                client: result.client,
+                name: result.name,
+                description: result.description,
+                deadlineid: result.deadline,
+            })
+            SystemAPI.getAPI().getProjectDeadline(result.set_deadline).then((result) => {
+                this.setState({
+                    deadline: result.time_of_event
+                })
+
+            })
+            SystemAPI.getAPI().getProjectDuration(result.project_duration).then((result) => {
+                this.setState({
+                    project_duration: result.duration
+                })
+
+
+            })
+            console.log(result)
+            console.log(result.creator)
+        })
     })
      }
 
@@ -61,7 +83,7 @@ export class UpdateProject extends Component {
 // schreibt die Projektdaten in die Datenbank
         // Doesn't Work yet omg
         
-    addProject = () => {
+    updateProject = () => {
         let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
         SystemAPI.getAPI().addProject(newProject).then(response => {
             console.log(response)
@@ -73,11 +95,11 @@ export class UpdateProject extends Component {
 // rendert das Dialogfenster mit allen relevanten Daten um ein neues Projekt zu erstellen
     render(){
 
-        const { name, creator, client, description, set_deadline, project_duration, activities, persons_responsible } = this.state;
+        const { name, creator, client, description, set_deadline, project_duration } = this.state;
 
         return(
             <div>
-                <DialogTitle> {this.props.alleprops} </DialogTitle>
+                <DialogTitle> Projekt: "{this.state.name}" bearbeiten</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Füllen Sie bitte das folgende Formular aus, um ein neues Projekt zu erstellen.
@@ -90,20 +112,10 @@ export class UpdateProject extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={name} 
+                        value={this.state.name}
                         onChange={this.handleChange}
                     />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="creator"
-                        label="Projektersteller"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={creator} 
-                        onChange={this.handleChange}
-                    />
+
                     <TextField 
                         autoFocus
                         margin="dense"
@@ -112,7 +124,7 @@ export class UpdateProject extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={client} 
+                        value={this.state.client}
                         onChange={this.handleChange}
                     />
                     <TextField 
@@ -123,7 +135,7 @@ export class UpdateProject extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={description} 
+                        value={this.state.description}
                         onChange={this.handleChange}
                     />
                     <TextField 
@@ -134,8 +146,11 @@ export class UpdateProject extends Component {
                         type="datetime-local"
                         fullWidth
                         variant="standard"
-                        value={set_deadline} 
+                        value={this.state.deadline}
                         onChange={this.handleChange}
+                        InputLabelProps={{
+                                shrink: true,
+                            }}
                     />
                     <TextField 
                         autoFocus
@@ -145,7 +160,7 @@ export class UpdateProject extends Component {
                         type="number"
                         fullWidth
                         variant="standard"
-                        value={project_duration} 
+                        value={this.state.project_duration}
                         onChange={this.handleChange}
                     />
                 </DialogContent>
