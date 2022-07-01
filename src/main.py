@@ -730,7 +730,7 @@ class AllActivityListOperations(Resource):
         proposal = Aktivitaet.from_dict(api.payload)
 
         if proposal is not None:
-            a = s_adm.create_activity(proposal.get_name(), proposal.get_persons_responsible(),
+            a = s_adm.create_activity(proposal.get_activity_name(), proposal.get_persons_responsible(),
                                       proposal.get_man_day_capacity())
             return a, 200
         else:
