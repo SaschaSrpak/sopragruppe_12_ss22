@@ -950,7 +950,7 @@ class PersonOfAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/accounts/kommen/transaction/<int:id>')
+@timesystem.route('/accounts/kommen/transactions/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class KommenTransactionRelatedAccountOperations(Resource):
@@ -974,7 +974,7 @@ class KommenTransactionRelatedAccountOperations(Resource):
             return 'Account not found', 500
 
 
-@timesystem.route('/account/kommen/<int:id>/<string:start_date>/<string:end_date>')
+@timesystem.route('/account/kommen/date/<int:id>/<string:start_date>/<string:end_date>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des Kommen-Objekts')
 @timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
@@ -993,16 +993,15 @@ class AccountKommenDateOperations(Resource):
         """
         s_adm = SystemAdministration()
         events = s_adm.get_all_kommen_events_for_account_between_dates(id, start_date, end_date)
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
 class GehenTransactionRelatedAccountOperations(Resource):
+    @timesystem.marshal_list_with(gehen_transaction)
     @timesystem.marshal_list_with(gehen_transaction)
     @secured
     def get(self, id):
@@ -1043,10 +1042,8 @@ class AccountGehenDateOperations(Resource):
         s_adm = SystemAdministration()
         events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
 
-        if events:
-            return events
-        else:
-            return '', 500
+        return events
+
 
 
 @timesystem.route('/accounts/pause/<int:id>/time')
@@ -1117,7 +1114,7 @@ class PauseTransactionValueBetweenDatesAccountOperations(Resource):
         pauses_values = s_adm.get_all_pause_transaction_values_for_account_between_dates(account, start_date, end_date)
 
         if account is not None:
-            return pauses_values[0]
+            return pauses_values
 
 
 
@@ -1176,7 +1173,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
 @timesystem.param('start_date', 'Anfangsdatum des Suchtzeitraums')
 @timesystem.param('end_date', 'Enddatum des Suchtzeitraums')
 class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
-    @timesystem.marshal_list_with(pause_transaction_response_special)
+    @timesystem.marshal_list_with(project_worktime_transaction_response_special)
     @secured
     def get(self, id, start_date, end_date):
         """
@@ -1192,7 +1189,7 @@ class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
                                                                                               end_date)
 
         if account is not None:
-            return worktime_values[0]
+            return worktime_values
         
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')

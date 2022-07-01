@@ -16,6 +16,7 @@ import Error from './components/Zwischenelemente/Error';
 import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
+
 import { SystemAPI } from "./api";
 import ProfilRegistrierung from './components/pages/ProfilRegristrierung';
 
@@ -152,7 +153,7 @@ export class App extends Component {
                 <Route path={'/about'} element={<About />} />
                 <Route path={'/profil'} element={<Profil />} />
               </Routes>
-              <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+              <Error error={authError} contextErrorMsg={`Something went wrong during sign in process.`} onReload={this.handleSignInButtonClicked} />
               <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
             </Container>
           </Router>

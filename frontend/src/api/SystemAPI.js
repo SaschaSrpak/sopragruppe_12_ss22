@@ -77,7 +77,7 @@ export default class SystemAPI {
     #getAccountForPersonURL = (id) => `${this.#SystemServerBaseURL}/accounts/person/${id}`;
     #updateAccountURL = (id) => `${this.#SystemServerBaseURL}/accounts/${id}`;
     #getKommenTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/kommen/transactions/${id}`;
-    #getKommenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/kommen/${id}/${start_date}/${end_date}`
+    #getKommenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/kommen/date/${id}/${start_date}/${end_date}`;
     #getGehenTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/gehen/transactions/${id}`;
     #getGehenEventsOfAccountBetweenDatesURL= (id, start_date, end_date) => `${this.#SystemServerBaseURL}/account/gehen/${id}/${start_date}/${end_date}`
     #getPauseTransactionsOfAccountURL = (id) =>`${this.#SystemServerBaseURL}/accounts/pause/${id}`;
@@ -551,6 +551,7 @@ export default class SystemAPI {
   }
 
   getKommenTransactionsOfAccount(account_id){
+        console.log(account_id)
         return this.#fetchAdvanced(this.#getKommenTransactionsOfAccountURL(account_id)).then((responseJSON) => {
             let transactionBOs = KommenBuchungBO.fromJSON(responseJSON);
             return new Promise(function (resolve){
@@ -560,6 +561,7 @@ export default class SystemAPI {
   }
 
   getKommenEventsOfAccountBetweenDates(account_id, start_date, end_date){
+        console.log("SystemAPI")
         return this.#fetchAdvanced((this.#getKommenEventsOfAccountBetweenDatesURL(account_id, start_date, end_date)))
             .then((responseJSON) => {
                 let eventBOs = KommenBO.fromJSON(responseJSON);
@@ -616,8 +618,10 @@ export default class SystemAPI {
   }
 
   getWorktimeTransactionsOfAccount(account_id){
+        console.log("Test")
         return this.#fetchAdvanced(this.#getWorktimeTransactionsOfAccountURL(account_id)).then((responseJSON) => {
-            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON);
+            let transactionBOs = ProjektarbeitBuchungBO.fromJSON(responseJSON)
+            console.log("Test2")
             return new Promise(function (resolve){
                 resolve(transactionBOs)
             })
@@ -642,7 +646,7 @@ export default class SystemAPI {
         })
   }
 
-  getWorktimeTransactionsOfAccountBetweenDates(account_id, start_date, end_date){
+  getWorktimeTransactionsValueBetweenDates(account_id, start_date, end_date){
         return this.#fetchAdvanced(this.#getWorktimeTransactionsValueBetweenDatesURL(account_id, start_date, end_date)).then((responseJSON)=>{
             let transaction_values = responseJSON;
             return new Promise(function (resolve){
