@@ -27,7 +27,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import DialogActions from "@mui/material/DialogActions";
-
+import UpdateProject from "../Dienste/UpdateProject";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -61,6 +61,7 @@ export class Projektanzeige extends Component {
             persons: [],
             openNewActivity: false,
             openNewPersonResponsible: false,
+            openChangeProject: false,
             responsiblepersons: []
         }
     }
@@ -135,7 +136,7 @@ export class Projektanzeige extends Component {
 
 
 
-    
+
     // Function to get all the persons responsible for the Activity ID
                 // not working yet idk why
     getPersonsOnActivity = () => {
@@ -170,7 +171,12 @@ export class Projektanzeige extends Component {
         })
     }
 
+    handleProjectChange = () => {
+             this.setState({
+            openChangeProject: true
+        })
 
+        }
 
     handleClickOpen = () => {
         this.setState({
@@ -187,7 +193,8 @@ export class Projektanzeige extends Component {
     handleCloseClick = () => {
         this.setState({
             openNewActivity: false,
-            openNewPersonResponsible: false
+            openNewPersonResponsible: false,
+            openChangeProject: false
         })
     }
 
@@ -292,7 +299,7 @@ export class Projektanzeige extends Component {
                     margin: "20px"
                 }}/>
 
-
+{/* Neue Person hinzufügen */}
 
                <Dialog open={this.state.openNewPersonResponsible} onClose={this.handleCloseClick}>
                     <DialogTitle>Person zu Projekt: "{this.state.projects?this.state.projects.name:null}" Hinzufügen</DialogTitle>
@@ -337,6 +344,23 @@ export class Projektanzeige extends Component {
                         }}
                         >Neue Aktivität</Typography>
                     </Button>
+{/** Button zum Bearbeiten eines Projektes */}
+                     <Button variant="contained"
+                        onClick={this.handleProjectChange}
+
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Projekt bearbeiten</Typography>
+                    </Button>
+
+                    <Dialog open={this.state.openChangeProject} onClose={this.handleCloseClick}
+                    >
+                        <UpdateProject user={this.props.user} open={this.props} />
+                    </Dialog>
 
             {/** why is this not workiiiing */}
 
