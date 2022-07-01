@@ -35,13 +35,18 @@ export class Projektwahl extends Component {
         }
     }
 
-// componentDidMount funktion zum Laden der Projekte
-    componentDidMount() {
+// Projekte aus der Datenbank laden
+    getData() {
         SystemAPI.getAPI().getProjects().then(projects => {
             this.setState({
                 projects: projects
             })
         })
+    }
+
+// componentDidMount zum Laden der Projekte beim Rendern der Seite
+    componentDidMount() {
+        this.getData()
     }
 
 // Projektauswahl wird angezeigt
@@ -55,7 +60,7 @@ export class Projektwahl extends Component {
 // Beim betätigen von "Auswählen" wird das Projekt in projectChoice gespeichert (work in progress)
     handleChoseClick = () => {
         this.setState({
-            projectChoice: this.state.selectedProjects
+            projectChoice: this.state.selectedProjects,
         })
         // console.log(this.state.projectChoice)
     }
@@ -69,7 +74,8 @@ export class Projektwahl extends Component {
     handleClose = () => {
         this.setState({
             open: false,
-        });
+        })
+        this.getData()
     }
 
 // Projekt aus Datenbank löschen
@@ -186,7 +192,7 @@ export class Projektwahl extends Component {
                     >
                         {/** open prop wird an "NewProject" übergeben */}
                         <NewProjekt user={this.props.user} 
-                                    handleClose={() => this.setState({open: false})}
+                                    handleClose={this.handleClose}
                                     open={open}
                         />
                     </Dialog>
