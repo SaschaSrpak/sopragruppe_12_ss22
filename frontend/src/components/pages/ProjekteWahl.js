@@ -105,7 +105,7 @@ export class Projektwahl extends Component {
         return (
             <div>
                 {projectChoice
-                ? <Projektanzeige open={this.props} handleClose={() => this.setState({projectChoice:null})} 
+                ? <Projektanzeige open={this.props} user={this.props.user} handleClose={() => this.setState({projectChoice:null})}
                 projectChoice={projectChoice}
                 /> 
                 : 

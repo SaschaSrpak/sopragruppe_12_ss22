@@ -107,7 +107,7 @@ class ProjektMapper(Mapper):
         return result
 
 
-    def insert_creator(self, project, person):
+    def insert_creator(self, person, project):
         """Einfügen einer neuen verantwortlichen Person im Projekt
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
         berichtigt.

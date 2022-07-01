@@ -18,7 +18,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import { NewAktivität } from "../Dienste/NewAktivität";
-
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import DialogActions from "@mui/material/DialogActions";
+import UpdateProject from "../Dienste/UpdateProject";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -50,7 +59,10 @@ export class Projektanzeige extends Component {
             projectChoice: this.props.projectChoice,
             projects: null,
             persons: [],
-            openNewActivity: false
+            openNewActivity: false,
+            openNewPersonResponsible: false,
+            openChangeProject: false,
+            responsiblepersons: []
         }
     }
 
@@ -73,14 +85,26 @@ export class Projektanzeige extends Component {
             })
 // Deadline aus der Datenbank laden -> von ID in Datum
             SystemAPI.getAPI().getProjectDeadline(this.state.projectChoice).then(newDeadline => {
+                var deadlineanzeige = newDeadline.time_of_event
+                deadlineanzeige = deadlineanzeige.replace("T", ' - ')
+                deadlineanzeige = deadlineanzeige.substring(0, 18)
                 this.setState({
                         deadline_new: newDeadline,
+                        deadlineanzeige: deadlineanzeige
                 })
             })
 // Projektdauer aus der Datenbank laden
             SystemAPI.getAPI().getProjectDuration(this.state.projectChoice).then(newDuration => {
+                var Tage = Number(newDuration.duration) / 24
+                var Tage = Math.round(Tage)
+                if (Tage > 1){
+                    var bezeichnung = "Tage"
+                }else{
+                    var bezeichnung = "Tag"
+                }
                 this.setState({
-                        project_duration_new: newDuration.duration,
+                        project_duration_new: Tage,
+                        project_duration_bezeichnung: bezeichnung
                 })
             })
 // Projektersteller aus der Datenbank laden
@@ -89,24 +113,85 @@ export class Projektanzeige extends Component {
                         creator_new: newCreator.name,
                 })
             })
+ // Managerstatus aus der Datenbank laden
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+            console.log(result)
+            this.setState({
+                managerstatus: result.manager_status
+            })
+            })
+ // Arbeitszeit des Projektes aus der Datenbank laden
+        SystemAPI.getAPI().getFullWorktimeOnProject(this.state.projectChoice).then((result)=>{
+            console.log(result)
+            var worktime = result.full_worktime
+            var worktime = Math.round((worktime + Number.EPSILON) * 100) / 100;
+            if (worktime>1){
+                var bezeichnung = "Stunden"
+            }else{
+                var bezeichnung = "Stunde"
+            }
+            this.setState({
+                worktimeonproject: worktime,
+                worktimeonprojectbezeichnung: bezeichnung
+            })
+            })
 
-        })
+// Projektzuständige aus der Datenbank laden
+            SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
+                this.setState({
+                        responsiblepersons: responsiblepersons
+                })
+                        SystemAPI.getAPI().getPersons().then(persons => {
+                            this.setState({
+                                allpersons: persons})
+                                    const newArray = []
+                                        persons.map((all) => {
+
+                                                if (responsiblepersons.some(item => all.name === item.name)){
+                                                    }else{
+                                                    newArray.push(all)}
+                                        })
+                            this.setState({
+                                allpersons: newArray
+                            })
+                            console.log(newArray)
+                                            })
+                        })
+            })
+// Alle Personen aus der Datenbank laden
     }
 
 
-
-// Function to get all the persons responsible for the Activity ID
-            // not working yet idk why
-getPersonsOnActivity = () => {
-    console.log(this.state.activity.id)
-    SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
-        this.setState({
-            persons: persons
+    // Function to get all the persons responsible for the Activity ID
+                // not working yet idk why
+    getPersonsOnActivity = () => {
+        SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
+            this.setState({
+                persons: persons
+            })
         })
-    })
-}
+    }
 
+    handleDeletePersonResponsible = (personid) => {
+         if( this.state.managerstatus === "1"){
+        SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
+            this.setState({
+                persons: persons
+            })
+        })}else{
+             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+         }
+    }
 
+    handlePersonAddResponsible = () => {
+        SystemAPI.getAPI().addPersonResponsibleToProject(this.state.projectChoice, this.state.persontoadd).then(persons => {
+            this.setState({
+                openNewPersonResponsible: false
+            })
+            alert("Person wurde hinzugefügt")
+        })
+
+    }
     // Back-Button setzt den State projectChoice zurück, damit die Projektwahl wieder angezeigt wird
     handleBack = () => {
         this.setState({
@@ -114,6 +199,12 @@ getPersonsOnActivity = () => {
         })
     }
 
+    handleProjectChange = () => {
+             this.setState({
+            openChangeProject: true
+        })
+
+        }
 
     handleClickOpen = () => {
         this.setState({
@@ -121,16 +212,32 @@ getPersonsOnActivity = () => {
         })
     }
 
+    handleClickOpenPersonResponsible = () => {
+         if(this.state.managerstatus === "1"){
+        this.setState({
+            openNewPersonResponsible: true
+        })}else{
+             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+         }
+    }
+
     handleCloseClick = () => {
         this.setState({
-            openNewActivity: false
+            openNewActivity: false,
+            openNewPersonResponsible: false,
+            openChangeProject: false
         })
     }
 
+    PersonSelected = (data) => {
+        this.setState({
+            persontoadd: data.target.value
+        })
+    }
 
 // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
-    const {openNewActivity} = this.state;
+    const {openNewActivity, projectChoice} = this.state;
 
         return (
             <Box sx={{
@@ -166,12 +273,17 @@ getPersonsOnActivity = () => {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.deadline_new.time_of_event:null}</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.deadlineanzeige:null} Uhr</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null}</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null} {this.state.project_duration_bezeichnung}</TableCell>
                                 </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Gebuchte Arbeitszeit</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.worktimeonproject:null} {this.state.worktimeonprojectbezeichnung}</TableCell>
+                                </TableRow>
+
 
                             </TableBody>
                         </Table>
@@ -189,12 +301,73 @@ getPersonsOnActivity = () => {
                             </Typography>
                         </CardContent>
                     </Card>
+{/* Projektzuständige */}
+                    <Card>
+                        <Typography sx={{
+                            margin: "15px",
+                        }}>
+                            <h4>Projektzuständige:</h4>
+                        </Typography>
+                        <CardContent>
+                            <Typography>
+                                <TableContainer component={Paper}>
+                                <table>
+                                    <TableBody>
+                                {this.state.responsiblepersons.map((data, index) => (
+                                    <TableRow id={index} key={data.surname}>
+                                        <TableCell> {data.id} </TableCell>
+                                        <TableCell> {data.surname} </TableCell>
+                                        <TableCell> {data.name} </TableCell>
+                                        <TableCell> <Button  color='warning'  onClick={() => this.handleDeletePersonResponsible(data.id)} >Delete</Button> </TableCell>
+                                    </TableRow>
+
+                                ))}
+                                {this.state.projects?this.state.projects.responsiblepersons:null}
+                                <Button color='info' onClick={this.handleClickOpenPersonResponsible}> Person Hinzufügen </Button>
+                                        </TableBody>
+                                    </table>
+                                    </TableContainer>
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Paper>
                 <Divider variant="fullWidth" sx={{
                     margin: "20px"
                 }}/>
 
+{/* Neue Person hinzufügen */}
 
+               <Dialog open={this.state.openNewPersonResponsible} onClose={this.handleCloseClick}>
+                    <DialogTitle>Person zu Projekt: "{this.state.projects?this.state.projects.name:null}" Hinzufügen</DialogTitle>
+
+                    <DialogContent>
+
+
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-filled-label">Person auswählen</InputLabel>
+                            <Select
+
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                
+
+                                onChange={(e) => this.PersonSelected(e)}
+                            >
+                                {this.state.allpersons?this.state.allpersons.map((data, index) => (
+                                <MenuItem name={data.id} value={data.id}>ID: {data.id} {data.name} {data.surname} </MenuItem>)):null}
+
+
+                            </Select>
+                        </FormControl>
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handlePersonAddResponsible}>Save</Button>
+                        <Button onClick={this.handleCloseClick}>Cancel</Button>
+
+
+                    </DialogActions>
+            </Dialog >
 {/** TO DO: Button zum Erstellen einer neuen Aktivität */}
                     <Button variant="contained" 
                         onClick={this.handleClickOpen}
@@ -208,12 +381,32 @@ getPersonsOnActivity = () => {
                         >Neue Aktivität</Typography>
                     </Button>
 
+
             {/** why is this not workiiiing */}
 
-                    <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+            <Dialog open={openNewActivity} onClose={this.handleCloseClick}
                     >
-                        <NewAktivität openNewActivity={this.props} />
+                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
                     </Dialog> 
+
+{/** Button zum Bearbeiten eines Projektes */}
+                     <Button variant="contained"
+                        onClick={this.handleProjectChange}
+
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Projekt bearbeiten</Typography>
+                    </Button>
+
+                    <Dialog open={this.state.openChangeProject} onClose={this.handleCloseClick}
+                    >
+                        <UpdateProject user={this.props.user} projectdata={this.props.projectChoice} open={this.props} />
+                    </Dialog>
+
 
 
                 <Divider variant="fullWidth" sx={{
@@ -267,7 +460,7 @@ getPersonsOnActivity = () => {
 
 
 
-{/** Buttons brauchen Funktionalität
+{/** Buttons Edit / Delete brauchen Funktionalität
  * 
  */}
 
