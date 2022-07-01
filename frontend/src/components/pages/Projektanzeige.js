@@ -85,14 +85,26 @@ export class Projektanzeige extends Component {
             })
 // Deadline aus der Datenbank laden -> von ID in Datum
             SystemAPI.getAPI().getProjectDeadline(this.state.projectChoice).then(newDeadline => {
+                var deadlineanzeige = newDeadline.time_of_event
+                deadlineanzeige = deadlineanzeige.replace("T", ' - ')
+                deadlineanzeige = deadlineanzeige.substring(0, 18)
                 this.setState({
                         deadline_new: newDeadline,
+                        deadlineanzeige: deadlineanzeige
                 })
             })
 // Projektdauer aus der Datenbank laden
             SystemAPI.getAPI().getProjectDuration(this.state.projectChoice).then(newDuration => {
+                var Tage = Number(newDuration.duration) / 24
+                var Tage = Math.round(Tage)
+                if (Tage > 1){
+                    var bezeichnung = "Tage"
+                }else{
+                    var bezeichnung = "Tag"
+                }
                 this.setState({
-                        project_duration_new: newDuration.duration,
+                        project_duration_new: Tage,
+                        project_duration_bezeichnung: bezeichnung
                 })
             })
 // Projektersteller aus der Datenbank laden
@@ -113,8 +125,14 @@ export class Projektanzeige extends Component {
             console.log(result)
             var worktime = result.full_worktime
             var worktime = Math.round((worktime + Number.EPSILON) * 100) / 100;
+            if (worktime>1){
+                var bezeichnung = "Stunden"
+            }else{
+                var bezeichnung = "Stunde"
+            }
             this.setState({
-                worktimeonproject: worktime
+                worktimeonproject: worktime,
+                worktimeonprojectbezeichnung: bezeichnung
             })
             })
 
@@ -264,15 +282,15 @@ export class Projektanzeige extends Component {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.deadline_new.time_of_event:null}</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.deadlineanzeige:null} Uhr</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null} </TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null} {this.state.project_duration_bezeichnung}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Gebuchte Arbeitszeit</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.worktimeonproject:null} Stunden</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.worktimeonproject:null} {this.state.worktimeonprojectbezeichnung}</TableCell>
                                 </TableRow>
 
 
