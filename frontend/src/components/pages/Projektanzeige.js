@@ -18,6 +18,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import { NewAktivität } from "../Dienste/NewAktivität";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import DialogActions from "@mui/material/DialogActions";
 
 
 /** 
@@ -51,6 +60,7 @@ export class Projektanzeige extends Component {
             projects: null,
             persons: [],
             openNewActivity: false,
+            openNewPersonResponsible: false,
             responsiblepersons: []
         }
     }
@@ -90,40 +100,69 @@ export class Projektanzeige extends Component {
                         creator_new: newCreator.name,
                 })
             })
+
 // Projektzuständige aus der Datenbank laden
             SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
-                console.log(responsiblepersons)
                 this.setState({
                         responsiblepersons: responsiblepersons
                 })
-                    })
+                        SystemAPI.getAPI().getPersons().then(persons => {
+                            this.setState({
+                                allpersons: persons})
+                                    const newArray = []
+                                        persons.map((all) => {
+
+                                                if (responsiblepersons.some(item => all.name === item.name)){
+                                                    }else{
+                                                    newArray.push(all)}
+                                        })
+                            this.setState({
+                                allpersons: newArray
+                            })
+                            console.log(newArray)
+                                            })
+
+
+                        })
 
             })
+
+// Alle Personen aus der Datenbank laden
 
     }
 
 
 
-// Function to get all the persons responsible for the Activity ID
-            // not working yet idk why
-getPersonsOnActivity = () => {
-    console.log(this.state.activity.id)
-    SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
-        this.setState({
-            persons: persons
+
+
+    
+    // Function to get all the persons responsible for the Activity ID
+                // not working yet idk why
+    getPersonsOnActivity = () => {
+        SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.state.activity.id).then(persons => {
+            this.setState({
+                persons: persons
+            })
         })
-    })
-}
+    }
 
-deletePersonResponsible = (personid) => {
-    console.log(personid)
-    //SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
-     //   this.setState({
-      //      persons: persons
-     //   })
-    //})
-}
+    handleDeletePersonResponsible = (personid) => {
+        SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
+            this.setState({
+                persons: persons
+            })
+        })
+    }
 
+    handlePersonAddResponsible = () => {
+        SystemAPI.getAPI().addPersonResponsibleToProject(this.state.projectChoice, this.state.persontoadd).then(persons => {
+            this.setState({
+                openNewPersonResponsible: false
+            })
+            alert("Person wurde hinzugefügt")
+        })
+
+    }
     // Back-Button setzt den State projectChoice zurück, damit die Projektwahl wieder angezeigt wird
     handleBack = () => {
         this.setState({
@@ -132,18 +171,31 @@ deletePersonResponsible = (personid) => {
     }
 
 
+
     handleClickOpen = () => {
         this.setState({
             openNewActivity: true
         })
     }
 
-    handleCloseClick = () => {
+    handleClickOpenPersonResponsible = () => {
         this.setState({
-            openNewActivity: false
+            openNewPersonResponsible: true
         })
     }
 
+    handleCloseClick = () => {
+        this.setState({
+            openNewActivity: false,
+            openNewPersonResponsible: false
+        })
+    }
+
+    PersonSelected = (data) => {
+        this.setState({
+            persontoadd: data.target.value
+        })
+    }
 
 // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
@@ -215,12 +267,23 @@ deletePersonResponsible = (personid) => {
                         </Typography>
                         <CardContent>
                             <Typography>
-                                {this.state.responsiblepersons.map(data => (
-                                    <p>ID: {data.id} - {data.surname} {data.name} <Button color='warning'  onClick={this.deletePersonResponsible} >Delete</Button> </p>
+                                <TableContainer component={Paper}>
+                                <table>
+                                    <TableBody>
+                                {this.state.responsiblepersons.map((data, index) => (
+                                    <TableRow id={index} key={data.surname}>
+                                        <TableCell> {data.id} </TableCell>
+                                        <TableCell> {data.surname} </TableCell>
+                                        <TableCell> {data.name} </TableCell>
+                                        <TableCell> <Button  color='warning'  onClick={() => this.handleDeletePersonResponsible(data.id)} >Delete</Button> </TableCell>
+                                    </TableRow>
 
                                 ))}
                                 {this.state.projects?this.state.projects.responsiblepersons:null}
-                                <Button color='info'> Person Hinzufügen </Button>
+                                <Button color='info' onClick={this.handleClickOpenPersonResponsible}> Person Hinzufügen </Button>
+                                        </TableBody>
+                                    </table>
+                                    </TableContainer>
                             </Typography>
                         </CardContent>
                     </Card>
@@ -230,6 +293,38 @@ deletePersonResponsible = (personid) => {
                 }}/>
 
 
+
+               <Dialog open={this.state.openNewPersonResponsible} onClose={this.handleCloseClick}>
+                    <DialogTitle>Person zu Projekt: "{this.state.projects?this.state.projects.name:null}" Hinzufügen</DialogTitle>
+
+                    <DialogContent>
+
+
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-filled-label">Person auswählen</InputLabel>
+                            <Select
+
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                
+
+                                onChange={(e) => this.PersonSelected(e)}
+                            >
+                                {this.state.allpersons?this.state.allpersons.map((data, index) => (
+                                <MenuItem name={data.id} value={data.id}>ID: {data.id} {data.name} {data.surname} </MenuItem>)):null}
+
+
+                            </Select>
+                        </FormControl>
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handlePersonAddResponsible}>Save</Button>
+                        <Button onClick={this.handleCloseClick}>Cancel</Button>
+
+
+                    </DialogActions>
+            </Dialog >
 {/** TO DO: Button zum Erstellen einer neuen Aktivität */}
                     <Button variant="contained" 
                         onClick={this.handleClickOpen}
