@@ -1,11 +1,13 @@
-import React, {Component} from 'react'
-import Error from '../Zwischenelemente/Error'
-import Button from '@mui/material/Button'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import TextField from '@mui/material/TextField'
+import React, {Component} from 'react';
+import Error from '../Zwischenelemente/Error';
+import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import SystemAPI from '../../api/SystemAPI';
+import AktivitaetBO from '../../api/AktivitätBO';
 
 
 /** 
@@ -21,14 +23,41 @@ export class NewAktivität extends Component {
             man_day_capacity: "",
             persons_responsible: [],
             openNewActivity: false,
+            projectChoice: this.props.projectChoice,
         }
     }
 
+// Soll den Dialog schließen mit Abbrechen button why is this not working?
     handleCloseClick = () => {
         this.setState({
             openNewActivity: false
         })
     }
+
+// Erlaubt das befüllen der Textfelder
+    handleChange = (event) => {
+        console.log(event.target.value)
+        this.setState({
+            [event.target.id]: event.target.value,
+        })
+    }
+
+// Erstellt die neue Aktivität und schließt das Dialogfenster
+    addActivity = () => {
+        let newActivity = new AktivitaetBO(this.state.activity_name, this.state.man_day_capacity, this.state.persons_responsible);
+        SystemAPI.getAPI().addActivity(newActivity).then(response => {
+            SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id)
+            console.log(response)
+        })
+    }
+
+
+    // addActivity = () => {
+    //     let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity, this.state.persons_responsible);
+    //     SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, newActivity).then(response => {
+    //         console.log(response)
+    //     })
+    // }
 
     render(){
 
@@ -77,8 +106,8 @@ export class NewAktivität extends Component {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.props.handleCloseClick}>Abbrechen</Button>
-                    <Button>Speichern</Button>
+                    <Button onClick={this.handleCloseClick}>Abbrechen</Button>
+                    <Button onClick={this.addActivity}>Speichern</Button>
                 </DialogActions>
             </div>
         )

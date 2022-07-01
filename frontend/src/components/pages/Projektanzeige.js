@@ -122,19 +122,10 @@ export class Projektanzeige extends Component {
                             })
                             console.log(newArray)
                                             })
-
-
                         })
-
             })
-
 // Alle Personen aus der Datenbank laden
-
     }
-
-
-
-
 
 
     // Function to get all the persons responsible for the Activity ID
@@ -206,7 +197,7 @@ export class Projektanzeige extends Component {
 
 // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
-    const {openNewActivity} = this.state;
+    const {openNewActivity, projectChoice} = this.state;
 
         return (
             <Box sx={{
@@ -366,7 +357,7 @@ export class Projektanzeige extends Component {
 
                     <Dialog open={openNewActivity} onClose={this.handleCloseClick}
                     >
-                        <NewAktivität openNewActivity={this.props} />
+                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
                     </Dialog> 
 
 
@@ -421,7 +412,7 @@ export class Projektanzeige extends Component {
 
 
 
-{/** Buttons brauchen Funktionalität
+{/** Buttons Edit / Delete brauchen Funktionalität
  * 
  */}
 
