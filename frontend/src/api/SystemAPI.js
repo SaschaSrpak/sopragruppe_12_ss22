@@ -4,6 +4,7 @@ import AktivitaetBO from './AktivitätBO'
 import ZeitkontoBO from './ZeitkontoBO'
 import StartereignisBO from './Ereignisse/StartereignisBO'
 import EndereignisBO from './Ereignisse/EndereignisBO'
+import EreignisBO from './Ereignisse/EreignisBO'
 import KommenBO from './Ereignisse/KommenBO'
 import GehenBO from './Ereignisse/GehenBO'
 import ProjektDeadlineBO from './Ereignisse/ProjektDeadlineBO'
@@ -258,6 +259,7 @@ export default class SystemAPI {
     }
 
     updatePerson(personBO) {
+        console.log(JSON.stringify(personBO))
     return this.#fetchAdvanced(this.#updatePersonURL(personBO.getId()), {
       method: 'PUT',
       headers: {
@@ -1122,6 +1124,7 @@ export default class SystemAPI {
    * @public
    */
   updateKommen(kommenBO) {
+    console.log(JSON.stringify(kommenBO))
     return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getId()), {
       method: 'PUT',
       headers: {
@@ -1315,8 +1318,9 @@ export default class SystemAPI {
   }
 
   updatePauseTransactionWithValues(transaction_id, interval_id, interval_name, start_time, end_time){
+
       return this.#fetchAdvanced(this.#updatePauseTransactionWithValuesURL(transaction_id, interval_id, interval_name, start_time, end_time), {
-          method: 'PUT',
+          method: 'POST',
 
       }).then((responseJSON) => {
               let transaction_response = responseJSON;

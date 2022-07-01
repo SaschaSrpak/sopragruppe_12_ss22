@@ -493,6 +493,7 @@ class SystemAdministration(object):
                     response['project_name'] = project.get_name()
                     response['start_time'] = time_of_start
                     response['end_time'] = time_of_end
+                    response['duration'] = projectarbeit.get_duration()
 
                     selected_worktime_values.append(response)
 
@@ -1173,6 +1174,10 @@ class SystemAdministration(object):
         with KommenBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
 
+    def get_kommen_transaction_by_event_key(self, event_key):
+        with KommenBuchungMapper() as mapper:
+            return mapper.find_by_event_key(event_key)
+
     def save_kommen_transaction(self, transaction):
         with KommenBuchungMapper() as mapper:
             mapper.update(transaction)
@@ -1245,6 +1250,10 @@ class SystemAdministration(object):
     def get_gehen_transaction_by_account_key(self, account_key):
         with GehenBuchungMapper() as mapper:
             return mapper.find_by_account_key(account_key)
+
+    def get_gehen_transaction_by_event_key(self, event_key):
+        with GehenBuchungMapper() as mapper:
+            return mapper.find_by_event_key(event_key)
 
     def save_gehen_transaction(self, transaction):
         with GehenBuchungMapper() as mapper:
@@ -1419,8 +1428,8 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S')
+        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)
@@ -1590,8 +1599,8 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S')
+        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)
