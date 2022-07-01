@@ -43,6 +43,10 @@ export class UpdateProject extends Component {
                 name: result.name,
                 description: result.description,
                 deadlineid: result.deadline,
+                project_durationid: result.project_duration,
+                creator: result.creator
+
+
             })
             SystemAPI.getAPI().getProjectDeadline(result.set_deadline).then((result) => {
                 this.setState({
@@ -84,8 +88,20 @@ export class UpdateProject extends Component {
         // Doesn't Work yet omg
         
     updateProject = () => {
-        let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
-        SystemAPI.getAPI().addProject(newProject).then(response => {
+
+        let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.deadlineid, this.state.project_durationid, this.state.deadlineid);
+        newProject.setName(this.state.name);
+        newProject.setCreator(this.state.name);
+        newProject.setClient(this.state.name);
+        newProject.setDescription(this.state.name);
+        newProject.setProject_Duration(this.state.name);
+        newProject.setPersons_Responsible(this.state.name);
+        newProject.setId(this.state.name);
+        newProject.setLast(this.state.name);
+
+
+        console.log(newProject)
+        SystemAPI.getAPI().updateProject(newProject).then(response => {
             console.log(response)
         })
     }
@@ -166,7 +182,7 @@ export class UpdateProject extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose}>Abbrechen</Button>
-                    <Button onClick={this.addProject}>Speichern</Button>
+                    <Button onClick={this.updateProject}>Speichern</Button>
                 </DialogActions>
             </div>
         )
