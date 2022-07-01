@@ -135,7 +135,7 @@ export class Projektanzeige extends Component {
 
 
 
-    
+
     // Function to get all the persons responsible for the Activity ID
                 // not working yet idk why
     getPersonsOnActivity = () => {
@@ -292,7 +292,7 @@ export class Projektanzeige extends Component {
                     margin: "20px"
                 }}/>
 
-
+{/* Neue Person hinzufügen */}
 
                <Dialog open={this.state.openNewPersonResponsible} onClose={this.handleCloseClick}>
                     <DialogTitle>Person zu Projekt: "{this.state.projects?this.state.projects.name:null}" Hinzufügen</DialogTitle>
@@ -336,6 +336,18 @@ export class Projektanzeige extends Component {
                             fontWeight: "bold",
                         }}
                         >Neue Aktivität</Typography>
+                    </Button>
+
+                     <Button variant="contained"
+                        onClick={this.handleClickOpen}
+
+                        sx={{
+                        margin: "20px",
+                        }}>
+                        <Typography sx={{
+                            fontWeight: "bold",
+                        }}
+                        >Projekt bearbeiten</Typography>
                     </Button>
 
             {/** why is this not workiiiing */}
