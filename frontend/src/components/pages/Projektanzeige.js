@@ -335,6 +335,15 @@ export class Projektanzeige extends Component {
                         }}
                         >Neue Aktivität</Typography>
                     </Button>
+
+
+            {/** why is this not workiiiing */}
+
+            <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+                    >
+                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
+                    </Dialog> 
+
 {/** Button zum Bearbeiten eines Projektes */}
                      <Button variant="contained"
                         onClick={this.handleProjectChange}
@@ -353,12 +362,6 @@ export class Projektanzeige extends Component {
                         <UpdateProject user={this.props.user} open={this.props} />
                     </Dialog>
 
-            {/** why is this not workiiiing */}
-
-                    <Dialog open={openNewActivity} onClose={this.handleCloseClick}
-                    >
-                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
-                    </Dialog> 
 
 
                 <Divider variant="fullWidth" sx={{
