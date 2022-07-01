@@ -117,7 +117,8 @@ project = api.inherit('Projekt', bo, {
 
 activity = api.inherit('Aktivitaet', bo, {
     'activity_name': fields.String(attribute='_activity_name', description='Name der Aktivität'),
-    'man_day_capacity': fields.Float(attribute='_man_day_capacity', description='Kapazität in Personentagen')
+    'man_day_capacity': fields.Float(attribute='_man_day_capacity', description='Kapazität in Personentagen'),
+    'persons_responsible': fields.List(fields.String, attribute='_persons_responsible', description='Kapazität in Personentagen'),
 })
 
 zi = api.inherit('Zeitintervall', bo, {
@@ -721,7 +722,7 @@ class ProjectRelatedSpecificActivityOperations(Resource):
         s_adm = SystemAdministration()
         project = s_adm.get_project_by_key(id)
         activity = s_adm.get_activity_by_key(activity_id)
-        s_adm.add_person_responsible_to_project(project, activity)
+        s_adm.add_activity_to_project(project, activity)
         return '', 200
 
 
@@ -757,6 +758,7 @@ class AllActivityListOperations(Resource):
             return a, 200
         else:
             return '', 500
+
 
 
 @timesystem.route('/activities/<int:id>')

@@ -86,7 +86,7 @@ class AktivitaetMapper(Mapper):
     def insert_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
         cursor.execute("INSERT INTO Aktivitaet_Zustaendigkeit(Activity_ID,"
-                       "User_ID) VALUES('{}', '{}')".format(activity.get_id(), person.get_id()))
+                       "User_ID) VALUES('{}', '{}')".format(activity.get_id(), person))
         self._cnx.commit()
         cursor.close()
         return activity

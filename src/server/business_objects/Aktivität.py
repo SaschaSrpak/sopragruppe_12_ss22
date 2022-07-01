@@ -45,6 +45,7 @@ class Aktivitaet(bo.BusinessObject):
         obj.set_id(dictionary['id'])
         obj.set_activity_name(dictionary['activity_name'])
         obj.set_man_day_capacity(dictionary['man_day_capacity'])
+        obj.set_persons_responsible(dictionary['persons_responsible'])
         obj.set_last_modified_date(dictionary['last_modified_date'])
         return obj
 

@@ -144,11 +144,11 @@ class SystemAdministration(object):
         activity.set_id(1)
 
         with AktivitaetMapper() as mapper:
-            mapper.insert(activity)
+            ak = mapper.insert(activity)
             responsibles = activity.get_persons_responsible()
             for person in responsibles:
                 mapper.insert_person_responsible(activity, person)
-            return
+            return ak
 
     def get_all_activities(self):
         """Gibt alle Aktivitäten aus, die im System gespeichert sind."""
@@ -206,7 +206,7 @@ class SystemAdministration(object):
             if not (responsible_dict is None):
                 for person in responsible_dict:
                     mapper.update_person_responsible(activity, person)
-            mapper.update(activity)
+            return mapper.update(activity)
 
     def delete_person_responsible_from_activity(self, activity, person):
         """Löscht eine bestimmte Person von der Zuständigkeitsliste"""

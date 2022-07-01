@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Error from '../Zwischenelemente/Error';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,25 +7,55 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import SystemAPI from '../../api/SystemAPI';
-import AktivitaetBO from '../../api/AktivitätBO';
-
+import AktivitätBO from '../../api/AktivitätBO';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import CommentIcon from '@mui/icons-material/Comment';
 
 /** 
  *@fileOverview 
  *@author
 */
 
+
+
 export class NewAktivität extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             activity_name: "",
             man_day_capacity: "",
             persons_responsible: [],
             openNewActivity: false,
+            values: [],
+            names: ["kim", "liam", "jeff"],
             projectChoice: this.props.projectChoice,
+            personresponsibleforactivity: []
         }
+
     }
+
+    componentDidMount() {
+        SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
+            console.log(responsiblepersons)
+                this.setState({
+                        responsiblepersons: responsiblepersons,
+
+                                    })
+            })
+
+
+            }
+
 
 // Soll den Dialog schließen mit Abbrechen button why is this not working?
     handleCloseClick = () => {
@@ -42,74 +72,130 @@ export class NewAktivität extends Component {
         })
     }
 
-// Erstellt die neue Aktivität und schließt das Dialogfenster
-    addActivity = () => {
-        let newActivity = new AktivitaetBO(this.state.activity_name, this.state.man_day_capacity, this.state.persons_responsible);
-        SystemAPI.getAPI().addActivity(newActivity).then(response => {
-            SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id)
-            console.log(response)
-        })
+
+
+    handleToggle = (item) => {
+
+              // only add if the item doesn't exist in the list
+        console.log(item)
+        let liste = this.state.personresponsibleforactivity
+        console.log(liste)
+      if(liste.includes(item)){
+          console.log("If TRUE")
+
+          let liste = this.state.personresponsibleforactivity
+             let index = liste.findIndex(e => e === item)
+            console.log(index)
+          liste.splice(index, 1)
+        this.setState(() => ({
+          personresponsibleforactivity: liste
+        }))
+
+      }else{
+                console.log("IF FALSE")
+              this.setState({ personresponsibleforactivity: [...this.state.personresponsibleforactivity, item] })
+          console.log(this.state.personresponsibleforactivity)
+          }
+
+
     }
 
 
-    // addActivity = () => {
-    //     let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity, this.state.persons_responsible);
-    //     SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, newActivity).then(response => {
-    //         console.log(response)
-    //     })
-    // }
+     addActivity = () => {
+        console.log(this.state.personresponsibleforactivity)
+         let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity);
+        newActivity.setPersons_Responsible(this.state.personresponsibleforactivity)
+         console.log(newActivity)
+         SystemAPI.getAPI().addActivity(newActivity).then(response => {
+             console.log(response)
 
-    render(){
+             SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id).then(response => {
+             console.log(response)
+
+
+         })
+         })
+
+     }
+
+    render() {
 
         const {activity_name, man_day_capacity, persons_responsible} = this.state;
-        const {openNewActivity} = this.props
+        const {values} = this.state;
+        const {checked} = this.state;
+
+
+            return (
+                <div>
+                    <DialogTitle>Neue Aktivität erstellen</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Füllen Sie bitte das folgende Formular aus, um eine neue Aktivität zu erstellen.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="activity_name"
+                            label="Name der Aktivität"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={activity_name}
+                            onChange={this.handleChange}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="man_day_capacity"
+                            label="Kapazität in Personentagen"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            value={man_day_capacity}
+                            onChange={this.handleChange}
+                        />
+
+                        <DialogContentText sx={{top:10}}>
+                            Wählen Sie Personen die für diese Aktivität zuständig sind aus
+                         </DialogContentText>
+                       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      {this.state.responsiblepersons?this.state.responsiblepersons.map((value) => {
+        const labelId = `checkbox-list-label-${value.id}`;
 
         return (
-            <div>
-                <DialogTitle>Neue Aktivität erstellen</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Füllen Sie bitte das folgende Formular aus, um eine neue Aktivität zu erstellen.
-                    </DialogContentText>
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="activity_name"
-                        label="Name der Aktivität"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={activity_name} 
-                        onChange={this.handleChange}
-                    />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="man_day_capacity"
-                        label="Kapazität in Personentagen"
-                        type="number"
-                        fullWidth
-                        variant="standard"
-                        value={man_day_capacity} 
-                        onChange={this.handleChange}
-                    />
-                    <TextField 
-                        autoFocus
-                        margin="dense"
-                        id="persons_responsible"
-                        label="Zuständige Personen"
-                        type="string"
-                        fullWidth
-                        variant="standard"
-                        value={persons_responsible} 
-                        onChange={this.handleChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleCloseClick}>Abbrechen</Button>
-                    <Button onClick={this.addActivity}>Speichern</Button>
-                </DialogActions>
-            </div>
-        )
+          <ListItem
+            key={value.id}
+            secondaryAction={
+              <IconButton edge="end" aria-label="comments">
+
+              </IconButton>
+            }
+            disablePadding
+          >
+            <ListItemButton role={undefined}   dense>
+              <ListItemIcon>
+                <Checkbox
+                    onClick={() => this.handleToggle(value.id)}
+                  edge="start"
+                  //checked={checked.indexOf(value) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={`${value.id}  - ${value.surname} ${value.name}`} />
+            </ListItemButton>
+          </ListItem>
+        );
+      }):null}
+    </List>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCloseClick}>Abbrechen</Button>
+                        <Button onClick={this.addActivity}>Speichern</Button>
+                    </DialogActions>
+                </div>
+            )
+
     }
 }
