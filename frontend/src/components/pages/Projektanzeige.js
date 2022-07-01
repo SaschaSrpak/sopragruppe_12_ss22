@@ -359,7 +359,7 @@ export class Projektanzeige extends Component {
 
                     <Dialog open={this.state.openChangeProject} onClose={this.handleCloseClick}
                     >
-                        <UpdateProject user={this.props.user} open={this.props} />
+                        <UpdateProject user={this.props.user} alleprops={this.props} />
                     </Dialog>
 
             {/** why is this not workiiiing */}

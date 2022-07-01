@@ -77,7 +77,7 @@ export class UpdateProject extends Component {
 
         return(
             <div>
-                <DialogTitle>Neues Projekt erstellen</DialogTitle>
+                <DialogTitle> {this.props.alleprops} </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Füllen Sie bitte das folgende Formular aus, um ein neues Projekt zu erstellen.

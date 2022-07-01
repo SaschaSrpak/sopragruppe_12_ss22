@@ -547,8 +547,8 @@ class SystemAdministration(object):
         project.set_last_modified_date(dt.datetime.now())
         project.set_id(1)
 
-
-        deadlineid = SystemAdministration.create_project_deadline(self, "name", deadline_id)
+        deadlinename = "Deadline: " + name
+        deadlineid = SystemAdministration.create_project_deadline(self, deadlinename, deadline_id)
         project.set_deadline(deadlineid)
 
         startevent = SystemAdministration.create_start_event(self, "Start Projekt", dt.datetime.now())
