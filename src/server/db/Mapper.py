@@ -7,10 +7,10 @@ from abc import ABC, abstractmethod
 class Mapper(AbstractContextManager, ABC):
     """Abstrakte Basisklasse aller Mapper-Klassen"""
 
-    def init(self):
+    def __init__(self):
         self._cnx = None
 
-    def enter(self):
+    def __enter__(self):
 
         if os.getenv('GAE_ENV', '').startswith('standard'):
             """Landen wir in diesem Zweig, so haben wir festgestellt, dass der Code in der Cloud abläuft.
