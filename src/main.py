@@ -284,7 +284,7 @@ class PersonOperations(Resource):
 @timesystem.param('id', 'Die Firebase_ID des Personen Objekts')
 class PersonFirebaseOperations(Resource):
     @timesystem.marshal_with(person)
-    @secured
+   # @secured
     def get(self, id):
         """
         Gibt eine bestimmte Person aus.
