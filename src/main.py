@@ -325,7 +325,7 @@ class PersonRelatedActivityOperations(Resource):
 
 @timesystem.route('/project_deadline')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectDeadlineGetOperation(Resource):
+class ProjectDeadlinePostOperation(Resource):
     @timesystem.marshal_with(project_deadline, code=200)
     @timesystem.expect(project_deadline)
     @secured
@@ -581,6 +581,28 @@ class ProjectOperations(Resource):
             pr.set_id(id)
             s_adm.save_project(pr)
             return '', 200
+        else:
+            return '', 500
+
+
+@timesystem.route('/projects/<int:id>/worktime')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'Die ID des Projekt Objekts')
+class FullWorktimeOnProjectOperation(Resource):
+    #@secured
+    def get(self, id):
+        """
+        Gibt die gesamte Arbeitszeit am Projekt aus.
+        :param id: ID des Projekts
+        :return: Arbeitszeit in Float
+        """
+        s_adm = SystemAdministration()
+        pr = s_adm.get_project_by_key(id)
+        time = s_adm.get_full_work_time_on_project(pr)
+
+        if pr:
+            return time
+
         else:
             return '', 500
 
