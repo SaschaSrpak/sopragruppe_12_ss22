@@ -55,6 +55,7 @@ export default class SystemAPI {
     #deleteActivityFromProjectURL = (id, activity_id) => `${this.#SystemServerBaseURL}/projects/${id}/activity/${activity_id}`;
     #addPersonResponsibleToProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
     #deletePersonResponsibleFromProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
+    #getFullWorktimeOnProjectURL = (id) => `${this.#SystemServerBaseURL}/projects/${id}/worktime`;
 
     //Activity related
 
@@ -366,6 +367,15 @@ export default class SystemAPI {
             let activityBOs = AktivitaetBO.fromJSON(responseJSON);
             return new Promise ( function (resolve){
                 resolve(activityBOs);
+            })
+        })
+  }
+
+  getFullWorktimeOnProject(project_id){
+        return this.#fetchAdvanced(this.#getFullWorktimeOnProjectURL(project_id)).then((responseJSON)=>{
+            let worktime = responseJSON;
+            return new Promise(function (resolve){
+                resolve(worktime)
             })
         })
   }

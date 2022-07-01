@@ -108,6 +108,16 @@ export class Projektanzeige extends Component {
                 managerstatus: result.manager_status
             })
             })
+ // Arbeitszeit des Projektes aus der Datenbank laden
+        SystemAPI.getAPI().getFullWorktimeOnProject(this.state.projectChoice).then((result)=>{
+            console.log(result)
+            var worktime = result.full_worktime
+            var worktime = Math.round((worktime + Number.EPSILON) * 100) / 100;
+            this.setState({
+                worktimeonproject: worktime
+            })
+            })
+
 // Projektzuständige aus der Datenbank laden
             SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
                 this.setState({
@@ -249,8 +259,13 @@ export class Projektanzeige extends Component {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null}</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null} </TableCell>
                                 </TableRow>
+                                <TableRow>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Gebuchte Arbeitszeit</TableCell>
+                                    <TableCell align="center">{this.state.projects?this.state.worktimeonproject:null} Stunden</TableCell>
+                                </TableRow>
+
 
                             </TableBody>
                         </Table>
