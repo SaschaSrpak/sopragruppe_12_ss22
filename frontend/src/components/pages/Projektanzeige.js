@@ -27,7 +27,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import DialogActions from "@mui/material/DialogActions";
-
+import UpdateProject from "../Dienste/UpdateProject";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -61,6 +61,7 @@ export class Projektanzeige extends Component {
             persons: [],
             openNewActivity: false,
             openNewPersonResponsible: false,
+            openChangeProject: false,
             responsiblepersons: []
         }
     }
@@ -170,7 +171,12 @@ export class Projektanzeige extends Component {
         })
     }
 
+    handleProjectChange = () => {
+             this.setState({
+            openChangeProject: true
+        })
 
+        }
 
     handleClickOpen = () => {
         this.setState({
@@ -187,7 +193,8 @@ export class Projektanzeige extends Component {
     handleCloseClick = () => {
         this.setState({
             openNewActivity: false,
-            openNewPersonResponsible: false
+            openNewPersonResponsible: false,
+            openChangeProject: false
         })
     }
 
@@ -337,9 +344,9 @@ export class Projektanzeige extends Component {
                         }}
                         >Neue Aktivität</Typography>
                     </Button>
-
+{/** Button zum Bearbeiten eines Projektes */}
                      <Button variant="contained"
-                        onClick={this.handleClickOpen}
+                        onClick={this.handleProjectChange}
 
                         sx={{
                         margin: "20px",
@@ -349,6 +356,11 @@ export class Projektanzeige extends Component {
                         }}
                         >Projekt bearbeiten</Typography>
                     </Button>
+
+                    <Dialog open={this.state.openChangeProject} onClose={this.handleCloseClick}
+                    >
+                        <UpdateProject user={this.props.user} open={this.props} />
+                    </Dialog>
 
             {/** why is this not workiiiing */}
 
