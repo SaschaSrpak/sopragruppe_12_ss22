@@ -560,7 +560,7 @@ class SystemAdministration(object):
         with ProjektMapper() as mapper:
             project = mapper.insert(project)
             activities = project.get_activities()
-            responsibles = project.get_person_responsible()
+            responsibles = [SystemAdministration.get_person_by_key(self, creator_id)]
             for activity in activities:
                 mapper.insert_activity(project, activity)
             for person in responsibles:
