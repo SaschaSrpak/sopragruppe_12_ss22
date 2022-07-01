@@ -156,19 +156,10 @@ export class Projektanzeige extends Component {
                             })
                             console.log(newArray)
                                             })
-
-
                         })
-
             })
-
 // Alle Personen aus der Datenbank laden
-
     }
-
-
-
-
 
 
     // Function to get all the persons responsible for the Activity ID
@@ -246,7 +237,7 @@ export class Projektanzeige extends Component {
 
 // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
-    const {openNewActivity} = this.state;
+    const {openNewActivity, projectChoice} = this.state;
 
         return (
             <Box sx={{
@@ -389,6 +380,15 @@ export class Projektanzeige extends Component {
                         }}
                         >Neue Aktivität</Typography>
                     </Button>
+
+
+            {/** why is this not workiiiing */}
+
+            <Dialog open={openNewActivity} onClose={this.handleCloseClick}
+                    >
+                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
+                    </Dialog> 
+
 {/** Button zum Bearbeiten eines Projektes */}
                      <Button variant="contained"
                         onClick={this.handleProjectChange}
@@ -407,12 +407,6 @@ export class Projektanzeige extends Component {
                         <UpdateProject user={this.props.user} projectdata={this.props.projectChoice} open={this.props} />
                     </Dialog>
 
-            {/** why is this not workiiiing */}
-
-                    <Dialog open={openNewActivity} onClose={this.handleCloseClick}
-                    >
-                        <NewAktivität openNewActivity={this.props} />
-                    </Dialog> 
 
 
                 <Divider variant="fullWidth" sx={{
@@ -466,7 +460,7 @@ export class Projektanzeige extends Component {
 
 
 
-{/** Buttons brauchen Funktionalität
+{/** Buttons Edit / Delete brauchen Funktionalität
  * 
  */}
 
