@@ -86,14 +86,14 @@ class AktivitaetMapper(Mapper):
     def insert_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
         cursor.execute("INSERT INTO Aktivitaet_Zustaendigkeit(Activity_ID,"
-                       "User_ID) VALUES('{}', '{}')".format(activity.get_id(), person.get_id()))
+                       "User_ID) VALUES('{}', '{}')".format(activity.get_id(), person))
         self._cnx.commit()
         cursor.close()
         return activity
 
     def update_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
-        command = "UPDATE Aktivitaet_Zuständigkeit" + "SET User_ID=%s, WHERE Activity_ID=%s"
+        command = "UPDATE Aktivitaet_Zustaendigkeit " + "SET User_ID=%s WHERE Activity_ID=%s"
         data = (person.get_id(), activity.get_id())
         cursor.execute(command, data)
 
@@ -143,6 +143,7 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+        return activity
 
     def delete(self, activity):
 
@@ -153,27 +154,7 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+        return activity
 
-
-"""
-if (__name__ == "__main__"):
-    Hugo = Person()
-    Hugo.set_id("U1000243")
-    Hugo.set_name("Hugo")
-    Hugo.set_surname("Herbert")
-    Hugo.set_mail_adress("hugo.herbert@hdmv.de")
-    Hugo.set_user_name("HHerbert")
-    Hugo.set_last_modified_date(datetime.datetime.now())
-
-    with PersonMapper() as mapper:
-
-        mapper.insert(Hugo)
-        test = mapper.find_by_activity_key("A100001")
-        for i in test:
-            print(i.get_name())
-        result = mapper.find_all()
-        for i in result:
-            print(i.get_name())
-"""
 
 

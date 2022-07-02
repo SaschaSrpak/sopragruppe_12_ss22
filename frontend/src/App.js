@@ -147,7 +147,7 @@ export class App extends Component {
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
                 <Route path={'/buchungen'} element={<Buchungen user={currentUser}/>} />
-                <Route path={'/auslese'} element={<Auslese />} />
+                <Route path={'/auslese'} element={<Auslese user={currentUser} />} />
                 <Route path={'/projektanzeige'} element={<Projektanzeige user={currentUser}/>} />
                 <Route path={'/projektewahl'} element={<Projektwahl user={currentUser} />} />
                 <Route path={'/about'} element={<About />} />

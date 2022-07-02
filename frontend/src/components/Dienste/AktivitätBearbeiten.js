@@ -20,6 +20,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import CommentIcon from '@mui/icons-material/Comment';
+import {calculateNewValue} from "@testing-library/user-event/dist/utils";
+
 
 /** 
  *@fileOverview 
@@ -28,39 +30,31 @@ import CommentIcon from '@mui/icons-material/Comment';
 
 
 
-export class NewAktivität extends Component {
+export class AktivitätBearbeiten extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activity_name: "",
             man_day_capacity: "",
             persons_responsible: [],
-            openNewActivity: false,
+            openEditActivity: false,
             values: [],
             names: ["kim", "liam", "jeff"],
-            projectChoice: this.props.projectChoice,
-            personresponsibleforactivity: []
+            personresponsibleforactivity: [],
+            inputVal: this.props.activitymanday
         }
 
     }
 
-    componentDidMount() {
-        SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
-            console.log(responsiblepersons)
-                this.setState({
-                        responsiblepersons: responsiblepersons,
 
-                                    })
-            })
+ componentDidMount() {
+        console.log(this.props.persons)
 
-
-            }
-
+    }
 
 // Soll den Dialog schließen mit Abbrechen button why is this not working?
     handleCloseClick = () => {
-            this.props.handleClose();
-
+        this.props.handleClose();
     }
 
 // Erlaubt das befüllen der Textfelder
@@ -98,21 +92,24 @@ export class NewAktivität extends Component {
 
 
     }
+    onChangeManday = (e) => {
+    this.setState({ manday: e.target.value });
+  }
+    onChangeName = (e) => {
+    this.setState({ name: e.target.value });
+  }
 
-
-     addActivity = () => {
-        console.log(this.state.personresponsibleforactivity)
-         let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity);
+     updateActivity = () => {
+         let newActivity = new AktivitätBO();
         newActivity.setPersons_Responsible(this.state.personresponsibleforactivity)
-         SystemAPI.getAPI().addActivity(newActivity).then(response => {
+         newActivity.setId(this.props.activityid)
+         newActivity.setActivity_name(this.state.name)
+         newActivity.setMan_day_capacity(this.state.manday)
+         newActivity.setLastModifiedDate(' ')
+         console.log(newActivity)
+         SystemAPI.getAPI().updateActivity(newActivity).then(response => {
              console.log(response)
-
-             SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id).then(response => {
-             console.log(response)
-                 this.props.handleClose()
-
-
-         })
+             this.props.handleUpdate(response);
          })
 
      }
@@ -126,39 +123,40 @@ export class NewAktivität extends Component {
 
             return (
                 <div>
-                    <DialogTitle>Neue Aktivität erstellen</DialogTitle>
+                    <DialogTitle>Aktivität bearbeiten</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Füllen Sie bitte das folgende Formular aus, um eine neue Aktivität zu erstellen.
+                            Füllen Sie bitte das folgende Formular aus, um eine Aktivität zu bearbeiten.
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="activity_name"
-                            label="Name der Aktivität"
+                            id= "id"
+                            label= "Aktivität Name"
                             type="text"
                             fullWidth
                             variant="standard"
-                            value={activity_name}
-                            onChange={this.handleChange}
+
+                            onChange={this.onChangeName}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="man_day_capacity"
                             label="Kapazität in Personentagen"
+
                             type="number"
                             fullWidth
                             variant="standard"
-                            value={man_day_capacity}
-                            onChange={this.handleChange}
+
+                            onChange={this.onChangeManday}
                         />
 
                         <DialogContentText sx={{top:10}}>
                             Wählen Sie Personen die für diese Aktivität zuständig sind aus
                          </DialogContentText>
                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {this.state.responsiblepersons?this.state.responsiblepersons.map((value) => {
+      {this.props.persons?this.props.persons.map((value) => {
         const labelId = `checkbox-list-label-${value.id}`;
 
         return (
@@ -191,7 +189,7 @@ export class NewAktivität extends Component {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleCloseClick}>Abbrechen</Button>
-                        <Button onClick={this.addActivity}>Speichern</Button>
+                        <Button onClick={this.updateActivity}>Speichern</Button>
                     </DialogActions>
                 </div>
             )
