@@ -75,6 +75,7 @@ export class Projektanzeige extends Component {
 
     // componentDidMount funktion zum Laden der Projektdaten
     componentDidMount() {
+        console.log(this.props.projectChoice)
         // Projekte aus der Datenbank laden
         SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
@@ -277,6 +278,7 @@ export class Projektanzeige extends Component {
         const {projectChoice} = this.state;
         const { openNewActivity } = this.state;
         const { open } = this.state;
+        const {responsiblepersons} = this.state;
 
         return (
             <Box sx={{
@@ -457,9 +459,9 @@ export class Projektanzeige extends Component {
                 <Grid>
                     <Grid container justifyContent="space-around">
 
-                        {this.state.activities.map(activity => {
-                            return <AktivitätCard persons={this.state.responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} handleDelete={this.handleDeleteActivity}/>
-                        })}
+                        {this.state.responsiblepersons?this.state.activities.map(activity => {
+                            return <AktivitätCard persons={responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} handleDelete={this.handleDeleteActivity}/>
+                        }):null}
 
 
 
