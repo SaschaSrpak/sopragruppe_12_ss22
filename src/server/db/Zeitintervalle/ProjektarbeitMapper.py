@@ -129,7 +129,3 @@ class ProjektarbeitMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen, 
-um die grundsätzliche Funktion zu überprüfen.
-"""
