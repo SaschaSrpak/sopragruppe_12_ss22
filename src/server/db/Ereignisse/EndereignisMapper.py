@@ -104,13 +104,3 @@ class EndereignisMapper(Mapper):
         cursor.close()
 
 
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen, 
-um die grundsätzliche Funktion zu überprüfen.
-
-Anmerkung: Nicht professionell aber hilfreich..."""
-"""if (__name__ == "__main__"):
-    with EreignisMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)"""
-

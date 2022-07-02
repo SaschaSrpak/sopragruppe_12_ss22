@@ -155,25 +155,4 @@ class AktivitaetMapper(Mapper):
         cursor.close()
 
 
-"""
-if (__name__ == "__main__"):
-    Hugo = Person()
-    Hugo.set_id("U1000243")
-    Hugo.set_name("Hugo")
-    Hugo.set_surname("Herbert")
-    Hugo.set_mail_adress("hugo.herbert@hdmv.de")
-    Hugo.set_user_name("HHerbert")
-    Hugo.set_last_modified_date(datetime.datetime.now())
-
-    with PersonMapper() as mapper:
-
-        mapper.insert(Hugo)
-        test = mapper.find_by_activity_key("A100001")
-        for i in test:
-            print(i.get_name())
-        result = mapper.find_all()
-        for i in result:
-            print(i.get_name())
-"""
-
 
