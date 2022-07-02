@@ -5,15 +5,16 @@ INSERT INTO Person VALUES (10001,'Till','Lindemann','till.lindemann@gmail.com','
                           (10002,'Richard','Kruspe','richard.kruspe@gmail.com','Richard Kruspe','BIUObibiobiuoOPJjjiogERtsterzVUIuvi',1, '2022-06-22 16:00:00'),
                           (10003,'Christian','Lorenz','christian.lorenz@gmail.com','Christian Lorenz','fbewuiqbfeuwiqfiobouUOzvuzovUOvhuoVUZVuo',0, '2022-06-22 16:00:00'),
                           (10004,'Christoph','Schneider','christoph.schneider@gmail.com','Christoph Schneider','fewhuqibfeuiwqbfueanjifbeiouqwbusbahuofwqbu',0, '2022-05-02 19:49:00'),
-                          (10005,'Oliver','Riedel','oliver.riedel@gmail.com','Oliver Riedel','buhiPopjPItzZRSEvhkNJoiZi',0, '2022-05-02 19:49:47');
-                        --   (10006,'Paul','Landers','paul.landers@gmail.com','Paul Landers','skdugfijsdzfgksudzfgvskdufgt',0, '2022-06-03 18:49:47');
+                          (10005,'Oliver','Riedel','oliver.riedel@gmail.com','Oliver Riedel','buhiPopjPItzZRSEvhkNJoiZi',0, '2022-05-02 19:49:47'),
+                          (10006,'Paul','Landers','paul.landers@gmail.com','Paul Landers','skdugfijsdzfgksudzfgvskdufgt',0, '2022-06-03 18:49:47');
 
 
 INSERT INTO Arbeitszeitkonto VALUES (10001, 10001),
                                     (10002, 10002),
                                     (10003, 10003),
                                     (10004, 10004),
-                                    (10005, 10005);
+                                    (10005, 10005),
+                                    (10006, 10006);
 
 
 
