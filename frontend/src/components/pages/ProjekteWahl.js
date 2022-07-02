@@ -12,6 +12,8 @@ import SystemAPI from "../../api/SystemAPI";
 import { Dialog } from "@mui/material";
 import {NewProjekt} from "../Dienste/NewProjekt";
 import Projektanzeige from "./Projektanzeige";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
 
 
 
@@ -33,16 +35,22 @@ export class Projektwahl extends Component {
             selectedProjects: null,
             projectChoice: null,
             open: false,
+            deleteDialogOpen: false
         }
     }
 
-// componentDidMount funktion zum Laden der Projekte
-    componentDidMount() {
+// Projekte aus der Datenbank laden
+    getData() {
         SystemAPI.getAPI().getProjects().then(projects => {
             this.setState({
                 projects: projects
             })
         })
+    }
+
+// componentDidMount zum Laden der Projekte beim Rendern der Seite
+    componentDidMount() {
+        this.getData()
     }
 
 // Projektauswahl wird angezeigt
@@ -56,7 +64,7 @@ export class Projektwahl extends Component {
 // Beim betätigen von "Auswählen" wird das Projekt in projectChoice gespeichert (work in progress)
     handleChoseClick = () => {
         this.setState({
-            projectChoice: this.state.selectedProjects
+            projectChoice: this.state.selectedProjects,
         })
         // console.log(this.state.projectChoice)
     }
@@ -70,26 +78,39 @@ export class Projektwahl extends Component {
     handleClose = () => {
         this.setState({
             open: false,
-        });
+            deleteDialogOpen: false
+        })
+        this.getData()
     }
 
-// Projekt aus Datenbank löschen
-    // deleteProject = () => {
-    //     SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
-    //         this.setState({
-    //             selectedProjects: null
-    //         })
-    //     }).catch(err => {
-    //         console.log(err)
-    //     }).finally(() => {
-    //         SystemAPI.getAPI().getProjects().then(projects => {
-    //             this.setState({
-    //                 projects: projects
-    //             })
-    //         })
-    //     }
-    //     )
-    // }
+
+    deleteProject = () => {
+        console.log(this.state.selectedProjects)
+        if(this.state.selectedProjects){
+         SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
+             this.setState({
+                 selectedProjects: null
+             })
+         }).catch(err => {
+             console.log(err)
+        }).finally(() => {
+             SystemAPI.getAPI().getProjects().then(projects => {
+                 this.setState({
+                     projects: projects,
+                     deleteDialogOpen: false
+                 })
+            })
+        }
+         )
+
+        alert("Projekt wurde gelöscht" )}else{
+            alert("Kein Projekt ausgewählt")
+            this.setState({
+
+                     deleteDialogOpen: false
+                 })
+        }
+     }
 
 
 
@@ -99,7 +120,7 @@ export class Projektwahl extends Component {
 
 // rendert die Projekte aus der Liste
     render () {
-        const {projects, selectedProjects, open, projectChoice} = this.state;
+        const {projects, selectedProjects, open, projectChoice, deleteDialogOpen} = this.state;
 
 
         return (
@@ -151,14 +172,16 @@ export class Projektwahl extends Component {
                         >Auswählen</Typography>
                     </Button>
                     <Button  
-                        onClick={this.deleteProject}
+                        onClick={() => this.setState({ deleteDialogOpen: true })}
                         id={this.state.selectedProjects}
-                        variant="contained" 
+                        variant="outlined"
+                        color = "error"
                         sx={{
                         margin: "20px",
                     }}>
                         <Typography sx={{
                             fontWeight: "bold",
+
                         }}
                         >Ausgewähltes Projekt löschen</Typography>
                     </Button>
@@ -181,12 +204,25 @@ export class Projektwahl extends Component {
                         }}
                         >Neues Projekt</Typography>
                     </Button>
-                    <Dialog open={open} onClose={this.handleClose}
+                    <Dialog 
+                        open={open} 
+                        onClose={this.handleClose}
                     >
                         {/** open prop wird an "NewProject" übergeben */}
-                        <NewProjekt user={this.props.user} open={this.props} />
+                        <NewProjekt user={this.props.user} 
+                                    handleClose={this.handleClose}
+                                    open={open}
+                        />
                     </Dialog>
-
+                    <Dialog open={deleteDialogOpen} onClose={this.handleClose}>
+                        <DialogTitle>
+                            Soll das Projekt mit allen zugehörigen Daten gelöscht werden?
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button onClick={this.deleteProject}>Ja</Button>
+                            <Button onClick={() => this.setState({ deleteDialogOpen: false })}>Nein</Button>
+                        </DialogActions>
+                    </Dialog>
 
 
                 </Paper>

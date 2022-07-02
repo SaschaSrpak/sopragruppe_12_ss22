@@ -47,9 +47,10 @@ import {AktivitätBearbeiten} from "../Dienste/AktivitätBearbeiten";
 export class AktivitätCard extends Component {
 
     constructor(props) {
+
+        super(props);
         console.log(props.activity)
         console.log(props.persons)
-        super(props);
         this.state = {
             deleteDialogOpen: false,
             open: false,
@@ -61,7 +62,34 @@ export class AktivitätCard extends Component {
         };
     }
     componentDidMount() {
-        console.log(this.state.personslist)
+        console.log(this.state.personresponsible)
+        SystemAPI.getAPI().getPersonsResponsibleOnActivity(this.props.activity.id).then(persons =>{
+        var personsworktimeonac = []
+        persons.map((person) => {
+            console.log(person.id, this.props.activity.id)
+        SystemAPI.getAPI().getWorktimeOfAccountOnActivity(person.id, this.props.activity.id).then(worktime => {
+            if (worktime){
+                worktime = worktime * 60
+                var Hours = Math.floor(worktime /60)
+                var minutes = Math.round(worktime % 60)
+
+                let worktimerounded =  Hours + "h " +minutes + "Min"
+                console.log(worktimerounded)
+                person.username = worktimerounded
+                personsworktimeonac.push(person)
+                }else{
+                person.username = ("0h 0Min")
+                personsworktimeonac.push(person)
+            }
+            this.setState({
+                personresponsible: personsworktimeonac
+                })
+            })
+
+        })
+
+        console.log(personsworktimeonac)
+            })
     }
 
     openEditActivity = () => {
@@ -77,8 +105,13 @@ export class AktivitätCard extends Component {
             open: !this.state.open
         })
     }
+    handleCloseDelete() {
+
+        this.setState({deleteDialogOpen: false })
+    }
     handleClose() {
-        this.setState({ deleteDialogOpen: false })
+        console.log("Funkt")
+        this.setState({deleteDialogOpen: false })
     }
     handleDelete() {
         SystemAPI.getAPI().deleteActivity(this.props.activity.id).then(activity => {
@@ -98,13 +131,47 @@ export class AktivitätCard extends Component {
                 personresponsible: persons
             })
             console.log(this.state.personresponsible)
+
+                   var personsworktimeonac = []
+        this.state.personresponsible.map((person) => {
+            console.log(person.id, this.props.activity.id)
+        SystemAPI.getAPI().getWorktimeOfAccountOnActivity(person.id, this.props.activity.id).then(worktime => {
+            if (worktime){
+                worktime = worktime * 60
+                var Hours = Math.floor(worktime /60)
+                var minutes = Math.round(worktime % 60)
+
+                let worktimerounded =  Hours + "h " +minutes + "Min"
+                console.log(worktimerounded)
+                person.username = worktimerounded
+                personsworktimeonac.push(person)
+                }else{
+                person.username = ("0h 0Min")
+                personsworktimeonac.push(person)
+            }
+            this.setState({
+                personresponsible: personsworktimeonac
+                })
+            })
+            //if (!this.personsworktimeonac){
+            //    this.setState({
+             //   personsworktimeonac: [0]
+             //   })
+           // }
+
+    })
+
+
         })
+
+
 
     }
 
    handleCloseClickEdit = () => {
         this.setState({
             openEditActivity: false,
+
 
         })
     }
@@ -113,6 +180,8 @@ export class AktivitätCard extends Component {
         const { activity } = this.props;
         const {open} = this.state;
         const { openEditActivity } = this.state;
+        const { persons } = this.props;
+        const {deleteDialogOpen} = this.state;
         return (
 
             <Card variant="outlined" sx={{ maxWidth: 800 }}>
@@ -131,6 +200,7 @@ export class AktivitätCard extends Component {
                                     <TableCell sx={{ fontWeight: "bold", }}>Name </TableCell>
                                     <TableCell sx={{ fontWeight: "bold", }}>Vorname</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", }}>UserID</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", }}>Arbeitszeit</TableCell>
                                 </TableRow>
                             </TableHead>
 
@@ -141,12 +211,14 @@ export class AktivitätCard extends Component {
 */}
 
                             <TableBody>
-                                {this.state.personresponsible?this.state.personresponsible.map(person => {
+                                {this.state.personresponsible?this.state.personresponsible.map((person, index) => {
                                 return <TableRow>
 
                             <TableCell> {person.name}  </TableCell>
                             <TableCell> {person.surname}  </TableCell>
                             <TableCell> {person.id} </TableCell>
+                            <TableCell> {person.username}</TableCell>
+
 
 
                                 </TableRow>}):null}
@@ -179,17 +251,17 @@ export class AktivitätCard extends Component {
                         <AktivitätBearbeiten  open={openEditActivity} handleClose={this.handleCloseClickEdit}
                                               responsibles={activity.persons_responsible}  activityname={activity.name}
                                               activitydescription={activity.description}  activityid = {activity.id}
-                                              persons={this.state.personslist} activitymanday ={activity.man_day_capacity}
+                                              persons={persons} activitymanday ={activity.man_day_capacity}
                                                 handleUpdate={this.handleUpdateActivity}/>
                     </Dialog>
 
-                    <Dialog open={this.state.deleteDialogOpen} onClose={this.handleClose}>
+                    <Dialog open={deleteDialogOpen} onClose={this.handleClose}>
                         <DialogTitle>
                             Soll die Aktivität gelöscht werden?
                         </DialogTitle>
                         <DialogActions>
                             <Button onClick={() => this.handleDelete(activity.id)}>Ja</Button>
-                            <Button onClick={this.handleClose}>Nein</Button>
+                            <Button onClick={() => this.setState({ deleteDialogOpen: false })}>Nein</Button>
                         </DialogActions>
                     </Dialog>
 

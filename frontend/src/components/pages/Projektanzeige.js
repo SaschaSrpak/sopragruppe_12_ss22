@@ -75,6 +75,7 @@ export class Projektanzeige extends Component {
 
     // componentDidMount funktion zum Laden der Projektdaten
     componentDidMount() {
+        console.log(this.props.projectChoice)
         // Projekte aus der Datenbank laden
         SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
@@ -93,22 +94,22 @@ export class Projektanzeige extends Component {
                 deadlineanzeige = deadlineanzeige.replace("T", ' - ')
                 deadlineanzeige = deadlineanzeige.substring(0, 18)
                 this.setState({
-                        deadline_new: newDeadline,
-                        deadlineanzeige: deadlineanzeige
+                    deadline_new: newDeadline,
+                    deadlineanzeige: deadlineanzeige
                 })
             })
             // Projektdauer aus der Datenbank laden
             SystemAPI.getAPI().getProjectDuration(this.state.projectChoice).then(newDuration => {
                 var Tage = Number(newDuration.duration) / 24
                 var Tage = Math.round(Tage)
-                if (Tage > 1){
+                if (Tage > 1) {
                     var bezeichnung = "Tage"
-                }else{
+                } else {
                     var bezeichnung = "Tag"
                 }
                 this.setState({
-                        project_duration_new: Tage,
-                        project_duration_bezeichnung: bezeichnung
+                    project_duration_new: Tage,
+                    project_duration_bezeichnung: bezeichnung
                 })
             })
             // Projektersteller aus der Datenbank laden
@@ -117,27 +118,27 @@ export class Projektanzeige extends Component {
                     creator_new: newCreator.name,
                 })
             })
- // Managerstatus aus der Datenbank laden
-        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
-            console.log(result)
-            this.setState({
-                managerstatus: result.manager_status
+            // Managerstatus aus der Datenbank laden
+            SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
+                console.log(result)
+                this.setState({
+                    managerstatus: result.manager_status
+                })
             })
-            })
- // Arbeitszeit des Projektes aus der Datenbank laden
-        SystemAPI.getAPI().getFullWorktimeOnProject(this.state.projectChoice).then((result)=>{
-            console.log(result)
-            var worktime = result.full_worktime
-            var worktime = Math.round((worktime + Number.EPSILON) * 100) / 100;
-            if (worktime>1){
-                var bezeichnung = "Stunden"
-            }else{
-                var bezeichnung = "Stunde"
-            }
-            this.setState({
-                worktimeonproject: worktime,
-                worktimeonprojectbezeichnung: bezeichnung
-            })
+            // Arbeitszeit des Projektes aus der Datenbank laden
+            SystemAPI.getAPI().getFullWorktimeOnProject(this.state.projectChoice).then((result) => {
+                console.log(result)
+                var worktime = result.full_worktime
+                worktime = Math.round((worktime + Number.EPSILON) * 100) / 100;
+                if (worktime > 1) {
+                    var bezeichnung = "Stunden"
+                } else {
+                    var bezeichnung = "Stunde"
+                }
+                this.setState({
+                    worktimeonproject: worktime,
+                    worktimeonprojectbezeichnung: bezeichnung
+                })
             })
 
             // Projektzuständige aus der Datenbank laden
@@ -152,18 +153,19 @@ export class Projektanzeige extends Component {
                     const newArray = []
                     persons.map((all) => {
 
-                                                if (responsiblepersons.some(item => all.name === item.name)){
-                                                    }else{
-                                                    newArray.push(all)}
-                                        })
-                            this.setState({
-                                allpersons: newArray
-                            })
-                            console.log(newArray)
-                                            })
-                        })
+                        if (responsiblepersons.some(item => all.name === item.name)) {
+                        } else {
+                            newArray.push(all)
+                        }
+                    })
+                    this.setState({
+                        allpersons: newArray
+                    })
+                    console.log(newArray)
+                })
             })
-// Alle Personen aus der Datenbank laden
+        })
+        // Alle Personen aus der Datenbank laden
     }
 
 
@@ -177,22 +179,53 @@ export class Projektanzeige extends Component {
         })
     }
 
-    handleDeletePersonResponsible = (personid) => {
-         if( this.state.managerstatus === "1"){
-        SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, personid).then(persons => {
-            this.setState({
-                persons: persons
+    handleDeletePersonResponsible = (person) => {
+        if (this.state.managerstatus === "1") {
+            SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, person.id).then(persons => {
+                console.log(person)
+                var newresponsiblepersons = this.state.responsiblepersons.filter(a => a.id !== person.id)
+                console.log(newresponsiblepersons)
+                console.log(this.state.responsiblepersons)
+                this.setState({
+                    persons: persons,
+                    responsiblepersons: newresponsiblepersons
+                })
+                SystemAPI.getAPI().getPersons().then(persons => {
+                    this.setState({
+                        allpersons: persons
+                    })
+                    const newArray = []
+                    persons.map((all) => {
+
+                        if (newresponsiblepersons.some(item => all.name === item.name)) {
+                        } else {
+                            newArray.push(all)
+                        }
+                    })
+                    this.setState({
+                        allpersons: newArray
+                    })
+                })
             })
-        })}else{
-             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
-         }
+        } else {
+            alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+        }
     }
 
     handlePersonAddResponsible = () => {
         SystemAPI.getAPI().addPersonResponsibleToProject(this.state.projectChoice, this.state.persontoadd).then(persons => {
-            this.setState({
-                openNewPersonResponsible: false
+            SystemAPI.getAPI().getPerson(this.state.persontoadd).then(person => {
+                var newallpersons = this.state.allpersons.filter(a => a.id !== person.id)
+                SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(response => {
+                    this.setState({
+                        openNewPersonResponsible: false,
+                        responsiblepersons: response,
+                        allpersons: newallpersons
+
+                    })
+                })
             })
+
             alert("Person wurde hinzugefügt")
         })
 
@@ -218,12 +251,13 @@ export class Projektanzeige extends Component {
     }
 
     handleClickOpenPersonResponsible = () => {
-         if(this.state.managerstatus === "1"){
-        this.setState({
-            openNewPersonResponsible: true
-        })}else{
-             alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
-         }
+        if (this.state.managerstatus === "1") {
+            this.setState({
+                openNewPersonResponsible: true
+            })
+        } else {
+            alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
+        }
     }
 
     handleCloseClick = () => {
@@ -248,7 +282,7 @@ export class Projektanzeige extends Component {
     }
 
     handleActivityChange = () => {
-        
+
     }
 
     handleActivityIconClickOpen = () => {
@@ -264,19 +298,30 @@ export class Projektanzeige extends Component {
     }
 
     handleDeleteActivity = (activity) => {
-            var newactivities = this.state.activities.filter(a =>a.id!==activity.id)
-            this.setState({
-                activities: newactivities
-            })
-            alert("Aktivität wurde entfernt")
-       
-    }
+        var newactivities = this.state.activities.filter(a => a.id !== activity.id)
+        this.setState({
+            activities: newactivities
+        })
+        alert("Aktivität wurde entfernt")
 
+    }
+    handleAddActivity = (activity) => {
+        console.log(activity)
+        this.setState({
+            activities: activity
+        })
+        alert("Aktivität hinzugefügt")
+
+    }
     // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
-        const {projectChoice} = this.state;
+        const { projectChoice } = this.state;
         const { openNewActivity } = this.state;
         const { open } = this.state;
+        const { openChangeProject } = this.state;
+        const { responsiblepersons } = this.state;
+        const {activities} = this.state;
+
 
         return (
             <Box sx={{
@@ -312,15 +357,15 @@ export class Projektanzeige extends Component {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.deadlineanzeige:null} Uhr</TableCell>
+                                    <TableCell align="center">{this.state.projects ? this.state.deadlineanzeige : null} Uhr</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.project_duration_new:null} {this.state.project_duration_bezeichnung}</TableCell>
+                                    <TableCell align="center">{this.state.projects ? this.state.project_duration_new : null} {this.state.project_duration_bezeichnung}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Gebuchte Arbeitszeit</TableCell>
-                                    <TableCell align="center">{this.state.projects?this.state.worktimeonproject:null} {this.state.worktimeonprojectbezeichnung}</TableCell>
+                                    <TableCell align="center">{this.state.projects ? this.state.worktimeonproject : null} {this.state.worktimeonprojectbezeichnung}</TableCell>
                                 </TableRow>
 
 
@@ -357,7 +402,7 @@ export class Projektanzeige extends Component {
                                                     <TableCell> {data.id} </TableCell>
                                                     <TableCell> {data.surname} </TableCell>
                                                     <TableCell> {data.name} </TableCell>
-                                                    <TableCell> <Button color='warning' onClick={() => this.handleDeletePersonResponsible(data.id)} >Delete</Button> </TableCell>
+                                                    <TableCell> <Button color='warning' onClick={() => this.handleDeletePersonResponsible(data)} >Delete</Button> </TableCell>
                                                 </TableRow>
 
                                             ))}
@@ -413,24 +458,27 @@ export class Projektanzeige extends Component {
                     value={this.state.openNewActivity}
                     sx={{
                         margin: "20px",
-                        }}>
-                        <Typography sx={{
-                            fontWeight: "bold",
-                        }}
-                        >Neue Aktivität</Typography>
-                    </Button>
+                    }}>
+                    <Typography sx={{
+                        fontWeight: "bold",
+                    }}
+                    >Neue Aktivität</Typography>
+                </Button>
 
 
-            {/** why is this not workiiiing */}
+                {/** why is this not workiiiing */}
 
-            <Dialog open={openNewActivity} onClose={this.handleCloseClick}
-                    >
-                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  project={this.state.projectChoice} projectChoice={projectChoice} />
-                    </Dialog> 
+                <Dialog
+                    open={openNewActivity}
+                    onClose={this.handleCloseClick}
+                >
+                    <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({ openNewActivity: false })}
+                                  project={projectChoice} projectChoice={projectChoice} handelAdd={this.handleAddActivity} activities={activities} />
+                </Dialog>
 
-{/** Button zum Bearbeiten eines Projektes */}
-                     <Button variant="contained"
-                        onClick={this.handleProjectChange}
+                {/** Button zum Bearbeiten eines Projektes */}
+                <Button variant="contained"
+                    onClick={this.handleProjectChange}
 
                     sx={{
                         margin: "20px",
@@ -441,9 +489,9 @@ export class Projektanzeige extends Component {
                     >Projekt bearbeiten</Typography>
                 </Button>
 
-                <Dialog open={this.state.openChangeProject} onClose={this.handleCloseClick}
+                <Dialog open={openChangeProject} onClose={this.handleCloseClick}
                 >
-                    <UpdateProject user={this.props.user} projectdata={this.props.projectChoice} open={this.props} />
+                    <UpdateProject user={this.props.user} handleClose={() => this.setState({ openChangeProject: false })} projectdata={this.props.projectChoice} open={this.props} />
                 </Dialog>
 
 
@@ -457,9 +505,9 @@ export class Projektanzeige extends Component {
                 <Grid>
                     <Grid container justifyContent="space-around">
 
-                        {this.state.activities.map(activity => {
-                            return <AktivitätCard persons={this.state.responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} handleDelete={this.handleDeleteActivity}/>
-                        })}
+                        {this.state.responsiblepersons ? this.state.activities.map(activity => {
+                            return <AktivitätCard persons={responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} activities={activities}  handleDelete={this.handleDeleteActivity} />
+                        }) : null}
 
 
 

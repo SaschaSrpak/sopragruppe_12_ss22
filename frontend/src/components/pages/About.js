@@ -1,7 +1,12 @@
 import * as React from "react";
 import { Component } from "react";
 import { Link } from '@material-ui/core';
-import { Toolbar } from '@mui/material';
+
+
+/**
+ *@fileOverview Zeigt alle Mitwirkenden im Projekt mit Verweis auf die Git-Repository
+ *@author Luca Trautmann
+*/
 
 export class About extends Component {
 

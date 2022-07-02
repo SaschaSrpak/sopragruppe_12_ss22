@@ -73,14 +73,14 @@ export class Buchungen extends Component {
   }
 
   bookPauseClicked = event => {
-    
+if  ( [this.state.pausedescription,this.state.beginnP,this.state.endeP ].includes('') || [this.state.pausedescription,this.state.beginnP,this.state.endeP].includes(null)) {
+  alert("Füllen Sie bitte alle Werte aus")
+    }else{
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
 
       SystemAPI.getAPI().commitPauseTransaction(result.id, this.state.pausedescription, this.state.beginnP, this.state.endeP).then ((result) => {
-        alert("Pause wurde gebucht") 
-      })
-    })
-
+        alert("Aktivität wurde gebucht")
+})})}
   }
 
 
@@ -101,6 +101,8 @@ export class Buchungen extends Component {
 
         })
 
+
+
       })
     })
   }
@@ -110,16 +112,16 @@ export class Buchungen extends Component {
       selectedActivities: event.target.value
     })
   }
-  
-  bookBuchung = event => {
-    console.log(this.state.selectedActivities)
-    console.log(this.state.beginnA)
-    console.log(this.state.activitydescription)
-    console.log(this.state.endeA)
 
-    SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
-      SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription, this.state.selectedActivities, this.state.beginnA, this.state.endeA)
-    })
+  bookBuchung = event => {
+    console.log(this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA ,this.state.ende)
+if  ( [this.state.activitydescription,this.state.selectedActivities,this.state.beginnA,this.state.endeA ].includes('') || [this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA ,this.state.endeA].includes(null)) {
+  alert("Füllen Sie bitte alle Werte aus")
+    }else{
+     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
+      SystemAPI.getAPI().commitProjectWorktimeTransaction(result.id, this.state.activitydescription, this.state.selectedActivities, this.state.beginnA, this.state.endeA).then((result) => {
+      alert("Aktivität wurde gebucht")
+})})}
   }
 
   render() {
@@ -140,15 +142,15 @@ export class Buchungen extends Component {
           direction={{ sm: 'row' }}
         >
           <FormControl fullWidth>
-            <h2>Pause</h2>
+            <h2>Abwesenheit</h2>
 
-            <TextField required id="outlined-required" label="Required" defaultValue="Pause Beschreibung" onChange={(event) => this.setState({ pausedescription: event.target.value })} />
+            <TextField required id="outlined-required" label="Required" defaultValue="Abwesenheitsbeschreibung" onChange={(event) => this.setState({ pausedescription: event.target.value })} />
             <div><br></br></div>
             <TextField id="outlined-basic" label="Beginn" variant="outlined" type="datetime-local" onChange={(event) => this.setState({ beginnP: event.target.value })} InputLabelProps={{ shrink: true, }} />
             <div><br></br></div>
             <TextField id="outlined-basic" label="Ende" variant="outlined" type="datetime-local" onChange={(event) => this.setState({ endeP: event.target.value })} InputLabelProps={{ shrink: true, }} />
             <div><br></br></div>
-            <Button variant="contained" onClick={() => this.bookPauseClicked()} >Pause Buchen </Button>
+            <Button variant="contained" onClick={() => this.bookPauseClicked()} >Abwesenheit buchen </Button>
 
           </FormControl>
         </Stack>

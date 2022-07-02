@@ -1556,8 +1556,14 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
+        try:
+            start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        except:
+            start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
+        try:
+            end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
+        except:
+            end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)
@@ -1677,7 +1683,7 @@ class SystemAdministration(object):
                 end_event_time = end_event_time - td
                 td2 = dt.timedelta(seconds=1)
                 pause_start_event_time = end_event_time + td2
-                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei" + name,
+                self.book_pause_transaction(account, "Überschreitung der Arbeitszeit ohne Pause bei " + name,
                                             pause_start_event_time, pause_end_event_time)
                 daily_worktime_hours -= t
 
@@ -1750,8 +1756,14 @@ class SystemAdministration(object):
         start = self.get_start_event_by_key(interval.get_start())
         end = self.get_end_event_by_key(interval.get_end())
         interval.set_name(intervall_name)
-        start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
-        end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
+        try:
+            start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
+        except:
+            start_time = dt.datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
+        try:
+            end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%d %H:%M:%S')
+        except:
+            end_time = dt.datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M')
         start.set_time_of_event(start_time)
         end.set_time_of_event(end_time)
         self.save_start_event(start)

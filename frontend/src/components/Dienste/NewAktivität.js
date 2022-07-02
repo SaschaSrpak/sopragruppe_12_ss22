@@ -39,6 +39,7 @@ export class NewAktivität extends Component {
             values: [],
             names: ["kim", "liam", "jeff"],
             projectChoice: this.props.projectChoice,
+
             personresponsibleforactivity: []
         }
 
@@ -106,10 +107,20 @@ export class NewAktivität extends Component {
         newActivity.setPersons_Responsible(this.state.personresponsibleforactivity)
          SystemAPI.getAPI().addActivity(newActivity).then(response => {
              console.log(response)
+             let activities = this.props.activities
+             console.log(activities)
+             if(activities){
+             activities.push(response)
+                 }else{
+             activities = [response]
+             }
+
+
 
              SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, response.id).then(response => {
              console.log(response)
                  this.props.handleClose()
+                 this.props.handelAdd(activities)
 
 
          })

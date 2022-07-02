@@ -87,9 +87,7 @@ export class UpdateProject extends Component {
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
-        this.setState({
-            open: false
-        });
+        this.props.handleClose();
     }
     
 
@@ -153,6 +151,8 @@ export class UpdateProject extends Component {
             console.log(newDuration)
             SystemAPI.getAPI().updateProjectDuration(newDuration).then(response => {
         })
+            alert("Projekt wurde bearbeitet")
+            this.props.handleClose();
         })
     }else{
         alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
