@@ -318,7 +318,7 @@ export class Auslese extends Component {
 
                       <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                             <Typography>Pause</Typography>
+                             <Typography>Abwesenheit</Typography>
                         </AccordionSummary>
                           <PauseTable title=" " data={this.state.pausennamen}/>
                       </Accordion>

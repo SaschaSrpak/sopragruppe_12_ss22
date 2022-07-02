@@ -100,7 +100,7 @@ export class  PauseTable extends Component{
     render() {
         if (this.props.data.length > 0) {
             const headers = Object.keys(this.props.data[0]);
-            const headers2 = ["Transaktions ID", "Interval ID", "Pausen Beschreibung", "Start Zeitpunkt", "End Zeitpunkt"];
+            const headers2 = ["Transaktions ID", "Interval ID", "Abwesenheitsbeschreibung", "Start Zeitpunkt", "End Zeitpunkt"];
             const { openEdit, openDelete } = this.state;
 
                 return (
