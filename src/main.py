@@ -118,7 +118,7 @@ project = api.inherit('Projekt', bo, {
 activity = api.inherit('Aktivitaet', bo, {
     'activity_name': fields.String(attribute='_activity_name', description='Name der Aktivität'),
     'man_day_capacity': fields.Float(attribute='_man_day_capacity', description='Kapazität in Personentagen'),
-    'persons_responsible': fields.List(fields.String, attribute='_persons_responsible', description='Kapazität in Personentagen'),
+    'persons_responsible': fields.List(fields.Nested(person), attribute='_persons_responsible', description='Kapazität in Personentagen'),
 })
 
 zi = api.inherit('Zeitintervall', bo, {
@@ -778,7 +778,8 @@ class ActivityOperations(Resource):
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
         return a
-
+    @timesystem.marshal_with(activity)    
+    @secured
     def delete(self, id):
         """
         Löscht eine bestimmte Aktivität aus dem System.
@@ -788,11 +789,11 @@ class ActivityOperations(Resource):
         """
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
-        s_adm.delete_activity(a)
-        return '', 200
+     
+        return s_adm.delete_activity(a)
 
     @timesystem.marshal_with(activity)
-    @timesystem.expect(activity, validate=True)
+    #@timesystem.expect(activity, validate=True)
     @secured
     def put(self, id):
         """
@@ -806,8 +807,9 @@ class ActivityOperations(Resource):
 
         if a is not None:
             a.set_id(id)
-            s_adm.save_activity(a)
-            return '', 200
+
+            s_adm.change_activity_persons_responsible(a.get_id(), a.get_persons_responsible())
+            return s_adm.save_activity(a)
         else:
             return '', 500
 

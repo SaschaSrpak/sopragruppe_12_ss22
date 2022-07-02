@@ -93,7 +93,7 @@ class AktivitaetMapper(Mapper):
 
     def update_person_responsible(self, activity, person):
         cursor = self._cnx.cursor()
-        command = "UPDATE Aktivitaet_Zuständigkeit" + "SET User_ID=%s, WHERE Activity_ID=%s"
+        command = "UPDATE Aktivitaet_Zustaendigkeit " + "SET User_ID=%s WHERE Activity_ID=%s"
         data = (person.get_id(), activity.get_id())
         cursor.execute(command, data)
 
@@ -143,6 +143,7 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+        return activity
 
     def delete(self, activity):
 
@@ -153,6 +154,7 @@ class AktivitaetMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
+        return activity
 
 
 """

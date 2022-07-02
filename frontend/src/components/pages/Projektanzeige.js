@@ -28,6 +28,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import DialogActions from "@mui/material/DialogActions";
 import UpdateProject from "../Dienste/UpdateProject";
+import AktivitätCard from "./AktivitätAnzeige";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
@@ -78,6 +79,7 @@ export class Projektanzeige extends Component {
         SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
                 projects: projects
+
             })
             // Aktivitäten aus der Datenbank laden
             SystemAPI.getAPI().getActivitiesOnProject(this.state.projectChoice).then(activities => {
@@ -255,20 +257,19 @@ export class Projektanzeige extends Component {
         })
     }
 
-    handleDeleteIconClickOpen = () => {
-        console.log(this.openDeleteActivity)
+    handleDeleteIconClickOpen = (id) => {
         this.setState({
-            openDeleteActivity: !this.state.open
+            ["openDeleteActivity" + id]: !this.state.open
         })
     }
 
-    handleDeleteActivity = () => {
-        SystemAPI.getAPI().deleteActivity(this.state.activities).then(activities => {
+    handleDeleteActivity = (activity) => {
+            var newactivities = this.state.activities.filter(a =>a.id!==activity.id)
             this.setState({
-                activities: activities
+                activities: newactivities
             })
             alert("Aktivität wurde entfernt")
-        })
+       
     }
 
     // Projektedaten des ausgewählten Projekts werden gerendert
@@ -424,7 +425,7 @@ export class Projektanzeige extends Component {
 
             <Dialog open={openNewActivity} onClose={this.handleCloseClick}
                     >
-                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  projectChoice={projectChoice} />
+                        <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({openNewActivity:false})}  project={this.state.projectChoice} projectChoice={projectChoice} />
                     </Dialog> 
 
 {/** Button zum Bearbeiten eines Projektes */}
@@ -456,131 +457,8 @@ export class Projektanzeige extends Component {
                 <Grid>
                     <Grid container justifyContent="space-around">
 
-                        {this.state.activities.map((activity, index) => {
-                            return (
-
-                                <Card variant="outlined" sx={{ maxWidth: 800 }}>
-                                    <CardContent>
-                                        <Typography variant="h5" margin-top="10px" marginBottom="0px">
-                                            <b>{activity.activity_name}</b>
-                                        </Typography>
-                                        <Typography marginBottom="10px">Kapazität: {activity.man_day_capacity} Personentage</Typography>
-                                        <TableContainer>
-                                            <Table>
-                                                <TableHead sx={{
-                                                    backgroundColor: "#f5f5f5",
-                                                }}>
-                                                    <TableRow>
-                                                        {/* <TableCell sx={{ fontWeight: "bold", }}>Personen</TableCell> */}
-                                                        <TableCell sx={{ fontWeight: "bold", }}>Soll </TableCell>
-                                                        <TableCell sx={{ fontWeight: "bold", }}>Ist</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-
-
-
-                                                {/** API abfrage einbauen help i wanna die
- * 
-*/}
-
-                                                <TableBody>
-                                                    <TableRow>
-                                                        <TableCell>{this.getPersonsOnActivity(activity.id)}</TableCell>
-                                                        <TableCell>2</TableCell>
-                                                    </TableRow>
-                                                    <TableRow>
-                                                        <TableCell>Christoph Kunz</TableCell>
-                                                        <TableCell>3</TableCell>
-                                                    </TableRow>
-                                                </TableBody>
-
-
-
-{/** Buttons Edit / Delete brauchen Funktionalität
- * 
- */}
-
-                                            </Table>
-                                        </TableContainer>
-                                    </CardContent>
-                                    <CardActions>
-                                        <IconButton aria-label="edit">
-                                            <EditIcon onClick={this.handleActivityIconClickOpen} />
-                                            <Dialog open={open} onClose={this.handleClose}>
-                                                <DialogTitle>Aktivität bearbeiten</DialogTitle>
-                                                <DialogContent>
-                                                    <DialogContentText>
-                                                        Kapazität, Personen, Ist und Soll bearbeiten
-                                                    </DialogContentText>
-                                                    <TextField
-                                                        autoFocus
-                                                        margin="dense"
-                                                        label="Kapazität"
-                                                        type="number"
-                                                        fullWidth
-                                                        variant="standard"
-                                                    />
-                                                    <FormControl variant="standard" fullWidth>
-                                                        <InputLabel id="person_input">Person</InputLabel>
-                                                        <Select
-                                                            labelId="person"
-                                                            id="person"
-                                                            onChange={this.handleChange}
-                                                            label="Age"
-                                                        >
-                                                            <MenuItem value={10}>Ten</MenuItem>
-                                                            <MenuItem value={20}>Twenty</MenuItem>
-                                                            <MenuItem value={30}>Thirty</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                    <TextField
-                                                        margin="dense"
-                                                        label="Ist"
-                                                        type="number"
-                                                        fullWidth
-                                                        variant="standard"
-                                                    />
-                                                    <TextField
-                                                        margin="dense"
-                                                        label="Soll"
-                                                        type="number"
-                                                        fullWidth
-                                                        variant="standard"
-                                                    />
-                                                </DialogContent>
-                                                <DialogActions>
-                                                    <Button onClick={this.handleActivityChange}>Save</Button>
-                                                    <Button onClick={this.handleClose}>Cancel</Button>
-
-
-                                                </DialogActions>
-                                            </Dialog>
-                                        </IconButton>
-
-
-                                        <IconButton aria-label="delete">
-                                            <DeleteIcon onClick={this.handleDeleteIconClickOpen} />
-                                            
-                                        </IconButton>
-                                        <Dialog open={this.state.openDeleteActivity} onClose={this.handleClose}>
-                                                <DialogTitle>
-                                                    Soll die Aktivität gelöscht werden?
-                                                </DialogTitle>
-                                                <DialogActions>
-                                                    <Button onClick={this.handleDeleteActivity}>Ja</Button>
-                                                    <Button onClick={this.handleClose}>Nein</Button>
-                                                </DialogActions>
-                                            </Dialog>
-
-
-                                    </CardActions>
-                                    
-                                </Card>
-                                
-
-
-
-                            )
+                        {this.state.activities.map(activity => {
+                            return <AktivitätCard persons={this.state.responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} handleDelete={this.handleDeleteActivity}/>
                         })}
 
 

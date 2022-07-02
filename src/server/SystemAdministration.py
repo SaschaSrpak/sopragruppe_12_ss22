@@ -151,7 +151,7 @@ class SystemAdministration(object):
             return ak
 
     def get_all_activities(self):
-        """Gibt alle Aktivitäten aus, die im System gespeichert sind."""
+        """Gibt alle Aktivitäten aus, die im Systeactivitym gespeichert sind."""
 
         with AktivitaetMapper() as mapper:
             all_activities = mapper.find_all()
@@ -197,15 +197,23 @@ class SystemAdministration(object):
     def change_activity_persons_responsible(self, activity_key, persons_responsible):
         """Ändert die zuständigen Personen. Ähnliche funktionsweise wie in der
         Methode 'create_activity'."""
+        prlist = []
         activity = self.get_activity_by_key(activity_key)
-        activity.set_person_responsible(persons_responsible)
+        persons = self.get_persons_by_activity_key(activity.get_id())
+        for person in persons:
+            self.delete_person_responsible_from_activity(activity, person)
+
+        for person in persons_responsible:
+            pr = SystemAdministration.get_person_by_key(self, person)
+            prlist.append(pr)
+        activity.set_persons_responsible(prlist)
         activity.set_last_modified_date(dt.datetime.now())
 
         with AktivitaetMapper() as mapper:
             responsible_dict = activity.get_persons_responsible()
             if not (responsible_dict is None):
                 for person in responsible_dict:
-                    mapper.update_person_responsible(activity, person)
+                    mapper.insert_person_responsible(activity, person.get_id())
             return mapper.update(activity)
 
     def delete_person_responsible_from_activity(self, activity, person):
@@ -217,8 +225,10 @@ class SystemAdministration(object):
     def save_activity(self, activity):
         """Die gegebene Aktivität speichern"""
         activity.set_last_modified_date(dt.datetime.now())
+        persons = SystemAdministration.get_persons_by_activity_key(self, activity.get_id())
+        activity.set_persons_responsible(persons)
         with AktivitaetMapper() as mapper:
-            mapper.update(activity)
+            return mapper.update(activity)
 
     def delete_activity(self, activity):
         """Die gegebene Aktivität löschen"""
@@ -232,7 +242,7 @@ class SystemAdministration(object):
             transactions_of_activity = self.get_all_worktime_transactions_for_activity(activity)
             for transaction in transactions_of_activity:
                 self.delete_project_work_transaction(transaction)
-            mapper.delete(activity)
+            return mapper.delete(activity)
 
     """
     Zeitkonto spezifische Methoden
