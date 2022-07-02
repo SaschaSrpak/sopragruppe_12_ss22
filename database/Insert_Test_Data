@@ -1,11 +1,12 @@
 
 
 
-INSERT INTO Person VALUES (10001,'Klaus','Kleber','klaus.kleber@gmail.com','KlausKleber','fHivivUZIvVuzivuiVZUIvzuivZUivuziVUZIvUZivuziVzuivhhIOhoiph','2022-06-22 16:00:00',1),
-                          (10002,'Gundula','Gause','gundula.gause@gmail.com','GundulaGause','BIUObibiobiuoOPJjjiogERtsterzVUIuvi','2022-06-22 16:00:00',1),
-                          (10003,'Jasmin','Wagner','jasmin.wagner@gmail.com','Blümchen','fbewuiqbfeuwiqfiobouUOzvuzovUOvhuoVUZVuo','2022-06-22 16:00:00',0),
-                          (10004,'Hans','Müller','hans.müller@gmail.com','MüllerHans','fewhuqibfeuiwqbfueanjifbeiouqwbusbahuofwqbu','2022-05-02 19:49:00',0),
-                          (10005,'Thomas','Lokomotive','thomas.lokomotive@gmail.com','TankEngine','buhiPopjPItzZRSEvhkNJoiZi','2022-05-02 19:49:47',0);
+INSERT INTO Person VALUES (10001,'Till','Lindemann','till.lindemann@gmail.com','Till Lindemann','fHivivUZIvVuzivuiVZUIvzuivZUivuziVUZIvUZivuziVzuivhhIOhoiph',1, '2022-06-22 16:00:00'),
+                          (10002,'Richard','Kruspe','richard.kruspe@gmail.com','Richard Kruspe','BIUObibiobiuoOPJjjiogERtsterzVUIuvi',1, '2022-06-22 16:00:00'),
+                          (10003,'Christian','Lorenz','christian.lorenz@gmail.com','Christian Lorenz','fbewuiqbfeuwiqfiobouUOzvuzovUOvhuoVUZVuo',0, '2022-06-22 16:00:00'),
+                          (10004,'Christoph','Schneider','christoph.schneider@gmail.com','Christoph Schneider','fewhuqibfeuiwqbfueanjifbeiouqwbusbahuofwqbu',0, '2022-05-02 19:49:00'),
+                          (10005,'Oliver','Riedel','oliver.riedel@gmail.com','Oliver Riedel','buhiPopjPItzZRSEvhkNJoiZi',0, '2022-05-02 19:49:47');
+                        --   (10006,'Paul','Landers','paul.landers@gmail.com','Paul Landers','skdugfijsdzfgksudzfgvskdufgt',0, '2022-06-03 18:49:47');
 
 
 INSERT INTO Arbeitszeitkonto VALUES (10001, 10001),
