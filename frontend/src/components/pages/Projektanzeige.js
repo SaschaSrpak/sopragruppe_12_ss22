@@ -306,9 +306,9 @@ export class Projektanzeige extends Component {
 
     }
     handleAddActivity = (activity) => {
-        var newactivities = this.state.activities.filter(a => a.id !== activity.id)
+        console.log(activity)
         this.setState({
-            activities: newactivities
+            activities: activity
         })
         alert("Aktivität hinzugefügt")
 

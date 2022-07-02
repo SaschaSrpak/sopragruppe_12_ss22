@@ -78,13 +78,7 @@ export class  WorkTimeTable extends Component{
 
     UpdateWorktime = () => {
 
-        let updateKommen = Object.assign(new KommenBO(), this.state.kommen)
-        updateKommen.setEventName(this.state.eventname);
-        updateKommen.setTimeOfEvent(this.state.timeofevent);
-        updateKommen.setId(Number(this.state.kommenid));
-        console.log(updateKommen)
-        console.log(this.state.timeofevent)
-        console.log(this.state.eventname)
+        console.log(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende)
         SystemAPI.getAPI().updateProjectWorktimeTransactionWithValues(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende).then(person => {
             this.setState({
             })})
@@ -196,9 +190,10 @@ export class  WorkTimeTable extends Component{
                             autoFocus
                             margin="dense"
                             label="Start"
-                            id = "Start"
+                            id = "start"
                             type="datetime-local"
                             defaultValue={this.state.start}
+                            onChange={this.handleChange}
                             fullWidth
                             variant="standard"
 
@@ -206,10 +201,11 @@ export class  WorkTimeTable extends Component{
                         <TextField
                             autoFocus
                             margin="dense"
-                            id = "Ende"
+                            id = "ende"
                             label="Ende"
                             type="datetime-local"
                             defaultValue={this.state.ende}
+                            onChange={this.handleChange}
                             fullWidth
                             variant="standard"
 

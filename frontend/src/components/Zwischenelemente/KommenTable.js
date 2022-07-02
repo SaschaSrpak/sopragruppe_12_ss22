@@ -35,10 +35,7 @@ export class  KommenTable extends Component{
         let reihe = Number(event.target.parentNode.id)
          reihe += 1
 
-        console.log(document.getElementById("kommenTable").rows[reihe].cells[0].innerHTML)
-         console.log(document.getElementById("kommenTable").rows[reihe].cells[1].innerHTML)
-         console.log(document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML)
-         console.log(document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML)
+
         this.setState({
           openEdit: !this.state.open,
             kommenid: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML,

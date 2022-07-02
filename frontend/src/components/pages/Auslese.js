@@ -22,6 +22,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import UpdateDialog from '../Zwischenelemente/UpdateDialog';
 
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 
 export class Auslese extends Component {
       constructor(props) {
@@ -280,7 +282,12 @@ export class Auslese extends Component {
 
         if(this.state.loading < 4) {
             return(
-                <h1>Page is loading...</h1>
+                <Box sx={{ width: '50%'}} style={{
+                position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+    }}>
+                <LinearProgress />
+            </Box>
             )
         }
         else {

@@ -82,6 +82,7 @@ export class  PauseTable extends Component{
 
         const start = String(this.state.start)
         const ende = String(this.state.ende)
+        console.log(this.state.transaktionsid, this.state.intervalid,  this.state.pause, start, ende)
         SystemAPI.getAPI().updatePauseTransactionWithValues(this.state.transaktionsid, this.state.intervalid,  this.state.pause, start, ende).then(pause => {
             this.setState({
                 openEdit: false
@@ -174,22 +175,24 @@ export class  PauseTable extends Component{
                             autoFocus
                             margin="dense"
                             label="Start Zeitpunkt"
-                            id="Start"
+                            id="start"
                             type="datetime-local"
                             defaultValue={this.state.start}
                             fullWidth
                             variant="standard"
+                            onChange={this.handleChange}
 
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             label="End Zeitpunkt"
-                            id = "Ende"
+                            id = "ende"
                             type="datetime-local"
                             defaultValue={this.state.ende}
                             fullWidth
                             variant="standard"
+                            onChange={this.handleChange}
 
                         />
                         </DialogContent>
