@@ -27,7 +27,7 @@ export class NewAktivität extends Component {
         }
     }
 
-// Soll den Dialog schließen mit Abbrechen button why is this not working?
+// Soll den Dialog schließen mit Abbrechen button 
     handleCloseClick = () => {
         this.props.handleClose()
     }
@@ -50,13 +50,6 @@ export class NewAktivität extends Component {
         })
     }
 
-
-    // addActivity = () => {
-    //     let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity, this.state.persons_responsible);
-    //     SystemAPI.getAPI().addActivityToProject(this.state.projectChoice, newActivity).then(response => {
-    //         console.log(response)
-    //     })
-    // }
 
     render(){
 

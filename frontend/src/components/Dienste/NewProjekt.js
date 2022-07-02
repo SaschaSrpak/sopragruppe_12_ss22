@@ -65,11 +65,6 @@ export class NewProjekt extends Component {
             console.log(response)
             this.props.handleClose()
             alert("Projekt erstellt")
-            SystemAPI.getAPI().getProjects().then(projects => {
-                this.setState({
-                    projects: projects
-                })
-            })
         })
     }
 
