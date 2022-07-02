@@ -44,9 +44,7 @@ export class NewProjekt extends Component {
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
-        this.setState({
-            open: false
-        });
+        this.props.handleClose();
     }
     
 
@@ -65,6 +63,8 @@ export class NewProjekt extends Component {
         let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
         SystemAPI.getAPI().addProject(newProject).then(response => {
             console.log(response)
+            this.props.handleClose()
+            alert("Projekt erstellt")
         })
     }
 
