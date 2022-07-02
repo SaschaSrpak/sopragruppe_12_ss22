@@ -2,7 +2,7 @@
 import EreignisbuchungBO from './EreignisbuchungBO';
 
 /** 
- *@fileOverview 
+ *@fileOverview Representiert eine Kommenbuchung von Ereignisbuchungen
  *@author Luca Trautmann
 */
 
@@ -20,6 +20,7 @@ export default class KommenBuchungBO extends EreignisbuchungBO{
             })
         } else {
             let kt = kommen_transaction;
+            // Konvertieren des JSON-Inhalts in ein KommenBuchungBO Objekt
             Object.setPrototypeOf(kt, KommenBuchungBO.prototype);
             result.push(kt);
         }
