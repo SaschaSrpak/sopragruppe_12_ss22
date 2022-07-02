@@ -86,6 +86,7 @@ export class  PauseTable extends Component{
             this.setState({
                 openEdit: false
             })})
+         window.location.reload(false);
         //////});
           //  window.location.reload(false);
        // })
