@@ -11,7 +11,7 @@ import ProjektBO from '../../api/ProjektBO';
 
 /** 
  *@fileOverview Das ist der Dialog-Pup-Up, der beim Erstellen eines neuen Projekts angezeigt wird.
- *@author 
+ *@author Sascha Srpak
 */
 
 export class NewProjekt extends Component {
@@ -31,7 +31,9 @@ export class NewProjekt extends Component {
             open: true,
         }
     }
-     componentDidMount() {
+
+// ComponentDidMount, um die Daten beim Rendern zu laden
+    componentDidMount() {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
             console.log(result)
             this.setState({
@@ -39,7 +41,7 @@ export class NewProjekt extends Component {
                 creatorid : result.id
             })
     })
-     }
+    }
 
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen

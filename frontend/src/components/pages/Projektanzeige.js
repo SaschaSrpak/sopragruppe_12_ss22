@@ -32,7 +32,7 @@ import AktivitätCard from "./AktivitätAnzeige";
 
 /** 
  *@fileOverview Alle Daten des Projekts sind Sichtbar, wenn der User eingeloggt ist. Aktivities der Projekte werden angezeigt.
- *@author Sascha Srpak
+ *@author Sascha Srpak, Liam Wilke
 */
 
 
@@ -69,9 +69,6 @@ export class Projektanzeige extends Component {
         }
     }
 
-    // Projektdaten
-
-
 
     // componentDidMount funktion zum Laden der Projektdaten
     componentDidMount() {
@@ -80,7 +77,6 @@ export class Projektanzeige extends Component {
         SystemAPI.getAPI().getProject(this.state.projectChoice).then(projects => {
             this.setState({
                 projects: projects
-
             })
             // Aktivitäten aus der Datenbank laden
             SystemAPI.getAPI().getActivitiesOnProject(this.state.projectChoice).then(activities => {
@@ -152,7 +148,6 @@ export class Projektanzeige extends Component {
                     })
                     const newArray = []
                     persons.map((all) => {
-
                         if (responsiblepersons.some(item => all.name === item.name)) {
                         } else {
                             newArray.push(all)
@@ -179,6 +174,7 @@ export class Projektanzeige extends Component {
         })
     }
 
+    // Funktion zum löschen von Personen, die zur Projektverantwortlichkeit gehören
     handleDeletePersonResponsible = (person) => {
         if (this.state.managerstatus === "1") {
             SystemAPI.getAPI().deletePersonResponsibleToProject(this.state.projectChoice, person.id).then(persons => {
@@ -196,7 +192,6 @@ export class Projektanzeige extends Component {
                     })
                     const newArray = []
                     persons.map((all) => {
-
                         if (newresponsiblepersons.some(item => all.name === item.name)) {
                         } else {
                             newArray.push(all)
@@ -212,6 +207,7 @@ export class Projektanzeige extends Component {
         }
     }
 
+    // Funktion zum hinzufügen von Personen, die für das Projekt verantwortlich sind
     handlePersonAddResponsible = () => {
         SystemAPI.getAPI().addPersonResponsibleToProject(this.state.projectChoice, this.state.persontoadd).then(persons => {
             SystemAPI.getAPI().getPerson(this.state.persontoadd).then(person => {
@@ -221,11 +217,9 @@ export class Projektanzeige extends Component {
                         openNewPersonResponsible: false,
                         responsiblepersons: response,
                         allpersons: newallpersons
-
                     })
                 })
             })
-
             alert("Person wurde hinzugefügt")
         })
 
@@ -237,19 +231,21 @@ export class Projektanzeige extends Component {
         })
     }
 
+    // öffnet die Projektbearbeitung
     handleProjectChange = () => {
         this.setState({
             openChangeProject: true
         })
-
     }
 
+    // öffnet die Erstellung neuer Aktivitäten
     handleClickOpen = () => {
         this.setState({
             openNewActivity: true,
         })
     }
 
+    // Fügt neue Personen zur Projektverantwortlichkeit hinzu
     handleClickOpenPersonResponsible = () => {
         if (this.state.managerstatus === "1") {
             this.setState({
@@ -260,6 +256,7 @@ export class Projektanzeige extends Component {
         }
     }
 
+    // Handhabt den Abbrechen-Button
     handleCloseClick = () => {
         this.setState({
             openNewActivity: false,
@@ -268,12 +265,14 @@ export class Projektanzeige extends Component {
         })
     }
 
+    // Wählt personen aus
     PersonSelected = (data) => {
         this.setState({
             persontoadd: data.target.value
         })
     }
 
+    // schließt Dialog
     handleClose = () => {
         this.setState({
             open: false,
@@ -281,30 +280,30 @@ export class Projektanzeige extends Component {
         });
     }
 
-    handleActivityChange = () => {
-
-    }
-
+    // öffnet Activity-Löschdialog
     handleActivityIconClickOpen = () => {
         this.setState({
             open: !this.state.open
         })
     }
 
+    // schließt Dialog mit Delete-Icon
     handleDeleteIconClickOpen = (id) => {
         this.setState({
             ["openDeleteActivity" + id]: !this.state.open
         })
     }
 
+    // Löscht eine Aktivität
     handleDeleteActivity = (activity) => {
         var newactivities = this.state.activities.filter(a => a.id !== activity.id)
         this.setState({
             activities: newactivities
         })
         alert("Aktivität wurde entfernt")
-
     }
+
+    // fügt eine neue AKtivität hinzu
     handleAddActivity = (activity) => {
         console.log(activity)
         this.setState({
@@ -320,8 +319,7 @@ export class Projektanzeige extends Component {
         const { open } = this.state;
         const { openChangeProject } = this.state;
         const { responsiblepersons } = this.state;
-        const {activities} = this.state;
-
+        const { activities } = this.state;
 
         return (
             <Box sx={{
@@ -335,40 +333,37 @@ export class Projektanzeige extends Component {
                 <Paper>
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
-                            {/* <TableHead>
-                                <TableRow sx={{}}>
-                                    <TableCell sx={{ maxWidth: 100 }}>Detail Name</TableCell>
-                                    <TableCell align="center">Detail Value</TableCell>
-                                </TableRow>
-                            </TableHead> */}
                             <TableBody>
-
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektname</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th" s
+                                        cope="row">Projektname</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.projects.name : null}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektersteller</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th"
+                                        scope="row">Projektersteller</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.creator_new : null}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Client</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th"
+                                        scope="row">Client</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.projects.client : null}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Deadline</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th"
+                                        scope="row">Deadline</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.deadlineanzeige : null} Uhr</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Projektdauer</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th"
+                                        scope="row">Projektdauer</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.project_duration_new : null} {this.state.project_duration_bezeichnung}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell sx={{ maxWidth: 100 }} component="th" scope="row">Gebuchte Arbeitszeit</TableCell>
+                                    <TableCell sx={{ maxWidth: 100 }} component="th"
+                                        scope="row">Gebuchte Arbeitszeit</TableCell>
                                     <TableCell align="center">{this.state.projects ? this.state.worktimeonproject : null} {this.state.worktimeonprojectbezeichnung}</TableCell>
                                 </TableRow>
-
-
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -420,39 +415,31 @@ export class Projektanzeige extends Component {
                 }} />
 
                 {/* Neue Person hinzufügen */}
-
                 <Dialog open={this.state.openNewPersonResponsible} onClose={this.handleCloseClick}>
                     <DialogTitle>Person zu Projekt: "{this.state.projects ? this.state.projects.name : null}" Hinzufügen</DialogTitle>
-
                     <DialogContent>
-
-
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-filled-label">Person auswählen</InputLabel>
                             <Select
-
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
-
-
                                 onChange={(e) => this.PersonSelected(e)}
                             >
                                 {this.state.allpersons ? this.state.allpersons.map((data, index) => (
-                                    <MenuItem name={data.id} value={data.id}>ID: {data.id} {data.name} {data.surname} </MenuItem>)) : null}
-
-
+                                    <MenuItem
+                                        name={data.id}
+                                        value={data.id}>ID: {data.id} {data.name} {data.surname}
+                                    </MenuItem>)) : null}
                             </Select>
                         </FormControl>
-
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handlePersonAddResponsible}>Save</Button>
                         <Button onClick={this.handleCloseClick}>Cancel</Button>
-
-
                     </DialogActions>
                 </Dialog >
-                {/** TO DO: Button zum Erstellen einer neuen Aktivität */}
+
+                {/** Button zum Erstellen einer neuen Aktivität */}
                 <Button variant="contained"
                     onClick={this.handleClickOpen}
                     value={this.state.openNewActivity}
@@ -465,21 +452,22 @@ export class Projektanzeige extends Component {
                     >Neue Aktivität</Typography>
                 </Button>
 
-
-                {/** why is this not workiiiing */}
-
                 <Dialog
                     open={openNewActivity}
                     onClose={this.handleCloseClick}
                 >
-                    <NewAktivität openNewActivity={this.state.openNewActivity} handleClose={() => this.setState({ openNewActivity: false })}
-                                  project={projectChoice} projectChoice={projectChoice} handelAdd={this.handleAddActivity} activities={activities} />
+                    <NewAktivität
+                        openNewActivity={this.state.openNewActivity}
+                        handleClose={() => this.setState({ openNewActivity: false })}
+                        project={projectChoice}
+                        projectChoice={projectChoice}
+                        handelAdd={this.handleAddActivity}
+                        activities={activities} />
                 </Dialog>
 
                 {/** Button zum Bearbeiten eines Projektes */}
                 <Button variant="contained"
                     onClick={this.handleProjectChange}
-
                     sx={{
                         margin: "20px",
                     }}>
@@ -488,30 +476,29 @@ export class Projektanzeige extends Component {
                     }}
                     >Projekt bearbeiten</Typography>
                 </Button>
-
                 <Dialog open={openChangeProject} onClose={this.handleCloseClick}
                 >
-                    <UpdateProject user={this.props.user} handleClose={() => this.setState({ openChangeProject: false })} projectdata={this.props.projectChoice} open={this.props} />
+                    <UpdateProject
+                        user={this.props.user}
+                        handleClose={() => this.setState({ openChangeProject: false })}
+                        projectdata={this.props.projectChoice}
+                        open={this.props} />
                 </Dialog>
-
-
-
                 <Divider variant="fullWidth" sx={{
                     margin: "20px"
                 }} />
-                {/* AktivitätAnzeige als Komponente ausgelagert. Ok probably not nvm */}
-
 
                 <Grid>
                     <Grid container justifyContent="space-around">
-
                         {this.state.responsiblepersons ? this.state.activities.map(activity => {
-                            return <AktivitätCard persons={responsiblepersons} activity={activity} key={activity.id} projectChoice={projectChoice} activities={activities}  handleDelete={this.handleDeleteActivity} />
+                            return <AktivitätCard
+                                persons={responsiblepersons}
+                                activity={activity}
+                                key={activity.id}
+                                projectChoice={projectChoice}
+                                activities={activities}
+                                handleDelete={this.handleDeleteActivity} />
                         }) : null}
-
-
-
-
                     </Grid>
                 </Grid>
             </Box >
