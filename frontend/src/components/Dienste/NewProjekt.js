@@ -101,8 +101,10 @@ export class NewProjekt extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={creator} 
-                        onChange={this.handleChange}
+                        editable={false}
+                        value={creator}
+                        inputProps={{readOnly: true}}
+
                     />
                     <TextField 
                         autoFocus

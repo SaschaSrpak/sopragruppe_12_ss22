@@ -75,20 +75,17 @@ export class AktivitätCard extends Component {
 
                 let worktimerounded =  Hours + "h " +minutes + "Min"
                 console.log(worktimerounded)
-
-            personsworktimeonac.push(worktimerounded)
+                person.username = worktimerounded
+                personsworktimeonac.push(person)
                 }else{
-                personsworktimeonac.push("0h 0Min")
+                person.username = ("0h 0Min")
+                personsworktimeonac.push(person)
             }
             this.setState({
-                personsworktimeonac: personsworktimeonac
+                personresponsible: personsworktimeonac
                 })
             })
-            if (!this.personsworktimeonac){
-                this.setState({
-                personsworktimeonac: [0]
-                })
-            }
+
 
     })
         console.log(personsworktimeonac)
@@ -138,22 +135,23 @@ export class AktivitätCard extends Component {
                 var Hours = Math.floor(worktime /60)
                 var minutes = Math.round(worktime % 60)
 
-                let worktimerounded =  Hours + " H " +minutes + " Min"
+                let worktimerounded =  Hours + "h " +minutes + "Min"
                 console.log(worktimerounded)
-
-            personsworktimeonac.push(worktimerounded)
+                person.username = worktimerounded
+                personsworktimeonac.push(person)
                 }else{
-                personsworktimeonac.push("0h 0Min")
+                person.username = ("0h 0Min")
+                personsworktimeonac.push(person)
             }
             this.setState({
-                personsworktimeonac: personsworktimeonac
+                personresponsible: personsworktimeonac
                 })
             })
-            if (!this.personsworktimeonac){
-                this.setState({
-                personsworktimeonac: [0]
-                })
-            }
+            //if (!this.personsworktimeonac){
+            //    this.setState({
+             //   personsworktimeonac: [0]
+             //   })
+           // }
 
     })
 
@@ -211,7 +209,7 @@ export class AktivitätCard extends Component {
                             <TableCell> {person.name}  </TableCell>
                             <TableCell> {person.surname}  </TableCell>
                             <TableCell> {person.id} </TableCell>
-                            <TableCell> {this.state.personsworktimeonac?this.state.personsworktimeonac[index]:null}</TableCell>
+                            <TableCell> {person.username}</TableCell>
 
 
 
