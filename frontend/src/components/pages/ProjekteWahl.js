@@ -106,7 +106,7 @@ export class Projektwahl extends Component {
         alert("Projekt wurde gelöscht" )}else{
             alert("Kein Projekt ausgewählt")
             this.setState({
-                     
+
                      deleteDialogOpen: false
                  })
         }
@@ -160,7 +160,7 @@ export class Projektwahl extends Component {
                     </Box>
                             
                     <Button  
-                        onClick={() => this.setState({ deleteDialogOpen: true })}
+                        onClick={this.handleChoseClick}
                         id={this.state.selectedProjects}
                         variant="contained" 
                         sx={{
