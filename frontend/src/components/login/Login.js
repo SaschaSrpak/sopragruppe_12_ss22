@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
 
 /**
- *@fileOverview 
+ *@fileOverview Loginseite welche dem Nutzer angezeigt wird wenn dieser nicht eingeloggt ist.
  *@author Luca Trautmann
 */
 

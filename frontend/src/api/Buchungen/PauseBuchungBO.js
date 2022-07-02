@@ -2,7 +2,7 @@
 import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 
 /** 
- *@fileOverview 
+ *@fileOverview Representiert eine Pausenbuchung von Zeitintervallbuchungen
  *@author Luca Trautmann
 */
 
@@ -20,6 +20,7 @@ export default class PauseBuchungBO extends ZeitintervallbuchungBO{
             })
         } else {
             let pt = pause_transaction;
+            // Konvertieren des JSON-Inhalts in ein PausenBuchungBO Objekt
             Object.setPrototypeOf(pt, PauseBuchungBO.prototype);
             result.push(pt);
         }

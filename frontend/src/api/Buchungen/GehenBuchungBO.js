@@ -2,7 +2,7 @@
 import EreignisbuchungBO from './EreignisbuchungBO';
 
 /** 
- *@fileOverview 
+ *@fileOverview Representiert eine Gehenbuchung von Ereignisbuchungen
  *@author Luca Trautmann
 */
 
@@ -21,6 +21,7 @@ export default class GehenBuchungBO extends EreignisbuchungBO{
             })
         } else {
             let gt = gehen_transaction;
+            // Konvertieren des JSON-Inhalts in ein GehenBuchungBO Objekt
             Object.setPrototypeOf(gt, GehenBuchungBO.prototype);
             result.push(gt);
         }

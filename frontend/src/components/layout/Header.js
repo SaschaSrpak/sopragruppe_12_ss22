@@ -6,7 +6,8 @@ import DrawerComponent from './DrawerComponent';
 import Container from '@mui/material/Container';
 
 /** 
- *@fileOverview 
+ *@fileOverview Element welche auf jeder Seite als Header eingebunden ist. 
+ Beinhaltet ein Profildrop down und eine DrawerComponent zum Navigieren
  *@author Luca Trautmann
 */
 

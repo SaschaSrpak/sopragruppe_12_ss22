@@ -6,8 +6,8 @@ import Profil from '../pages/Profil';
 import SystemAPI from '../../api/SystemAPI';
 import PersonBO from '../../api/PersonBO';
 
-/**
- * @author
+/** Represemtiert die Profil-Dropdown Komponente unter welcher man sein Profil ansehen kann, sich Ausloggen kann und seinen Accoutn löschen kann.
+ * @author Luca Trautmann
  */
 
 
@@ -19,7 +19,7 @@ class ProfileDropDown extends Component {
     constructor(props) {
         super(props);
 
-        // Init the state
+        // setzt start States
         this.state = {
             open: false,
             show: false,
@@ -34,7 +34,7 @@ class ProfileDropDown extends Component {
         this.props.history.push(path);
     }
 
-    /** Handles click events on the avatar button and toggels visibility */
+    //Öffnet auf klick das Dropdown Menü
     handleAvatarButtonClick = () => {
         this.setState({
             open: !this.state.open
@@ -67,6 +67,7 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
+    //Funktion um Person aus dem Backend zu löschen
     deletePerson = () => {
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
             .then(PersonBO => {
@@ -77,11 +78,12 @@ class ProfileDropDown extends Component {
             )
     }
   
-    
+    //Funktion welche zum löschen des Accounts führt
     handledelete = () => {
         console.log("löschen wurde angefordert")
+        //Kontrollfenster zur Bestätigung ob wirklich gelöscht werden soll
         if (window.confirm('Bist du dir sicher, dass du deinen Account löschen möchtest?')) {
-            // Save it!
+            //Ja - User wird ausgeloggt, gelöscht und erhält ein Bestätigungspopup.
             console.log('Löschung findet statt.');
             this.handleSignOutButtonClicked()
             this.deletePerson();
@@ -89,7 +91,7 @@ class ProfileDropDown extends Component {
             alert("Account wurde gelöscht.")
             
         } else {
-            // Do nothing!
+            // Abbrechen - Keine Löschung
             console.log('Keine Löschung.');
         }
 
@@ -124,6 +126,7 @@ class ProfileDropDown extends Component {
                             <Grid container justifyContent='center'>
 
                                 <Grid item align='center'>
+                                   {/*  Begrüßung mit eingelesenem Username  und Button mit deren oben Beschriebenen Funktionen*/}
                                     <Typography align='center'>Hallo {user.displayName}</Typography>
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
