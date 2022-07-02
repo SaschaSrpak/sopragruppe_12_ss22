@@ -25,33 +25,25 @@ export class  GehenTable extends Component{
         this.state = {
             openedit: false,
             opendelete: false,
+            data: props.data,
             gehen: GehenBO
         }
     }
      handleClickOpenEdit = (event) => {
-        let reihe = Number(event.target.parentNode.id)
-         reihe += 1
 
-        console.log(document.getElementById("gehenTable").rows[reihe].cells[0].innerHTML)
-         console.log(document.getElementById("gehenTable").rows[reihe].cells[1].innerHTML)
-         console.log(document.getElementById("gehenTable").rows[reihe].cells[2].innerHTML)
-         console.log(document.getElementById("gehenTable").rows[reihe].cells[3].innerHTML)
         this.setState({
           openEdit: !this.state.open,
-            gehenid: document.getElementById("gehenTable").rows[reihe].cells[2].innerHTML,
-            lastchange: document.getElementById("gehenTable").rows[reihe].cells[3].innerHTML,
-            eventname: document.getElementById("gehenTable").rows[reihe].cells[0].innerHTML,
-            timeofevent: document.getElementById("gehenTable").rows[reihe].cells[1].innerHTML
+            editElement: event,
+            eventname: event.event_name,
+            timeofevent : event.time_of_event
         })
       };
 
       handleClickOpenDelete = (event) => {
-          let reihe = Number(event.target.parentNode.id)
-         reihe += 1
-         let id = document.getElementById("gehenTable").rows[reihe].cells[2].innerHTML
+
     this.setState({
-      openDelete: !this.state.open,
-        deleteId: id
+        openDelete: !this.state.open,
+        deleteElement: event
     })
   };
     handleCloseEdit = () => {
@@ -67,29 +59,46 @@ export class  GehenTable extends Component{
     };
 
     DeleteGehen = (event) => {
-        console.log(this.state.deleteId)
-        SystemAPI.getAPI().deleteGehen(this.state.deleteId).then((result) => {this.setState({
-          openDelete: false
+        console.log(this.state.deleteElement)
+        var newdata = this.state.data.filter(a => a.id !== this.state.deleteElement.id)
+        console.log(newdata)
+        SystemAPI.getAPI().deleteGehen(this.state.deleteElement.id).then((result) => {this.setState({
+          openDelete: false,
+            data: newdata
       });
-            window.location.reload(false);
+
         })
     }
+    getLocalTime = () => {
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
+        localISOTime = localISOTime.replace("T", " ")
+        return localISOTime
+      }
 
     UpdateGehen = () => {
 
         let updateGehen = Object.assign(new GehenBO(), this.state.gehen)
         updateGehen.setEventName(this.state.eventname);
-        updateGehen.setTimeOfEvent(this.state.timeofevent);
-        updateGehen.setId(Number(this.state.gehenid));
-        updateGehen.setLastModifiedDate(this.state.lastchange)
+        updateGehen.setTimeOfEvent(this.state.timeofevent)
+        updateGehen.setId(Number(this.state.editElement.id));
+
+        var time = this.getLocalTime()
+        var timeofevent = this.state.timeofevent.replace("T", " ")
+
+        updateGehen.setLastModifiedDate(time);
         console.log(updateGehen)
-        console.log(this.state.timeofevent)
-        console.log(this.state.eventname)
+        var newdata = this.state.data.filter(a => a.id !== this.state.editElement.id)
+
         SystemAPI.getAPI().updateGehen(updateGehen).then(person => {
+            updateGehen.setTimeOfEvent(timeofevent)
+            newdata.push(updateGehen)
+            console.log(newdata)
             this.setState({
+                data: newdata,
                 openEdit: false
             })
-        window.location.reload(false);
+
         })
         //////});
           //  window.location.reload(false);
@@ -102,8 +111,8 @@ export class  GehenTable extends Component{
         })
     }
     render() {
-        if (this.props.data.length > 0) {
-            const headers = Object.keys(this.props.data[0]);
+        if (this.props.data.length > 0 && this.state.data.length > 0) {
+            const headers = Object.keys(this.state.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"];
             const { openEdit, openDelete } = this.state;
 
@@ -124,13 +133,13 @@ export class  GehenTable extends Component{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.props.data.map((emp, index) => (
-                                    <TableRow id={index} key={index}>
+                                {this.state.data.map((emp) => (
+                                    <TableRow>
                                         {headers.map(header => (
                                             <TableCell align="left">{emp[header]}</TableCell>
                                         ))}
-                                        <Button color='primary' onClick={this.handleClickOpenEdit} >Edit</Button>
-                                        <Button color='warning' onClick={this.handleClickOpenDelete} >Delete</Button>
+                                        <Button color='primary' onClick={() =>this.handleClickOpenEdit(emp)} >Edit</Button>
+                                        <Button color='warning' onClick={() =>this.handleClickOpenDelete(emp)} >Delete</Button>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -147,7 +156,7 @@ export class  GehenTable extends Component{
                             margin="dense"
                             id="eventname"
                             label={"Event Name"}
-                            defaultValue={this.state.eventname}
+                            defaultValue={this.state.editElement?this.state.editElement.event_name:null}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -159,7 +168,7 @@ export class  GehenTable extends Component{
                             margin="dense"
                             id="name"
                             label={"Event ID"}
-                            value ={this.state.gehenid}
+                            value={this.state.editElement?this.state.editElement.id:null}
                             fullWidth
                             variant="standard"
 
@@ -170,7 +179,7 @@ export class  GehenTable extends Component{
                             id = "timeofevent"
                             label="Zeitpunkt des Events"
                             type="datetime-local"
-                            defaultValue={this.state.timeofevent}
+                            defaultValue={this.state.editElement?this.state.editElement.time_of_event:null}
                             fullWidth
                             variant="standard"
                             onChange={this.handleChange}
@@ -181,7 +190,7 @@ export class  GehenTable extends Component{
                             label="Letzte Änderung"
                             type="datetime-local"
                             inputProps={{readOnly: true}}
-                            defaultValue={this.state.lastchange}
+                            value={this.state.editElement?this.state.editElement.last_modified_date:null}
                             fullWidth
                             variant="standard"
 

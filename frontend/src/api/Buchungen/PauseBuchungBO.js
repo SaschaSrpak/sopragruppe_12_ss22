@@ -7,10 +7,12 @@ import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 */
 
 export default class PauseBuchungBO extends ZeitintervallbuchungBO{
-
     constructor() {
-        super()       
-    }
+        super()
+
+           }
+
+
     static fromJSON(pause_transaction) {
         let result = []
         if (Array.isArray(pause_transaction)) {

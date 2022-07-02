@@ -8,7 +8,10 @@ export default class PauseBO extends ZeitintervallBO{
 
     constructor() {
         super()
+
     }
+
+
 
     static fromJSON(pause) {
         let result = []
