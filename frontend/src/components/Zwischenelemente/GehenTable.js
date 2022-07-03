@@ -17,11 +17,16 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import GehenBO from "../../api/Ereignisse/GehenBO";
 
+/** 
+ *@fileOverview Hier kann man eine Gehenbuchung bearbeiten und löschen
+ *@author Liam Wilke
+*/
+
 export class  GehenTable extends Component{
     constructor(props)
     {
         super(props);
-
+        //setzt alle Standartstates für die Variablen
         this.state = {
             openedit: false,
             opendelete: false,
@@ -29,6 +34,7 @@ export class  GehenTable extends Component{
         }
     }
      handleClickOpenEdit = (event) => {
+        //Wenn der Dailog zum Editieren aufgerufen wird, werde mit dieser Funktion die Tabellendaten aus der entsprechenden Zeile ausgelesen und den Textfeldern als Default-Value übergeben
         let reihe = Number(event.target.parentNode.id)
          reihe += 1
 
@@ -46,6 +52,7 @@ export class  GehenTable extends Component{
       };
 
       handleClickOpenDelete = (event) => {
+        //Wenn der Dialog zum Löschen aufgerufen wird, wird diesem die entsprechenden Daten aus der Zeile ausgelesen
           let reihe = Number(event.target.parentNode.id)
          reihe += 1
          let id = document.getElementById("gehenTable").rows[reihe].cells[2].innerHTML
@@ -55,18 +62,21 @@ export class  GehenTable extends Component{
     })
   };
     handleCloseEdit = () => {
+        //Setzt den Zustand zurück
         this.setState({
           openEdit: false
       });
     };
 
     handleCloseDelete= () => {
+        //Setzt den Zustand zurück
         this.setState({
           openDelete: false
       });
     };
 
     DeleteGehen = (event) => {
+        //Gehenbuchung wird gelöscht 
         console.log(this.state.deleteId)
         SystemAPI.getAPI().deleteGehen(this.state.deleteId).then((result) => {this.setState({
           openDelete: false
@@ -76,6 +86,7 @@ export class  GehenTable extends Component{
     }
 
     UpdateGehen = () => {
+        //update Gehenbuchug 
 
         let updateGehen = Object.assign(new GehenBO(), this.state.gehen)
         updateGehen.setEventName(this.state.eventname);
@@ -97,12 +108,15 @@ export class  GehenTable extends Component{
     }
 
     handleChange = (event) => {
+        //Updatet das geänderte Objekt
         this.setState({
             [event.target.id]: event.target.value,
         })
     }
     render() {
+        //Rendert die Komponente
         if (this.props.data.length > 0) {
+            //Prüft ob Daten vorhanden sind
             const headers = Object.keys(this.props.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"];
             const { openEdit, openDelete } = this.state;

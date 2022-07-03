@@ -17,13 +17,17 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 
+/** 
+ *@fileOverview Hier kann man eine Arbeitszeitenbuchung bearbeiten und löschen
+ *@author Liam Wilke
+*/
 
 
 export class  WorkTimeTable extends Component{
     constructor(props)
     {
         super(props);
-
+        //setzt alle Standartstates für die Variablen
         this.state = {
             openedit: false,
             opendelete: false,
@@ -31,6 +35,7 @@ export class  WorkTimeTable extends Component{
         }
     }
      handleClickOpenEdit = (event) => {
+        //Wenn der Dialog zum Löschen aufgerufen wird, wird diesem die entsprechenden Daten aus der Zeile ausgelesen
         let reihe = Number(event.target.parentNode.id)
          reihe += 1
 
@@ -47,6 +52,7 @@ export class  WorkTimeTable extends Component{
       };
 
       handleClickOpenDelete = (event) => {
+        //Wenn der Dialog zum Löschen aufgerufen wird, wird diesem die entsprechenden Daten aus der Zeile ausgelesen
           let reihe = Number(event.target.parentNode.id)
          reihe += 1
          let id = document.getElementById("WorkTimeTable").rows[reihe].cells[1].innerHTML
@@ -56,18 +62,21 @@ export class  WorkTimeTable extends Component{
     })
   };
     handleCloseEdit = () => {
+        //Setzt den Zustand zurück
         this.setState({
           openEdit: false
       });
     };
 
     handleCloseDelete= () => {
+        //Setzt den Zustand zurück
         this.setState({
           openDelete: false
       });
     };
 
     DeleteWorktime = (event) => {
+        //Arbeitszeitbuchung wird gelöscht
         console.log(this.state.deleteId)
         SystemAPI.getAPI().deleteProjectWorktimeTransaction(this.state.deleteId).then((result) => {this.setState({
           openDelete: false
@@ -77,6 +86,7 @@ export class  WorkTimeTable extends Component{
     }
 
     UpdateWorktime = () => {
+        //Updatet Arbeitszeit
 
         console.log(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende)
         SystemAPI.getAPI().updateProjectWorktimeTransactionWithValues(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende).then(person => {
@@ -88,12 +98,15 @@ export class  WorkTimeTable extends Component{
     }
 
     handleChange = (event) => {
+        //Updatet das geänderte Objekt
         this.setState({
             [event.target.id]: event.target.value,
         })
     }
     render() {
+        //Rendert die Komponente
         if (this.props.data.length > 0) {
+            //Prüft ob Daten vorhanden sind
             const headers = Object.keys(this.props.data[0]);
             const headers2 = ["I-ID",  "T-ID", "Interval Name", "Projekt", "Aktivität", "Start", "Ende", "Stunden"];
             const { openEdit, openDelete } = this.state;
