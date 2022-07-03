@@ -24,6 +24,7 @@ import GehenBO from "../../api/Ereignisse/GehenBO";
 
 export class  GehenTable extends Component{
     constructor(props)
+
     {
         super(props);
         //setzt alle Standartstates für die Variablen
@@ -33,6 +34,8 @@ export class  GehenTable extends Component{
             data: props.data,
             gehen: GehenBO
         }
+
+
     }
      handleClickOpenEdit = (event) => {
         //Wenn der Dailog zum Editieren aufgerufen wird, werde mit dieser Funktion die Tabellendaten aus der entsprechenden Zeile ausgelesen und den Textfeldern als Default-Value übergeben
@@ -97,16 +100,15 @@ export class  GehenTable extends Component{
 
         updateGehen.setLastModifiedDate(time);
         console.log(updateGehen)
-        var newdata = this.state.data.filter(a => a.id !== this.state.editElement.id)
 
         SystemAPI.getAPI().updateGehen(updateGehen).then(person => {
             updateGehen.setTimeOfEvent(timeofevent)
-            newdata.push(updateGehen)
-            console.log(newdata)
+
             this.setState({
-                data: newdata,
+
                 openEdit: false
             })
+            this.props.handleUpdate()
 
         })
         //////});
@@ -122,8 +124,8 @@ export class  GehenTable extends Component{
     }
     render() {
         //Rendert die Komponente
-        if (this.props.data.length > 0 && this.state.data.length > 0) {
-            const headers = Object.keys(this.state.data[0]);
+        if (this.props.data.length > 0) {
+            const headers = Object.keys(this.props.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"];
             const { openEdit, openDelete } = this.state;
 
@@ -144,7 +146,7 @@ export class  GehenTable extends Component{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.data.map((emp) => (
+                                {this.props.data.map((emp) => (
                                     <TableRow>
                                         {headers.map(header => (
                                             <TableCell align="left">{emp[header]}</TableCell>

@@ -107,7 +107,8 @@ export class Auslese extends Component {
 
     async Datenfilter() {
         // Mit dieser Funktion können die ausgegebenen Daten für einen bestimmten Zeitraum gefiltert werden
-
+            console.log(this.state.startFilter)
+            console.log(this.state.endeFilter)
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
             this.setState({
                 userid: result.id

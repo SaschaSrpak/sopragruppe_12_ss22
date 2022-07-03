@@ -102,16 +102,15 @@ export class  KommenTable extends Component{
 
         updateKommen.setLastModifiedDate(time);
 
-         var newdata = this.state.data.filter(a => a.id !== this.state.editElement.id)
 
         SystemAPI.getAPI().updateKommen(updateKommen).then(person => {
             updateKommen.setTimeOfEvent(timeofevent)
-            newdata.push(updateKommen)
+
             this.setState({
-                 data: newdata,
+
                 openEdit: false
             })})
-
+        this.props.handleUpdate()
     }
 
     handleChange = (event) => {
@@ -123,7 +122,7 @@ export class  KommenTable extends Component{
     }
     render() {
         //Rendert die Komponente
-        if (this.props.data.length > 0 && this.state.data.length >0 ) {
+        if (this.props.data.length > 0) {
             const headers = Object.keys(this.props.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzte Änderung"];
             const { openEdit, openDelete } = this.state;
@@ -145,7 +144,7 @@ export class  KommenTable extends Component{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.data.map((emp) => (
+                                {this.props.data.map((emp) => (
                                     <TableRow>
                                         {headers.map(header => (
                                             <TableCell align="left">{emp[header]}</TableCell>
