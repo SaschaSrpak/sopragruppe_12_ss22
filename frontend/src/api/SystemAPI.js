@@ -57,7 +57,7 @@ export default class SystemAPI {
     #addPersonResponsibleToProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
     #deletePersonResponsibleFromProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
     #getFullWorktimeOnProjectURL = (id) => `${this.#SystemServerBaseURL}/projects/${id}/worktime`;
-    #getProjectDeadlineByProjectId = (id) => `${this.#SystemServerBaseURL}/projects/${id}/worktime`;
+    #getProjectDeadlineByProjectId = (id) => `${this.#SystemServerBaseURL}/projects/project_deadline/${id}`;
 
     //Activity related
 
