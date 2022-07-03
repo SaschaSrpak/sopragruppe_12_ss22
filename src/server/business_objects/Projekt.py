@@ -1,10 +1,7 @@
 from server.business_objects import BusinessObject as bo
-from datetime import datetime
-from datetime import timedelta
-from server.business_objects import Person
 
 
-class Projekt (bo.BusinessObject):
+class Projekt(bo.BusinessObject):
     def __init__(self):
         super().__init__()
         self._name = ""
@@ -110,5 +107,3 @@ class Projekt (bo.BusinessObject):
 
         obj.set_last_modified_date(dictionary['last_modified_date'])
         return obj
-
-

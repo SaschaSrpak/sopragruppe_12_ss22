@@ -1,6 +1,6 @@
 from server.business_objects import BusinessObject as bo
 from datetime import timedelta
-from business_objects.Ereignisse import Endereignis, Startereignis
+from server.business_objects.Ereignisse import Endereignis, Startereignis
 
 
 class Zeitintervall (bo.BusinessObject):
@@ -43,5 +43,3 @@ class Zeitintervall (bo.BusinessObject):
     def set_duration(self, new_duration):
         """Auslesen der Länge des Zeitintervalls."""
         self._duration = new_duration
-
-

@@ -1,4 +1,4 @@
-from business_objects.Buchungen.Buchung import Buchung
+from server.business_objects.Buchungen.Buchung import Buchung
 
 
 class Zeitintervallbuchung(Buchung):
@@ -15,5 +15,3 @@ class Zeitintervallbuchung(Buchung):
         """Mit dieser Funktion kann ein Bezug zwischen der Buchung
         und einem Zeitintervall-Objekt hergestellt werden"""
         self._time_interval_id = new_source
-
-

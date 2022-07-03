@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.Kommen import Kommen
+from server.business_objects.Ereignisse.Kommen import Kommen
 from server.db.Mapper import Mapper
 
 
@@ -8,19 +8,20 @@ class KommenMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Aulesen alles Kommen-Events
+            :return Eine Sammlung an Kommen-Objekte"""
         result = []
         cursor = self._cnx.cursor()
 
         cursor.execute("SELECT Event_ID, Name, Time, Last_modified_date from Kommen")
         tuples = cursor.fetchall()
 
-        for ( Event_ID, Name, Time, Last_modified_date) in tuples:
+        for (Event_ID, Name, Time, Last_modified_date) in tuples:
             ereignis = Kommen()
             ereignis.set_id(Event_ID)
             ereignis.set_event_name(Name)
             ereignis.set_time_of_event(Time)
             ereignis.set_last_modified_date(Last_modified_date)
-
 
             result.append(ereignis)
 
@@ -29,9 +30,11 @@ class KommenMapper(Mapper):
 
         return result
 
-
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+            :param id Primärschlüssenattribut
+            :return Kommen-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenen DB-Tupel"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -59,6 +62,9 @@ class KommenMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines Kommen-Events in die DB
+            :param ereignis das zu speicherne Objekt
+            :return das bereits übergebene Objekte, aber mit ggf. korrigierter ID"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Kommen ")
         tuples = cursor.fetchall()
@@ -78,24 +84,25 @@ class KommenMapper(Mapper):
 
         return ereignis
 
-
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param ereignis das Objekte, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
 
         command = "UPDATE Kommen " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
         data = (
-                ereignis.get_event_name(),
-                ereignis.get_time_of_event(),
-                ereignis.get_last_modified_date(),
-                ereignis.get_id())
+            ereignis.get_event_name(),
+            ereignis.get_time_of_event(),
+            ereignis.get_last_modified_date(),
+            ereignis.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param ereignis, das aus der DB zu löschende Objekte"""
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Kommen WHERE Event_ID='{}'".format(ereignis.get_id())
@@ -103,21 +110,3 @@ class KommenMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen, 
-um die grundsätzliche Funktion zu überprüfen.
-
-Anmerkung: Nicht professionell aber hilfreich..."""
-"""if (__name__ == "__main__"):
-    with EreignisMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)"""
-
-""""with KommenMapper() as mapper:
-    test = mapper.find_by_key(10001)
-    print(test.get_event_name())
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_event_name())"""

@@ -1,12 +1,15 @@
 from server.business_objects.Zeitkonto import Zeitkonto
 from server.db.Mapper import Mapper
 
+
 class ZeitkontoMapper(Mapper):
 
     def __init__(self):
         super().__init__()
 
     def find_all(self):
+        """Lesen aller Objekte in der Datenbank
+        :return Eine Sammlung von Zeitkonto-Objekten"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -25,9 +28,11 @@ class ZeitkontoMapper(Mapper):
 
         return result
 
-
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param id Primärschlüssel
+        :return Zeitkonto-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem Tupel
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -43,7 +48,6 @@ class ZeitkontoMapper(Mapper):
             zeitkonto.set_id(Account_ID)
             zeitkonto.set_owner(Owner_ID)
 
-
             result = zeitkonto
         else:
             result = None
@@ -54,7 +58,11 @@ class ZeitkontoMapper(Mapper):
         return result
 
     def find_by_person_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param id Primärschlüssel
+        :return Zeitkonto-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem
+        Tupel
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -70,7 +78,6 @@ class ZeitkontoMapper(Mapper):
             zeitkonto.set_id(Account_ID)
             zeitkonto.set_owner(Owner_ID)
 
-
             result = zeitkonto
         else:
             result = None
@@ -81,6 +88,10 @@ class ZeitkontoMapper(Mapper):
         return result
 
     def insert(self, zeitkonto):
+        """Einfügen eines neuen Zeitkonto-Objekts.
+            Der Primärschlüssel wird geprüft und ggf. berichtigt
+            :param zeitkonto das zu speichernde Objekt
+            :return das bereits übergeben Objekt mit evtl. korrigierter ID"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Account_ID) AS maxid FROM Arbeitszeitkonto ")
         tuples = cursor.fetchall()
@@ -98,9 +109,9 @@ class ZeitkontoMapper(Mapper):
 
         return zeitkonto
 
-
     def update(self, zeitkonto):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param zeitkonto das Objekt, das in die DB geschrieben werden soll."""
         cursor = self._cnx.cursor()
 
         command = "UPDATE Arbeitszeitkonto " + "SET User_ID=%s WHERE Account_ID=%s"
@@ -112,7 +123,8 @@ class ZeitkontoMapper(Mapper):
         cursor.close()
 
     def delete(self, zeitkonto):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param zeitkonto das aus der DB zu löschende "Objekt" """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Arbeitszeitkonto WHERE Account_ID='{}'".format(zeitkonto.get_id())
@@ -120,14 +132,3 @@ class ZeitkontoMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen,
-um die grundsätzliche Funktion zu überprüfen.
-
-Anmerkung: Nicht professionell aber hilfreich..."""
-if (__name__ == "__main__"):
-    with ZeitkontoMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)

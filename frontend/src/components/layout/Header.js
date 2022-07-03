@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Appbar from '@mui/material/AppBar';
 import { Toolbar, Typography, Box, Drawer, List } from '@mui/material';
 import ProfileDropDown from '../Dienste/Profildropdown';
@@ -6,8 +6,9 @@ import DrawerComponent from './DrawerComponent';
 import Container from '@mui/material/Container';
 
 /** 
- *@fileOverview 
- *@author Luca Trautmann
+ *@fileOverview Element welche auf jeder Seite als Header eingebunden ist. 
+ Beinhaltet ein Profildrop down und eine DrawerComponent zum Navigieren
+ *@author Luca Trautmann, Jeffrey He
 */
 
 class Header extends React.Component {
@@ -24,8 +25,8 @@ class Header extends React.Component {
         return (
             <Box sx={{ display: 'space-between' }}>
                 <Container align="center">
-                    <Appbar postion="static" sx={{ width: '100%' }}>
-                        <Toolbar variant="dense" align="center">
+                    <Appbar position="fixed" sx={{ width: '100%' }}>
+                        <Toolbar postion="fixed" variant="dense" align="center">
                             <DrawerComponent />
 
                             <div style={{ margin: '0 auto' }}>

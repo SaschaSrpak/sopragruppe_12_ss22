@@ -15,14 +15,15 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from "react-router-dom"
 import { IconButton } from '@mui/material';
+import {Link} from "react-router-dom";
+
+/**
+ *@fileOverview Element welche auf jeder Seite als Header eingebunden ist.
+ Beinhaltet ein Profildrop down und eine DrawerComponent zum Navigieren
+ *@author Jeffrey He
+*/
 
 export default function TemporaryDrawer() {
-
-  const useStyles = makeStyles({
-    drawer: {
-      width: "200px"
-    }
-  });
 
   const navigate = useNavigate();
 

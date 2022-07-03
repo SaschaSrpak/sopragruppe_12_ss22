@@ -1,29 +1,37 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, IconButton, Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
+import { Popover, IconButton, Avatar, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import { getAuth, signOut } from "firebase/auth";
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useNavigate } from 'react-router-dom';
-/**
- * @author
+import Profil from '../pages/Profil';
+import SystemAPI from '../../api/SystemAPI';
+import PersonBO from '../../api/PersonBO';
+
+/** Represemtiert die Profil-Dropdown Komponente unter welcher man sein Profil ansehen kann, sich Ausloggen kann und seinen Accoutn löschen kann.
+ * @author Luca Trautmann, Jeffrey He
  */
 
 
 class ProfileDropDown extends Component {
 
+
     #avatarButtonRef = createRef();
 
     constructor(props) {
         super(props);
-
-        // Init the state
+        // setzt start States
         this.state = {
             open: false,
+            show: false,
+            person: null,
         }
+        this.routeChange = this.routeChange.bind(this);
+    }
+    routeChange() {
+        let path = '/Profil';
+        this.props.history.push(path);
     }
 
-    /** Handles click events on the avatar button and toggels visibility */
+    //Öffnet auf klick das Dropdown Menü
     handleAvatarButtonClick = () => {
         this.setState({
             open: !this.state.open
@@ -41,6 +49,8 @@ class ProfileDropDown extends Component {
         });
     }
 
+
+
     /** 
      * Handles the click event of the sign in button and uses the firebase.auth() component to sign in.
      * 
@@ -54,14 +64,38 @@ class ProfileDropDown extends Component {
         signOut(auth);
     }
 
-    handleProfilButtonClicked = () => {
-        const navigate = useNavigate();
+    //Funktion um Person aus dem Backend zu löschen
+    deletePerson = () => {
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid)
+            .then(PersonBO => {
+                console.log(PersonBO.id);
+                SystemAPI.getAPI().deletePerson(PersonBO.id)
+            }
+            )
+    }
 
+    //Funktion welche zum löschen des Accounts führt
+    handledelete = () => {
+        console.log("löschen wurde angefordert")
+        //Kontrollfenster zur Bestätigung ob wirklich gelöscht werden soll
+        if (window.confirm('Bist du dir sicher, dass du deinen Account löschen möchtest?')) {
+            //Ja - User wird ausgeloggt, gelöscht und erhält ein Bestätigungspopup.
+            console.log('Löschung findet statt.');
+            this.handleSignOutButtonClicked()
+            this.deletePerson();
+            console.log("löschung ist durch.");
+            alert("Account wurde gelöscht.")
+        } else {
+            // Abbrechen - Keine Löschung
+            console.log('Keine Löschung.');
+        }
     }
 
     render() {
         const { user } = this.props;
         const { open } = this.state;
+
+        console.log(this.props.user)
 
         return (
             user ?
@@ -69,7 +103,6 @@ class ProfileDropDown extends Component {
                     <IconButton sx={{ align: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
                         <Avatar src={user.photoURL} />
                     </IconButton>
-
                     <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                         anchorOrigin={{
                             vertical: 'top',
@@ -79,39 +112,28 @@ class ProfileDropDown extends Component {
                             vertical: 'top',
                             horizontal: 'right'
                         }}>
-                        <ClickAwayListener onClickAway={this.handleClose}>
-                            <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
-
-                                <Grid container justifyContent='center'>
-
-                                    <Grid item align='center'>
-                                        <Typography align='center'>Hallo {user.displayName}</Typography>
-                                        <Divider sx={{ margin: 1 }} />
-                                        <Typography align='center' variant='body2'>{user.email}</Typography>
-                                        <Divider sx={{ margin: 1 }} />
-                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Profil</Button> <br />
-                                        <Divider sx={{ margin: 1 }} />
-                                        {/* <Button color='primary'>Profil</Button> */}
-                                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
-
-                                    </Grid>
+                        <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
+                            <Grid container justifyContent='center'>
+                                <Grid item align='center'>
+                                    {/*  Begrüßung mit eingelesenem Username  und Button mit deren oben Beschriebenen Funktionen*/}
+                                    <Typography align='center'>Hallo {user.displayName}</Typography>
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Typography align='center' variant='body2'>{user.email}</Typography>
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Profil user={user} />
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
+                                    <Divider sx={{ margin: 1 }} />
+                                    <Button onClick={this.handledelete}>Account löschen</Button>
                                 </Grid>
-                                {/* <Grid container justifyContent='center'>
-                                
-                                    <Grid item>
-                                        <LogoutIcon/>
-                                        <Button color='primary' style={{position:"relative", bottom:7}} onClick={this.handleSignOutButtonClicked}>Logout</Button>
-                                    </Grid>
-                                </Grid> */}
-                            </Paper>
-                        </ClickAwayListener>
+                            </Grid>
+                        </Paper>
                     </Popover>
                 </div>
                 : null
         )
     }
 }
-
 /** PropTypes */
 ProfileDropDown.propTypes = {
     /** The logged in firesbase user */

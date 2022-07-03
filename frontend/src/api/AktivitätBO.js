@@ -1,16 +1,16 @@
-import AktivitätBO from './AktivitätBO';
+import BO from './BO';
 
 /** 
  *@fileOverview 
- *@author Luca Trautmann
+ *@author Jeffrey He
 */
-export default class AktivitätBO{
+export default class AktivitaetBO extends BO{
 
-    constructor() {
+    constructor(aName, aCapacity) {
         super()
-            this.activity_name = null;
+            this.activity_name = aName;
             this.persons_responsible = ([]);
-            this.man_day_capacity = null;
+            this.man_day_capacity = aCapacity;
     }
 
 
@@ -27,8 +27,8 @@ export default class AktivitätBO{
         return this.persons_responsible;
     }
 
-    setPersons_Responsible(){
-        this.persons_responsible;
+    setPersons_Responsible(persons_responsible){
+        this.persons_responsible = persons_responsible;
     }
 
     setMan_day_capacity(man_day_capacity){
@@ -39,6 +39,21 @@ export default class AktivitätBO{
         return this.man_day_capacity;
     }
 
+    static fromJSON(activity){
+        let result = []
+        if(Array.isArray(activity)){
+            activity.forEach((a) => {
+                Object.setPrototypeOf(a, AktivitaetBO.prototype);
+                result.push(a)
+            })
+        } else{
+            let a = activity;
+            Object.setPrototypeOf(a, AktivitaetBO.prototype);
+            result.push(a);
+        }
+
+        return result;
+    }
     
 
 }

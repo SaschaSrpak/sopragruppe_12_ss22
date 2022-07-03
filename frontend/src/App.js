@@ -17,12 +17,19 @@ import { initializeApp } from 'firebase/app';
 import Projektwahl from './components/pages/ProjekteWahl';
 import Auslese from './components/pages/Auslese';
 
+import { SystemAPI } from "./api";
+import ProfilRegistrierung from './components/pages/ProfilRegristrierung';
 
 
+/**
+ *@fileOverview 
+ *@author Luca Trautmann
+*/
 
 export class App extends Component {
 
   constructor(props) {
+    //Konstruiert alle für Funktionen benötigten Variablen
     super(props);
     this.state = {
       currentUser: null,
@@ -30,8 +37,11 @@ export class App extends Component {
       authError: null,
       newUser: false,
       authLoading: true,
+      open: false,
+      person: null,
     };
   }
+
 
   componentDidMount() {
     const app = initializeApp(firebaseConfig);
@@ -39,19 +49,21 @@ export class App extends Component {
     onAuthStateChanged(auth, this.handleAuthStateChange)
   }
 
+  //Sorgt bei Knopfdruck für einloggen des Nutzers
   handleSignInButtonClicked = () => {
+    console.log("login gedrückt")
     const auth = getAuth();
     auth.languageCode = 'en';
     const provider = new GoogleAuthProvider();
 
-    //funciton aufstellen onlcick
-
+   
+    //Login erfolgt durch ein Google-Auth Popup
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
+        // Teilt einen Google Access Token dem Nutzer zu.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
+        // Speichert die Userinfo des Users.
         const user = result.user;
         this.setState({ currentUser: user, authLoading: false })
         // ...
@@ -67,28 +79,39 @@ export class App extends Component {
       });
   }
 
-  handleAuthStateChange = user => {
+  handleAuthStateChange = (user) => {
     if (user) {
-
+      //Ruft den Token und User auf
       user.getIdToken().then(token => {
         document.cookie = `token=${token};path=/`;
+        SystemAPI.getAPI().getPersonByFirebaseID(user.uid).then(person => {
 
-        this.setState({
-          currentUser: user,
-          authError: null,
-          authLoading: false
-        });
+          let open = false
+          console.log(person)
+          //Prüft ob User Neu angelegt ist und offnet bei ===Vorname das Profilregistrierungs-Popup
+          if(person.name === "Vorname") {
+            console.log("checkuser")
+            open = true
+          }
+          this.setState({
+            currentUser: user,
+            open: open,
+            person: person,
+            authError: null,
+            authLoading: false
+          });
+        })
       }).catch(e => {
         this.setState({
           authError: e,
           authLoading: true
         });
-      });
+      })
     } else {
-      // User has logged out, so clear the id token
+      // User hat sich ausgeloggt also wir der Token gelöscht
       document.cookie = 'token=;path=/';
 
-      // Set the logged out user to null
+      // User-Status auf null setzen nach Logout
       this.setState({
         currentUser: null,
         authLoading: true
@@ -96,11 +119,24 @@ export class App extends Component {
     }
   }
 
+
+  checkNewUser = () => {
+    //Prüft ob User Neu angelegt ist und offnet bei ===Vorname das Profilregistrierungs-Popup
+    if (this.state.person.name === "Vorname") {
+      console.log("checkuser")
+      this.setState({
+        open: true
+      })
+    }
+  }
+
+
+
   render() {
-    const { currentUser, authError, appError, loading } = this.state;
+    const { currentUser, authError, appError, open, person } = this.state;
 
 
-
+    //Prüft ob ein user eingeloggt ist und wenn nicht wird er zur Login-Page navigiert
     if (this.state.authLoading === true) {
       return (
         <Login google={this.handleSignInButtonClicked} />
@@ -108,25 +144,27 @@ export class App extends Component {
     } else {
       console.log(this.state.currentUser)
       return (
-        
+
         <div>
-          <Toolbar/>
+          <Toolbar />
           <Router>
             <Container maxWidth='md'>
               <Header user={currentUser} />
+              {/* Prüft nach neuer Person und übergibt Parameter an ProfilRegistrierung */}
+              {person ? <ProfilRegistrierung user={currentUser} open={open} handleClose={() => this.setState({ open: false })} /> : null}
               <Routes>
                 <Route path='/static/reactclient' element={
                   <Navigate replace to={'/home'} />
                 }></Route>
                 <Route path={'/home'} element={<Home />} />
-                <Route path={'/buchungen'} element={<Buchungen />} />
-                <Route path={'/auslese'} element={<Auslese />} />
-                <Route path={'/projektanzeige'} element={<Projektanzeige />} />
-                <Route path={'/projektewahl'} element={<Projektwahl />} />
+                <Route path={'/buchungen'} element={<Buchungen user={currentUser}/>} />
+                <Route path={'/auslese'} element={<Auslese user={currentUser} />} />
+                <Route path={'/projektanzeige'} element={<Projektanzeige user={currentUser}/>} />
+                <Route path={'/projektewahl'} element={<Projektwahl user={currentUser} />} />
                 <Route path={'/about'} element={<About />} />
                 <Route path={'/profil'} element={<Profil />} />
               </Routes>
-              <Error error={authError} contextErrorMsg={`Something went wrong during sighn in process.`} onReload={this.handleSignInButtonClicked} />
+              <Error error={authError} contextErrorMsg={`Something went wrong during sign in process.`} onReload={this.handleSignInButtonClicked} />
               <Error error={appError} contextErrorMsg={`Something went wrong inside the app. Please reload the page.`} />
             </Container>
           </Router>
@@ -135,5 +173,6 @@ export class App extends Component {
     };
   }
 }
+
 
 export default App;

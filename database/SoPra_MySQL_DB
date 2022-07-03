@@ -1,0 +1,412 @@
+CREATE DATABASE IF NOT EXISTS `SoPra_MySQL_DB`;
+USE `SoPra_MySQL_DB`;
+
+
+DROP TABLE IF EXISTS `Person`;
+create table Person
+(
+    User_ID            int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Nachname           varchar(100) not null,
+    EMail              varchar(100) not null,
+    Username           varchar(100) not null,
+    Firebase_ID        varchar(1000) not null,
+    Manager_Status     tinyint(1)   not null,
+    Last_modified_date timestamp    not null
+);
+
+DROP TABLE IF EXISTS `Arbeitszeitkonto`;
+create table Arbeitszeitkonto
+(
+    Account_ID int not null
+        primary key,
+    User_ID    int null,
+    constraint Zeitkonto_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID)
+);
+
+DROP TABLE IF EXISTS `Aktivitaet`;
+create table Aktivitaet
+(
+    Activity_ID        int          not null
+        primary key,
+    Name               varchar(100) null,
+    Man_Day_Capacity   float        not null,
+    Last_modified_date timestamp    not null
+);
+
+
+DROP TABLE IF EXISTS `Aktivitaet_Zustaendigkeit`;
+create table Aktivitaet_Zustaendigkeit
+(
+    Activity_ID int not null,
+    User_ID     int not null,
+    constraint Aktivitaet_Zustaendigkeit_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint Aktivitaet_Zustaendigkeit_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID)
+);
+
+
+DROP TABLE IF EXISTS `Startereignis`;
+create table Startereignis
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+DROP TABLE IF EXISTS `Endereignis`;
+create table Endereignis
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+
+DROP TABLE IF EXISTS `Kommen`;
+create table Kommen
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+DROP TABLE IF EXISTS `Gehen`;
+create table Gehen
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+
+DROP TABLE IF EXISTS `StartereignisBuchung`;
+create table StartereignisBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint StartereignisBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint StartereignisBuchung_Startereignis_Event_ID_fk
+        foreign key (Event_ID) references Startereignis (Event_ID)
+);
+
+DROP TABLE IF EXISTS `EndereignisBuchung`;
+create table EndereignisBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint EndereignisBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint EndereignisBuchung_Endereignis_Event_ID_fk
+        foreign key (Event_ID) references Endereignis (Event_ID)
+
+);
+
+DROP TABLE IF EXISTS `KommenBuchung`;
+create table KommenBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint KommenBuchung_Kommen_Event_ID_fk
+        foreign key (Event_ID) references Kommen (Event_ID),
+    constraint KommenBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+DROP TABLE IF EXISTS `GehenBuchung`;
+create table GehenBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Event_ID           int      null,
+    Last_modified_date datetime not null,
+    constraint GehenBuchung_Gehen_Event_ID_fk
+        foreign key (Event_ID) references Gehen (Event_ID),
+    constraint GehenBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+DROP TABLE IF EXISTS `Projekt_deadline`;
+create table Projekt_deadline
+(
+    Event_ID           int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Time               timestamp    not null,
+    Last_modified_date timestamp    not null
+);
+
+DROP TABLE IF EXISTS `Projektlaufzeit`;
+create table Projektlaufzeit
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null
+);
+
+DROP TABLE IF EXISTS `Projekt`;
+create table Projekt
+(
+    Project_ID          int          not null
+        primary key,
+    Name                varchar(100) not null,
+    Client              varchar(100) not null,
+    Description         varchar(500) null,
+    Deadline_ID         int          null,
+    Project_Duration_ID int          null,
+    Last_modified_date  timestamp    not null,
+    constraint Projekt_Projekt_deadline_Event_ID_fk
+        foreign key (Deadline_ID) references Projekt_deadline (Event_ID),
+    constraint Projekt_Projektlaufzeit_Interval_ID_fk
+        foreign key (Project_Duration_ID) references Projektlaufzeit (Interval_ID)
+);
+
+DROP TABLE IF EXISTS `Projekt_Aktivitaeten`;
+create table Projekt_Aktivitaeten
+(
+    Project_ID  int not null,
+    Activity_ID int not null,
+    constraint Projekt_Aktivitaeten_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint Projekt_Aktivitaeten_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+DROP TABLE IF EXISTS `Projekt_Ersteller`;
+create table Projekt_Ersteller
+(
+    Project_ID int not null,
+    User_ID    int not null,
+    constraint Projekt_Ersteller_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID),
+    constraint Projekt_Ersteller_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+DROP TABLE IF EXISTS `Projekt_Zustaendigkeit`;
+create table Projekt_Zustaendigkeit
+(
+    Project_ID int not null,
+    User_ID    int not null,
+    constraint Projekt_Zustaendigkeit_Person_User_ID_fk
+        foreign key (User_ID) references Person (User_ID),
+    constraint Projekt_Zustaendigkeit_Projekt_Project_ID_fk
+        foreign key (Project_ID) references Projekt (Project_ID)
+);
+
+
+DROP TABLE IF EXISTS `Pause`;
+create table Pause
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null,
+    constraint Pause_Endereignis_Event_ID_fk
+        foreign key (End_Event_ID) references Endereignis (Event_ID),
+    constraint Pause_Startereignis_Event_ID_fk
+        foreign key (Start_Event_ID) references Startereignis (Event_ID)
+);
+
+DROP TABLE IF EXISTS `PauseBuchung`;
+create table PauseBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Interval_ID        int      null,
+    Last_modified_date datetime not null,
+    constraint PauseBuchung_Pause_Interval_ID_fk
+        foreign key (Interval_ID) references Pause (Interval_ID),
+    constraint PauseBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID)
+);
+
+DROP TABLE IF EXISTS `Projektarbeit`;
+create table Projektarbeit
+(
+    Interval_ID        int          not null
+        primary key,
+    Name               varchar(100) not null,
+    Duration           float        not null,
+    Start_Event_ID     int          not null,
+    End_Event_ID       int          not null,
+    Last_modified_date timestamp    not null,
+    constraint Projektarbeit_Endereignis_Event_ID_fk
+        foreign key (End_Event_ID) references Endereignis (Event_ID),
+    constraint Projektarbeit_Startereignis_Event_ID_fk
+        foreign key (Start_Event_ID) references Startereignis (Event_ID)
+);
+
+DROP TABLE IF EXISTS `ProjektarbeitBuchung`;
+create table ProjektarbeitBuchung
+(
+    Transaction_ID     int      not null
+        primary key,
+    Account_ID         int      not null,
+    Activity_ID        int      null,
+    Interval_ID        int      null,
+    Last_modified_date datetime not null,
+    constraint ProjektarbeitBuchung_Aktivitaet_Activity_ID_fk
+        foreign key (Activity_ID) references Aktivitaet (Activity_ID),
+    constraint ProjektarbeitBuchung_Arbeitszeitkonto_Account_ID_fk
+        foreign key (Account_ID) references Arbeitszeitkonto (Account_ID),
+    constraint ProjektarbeitBuchung_Projektarbeit_Interval_ID_fk
+        foreign key (Interval_ID) references Projektarbeit (Interval_ID)
+);
+
+
+
+INSERT INTO Person VALUES (10001,'Till','Lindemann','till.lindemann@gmail.com','Till Lindemann','fHivivUZIvVuzivuiVZUIvzuivZUivuziVUZIvUZivuziVzuivhhIOhoiph',1, '2022-06-22 16:00:00'),
+                          (10002,'Richard','Kruspe','richard.kruspe@gmail.com','Richard Kruspe','BIUObibiobiuoOPJjjiogERtsterzVUIuvi',1, '2022-06-22 16:00:00'),
+                          (10003,'Christian','Lorenz','christian.lorenz@gmail.com','Christian Lorenz','fbewuiqbfeuwiqfiobouUOzvuzovUOvhuoVUZVuo',0, '2022-06-22 16:00:00'),
+                          (10004,'Christoph','Schneider','christoph.schneider@gmail.com','Christoph Schneider','fewhuqibfeuiwqbfueanjifbeiouqwbusbahuofwqbu',0, '2022-05-02 19:49:00'),
+                          (10005,'Oliver','Riedel','oliver.riedel@gmail.com','Oliver Riedel','buhiPopjPItzZRSEvhkNJoiZi',0, '2022-05-02 19:49:47'),
+                          (10006,'Paul','Landers','paul.landers@gmail.com','Paul Landers','skdugfijsdzfgksudzfgvskdufgt',0, '2022-06-03 18:49:47');
+
+
+INSERT INTO Arbeitszeitkonto VALUES (10001, 10001),
+                                    (10002, 10002),
+                                    (10003, 10003),
+                                    (10004, 10004),
+                                    (10005, 10005),
+                                    (10006, 10006);
+
+
+
+insert into Aktivitaet VALUES (10001, 'Anforderungen erfassen', 2, '2022-06-22 16:00:00'),
+        (10002, 'Prototyp erstellen', 8, '2022-06-22 16:00:00'),
+        (10003, 'Funktionen programmieren', 20, '2022-06-22 16:00:00'),
+        (10004, 'Design optimieren', 10, '2022-06-22 16:00:00'),
+        (10005, 'Projektplan erstellen', 4, '2022-06-22 16:00:00'),
+        (10006, 'Literaturrecherche betreiben', 10, '2022-06-22 16:00:00'),
+        (10007, 'Recherche auswerten', 10, '2022-06-22 16:00:00'),
+        (10008, 'Bericht schreiben', 20, '2022-06-22 16:00:00'),
+        (10009, 'Korrektur lesen', 2, '2022-06-22 16:00:00');
+
+INSERT INTO Startereignis VALUES (10001,'Test Laufzeit Startereignis', '2022-06-22 16:00:00', '2022-06-22 16:00:00'),
+                                 (10002,'Test2 Laufzeit Startereignis', '2022-06-23 16:00:00', '2022-06-22 16:00:00');
+
+
+INSERT INTO Endereignis VALUES (10001, 'Test Projekt Laufzeit Endereignis', '2022-06-23 17:00:00', '2022-06-22 16:00:00'),
+                               (10002, 'Test2 Projekt Laufzeit Endereignis', '2022-06-24 17:00:00', '2022-06-22 16:00:00');
+
+
+INSERT INTO Projekt_deadline VALUES (10001, 'Test Projekt Deadline', '2022-06-23 17:00:00', '2022-06-22 17:00:00'),
+                                    (10002, 'Test2 Projekt Deadline','2022-06-24 17:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO Projektlaufzeit VALUES (10001, 'Test Projekt Laufzeit', 25.0, 10001, 10001, '2022-06-22 16:00:00'),
+                                   (10002, 'Test Projekt Laufzeit', 25.0, 10002, 10002, '2022-06-22 16:00:00');
+
+insert into Projekt VALUES  (10001, 'Website', 'Tante_Emma_Laden', 'Erstellen einer kleinen Website für den örtlichen Tante Emma Laden.',10001, 10001, '2022-06-22 16:00:00'),
+        (10002, 'Hausarbeit', 'Professor Karlsen', 'Eine Hausarbeit im Modul X', 10002, 10002, '2022-06-22 16:00:00');
+
+insert into Projekt_Ersteller VALUES (10001, 10002),
+        (10002, 10001);
+
+insert into Projekt_Zustaendigkeit VALUES  (10001, 10002),
+        (10001, 10001),
+        (10001, 10003),
+        (10001, 10004),
+        (10001, 10005),
+        (10002, 10001),
+        (10002, 10003),
+        (10002, 10005);
+
+insert into Projekt_Aktivitaeten VALUES  (10001, 10001),
+        (10001, 10002),
+        (10001, 10003),
+        (10001, 10004),
+        (10002, 10005),
+        (10002, 10006),
+        (10002, 10007),
+        (10002, 10008),
+        (10002, 10009);
+
+insert into Aktivitaet_Zustaendigkeit VALUES  (10001, 10002),
+        (10002, 10001),
+        (10002, 10002),
+        (10003, 10003),
+        (10003, 10004),
+        (10003, 10005),
+        (10004, 10004),
+        (10004, 10005),
+        (10005, 10001),
+        (10006, 10001),
+        (10006, 10003),
+        (10006, 10005),
+        (10007, 10001),
+        (10007, 10003),
+        (10007, 10005),
+        (10008, 10001),
+        (10008, 10003),
+        (10008, 10005),
+        (10009, 10003),
+        (10009, 10005);
+
+
+INSERT INTO Kommen VALUES (10001,'Test Kommen Ereignis', '2022-06-22 16:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO KommenBuchung VALUES (10001, 10002, 10001, '2022-06-22 16:00:00');
+
+INSERT INTO Gehen VALUES (10001, 'Test Gehen Ereignis', '2022-06-22 17:00:00', '2022-06-22 17:00:00');
+
+INSERT INTO GehenBuchung VALUES (10001, 10002, 10001, '2022-06-22 16:00:00');
+
+
+
+INSERT INTO Startereignis VALUES (10003,'Test Pause Startereignis', '2022-06-22 17:00:00', '2022-06-22 16:00:00'),
+                                 (10004,'Test Projektarbeitszeit Startereignis', '2022-06-23 16:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO StartereignisBuchung VALUES (10001, 10001, 10003, '2022-06-22 16:00:00'),
+                                        (10002, 10002, 10004, '2022-06-22 16:00:00');
+
+
+INSERT INTO Endereignis VALUES (10003, 'Test Pause Laufzeit Endereignis', '2022-06-23 17:15:00', '2022-06-22 16:00:00'),
+                               (10004, 'Test2 Projektarbeitszeit Endereignis', '2022-06-23 17:00:00', '2022-06-22 16:00:00');
+
+INSERT INTO EndereignisBuchung VALUES (10001, 10001, 10003, '2022-06-22 17:16:00'),
+                                        (10002, 10002, 10004, '2022-06-22 16:00:00');
+
+INSERT INTO Pause VALUES (10001, 'Test Kaffee Pause', 0.25, 10003, 10003, '2022-06-22 17:16:00');
+
+INSERT INTO PauseBuchung VALUES (10001, 10001, 10001,'2022-06-22 17:16:00');
+
+INSERT INTO Projektarbeit VALUES (10001, 'Test Projektarbeitszeit', 1.0, 10004, 10004, '2022-06-23 17:03:00');
+
+INSERT INTO ProjektarbeitBuchung VALUES (10001, 10002, 10001, 10001, '2022-06-23 17:03:00');
+
+
+
+
+
+

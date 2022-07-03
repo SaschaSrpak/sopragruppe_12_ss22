@@ -1,18 +1,153 @@
-import React, {Component} from 'react'
-import Error from '../Zwischenelemente/Error'
+import React, { Component } from 'react';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import Error from '../Zwischenelemente/Error';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import DialogContentText from '@mui/material/DialogContentText';
+import SystemAPI from '../../api/SystemAPI';
+import ProjektBO from '../../api/ProjektBO';
 
 /** 
- *@fileOverview 
- *@author 
+ *@fileOverview Das ist der Dialog-Pup-Up, der beim Erstellen eines neuen Projekts angezeigt wird.
+ *@author Sascha Srpak
 */
 
 export class NewProjekt extends Component {
-    constructor(props){
-        super(props)
+
+    // Constructor der Anfangswerte setzt
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: "",
+            creator: "",
+            client: "",
+            description: "",
+            set_deadline: "2022-07-04T12:00",
+            project_duration: "",
+            activities: [],
+            persons_responsible: [],
+            open: true,
+        }
+    }
+
+    // ComponentDidMount, um die Daten beim Rendern aus der Datenbank zu laden
+    componentDidMount() {
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
+            console.log(result)
+            this.setState({
+                creator: result.name + " " + result.surname,
+                creatorid: result.id
+            })
+        })
     }
 
 
-    render(){
+    // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
+    handleClose = () => {
+        this.props.handleClose();
+    }
 
+
+    // Setzt Props auf die State-Variablen für Projektdaten
+    handleChange = (event) => {
+        console.log(event.target.value)
+        this.setState({
+            [event.target.id]: event.target.value,
+        })
+    }
+
+    // schreibt die Projektdaten in die Datenbank
+    // Doesn't Work yet omg
+
+    addProject = () => {
+        let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
+        SystemAPI.getAPI().addProject(newProject).then(response => {
+            console.log(response)
+            this.props.handleClose()
+            alert("Projekt erstellt")
+        })
+    }
+
+
+
+    // rendert das Dialogfenster mit allen relevanten Daten um ein neues Projekt zu erstellen
+    render() {
+
+        const { name, creator, client, description, set_deadline, project_duration, activities, persons_responsible } = this.state;
+
+        return (
+            <div>
+                <DialogTitle>Neues Projekt erstellen</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Füllen Sie bitte das folgende Formular aus, um ein neues Projekt zu erstellen.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Projektname"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={name}
+                        onChange={this.handleChange}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="creator"
+                        label="Projektersteller"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        editable={false}
+                        value={creator}
+                        inputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="client"
+                        label="Client"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={client}
+                        onChange={this.handleChange}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="description"
+                        label="Projektbeschreibung"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={description}
+                        onChange={this.handleChange}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="set_deadline"
+                        label="Deadline"
+                        type="datetime-local"
+                        fullWidth
+                        variant="standard"
+                        value={set_deadline}
+                        onChange={this.handleChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose}>Abbrechen</Button>
+                    <Button onClick={this.addProject}>Speichern</Button>
+                </DialogActions>
+            </div>
+        )
     }
 }
+
+export default NewProjekt;

@@ -9,25 +9,28 @@ class PersonMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Auslesen aller Personen.
 
+        :return Eine Sammlung mit Personen-Objekten
+        """
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from Person")
         tuples = cursor.fetchall()
 
         for (id, name, surname,
-             mail_address, user_name,
-             firebase_id,
-             last_modified_date, manager_status) in tuples:
+             mail_address, user_name, firebase_id,
+             manager_status, last_modified_date) in tuples:
             person = Person()
             person.set_id(id)
             person.set_name(name)
             person.set_surname(surname)
             person.set_mail_address(mail_address)
             person.set_user_name(user_name)
+            person.set_last_modified_date(last_modified_date)
             person.set_manager_status(manager_status)
             person.set_firebase_id(firebase_id)
-            person.set_last_modified_date(last_modified_date)
+
             result.append(person)
 
         self._cnx.commit()
@@ -36,6 +39,12 @@ class PersonMapper(Mapper):
         return result
 
     def find_by_key(self, key):
+        """Suchen einer Person
+            :param key Primärschlüsselattribut
+            :return Personen-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+                nicht vorhandenem DB-Tupel.
+            """
+
         result = None
 
         cursor = self._cnx.cursor()
@@ -66,7 +75,11 @@ class PersonMapper(Mapper):
 
         return result
 
-    def find_by_firebase_id(self, firebase_id):
+    def find_person_by_firebase_id(self, firebase_id):
+        """Auslesen der Person anhand der firebase ID
+        :param firebase_id der zugehörigen Person
+        :return Person mit der zugehörigen firebase_id
+                    """
         result = None
 
         cursor = self._cnx.cursor()
@@ -98,6 +111,11 @@ class PersonMapper(Mapper):
         return result
 
     def find_by_activity_key(self, activity_key):
+        """Auslesen aller Personen anhand der Aktivität
+        :param activity_key
+        :return Eine Sammlung mit Personen-Objekten, die sämtliche Personen mit
+        gewünschter Aktivität erhält
+        """
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT User_ID FROM Aktivitaet_Zustaendigkeit " \
@@ -112,6 +130,11 @@ class PersonMapper(Mapper):
         return result
 
     def find_by_project_key(self, project_key):
+        """Auslesen aller Personen anhand des Projektes
+                :param project_key
+                :return Eine Sammlung mit Personen-Objekten, die sämtliche Personen mit
+                gewünschten Projekten enthält
+                """
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT User_ID FROM Projekt_Zustaendigkeit " \
@@ -126,6 +149,11 @@ class PersonMapper(Mapper):
         return result
 
     def find_creator_by_project_key(self, project_key):
+        """Auslesen der Ersteller anhand des Projekts
+                :param project_key
+                :return Eine Sammlung mit Personen-Objekten, die aus Erstellern besteht mit
+                dem gewünschten Projekt
+                """
         result = None
         cursor = self._cnx.cursor()
         command = "SELECT User_ID FROM Projekt_Ersteller " \
@@ -139,17 +167,21 @@ class PersonMapper(Mapper):
         cursor.close()
         return result
 
-    
-
     def insert(self, person):
+        """Einfügen eines Customer-Objekts in die Datenbank.
 
+                Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+                berichtigt.
+
+                :param person das zu speichernde Objekt
+                :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
+                """
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(User_ID) AS maxid FROM Person ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
             person.set_id(maxid[0] + 1)
-
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
                        "EMail, Username, Firebase_ID, Last_modified_date,Manager_Status) "
@@ -188,27 +220,3 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-"""
-if (__name__ == "__main__"):
-    Hugo = Person()
-    Hugo.set_id("U1000243")
-    Hugo.set_name("Hugo")
-    Hugo.set_surname("Herbert")
-    Hugo.set_mail_address("hugo.herbert@hdmv.de")
-    Hugo.set_user_name("HHerbert")
-    Hugo.set_last_modified_date(datetime.datetime.now())
-    Hugo.set_manager_status(0)
-    
-    with PersonMapper() as mapper:
-
-        #mapper.insert(Hugo)
-        test = mapper.find_by_activity_key("A100001")
-        for i in test:
-            print(i.get_name())
-        result = mapper.find_all()
-        for i in result:
-            print(i.get_name())
-"""
-

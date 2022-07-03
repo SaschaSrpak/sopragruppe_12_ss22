@@ -1,4 +1,4 @@
-from business_objects.Zeitintervalle.Pause import Pause
+from server.business_objects.Zeitintervalle.Pause import Pause
 from server.db.Mapper import Mapper
 
 
@@ -8,6 +8,10 @@ class PauseMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Auslesen aller Pausen.
+
+                :return Eine Sammlung mit Pausen-Objekten
+                """
         result = []
         cursor = self._cnx.cursor()
 
@@ -32,7 +36,10 @@ class PauseMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param key Primärschlüsselattribut
+        :return Pause-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel."""
         result = None
 
         cursor = self._cnx.cursor()
@@ -62,6 +69,10 @@ class PauseMapper(Mapper):
         return result
 
     def find_by_transaction_key(self, transaction_key):
+        """Suchen einer Pause anhand der Buchugn.
+               :param transaction_key Primärschlüsselattribut
+               :return Pause-Objekt, das dem übergebenen Schlüssel entspricht
+               """
         result = None
         cursor = self._cnx.cursor()
 
@@ -76,6 +87,11 @@ class PauseMapper(Mapper):
         return result
 
     def insert(self, pause):
+        """Einfügen eines Pausen-Objekts in die Datenbank.
+
+                :param pause das zu speichernde Objekt
+                :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
+                """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Interval_ID) AS maxid FROM Pause ")
         tuples = cursor.fetchall()
@@ -100,25 +116,31 @@ class PauseMapper(Mapper):
 
     def update(self, pause):
 
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param pause das Objekt, das in die DB geschrieben werden soll
+        """
         cursor = self._cnx.cursor()
 
         command = "UPDATE Pause " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, " \
-                                            "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
+                                    "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
         data = (
-                pause.get_name(),
-                pause.get_duration(),
-                pause.get_start(),
-                pause.get_end(),
-                pause.get_last_modified_date(),
-                pause.get_id())
+            pause.get_name(),
+            pause.get_duration(),
+            pause.get_start(),
+            pause.get_end(),
+            pause.get_last_modified_date(),
+            pause.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
     def delete(self, pause):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Löschen der Daten eines Pause-Objekts aus der Datenbank.
+
+        :param pause das aus der DB zu löschende "Objekt"
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Pause WHERE Interval_ID='{}'".format(pause.get_id())
@@ -126,8 +148,3 @@ class PauseMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen, 
-um die grundsätzliche Funktion zu überprüfen.
-"""

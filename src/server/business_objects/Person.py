@@ -62,11 +62,10 @@ class Person(bo.BusinessObject):
 
     def __str(self):
         return "Person: {}, {}, {}, {}, {}, {}, {}, {}".format(self.get_name(),
-                                                          self.get_surname(), self.get_mail_address(),
-                                                          self.get_user_name(), self.get_firebase_id(),
-                                                          self.get_manager_status(), self.get_id(),
+                                                               self.get_surname(), self.get_mail_address(),
+                                                               self.get_user_name(), self.get_firebase_id(),
+                                                               self.get_manager_status(), self.get_id(),
                                                                self.get_last_modified_date())
-
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -81,5 +80,3 @@ class Person(bo.BusinessObject):
         obj.set_id(dictionary['id'])
         obj.set_manager_status(dictionary['manager_status'])
         return obj
-
-

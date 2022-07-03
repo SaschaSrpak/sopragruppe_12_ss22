@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.Ereignis import Ereignis
+from server.business_objects.Ereignisse.Ereignis import Ereignis
 
 
 class Gehen(Ereignis):

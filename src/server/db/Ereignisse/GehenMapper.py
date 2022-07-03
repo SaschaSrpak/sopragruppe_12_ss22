@@ -1,4 +1,4 @@
-from business_objects.Ereignisse.Gehen import Gehen
+from server.business_objects.Ereignisse.Gehen import Gehen
 from server.db.Mapper import Mapper
 
 
@@ -8,6 +8,10 @@ class GehenMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Auslesen aller Gehen-Objekte.
+
+                :return Eine Sammlung mit Gehen-Objekten
+                """
         result = []
         cursor = self._cnx.cursor()
 
@@ -29,7 +33,10 @@ class GehenMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param key Primärschlüsselattribut
+        :return Gehen-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenem DB-Tupel."""
         result = None
 
         cursor = self._cnx.cursor()
@@ -57,6 +64,11 @@ class GehenMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines Gehen-Objekts in die Datenbank.
+
+                :param ereignis das zu speichernde Objekt
+                :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
+                """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Gehen ")
         tuples = cursor.fetchall()
@@ -77,7 +89,10 @@ class GehenMapper(Mapper):
         return ereignis
 
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param ereignis das Objekt, das in die DB geschrieben werden soll
+        """
         cursor = self._cnx.cursor()
 
         command = "UPDATE Gehen " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
@@ -91,7 +106,10 @@ class GehenMapper(Mapper):
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Löschen der Daten eines Gehen-Objekts aus der Datenbank.
+
+            :param ereignis das aus der DB zu löschende "Objekt"
+            """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Gehen WHERE Event_ID='{}'".format(ereignis.get_id())
@@ -99,22 +117,3 @@ class GehenMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-"""Zu Testzwecken können wir diese Datei bei Bedarf auch ausführen, 
-um die grundsätzliche Funktion zu überprüfen.
-
-Anmerkung: Nicht professionell aber hilfreich..."""
-"""if (__name__ == "__main__"):
-    with EreignisMapper() as mapper:
-        result = mapper.find_all()
-        for t in result:
-            print(t)"""
-""""
-with GehenMapper() as mapper:
-    test = mapper.find_by_key(10001)
-    print(test.get_event_name())
-    result = mapper.find_all()
-    for i in result:
-        print(i.get_event_name())
-"""

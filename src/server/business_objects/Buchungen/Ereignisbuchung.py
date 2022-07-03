@@ -1,5 +1,5 @@
-from business_objects.Buchungen.Buchung import Buchung
-from business_objects.Ereignisse.Ereignis import Ereignis
+from server.business_objects.Buchungen.Buchung import Buchung
+from server.business_objects.Ereignisse.Ereignis import Ereignis
 
 
 class Ereignisbuchung(Buchung):
@@ -16,4 +16,3 @@ class Ereignisbuchung(Buchung):
         """Mit dieser Funktion kann ein Bezug zwischen der Buchung
         und einem Ereignis-Objekt hergestellt werden"""
         self._event_id = new_source
-

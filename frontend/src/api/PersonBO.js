@@ -1,20 +1,20 @@
-import PersonBO from './PersonBO';
+import BO from './BO';
 
 /** 
  *@fileOverview 
- *@author Luca Trautmann
+ *@author Jeffrey He
 */
 
-export default class PersonBO{
+export default class PersonBO extends BO{
 
-    constructor() {
+    constructor(aName, aSurname, aMail_Address, aUser_Name, aFirebase_ID, aManager_Status) {
         super()
-        this.name = null;
-        this.surname = null;
-        this.mail_adress = null;
-        this.user_name = null;
-        this.firebase_id = null;
-        this.manager_status = null;
+        this.name = aName;
+        this.surname = aSurname;
+        this.mail_address = aMail_Address;
+        this.user_name = aUser_Name;
+        this.firebase_id = aFirebase_ID;
+        this.manager_status = aManager_Status;
     }
 
     getName(){
@@ -33,12 +33,12 @@ export default class PersonBO{
         this.surname = new_surname;
     }
 
-    getMail_adress(){
-        return this.mail_adress;
+    getMail_address(){
+        return this.mail_address;
     }
 
-    setMail_adress(new_mailadress){
-        this.mail_adress = new_mailadress;
+    setMail_address(new_mailaddress){
+        this.mail_address = new_mailaddress;
     }
 
     getUser_name(){
