@@ -699,9 +699,9 @@ class ProjectRelatedActivityOperations(Resource):
 class ProjectDeadlineByProjectOperations(Resource):
     @timesystem.marshal_with(project_deadline)
     @secured
-    def get(self, project_id):
+    def get(self, id):
         s_adm = SystemAdministration()
-        deadline = s_adm.get_project_deadline_by_project_key(project_id)
+        deadline = s_adm.get_project_deadline_by_project_key(id)
 
         return deadline
 
