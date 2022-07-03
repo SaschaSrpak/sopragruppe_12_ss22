@@ -693,7 +693,7 @@ class ProjectRelatedActivityOperations(Resource):
             return 'Person not found', 500
 
 
-@timesystem.route('/project/project_deadline/<int:id>')
+@timesystem.route('/projects/project_deadline/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'ID des ProjektDeadline-Objekts')
 class ProjectDeadlineByProjectOperations(Resource):
