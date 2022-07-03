@@ -85,7 +85,10 @@ class EndereignisMapper(Mapper):
 
 
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param ereignis das Objekt, das in die DB geschrieben werden soll
+        """
         cursor = self._cnx.cursor()
 
         command = "UPDATE Endereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
@@ -100,7 +103,10 @@ class EndereignisMapper(Mapper):
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Löschen der Daten eines Customer-Objekts aus der Datenbank.
+
+        :param ereignis das aus der DB zu löschende "Objekt"
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Endereignis WHERE Event_ID='{}'".format(ereignis.get_id())
