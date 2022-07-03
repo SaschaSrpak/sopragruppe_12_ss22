@@ -2,7 +2,7 @@ import BO from './BO';
 
 /** 
  *@fileOverview 
- *@author Luca Trautmann
+ *@author Jeffrey He, Liam Wilke
 */
 
 export default class ProjektBO extends BO{

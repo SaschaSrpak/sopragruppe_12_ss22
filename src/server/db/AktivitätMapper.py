@@ -9,7 +9,9 @@ class AktivitaetMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
+        """Auslesen aller Aktivitäten.
+            :return Eine Sammlung mit Aktivitäts-Objekten
+                """
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from Aktivitaet")

@@ -8,6 +8,7 @@ class ProjektDeadlineMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Finde alle Objekte in der Datenbank"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -59,6 +60,7 @@ class ProjektDeadlineMapper(Mapper):
         return result
 
     def find_by_project_key(self, project_key):
+        """Finde ein Projekt anhand einer Projekt-ID"""
         result = None
         cursor = self._cnx.cursor()
         command = "SELECT Deadline_ID FROM Projekt " \
@@ -73,6 +75,7 @@ class ProjektDeadlineMapper(Mapper):
         return result
 
     def insert(self, projektdeadline):
+        """Einfügen einer Deadline zum Projekt"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM projekt_deadline ")
         tuples = cursor.fetchall()

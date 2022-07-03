@@ -8,6 +8,8 @@ class EndereignisMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Finde alle Endereignis-Events in der DB
+            :return eine Sammlung mit Endereignis-Events"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -30,7 +32,9 @@ class EndereignisMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+            :param id Primärschlüsselattribut
+            :return Endereignis mit dem passenden Schlüsselm ansonsten None"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -58,6 +62,8 @@ class EndereignisMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines neuen Endereignisses
+            :param"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Endereignis ")
         tuples = cursor.fetchall()

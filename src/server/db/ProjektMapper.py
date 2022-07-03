@@ -8,7 +8,8 @@ class ProjektMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-        """Lesen aller Projekte aus der Datenbank"""
+        """Lesen aller Projekte aus der Datenbank
+        :return Eine Sammlung von Projekt-objekten"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -33,7 +34,9 @@ class ProjektMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lesen eines Projekts aus der Datenbank mit der gegebenen ID"""
+        """suchen eines Projekts aus der Datenbank mit der gegebenen ID
+            :param id Primärschlüssel
+            :return Projek-Objekt mit entsprechendem SChlüssel, None, wenn der Tupel nicht vorhanden ist"""
         result = None
         cursor = self._cnx.cursor()
         cursor.execute(
@@ -64,7 +67,9 @@ class ProjektMapper(Mapper):
         return result
 
     def find_by_client(self, client):
-        """Lesen aller Projekte aus der Datenbank mit dem gegebenen Client"""
+        """Suchehn der Projekte aus der Datenbank mit dem gegebenen Client
+        :param client
+        :return Projekt, das dem übergegeben Schlüssel entspricht, None bei nicht vorhandenem Tupel"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -92,7 +97,9 @@ class ProjektMapper(Mapper):
         return result
 
     def find_by_creator(self, creator_key):
-        """Lesen aller Projekte aus der Datenbank mit dem gegebenen Projekt-Ersteller"""
+        """Suchen der Projekte aus der Datenbank mit dem gegebenen Projekt-Ersteller
+            :param creator
+            :return Projekt, das dem übergegeben Schlüssel entspricht, None bei nicht vorhandenem Tupel"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Ersteller " \
@@ -122,7 +129,8 @@ class ProjektMapper(Mapper):
         return project
 
     def update_creator(self, project, person):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz erneut abbilden.
+        :param person das Objekt, das in die Db geschrieben werden soll"""
         cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Ersteller" + "SET User_ID=%s, WHERE Project_ID=%s"
         data = (person.get_id(), project.get_id())
@@ -145,7 +153,9 @@ class ProjektMapper(Mapper):
         cursor.close()
 
     def find_by_person_key(self, person_key):
-        """Lesen aller Projekte aus der Datenbank mit dem gegebenen User"""
+        """Lesen aller Projekte aus der Datenbank mit dem gegebener Person
+        :param person_key Primärschlüsselattribut
+        :return project, das dem übergebenen Schlüssel entspircht"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Zustaendigkeit " \
@@ -175,7 +185,8 @@ class ProjektMapper(Mapper):
         return project
 
     def update_person_responsible(self, project, person):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz erneut abbilden.
+            :param person das Objekt in projekt, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Zuständigkeit" + "SET User_ID=%s, WHERE Project_ID=%s"
         data = (person.get_id(), project.get_id())
@@ -198,7 +209,9 @@ class ProjektMapper(Mapper):
         cursor.close()
 
     def find_by_activity_key(self, activity_key):
-        """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID"""
+        """Lesen eines Projekts aus der Datenbank anhand der gegebenen Aktivität_ID
+        :param activity_key Primärschlüsseattribut
+        :return Aktivität, das dem übergebenen SChlüssel entspricht, None bei nicht vorhandenen Tupel"""
         result = None
         cursor = self._cnx.cursor()
         command = "SELECT Project_ID FROM Projekt_Aktivitaeten " \
@@ -213,7 +226,8 @@ class ProjektMapper(Mapper):
         return result
 
     def insert_activity(self, project, activity):
-        """Einfügen einer neuen Aktivität in die Datenbank"""
+        """Einfügen einer neuen Aktivität in die Datenbank
+            :param """
         cursor = self._cnx.cursor()
         cursor.execute("INSERT INTO Projekt_Aktivitaeten(Project_ID,"
                        "Activity_ID) VALUES('{}', '{}')".format(project.get_id(), activity.get_id()))
@@ -222,6 +236,8 @@ class ProjektMapper(Mapper):
         return project
 
     def update_activity(self, project, activity):
+        """Widerholtes Schreiben eines Objektes in der der DB
+        :param activity aus projekt das Objekt, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
         command = "UPDATE Projekt_Aktivitaeten " + "SET Activity_ID=%s WHERE Project_ID=%s"
         data = (activity.get_id(), project.get_id())
@@ -232,6 +248,8 @@ class ProjektMapper(Mapper):
 
 
     def delete_activity(self, project, activity):
+        """Löschen einer Aktivität eines Projektes aus der Datenbank
+        :param activity das aus der DB zu löschende objekt"""
         cursor = self._cnx.cursor()
         command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}' and Activity_ID='{}'".format(project.get_id(),
                                                                                                     activity.get_id())
@@ -241,7 +259,9 @@ class ProjektMapper(Mapper):
         cursor.close()
 
     def insert(self, projekt):
-        """Einfügen eines Projekts in die Datenbank"""
+        """Einfügen eines Projekts in die Datenbank
+        :param projekt das zu speichernde Objekt
+        :return das bereits übergebene Objekt mit ggf. korrigierter ID"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT max(Project_ID) AS maxid FROM Projekt")
         tuples = cursor.fetchall()
@@ -269,7 +289,8 @@ class ProjektMapper(Mapper):
         return projekt
 
     def update(self, projekt):
-        """Aktualisieren eines Projekts in der Datenbank"""
+        """Aktualisieren eines Projekts in der Datenbank
+        :param projekt das Objekt, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
 
         command = "UPDATE Projekt SET Name=%s, Client=%s, Description=%s, " \
@@ -289,7 +310,8 @@ class ProjektMapper(Mapper):
         cursor.close()
 
     def delete(self, projekt):
-        """Löschen eines Projekts aus der Datenbank"""
+        """Löschen eines Projekts aus der Datenbank
+        :param projekt das aus der DB zu löschende Objekt"""
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Projekt WHERE Project_ID={}".format(projekt.get_id())

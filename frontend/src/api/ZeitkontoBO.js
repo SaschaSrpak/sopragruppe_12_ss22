@@ -2,7 +2,7 @@ import BO from './BO';
 import PersonBO from './PersonBO';
 /** 
  *@fileOverview 
- *@author Luca Trautmann
+ *@author Luca Trautmann, Jeffrey He
 */
 
 export default class ZeitkontoBO extends BO{

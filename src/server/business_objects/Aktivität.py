@@ -17,9 +17,11 @@ class Aktivitaet(bo.BusinessObject):
         self._activity_name = new_activity_name
 
     def get_persons_responsible(self):
+        """Anzeigen der verantwortlichen Person"""
         return self._persons_responsible
 
     def set_persons_responsible(self, new_persons_responsible):
+        """Ändern der verantwortlichen Person"""
         self._persons_responsible = new_persons_responsible
 
     def get_man_day_capacity(self):
