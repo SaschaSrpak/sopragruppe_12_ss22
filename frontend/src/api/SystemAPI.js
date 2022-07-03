@@ -57,6 +57,7 @@ export default class SystemAPI {
     #addPersonResponsibleToProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
     #deletePersonResponsibleFromProjectURL = (id, person_id) => `${this.#SystemServerBaseURL}/projects/${id}/persons/${person_id}`;
     #getFullWorktimeOnProjectURL = (id) => `${this.#SystemServerBaseURL}/projects/${id}/worktime`;
+    #getProjectDeadlineByProjectId = (id) => `${this.#SystemServerBaseURL}/projects/${id}/worktime`;
 
     //Activity related
 
@@ -390,6 +391,17 @@ export default class SystemAPI {
             })
         })
   }
+
+  getProjectDeadlineOnProject(project_id) {
+        return this.#fetchAdvanced(this.#getProjectDeadlineByProjectId(project_id)).then((responseJSON) => {
+            let projekt_deadline_BOs = ProjektDeadlineBO.fromJSON(responseJSON);
+            return new Promise ( function (resolve){
+                resolve(projekt_deadline_BOs);
+            })
+        })
+  }
+
+
 
   addActivityToProject(project_id, activity_id) {
         return this.#fetchAdvanced(this.#addActivityToProjectURL(project_id, activity_id), {

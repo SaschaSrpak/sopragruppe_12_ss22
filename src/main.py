@@ -693,6 +693,19 @@ class ProjectRelatedActivityOperations(Resource):
             return 'Person not found', 500
 
 
+@timesystem.route('/project/project_deadline/<int:id>')
+@timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@timesystem.param('id', 'ID des ProjektDeadline-Objekts')
+class ProjectDeadlineByProjectOperations(Resource):
+    @timesystem.marshal_with(project_deadline)
+    @secured
+    def get(self, project_id):
+        s_adm = SystemAdministration()
+        deadline = s_adm.get_project_deadline_by_project_key(project_id)
+
+        return deadline
+
+
 @timesystem.route('/projects/<int:id>/activity/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Project-Objekts')
