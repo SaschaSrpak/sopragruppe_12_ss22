@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Error from '../Zwischenelemente/Error';
@@ -16,7 +16,7 @@ import ProjektBO from '../../api/ProjektBO';
 
 export class NewProjekt extends Component {
 
-// Constructor
+    // Constructor der Anfangswerte setzt
     constructor(props) {
         super(props);
         this.state = {
@@ -32,25 +32,25 @@ export class NewProjekt extends Component {
         }
     }
 
-// ComponentDidMount, um die Daten beim Rendern zu laden
+    // ComponentDidMount, um die Daten beim Rendern aus der Datenbank zu laden
     componentDidMount() {
-        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result)=>{
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
             console.log(result)
             this.setState({
                 creator: result.name + " " + result.surname,
-                creatorid : result.id
+                creatorid: result.id
             })
-    })
+        })
     }
 
 
-// Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
+    // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
         this.props.handleClose();
     }
-    
 
-// Setzt Props auf die State-Variablen für Projektdaten
+
+    // Setzt Props auf die State-Variablen für Projektdaten
     handleChange = (event) => {
         console.log(event.target.value)
         this.setState({
@@ -58,9 +58,9 @@ export class NewProjekt extends Component {
         })
     }
 
-// schreibt die Projektdaten in die Datenbank
-        // Doesn't Work yet omg
-        
+    // schreibt die Projektdaten in die Datenbank
+    // Doesn't Work yet omg
+
     addProject = () => {
         let newProject = new ProjektBO(this.state.name, this.state.creatorid, this.state.client, this.state.description, this.state.set_deadline, this.state.project_duration, this.state.activities, this.state.creatorid);
         SystemAPI.getAPI().addProject(newProject).then(response => {
@@ -72,19 +72,19 @@ export class NewProjekt extends Component {
 
 
 
-// rendert das Dialogfenster mit allen relevanten Daten um ein neues Projekt zu erstellen
-    render(){
+    // rendert das Dialogfenster mit allen relevanten Daten um ein neues Projekt zu erstellen
+    render() {
 
         const { name, creator, client, description, set_deadline, project_duration, activities, persons_responsible } = this.state;
 
-        return(
+        return (
             <div>
                 <DialogTitle>Neues Projekt erstellen</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Füllen Sie bitte das folgende Formular aus, um ein neues Projekt zu erstellen.
                     </DialogContentText>
-                    <TextField 
+                    <TextField
                         autoFocus
                         margin="dense"
                         id="name"
@@ -92,10 +92,10 @@ export class NewProjekt extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={name} 
+                        value={name}
                         onChange={this.handleChange}
                     />
-                    <TextField 
+                    <TextField
                         autoFocus
                         margin="dense"
                         id="creator"
@@ -105,10 +105,9 @@ export class NewProjekt extends Component {
                         variant="standard"
                         editable={false}
                         value={creator}
-                        inputProps={{readOnly: true}}
-
+                        inputProps={{ readOnly: true }}
                     />
-                    <TextField 
+                    <TextField
                         autoFocus
                         margin="dense"
                         id="client"
@@ -116,10 +115,10 @@ export class NewProjekt extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={client} 
+                        value={client}
                         onChange={this.handleChange}
                     />
-                    <TextField 
+                    <TextField
                         autoFocus
                         margin="dense"
                         id="description"
@@ -127,10 +126,10 @@ export class NewProjekt extends Component {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={description} 
+                        value={description}
                         onChange={this.handleChange}
                     />
-                    <TextField 
+                    <TextField
                         autoFocus
                         margin="dense"
                         id="set_deadline"
@@ -138,10 +137,9 @@ export class NewProjekt extends Component {
                         type="datetime-local"
                         fullWidth
                         variant="standard"
-                        value={set_deadline} 
+                        value={set_deadline}
                         onChange={this.handleChange}
                     />
-
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose}>Abbrechen</Button>

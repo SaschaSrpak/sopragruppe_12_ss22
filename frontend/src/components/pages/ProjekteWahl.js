@@ -10,7 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import Paper from "@mui/material/Paper";
 import SystemAPI from "../../api/SystemAPI";
 import { Dialog } from "@mui/material";
-import {NewProjekt} from "../Dienste/NewProjekt";
+import { NewProjekt } from "../Dienste/NewProjekt";
 import Projektanzeige from "./Projektanzeige";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -47,11 +47,11 @@ export class Projektwahl extends Component {
         })
         // Managerstatus aus der Datenbank laden
         SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
-                console.log(result)
-                this.setState({
-                    managerstatus: result.manager_status
-                })
+            console.log(result)
+            this.setState({
+                managerstatus: result.manager_status
             })
+        })
     }
 
     // componentDidMount zum Laden der Projekte beim Rendern der Seite
@@ -92,36 +92,36 @@ export class Projektwahl extends Component {
 
     // Funktion zum Löschen eines Projekts
     deleteProject = () => {
-
-        if(this.state.managerstatus === "1"){
-        console.log(this.state.selectedProjects)
-        if (this.state.selectedProjects) {
-            SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
-                this.setState({
-                    selectedProjects: null
-                })
-            }).catch(err => {
-                console.log(err)
-            }).finally(() => {
-                SystemAPI.getAPI().getProjects().then(projects => {
+        if (this.state.managerstatus === "1") {
+            console.log(this.state.selectedProjects)
+            if (this.state.selectedProjects) {
+                SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
                     this.setState({
-                        projects: projects,
-                        deleteDialogOpen: false
+                        selectedProjects: null
                     })
+                }).catch(err => {
+                    console.log(err)
+                }).finally(() => {
+                    SystemAPI.getAPI().getProjects().then(projects => {
+                        this.setState({
+                            projects: projects,
+                            deleteDialogOpen: false
+                        })
+                    })
+                }
+                )
+                alert("Projekt wurde gelöscht")
+            } else {
+                alert("Kein Projekt ausgewählt")
+                this.setState({
+                    deleteDialogOpen: false
                 })
             }
-            )
-            alert("Projekt wurde gelöscht")
         } else {
-            alert("Kein Projekt ausgewählt")
-            this.setState({
-                deleteDialogOpen: false
-            })
-        }
-     }else{
             alert("Sie haben keine Berechtigung dazu ein Projekt zu löschen")
-            this.setState({deleteDialogOpen: false })
-        }}
+            this.setState({ deleteDialogOpen: false })
+        }
+    }
 
 
     // rendert die Projekte aus der Liste. Projekte können ausgewählt werden, beim bestätigen wird über
@@ -197,12 +197,9 @@ export class Projektwahl extends Component {
                             }}
                             >Ausgewähltes Projekt löschen</Typography>
                         </Button>
-
                         <Divider sx={{
                             margin: "10px",
                         }} />
-
-
                         {/** Button zum Erstellen eines neuen Projekts */}
                         <Button variant="contained"
                             onClick={this.handleClickOpen}

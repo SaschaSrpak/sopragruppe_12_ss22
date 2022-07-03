@@ -18,7 +18,6 @@ export class About extends Component {
         <h2>
           Software-Praktikum im SS 2022
         </h2>
-       
         <br />
         <p>
           React Frontend written by

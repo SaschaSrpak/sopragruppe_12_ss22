@@ -18,17 +18,14 @@ class ProfileDropDown extends Component {
 
     constructor(props) {
         super(props);
-
         // setzt start States
         this.state = {
             open: false,
             show: false,
             person: null,
         }
-
         this.routeChange = this.routeChange.bind(this);
     }
-
     routeChange() {
         let path = '/Profil';
         this.props.history.push(path);
@@ -73,11 +70,10 @@ class ProfileDropDown extends Component {
             .then(PersonBO => {
                 console.log(PersonBO.id);
                 SystemAPI.getAPI().deletePerson(PersonBO.id)
-             }
-
+            }
             )
     }
-  
+
     //Funktion welche zum löschen des Accounts führt
     handledelete = () => {
         console.log("löschen wurde angefordert")
@@ -89,13 +85,10 @@ class ProfileDropDown extends Component {
             this.deletePerson();
             console.log("löschung ist durch.");
             alert("Account wurde gelöscht.")
-            
         } else {
             // Abbrechen - Keine Löschung
             console.log('Keine Löschung.');
         }
-
-
     }
 
     render() {
@@ -110,7 +103,6 @@ class ProfileDropDown extends Component {
                     <IconButton sx={{ align: 'right' }} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
                         <Avatar src={user.photoURL} />
                     </IconButton>
-
                     <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                         anchorOrigin={{
                             vertical: 'top',
@@ -120,13 +112,10 @@ class ProfileDropDown extends Component {
                             vertical: 'top',
                             horizontal: 'right'
                         }}>
-
                         <Paper sx={{ padding: 1, bgcolor: 'background.default' }}>
-
                             <Grid container justifyContent='center'>
-
                                 <Grid item align='center'>
-                                   {/*  Begrüßung mit eingelesenem Username  und Button mit deren oben Beschriebenen Funktionen*/}
+                                    {/*  Begrüßung mit eingelesenem Username  und Button mit deren oben Beschriebenen Funktionen*/}
                                     <Typography align='center'>Hallo {user.displayName}</Typography>
                                     <Divider sx={{ margin: 1 }} />
                                     <Typography align='center' variant='body2'>{user.email}</Typography>
@@ -136,11 +125,9 @@ class ProfileDropDown extends Component {
                                     <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button> <br />
                                     <Divider sx={{ margin: 1 }} />
                                     <Button onClick={this.handledelete}>Account löschen</Button>
-
                                 </Grid>
                             </Grid>
                         </Paper>
-
                     </Popover>
                 </div>
                 : null

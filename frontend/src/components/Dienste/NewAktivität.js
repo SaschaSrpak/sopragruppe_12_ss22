@@ -42,7 +42,7 @@ export class NewAktivität extends Component {
     }
   }
 
-// Lädt die Projektbeteiligten beim Rendern der Seite
+  // Lädt die Projektbeteiligten beim Rendern der Seite
   componentDidMount() {
     SystemAPI.getAPI().getPersonsOnProject(this.state.projectChoice).then(responsiblepersons => {
       console.log(responsiblepersons)
@@ -89,7 +89,7 @@ export class NewAktivität extends Component {
     }
   }
 
-// Funktion um eine neue Aktivität hinzuzufügen
+  // Funktion um eine neue Aktivität hinzuzufügen
   addActivity = () => {
     console.log(this.state.personresponsibleforactivity)
     let newActivity = new AktivitätBO(this.state.activity_name, this.state.man_day_capacity);
@@ -111,6 +111,7 @@ export class NewAktivität extends Component {
     })
   }
 
+  // Rendert die Seite zum Erstellen einer neuen Aktivität
   render() {
 
     const { activity_name, man_day_capacity, persons_responsible } = this.state;
