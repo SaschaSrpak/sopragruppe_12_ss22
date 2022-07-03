@@ -9,7 +9,8 @@ class GehenBuchungMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
+        """Lesen aller Objekte in der Datenbank
+        :return Eine Sammlung von GehenBuchungs-Objekten"""
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from GehenBuchung")
@@ -30,6 +31,11 @@ class GehenBuchungMapper(Mapper):
         return result
 
     def find_by_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param  der zu findende Key
+        :return GehenBuchung-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem Tupel
+        """
+
         result = None
 
         cursor = self._cnx.cursor()
@@ -57,7 +63,11 @@ class GehenBuchungMapper(Mapper):
 
     def find_by_event_key(self, event_key):
         result = None
-
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param event_key der zu findende Account
+        :return GehenBuchung-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem
+        Tupel
+        """
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID, Account_ID, Event_ID, " \
                   "Last_modified_date FROM GehenBuchung WHERE Event_ID='{}'".format(event_key)
@@ -82,6 +92,11 @@ class GehenBuchungMapper(Mapper):
         return result
 
     def find_by_account_key(self, account_key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param account_key der zu findende Account
+        :return GehenBuchung-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem
+        Tupel
+        """
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID FROM GehenBuchung " \
@@ -96,7 +111,10 @@ class GehenBuchungMapper(Mapper):
         return result
 
     def insert(self, transaction):
-
+        """Einfügen eines neuen GehenBuchung-Objekts.
+            Der Primärschlüssel wird geprüft und ggf. berichtigt
+            :param transaction das zu speichernde Objekt
+            :return das bereits übergeben Objekt mit evtl. korrigierter ID"""
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM GehenBuchung ")
         tuples = cursor.fetchall()
@@ -116,7 +134,8 @@ class GehenBuchungMapper(Mapper):
         return transaction
 
     def update(self, transaction):
-
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param transaction das Objekt, das in die DB geschrieben werden soll."""
         cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
@@ -131,7 +150,8 @@ class GehenBuchungMapper(Mapper):
         cursor.close()
 
     def delete(self, transaction):
-
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param transaction das aus der DB zu löschende "Objekt" """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM GehenBuchung where Transaction_ID='{}'".format(transaction.get_id())

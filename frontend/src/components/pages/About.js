@@ -5,7 +5,7 @@ import { Link } from '@material-ui/core';
 
 /**
  *@fileOverview Zeigt alle Mitwirkenden im Projekt mit Verweis auf die Git-Repository
- *@author Luca Trautmann
+ *@author Luca Trautmann, Jeffrey He
 */
 
 export class About extends Component {

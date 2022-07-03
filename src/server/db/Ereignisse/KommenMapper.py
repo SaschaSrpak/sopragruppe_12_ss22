@@ -8,6 +8,8 @@ class KommenMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Aulesen alles Kommen-Events
+            :return Eine Sammlung an Kommen-Objekte"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -29,7 +31,10 @@ class KommenMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+            :param id Primärschlüssenattribut
+            :return Kommen-Objekt, das dem übergebenen Schlüssel entspricht, None bei
+            nicht vorhandenen DB-Tupel"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -57,6 +62,9 @@ class KommenMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines Kommen-Events in die DB
+            :param ereignis das zu speicherne Objekt
+            :return das bereits übergebene Objekte, aber mit ggf. korrigierter ID"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Kommen ")
         tuples = cursor.fetchall()
@@ -77,7 +85,8 @@ class KommenMapper(Mapper):
         return ereignis
 
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param ereignis das Objekte, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
 
         command = "UPDATE Kommen " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
@@ -92,7 +101,8 @@ class KommenMapper(Mapper):
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param ereignis, das aus der DB zu löschende Objekte"""
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Kommen WHERE Event_ID='{}'".format(ereignis.get_id())

@@ -9,7 +9,8 @@ class StartereignisBuchungMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
+        """Lesen aller Objekte in der Datenbank
+        :return Eine Sammlung von StartereignisBuchung-Objekten"""
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from StartereignisBuchung")
@@ -30,6 +31,7 @@ class StartereignisBuchungMapper(Mapper):
         return result
 
     def find_by_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         result = None
 
         cursor = self._cnx.cursor()
@@ -56,6 +58,7 @@ class StartereignisBuchungMapper(Mapper):
         return result
 
     def find_by_event_key(self, event_key):
+        """Lesen eines Projekts aus der Datenbank mit der gegebenen ID"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -82,6 +85,7 @@ class StartereignisBuchungMapper(Mapper):
         return result
 
     def find_by_account_key(self, account_key):
+        """Lesen aller Projekte aus der Datenbank mit dem gegebenen Account"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID FROM StartereignisBuchung " \
@@ -96,7 +100,14 @@ class StartereignisBuchungMapper(Mapper):
         return result
 
     def insert(self, transaction):
+        """Einfügen eines Transactios-Objekts in die Datenbank.
 
+                Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+                berichtigt.
+
+                :param person das zu speichernde Objekt
+                :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
+                """
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM StartereignisBuchung ")
         tuples = cursor.fetchall()
@@ -116,7 +127,7 @@ class StartereignisBuchungMapper(Mapper):
         return transaction
 
     def update(self, transaction):
-
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())

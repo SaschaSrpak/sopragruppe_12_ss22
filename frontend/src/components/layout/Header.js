@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 /** 
  *@fileOverview Element welche auf jeder Seite als Header eingebunden ist. 
  Beinhaltet ein Profildrop down und eine DrawerComponent zum Navigieren
- *@author Luca Trautmann
+ *@author Luca Trautmann, Jeffrey He
 */
 
 class Header extends React.Component {

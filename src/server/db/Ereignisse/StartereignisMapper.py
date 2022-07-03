@@ -8,6 +8,10 @@ class StartereignisMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Auslesen aller Startereignisse.
+
+                :return Eine Sammlung mit Startereignis-Objekten
+                """
         result = []
         cursor = self._cnx.cursor()
 
@@ -29,7 +33,10 @@ class StartereignisMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param key Primärschlüsselattribut
+        :return Eine Sammlung mit Startereignis-Objekten, die sämtliche Starteregnisse mit gewünschter
+        Event-ID"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -57,6 +64,10 @@ class StartereignisMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines Ereignis-Objekts in die Datenbank.
+                :param ereignis zu speichernde Objekt
+                :return das bereits übergebene Objekt, jedoch mit ggf. korrigierter ID.
+                """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Startereignis ")
         tuples = cursor.fetchall()
@@ -77,7 +88,8 @@ class StartereignisMapper(Mapper):
         return ereignis
 
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz ereneut abbilden.
+        :param ereignis das Objekt, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
 
         command = "UPDATE startereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
@@ -92,7 +104,9 @@ class StartereignisMapper(Mapper):
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Löschen der Daten eines Ereignis-Objekts aus der Datenbank.
+        :param ereignis das aus der DB zu löschende "Objekt"
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Startereignis WHERE Event_ID='{}'".format(ereignis.get_id())

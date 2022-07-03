@@ -8,6 +8,8 @@ class EndereignisMapper(Mapper):
         super().__init__()
 
     def find_all(self):
+        """Finde alle Endereignis-Events in der DB
+            :return eine Sammlung mit Endereignis-Events"""
         result = []
         cursor = self._cnx.cursor()
 
@@ -29,7 +31,9 @@ class EndereignisMapper(Mapper):
         return result
 
     def find_by_key(self, key):
-        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+            :param id Primärschlüsselattribut
+            :return Endereignis mit dem passenden Schlüsselm ansonsten None"""
         result = None
 
         cursor = self._cnx.cursor()
@@ -57,6 +61,8 @@ class EndereignisMapper(Mapper):
         return result
 
     def insert(self, ereignis):
+        """Einfügen eines neuen Endereignisses
+            :param"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(Event_ID) AS maxid FROM Endereignis ")
         tuples = cursor.fetchall()
@@ -77,7 +83,10 @@ class EndereignisMapper(Mapper):
         return ereignis
 
     def update(self, ereignis):
-        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param ereignis das Objekt, das in die DB geschrieben werden soll
+        """
         cursor = self._cnx.cursor()
 
         command = "UPDATE Endereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
@@ -92,7 +101,10 @@ class EndereignisMapper(Mapper):
         cursor.close()
 
     def delete(self, ereignis):
-        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen."""
+        """Löschen der Daten eines Customer-Objekts aus der Datenbank.
+
+        :param ereignis das aus der DB zu löschende "Objekt"
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM Endereignis WHERE Event_ID='{}'".format(ereignis.get_id())

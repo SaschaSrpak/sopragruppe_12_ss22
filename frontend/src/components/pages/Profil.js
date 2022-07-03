@@ -16,7 +16,7 @@ import SystemAPI from '../../api/SystemAPI';
 /**
  *@fileOverview Repersentiert ein Popup welche als Profilübersicht mit den Aktuellen Daten des Nutzers anzeigen. 
  Änderungen können ebenso gemacht werden.
- *@author Luca Trautmann
+ *@author Luca Trautmann, Jeffrey He
 */
 
 class Profil extends Component {

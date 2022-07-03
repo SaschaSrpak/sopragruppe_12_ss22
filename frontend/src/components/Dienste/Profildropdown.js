@@ -7,7 +7,7 @@ import SystemAPI from '../../api/SystemAPI';
 import PersonBO from '../../api/PersonBO';
 
 /** Represemtiert die Profil-Dropdown Komponente unter welcher man sein Profil ansehen kann, sich Ausloggen kann und seinen Accoutn löschen kann.
- * @author Luca Trautmann
+ * @author Luca Trautmann, Jeffrey He
  */
 
 
