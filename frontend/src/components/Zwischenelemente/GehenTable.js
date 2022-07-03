@@ -77,7 +77,7 @@ export class  GehenTable extends Component{
           openDelete: false,
             data: newdata
       });
-
+        this.props.handleUpdate()
         })
     }
     getLocalTime = () => {

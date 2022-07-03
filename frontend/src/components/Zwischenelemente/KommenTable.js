@@ -80,7 +80,9 @@ export class  KommenTable extends Component{
                 }
 
         )
+            this.props.handleUpdate()
         })
+
     }
     getLocalTime = () => {
     var tzoffset = (new Date()).getTimezoneOffset() * 60000;

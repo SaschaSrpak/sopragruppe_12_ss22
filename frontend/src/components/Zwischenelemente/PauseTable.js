@@ -113,7 +113,7 @@ export class  PauseTable extends Component{
         if (this.props.data.length > 0) {
             //Prüft ob Daten vorhanden sind
             const headers = Object.keys(this.props.data[0]);
-            const headers2 = ["Transaktions ID", "Interval ID", "Pausen Beschreibung", "Start Zeitpunkt", "End Zeitpunkt"];
+            const headers2 = ["Transaktions ID", "Interval ID", "Abwesenheitsbeschreibung", "Start Zeitpunkt", "End Zeitpunkt"];
             const { openEdit, openDelete } = this.state;
 
                 return (
@@ -149,7 +149,7 @@ export class  PauseTable extends Component{
                     <DialogTitle>Aktualisiere deine Buchung</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Bearbeite deine Pausebuchungen:
+                            Bearbeite deine Abwesenheitsbuchungen:
                         </DialogContentText>
                         <TextField
                             autoFocus
@@ -188,23 +188,23 @@ export class  PauseTable extends Component{
                             autoFocus
                             margin="dense"
                             label="Start Zeitpunkt"
-                            id="Start"
+                            id="start"
                             type="datetime-local"
                             defaultValue={this.state.start}
                             fullWidth
                             variant="standard"
-
+                            onChange={this.handleChange}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             label="End Zeitpunkt"
-                            id = "Ende"
+                            id = "ende"
                             type="datetime-local"
                             defaultValue={this.state.ende}
                             fullWidth
                             variant="standard"
-
+                            onChange={this.handleChange}
                         />
                         </DialogContent>
                         <DialogActions>

@@ -91,6 +91,7 @@ export class  WorkTimeTable extends Component{
         console.log(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende)
         SystemAPI.getAPI().updateProjectWorktimeTransactionWithValues(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende).then(person => {
             this.setState({
+                openEdit: false
             });
             this.props.handleUpdate()
         })
