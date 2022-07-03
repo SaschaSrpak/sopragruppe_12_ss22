@@ -83,7 +83,7 @@ export class  WorkTimeTable extends Component{
             this.setState({
             })})
         //////});
-          //  window.location.reload(false);
+            window.location.reload(false)
        // })transaction_id, interval_id, interval_name, start_time, end_time
     }
 

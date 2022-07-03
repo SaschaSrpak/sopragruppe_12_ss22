@@ -28,30 +28,24 @@ export class  KommenTable extends Component{
         this.state = {
             openedit: false,
             opendelete: false,
+            data: props.data,
             kommen: KommenBO
         }
     }
      handleClickOpenEdit = (event) => {
-        let reihe = Number(event.target.parentNode.id)
-         reihe += 1
-
-
         this.setState({
           openEdit: !this.state.open,
-            kommenid: document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML,
-            lastchange: document.getElementById("kommenTable").rows[reihe].cells[3].innerHTML,
-            eventname: document.getElementById("kommenTable").rows[reihe].cells[0].innerHTML,
-            timeofevent: document.getElementById("kommenTable").rows[reihe].cells[1].innerHTML
+            editElement: event,
+            eventname: event.event_name,
+            timeofevent : event.time_of_event
         })
+
       };
 
       handleClickOpenDelete = (event) => {
-          let reihe = Number(event.target.parentNode.id)
-         reihe += 1
-         let id = document.getElementById("kommenTable").rows[reihe].cells[2].innerHTML
     this.setState({
       openDelete: !this.state.open,
-        deleteId: id
+        deleteElement: event
     })
   };
     handleCloseEdit = () => {
@@ -67,39 +61,58 @@ export class  KommenTable extends Component{
     };
 
     DeleteKommen = (event) => {
-        console.log(this.state.deleteId)
-        SystemAPI.getAPI().deleteKommen(this.state.deleteId).then((result) => {this.setState({
-          openDelete: false
-      });
-            window.location.reload(false);
+        console.log(this.state.deleteElement)
+         var newdata = this.state.data.filter(a => a.id !== this.state.deleteElement.id)
+        console.log(newdata)
+        SystemAPI.getAPI().deleteKommen(this.state.deleteElement.id).then((result) => {this.setState({
+          openDelete: false,
+            data: newdata
+
+
+                }
+
+        )
         })
     }
+    getLocalTime = () => {
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -5);
+    localISOTime = localISOTime.replace("T", " ")
+    return localISOTime
+  }
 
     UpdateKommen = () => {
 
         let updateKommen = Object.assign(new KommenBO(), this.state.kommen)
         updateKommen.setEventName(this.state.eventname);
         updateKommen.setTimeOfEvent(this.state.timeofevent);
-        updateKommen.setId(Number(this.state.kommenid));
-        updateKommen.setLastModifiedDate(this.state.lastchange);
-        console.log(updateKommen)
-        console.log(this.state.timeofevent)
-        console.log(this.state.eventname)
+        updateKommen.setId(Number(this.state.editElement.id));
+
+        var time = this.getLocalTime()
+        var timeofevent = this.state.timeofevent.replace("T", " ")
+
+        updateKommen.setLastModifiedDate(time);
+
+         var newdata = this.state.data.filter(a => a.id !== this.state.editElement.id)
+
         SystemAPI.getAPI().updateKommen(updateKommen).then(person => {
+            updateKommen.setTimeOfEvent(timeofevent)
+            newdata.push(updateKommen)
             this.setState({
+                 data: newdata,
+                openEdit: false
             })})
-        //////});
-          //  window.location.reload(false);
-       // })
+
     }
 
     handleChange = (event) => {
         this.setState({
             [event.target.id]: event.target.value,
+
         })
     }
     render() {
-        if (this.props.data.length > 0) {
+        if (this.props.data.length > 0 && this.state.data.length >0 ) {
             const headers = Object.keys(this.props.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzte Änderung"];
             const { openEdit, openDelete } = this.state;
@@ -121,13 +134,13 @@ export class  KommenTable extends Component{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.props.data.map((emp, index) => (
-                                    <TableRow id={index} key={index}>
+                                {this.state.data.map((emp) => (
+                                    <TableRow>
                                         {headers.map(header => (
                                             <TableCell align="left">{emp[header]}</TableCell>
                                         ))}
-                                        <Button color='primary' onClick={this.handleClickOpenEdit} >Edit</Button>
-                                        <Button color='warning' onClick={this.handleClickOpenDelete} >Delete</Button>
+                                        <Button color='primary' onClick={() =>this.handleClickOpenEdit(emp)} >Edit</Button>
+                                        <Button color='warning' onClick={() =>this.handleClickOpenDelete(emp)} >Delete</Button>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -144,9 +157,9 @@ export class  KommenTable extends Component{
                             margin="dense"
                             id="eventname"
                             label={"Event Name"}
-                            defaultValue={this.state.eventname}
                             fullWidth
                             variant="standard"
+                            defaultValue={this.state.editElement?this.state.editElement.event_name:null}
                             onChange={this.handleChange}
                         />
                         <TextField
@@ -154,9 +167,9 @@ export class  KommenTable extends Component{
                             editable = "false"
                             inputProps={{readOnly: true}}
                             margin="dense"
-                            id="name"
+                            id="id"
                             label={"Event ID"}
-                            value ={this.state.kommenid}
+                            value={this.state.editElement?this.state.editElement.id:null}
                             fullWidth
                             variant="standard"
 
@@ -167,9 +180,9 @@ export class  KommenTable extends Component{
                             id = "timeofevent"
                             label="Zeitpunkt des Events"
                             type="datetime-local"
-                            defaultValue={this.state.timeofevent}
                             fullWidth
                             variant="standard"
+                            defaultValue={this.state.editElement?this.state.editElement.time_of_event:null}
                             onChange={this.handleChange}
                         />
                         <TextField
@@ -178,7 +191,7 @@ export class  KommenTable extends Component{
                             label="Letzte Änderung"
                             type="datetime-local"
                             inputProps={{readOnly: true}}
-                            defaultValue={this.state.lastchange}
+                            value={this.state.editElement?this.state.editElement.last_modified_date:null}
                             fullWidth
                             variant="standard"
 

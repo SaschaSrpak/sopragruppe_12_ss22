@@ -85,7 +85,10 @@ export class Projektanzeige extends Component {
                 })
             })
             // Deadline aus der Datenbank laden -> von ID in Datum
+            console.log(this.state.projectChoice)
+
             SystemAPI.getAPI().getProjectDeadline(this.state.projectChoice).then(newDeadline => {
+                console.log(newDeadline)
                 var deadlineanzeige = newDeadline.time_of_event
                 deadlineanzeige = deadlineanzeige.replace("T", ' - ')
                 deadlineanzeige = deadlineanzeige.substring(0, 18)

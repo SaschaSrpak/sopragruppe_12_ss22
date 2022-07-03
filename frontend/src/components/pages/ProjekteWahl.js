@@ -45,6 +45,13 @@ export class Projektwahl extends Component {
                 projects: projects
             })
         })
+        // Managerstatus aus der Datenbank laden
+        SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
+                console.log(result)
+                this.setState({
+                    managerstatus: result.manager_status
+                })
+            })
     }
 
     // componentDidMount zum Laden der Projekte beim Rendern der Seite
@@ -57,7 +64,6 @@ export class Projektwahl extends Component {
         this.setState({
             selectedProjects: event.target.value
         })
-        // console.log(this.state.selectedProjects)
     }
 
     // Beim betätigen von "Auswählen" wird das Projekt in projectChoice gespeichert (work in progress)
@@ -86,6 +92,8 @@ export class Projektwahl extends Component {
 
     // Funktion zum Löschen eines Projekts
     deleteProject = () => {
+
+        if(this.state.managerstatus === "1"){
         console.log(this.state.selectedProjects)
         if (this.state.selectedProjects) {
             SystemAPI.getAPI().deleteProject(this.state.selectedProjects).then(() => {
@@ -110,7 +118,10 @@ export class Projektwahl extends Component {
                 deleteDialogOpen: false
             })
         }
-    }
+     }else{
+            alert("Sie haben keine Berechtigung dazu ein Projekt zu löschen")
+            this.setState({deleteDialogOpen: false })
+        }}
 
 
     // rendert die Projekte aus der Liste. Projekte können ausgewählt werden, beim bestätigen wird über
