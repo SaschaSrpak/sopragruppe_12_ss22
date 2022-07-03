@@ -105,7 +105,7 @@ export class UpdateProject extends Component {
 
     updateProject = () => {
     if( this.state.managerstatus === "1"){
-        if(this.state.client,this.state.description,this.state.name,this.set_deadline){
+        if(this.state.set_deadline){
         console.log(this.state.persons_responsible)
         let newProject = new ProjektBO();
         newProject.setName(this.state.name);
