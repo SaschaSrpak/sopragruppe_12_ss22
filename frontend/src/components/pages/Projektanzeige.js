@@ -88,7 +88,7 @@ export class Projektanzeige extends Component {
             console.log(this.state.projectChoice)
 
             SystemAPI.getAPI().getProjectDeadlineOnProject(this.state.projectChoice).then(newDeadline => {
-                 var deadlineanzeige = newDeadline[0]
+                var deadlineanzeige = newDeadline[0]
                 deadlineanzeige = deadlineanzeige.time_of_event
                 deadlineanzeige = deadlineanzeige.replace("T", ' - ')
                 deadlineanzeige = deadlineanzeige.substring(0, 18)
@@ -284,34 +284,29 @@ export class Projektanzeige extends Component {
     }
     // schließt Dialog
     handleCloseEdit = (newproject, newdeadline, newduration) => {
-        if(newproject && newdeadline && newduration){
+        if (newproject && newdeadline && newduration) {
             var deadlineanzeige = newdeadline.time_of_event
-                deadlineanzeige = deadlineanzeige.replace("T", ' - ')
-                deadlineanzeige = deadlineanzeige.substring(0, 18)
+            deadlineanzeige = deadlineanzeige.replace("T", ' - ')
+            deadlineanzeige = deadlineanzeige.substring(0, 18)
             var Tage = Number(newduration.duration) / 24
-                var Tage = Math.round(Tage)
-                if (Tage > 1) {
-                    var bezeichnung = "Tage"
-                } else {
-                    var bezeichnung = "Tag"
-                }
-                this.setState({
-                    project_duration_new: Tage,
-                    project_duration_bezeichnung: bezeichnung,
-                    deadline_new: deadlineanzeige,
-                    deadlineanzeige: deadlineanzeige,
-                    projects: newproject
-                })
-
-
-
-
-
-
+            var Tage = Math.round(Tage)
+            if (Tage > 1) {
+                var bezeichnung = "Tage"
+            } else {
+                var bezeichnung = "Tag"
+            }
+            this.setState({
+                project_duration_new: Tage,
+                project_duration_bezeichnung: bezeichnung,
+                deadline_new: deadlineanzeige,
+                deadlineanzeige: deadlineanzeige,
+                projects: newproject
+            })
         }
         console.log(newproject, newdeadline, newduration)
         this.setState({ openChangeProject: false })
     }
+
     // öffnet Activity-Löschdialog
     handleActivityIconClickOpen = () => {
         this.setState({
@@ -342,8 +337,8 @@ export class Projektanzeige extends Component {
             activities: activity
         })
         alert("Aktivität hinzugefügt")
-
     }
+
     // Projektedaten des ausgewählten Projekts werden gerendert
     render() {
         const { projectChoice } = this.state;
@@ -512,7 +507,7 @@ export class Projektanzeige extends Component {
                 >
                     <UpdateProject
                         user={this.props.user}
-                        handleCloseEdit={(newproject, newdeadline, newduration) => this.handleCloseEdit(newproject, newdeadline, newduration) }
+                        handleCloseEdit={(newproject, newdeadline, newduration) => this.handleCloseEdit(newproject, newdeadline, newduration)}
 
                         projectdata={this.props.projectChoice}
                         open={this.props} />

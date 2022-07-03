@@ -13,11 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { TableBody } from "@mui/material";
 import SystemAPI from "../../api/SystemAPI";
-
-
-
 // import AktivitätCard from "./AktivitätAnzeige";
-
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -40,7 +36,7 @@ import { AktivitätBearbeiten } from "../Dienste/AktivitätBearbeiten";
 
 // rendert die Aktivitäten zu einem Projekt in Form einer Card Komponente
 export class AktivitätCard extends Component {
-
+    // Constructor, der anfangswerte setzt
     constructor(props) {
         super(props);
         console.log(props.activity)
@@ -68,7 +64,6 @@ export class AktivitätCard extends Component {
                         worktime = worktime * 60
                         var Hours = Math.floor(worktime / 60)
                         var minutes = Math.round(worktime % 60)
-
                         let worktimerounded = Hours + "h " + minutes + "Min"
                         console.log(worktimerounded)
                         person.username = worktimerounded
