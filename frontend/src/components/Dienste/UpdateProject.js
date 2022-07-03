@@ -57,6 +57,7 @@ export class UpdateProject extends Component {
 
 
             })
+
             SystemAPI.getAPI().getProjectDeadline(result.set_deadline).then((result) => {
                 this.setState({
                     time_of_event: result.time_of_event,
@@ -87,7 +88,7 @@ export class UpdateProject extends Component {
 
 // Beim Betätigen des Buttons "Abbrechen" wird das Dialogfenster geschlossen
     handleClose = () => {
-        this.props.handleClose();
+        this.props.handleCloseEdit();
     }
     
 
@@ -104,6 +105,7 @@ export class UpdateProject extends Component {
 
     updateProject = () => {
     if( this.state.managerstatus === "1"){
+        if(this.state.client,this.state.description,this.state.name,this.set_deadline){
         console.log(this.state.persons_responsible)
         let newProject = new ProjektBO();
         newProject.setName(this.state.name);
@@ -119,9 +121,10 @@ export class UpdateProject extends Component {
 
         let newDeadline = new ProjektDeadlineBO();
         newDeadline.setEventName(this.state.event_name);
-        newDeadline.setTimeOfEvent(this.state.time_of_event);
+        newDeadline.setTimeOfEvent(this.state.set_deadline);
         newDeadline.setId(this.state.deadlineid);
         newDeadline.setLastModifiedDate("");
+
 
         let newDuration = new ProjektlaufzeitBO();
         newDuration.setDuration(this.state.project_duration);
@@ -132,28 +135,26 @@ export class UpdateProject extends Component {
         newDuration.setLastModifiedDate("");
 
 
-        console.log(newProject)
+
         SystemAPI.getAPI().updateProject(newProject).then(response => {
         })
         SystemAPI.getAPI().updateProjectDeadline(newDeadline).then(response => {
         })
-        console.log(newDuration)
+
         SystemAPI.getAPI().getEndEvent(this.state.duration_ende).then(response => {
             let newendereignis = new EndereignisBO()
-            console.log(response)
-            console.log(response.event_name)
             newendereignis.setEventName(response.event_name)
             newendereignis.setTimeOfEvent(this.state.set_deadline)
             newendereignis.setId(response.id)
             newendereignis.setLastModifiedDate(response.last_modified_date)
             SystemAPI.getAPI().updateEndEvent(newendereignis)
-            console.log(newendereignis)
-            console.log(newDuration)
             SystemAPI.getAPI().updateProjectDuration(newDuration).then(response => {
         })
             alert("Projekt wurde bearbeitet")
-            this.props.handleClose();
-        })
+            this.props.handleCloseEdit(newProject, newendereignis, newDuration);
+        })}else{
+            alert("Füllen Sie alle Felder aus")
+        }
     }else{
         alert("Sie haben keine Berechtigung diese Handlung durchzuführen")
     }
