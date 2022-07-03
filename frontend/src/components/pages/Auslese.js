@@ -314,13 +314,13 @@ export class Auslese extends Component {
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                                 <Typography>Kommen</Typography>
                             </AccordionSummary>
-                            <KommenTable title=" " data={this.state.kommenname} />
+                            <KommenTable title=" " data={this.state.kommenname} handleUpdate={this.handleUpdateActivity}/>
                         </Accordion>
                         <Accordion sx={{ minWidth: "1200px" }}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                                 <Typography>Gehen</Typography>
                             </AccordionSummary>
-                            <GehenTable title=" " data={this.state.gehennamen} />
+                            <GehenTable title=" " data={this.state.gehennamen} handleUpdate={this.handleUpdateActivity} />
                         </Accordion>
                         <Accordion sx={{ minWidth: "1200px" }}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
