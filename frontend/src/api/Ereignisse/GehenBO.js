@@ -1,6 +1,6 @@
 import EreignisBO from "./EreignisBO";
 /** 
- *@fileOverview 
+ *@fileOverview Representiert ein Gehenereignis von Ereignis
  *@author Luca Trautmann, Kim Kaussler
 */
 

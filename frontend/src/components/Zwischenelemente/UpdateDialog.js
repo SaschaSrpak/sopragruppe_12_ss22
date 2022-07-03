@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 
 /** 
- *@fileOverview 
+ *@fileOverview Grundstruktur für den Berabeitungsdialog
  *@author Kim Kausler
 */
 
@@ -42,6 +42,7 @@ class UpdateDialog extends Component {
         return(
 
                 <Dialog open={false} onClose={this.handleClose}>
+
                     <DialogTitle>Aktualisiere deine Buchung</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -85,7 +86,7 @@ class UpdateDialog extends Component {
                             variant="standard"
                             onChange={this.handleChange}
                         />
-                    
+
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={this.handleClose}>Cancel</Button>

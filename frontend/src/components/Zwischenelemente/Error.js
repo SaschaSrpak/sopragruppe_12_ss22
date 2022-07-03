@@ -5,7 +5,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 
 /**
- *@fileOverview 
+ *@fileOverview Zeigt ein Fehlerobjekt an
  *@author Kim Kausler, Luca Trautmann
 */
 

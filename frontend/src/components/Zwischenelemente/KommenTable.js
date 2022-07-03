@@ -18,13 +18,17 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import KommenBO from "../../api/Ereignisse/KommenBO";
 
+/** 
+ *@fileOverview Hier kann man eine Kommenbuchung bearbeiten und löschen
+ *@author Liam Wilke
+*/
 
 
 export class  KommenTable extends Component{
     constructor(props)
     {
         super(props);
-
+        //setzt alle Standartstates für die Variablen
         this.state = {
             openedit: false,
             opendelete: false,
@@ -33,6 +37,7 @@ export class  KommenTable extends Component{
         }
     }
      handleClickOpenEdit = (event) => {
+        //Wenn der Dailog zum Editieren aufgerufen wird, werde mit dieser Funktion die Tabellendaten aus der entsprechenden Zeile ausgelesen und den Textfeldern als Default-Value übergeben
         this.setState({
           openEdit: !this.state.open,
             editElement: event,
@@ -49,12 +54,14 @@ export class  KommenTable extends Component{
     })
   };
     handleCloseEdit = () => {
+        //Setzt den Zustand zurück
         this.setState({
           openEdit: false
       });
     };
 
     handleCloseDelete= () => {
+        //Setzt den Zustand zurück
         this.setState({
           openDelete: false
       });
@@ -82,6 +89,7 @@ export class  KommenTable extends Component{
   }
 
     UpdateKommen = () => {
+        //Update Kommebuchung
 
         let updateKommen = Object.assign(new KommenBO(), this.state.kommen)
         updateKommen.setEventName(this.state.eventname);
@@ -106,12 +114,14 @@ export class  KommenTable extends Component{
     }
 
     handleChange = (event) => {
+        //Updatet das geänderte Objekt
         this.setState({
             [event.target.id]: event.target.value,
 
         })
     }
     render() {
+        //Rendert die Komponente
         if (this.props.data.length > 0 && this.state.data.length >0 ) {
             const headers = Object.keys(this.props.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzte Änderung"];

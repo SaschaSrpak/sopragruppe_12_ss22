@@ -25,10 +25,16 @@ import UpdateDialog from '../Zwischenelemente/UpdateDialog';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 
+/** 
+ *@fileOverview Seite zum Auslesen von den Zeiten zu Kommen, Gehen, Abwesenheit und Abwesenheit, zudem das Editieren und Löschen entsprechender Buchungen
+ *@author Liam Wilke, Kim Kausler
+*/
+
 export class Auslese extends Component {
       constructor(props) {
           super(props);
 
+          //setzt alle Standartstates für die Variablen
           this.state = {
 
          data: [],
@@ -47,6 +53,7 @@ export class Auslese extends Component {
       }
 
      async componentDidMount() {
+        // Auslesen der entsprechenden Daten aus der Datenbank 
 
 
          SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
@@ -56,8 +63,10 @@ export class Auslese extends Component {
              SystemAPI.getAPI().getGehenEventsOfAccountBetweenDates(this.state.userid, "1999-01-01", "2100-01-01").then((result) => {
                 // this.TestTwo(result)
                  if (result.length > 0){
+                    //Abfragen der Gehen Daten, wenn dafür welche vorhanden sind werden die ausgegeben
                  this.GehenDaten(result)
                  }else{
+                    //Wenn nicht wird ein leerer String zurückgegeben
                      this.GehenDaten("")
                  }
              })
@@ -66,8 +75,10 @@ export class Auslese extends Component {
                 // this.TestTwo(result)
                  console.log(result)
                  if (result.length > 0){
+                    //Abfragen der Abwesenheit Daten, wenn dafür welche vorhanden sind werden die ausgegeben
                  this.PauseDaten(result)
                  }else{
+                    //Wenn nicht wird ein leerer String zurückgegeben
                      this.PauseDaten("")
                  }
              })
@@ -76,8 +87,10 @@ export class Auslese extends Component {
                 // this.TestTwo(result)
                  console.log(result)
                  if (result.length > 0){
+                    //Abfragen der Arbeitszeiten Daten, wenn dafür welche vorhanden sind werden die ausgegeben
                  this.WorkTimeDaten(result)
                  }else{
+                    //Wenn nicht wird ein leerer String zurückgegeben
                      this.WorkTimeDaten("")
                  }
              })
@@ -86,8 +99,10 @@ export class Auslese extends Component {
                 // this.TestTwo(result)
                  console.log(result)
                  if (result.length > 0){
+                    //Abfragen der Kommen Daten, wenn dafür welche vorhanden sind werden die ausgegeben
                  this.KommenDaten(result)
                  }else{
+                    //Wenn nicht wird ein leerer String zurückgegeben
                      this.KommenDaten("")
                  }
              })
@@ -97,6 +112,7 @@ export class Auslese extends Component {
      }
 
     async Datenfilter() {
+    // Mit dieser Funktion können die ausgegebenen Daten für einen bestimmten Zeitraum gefiltert werden
 
 
 
@@ -150,11 +166,14 @@ export class Auslese extends Component {
      }
 
      KommenDaten =  (daten) => {
+        //Aufbereitung der Daten
             console.log(daten)
             if (daten === ""){
+                //Abfragen ob die Liste leer ist
                  daten = []
                 this.setState({kommenname: daten})
             }else{
+                //Wenn sie nicht leer ist, dann geht man durch alle Daten und "verschönert" die Ausgabe
                             (daten.map(Zeitpunkt=>{
                 //Change
                  var ZeitpunktString = Zeitpunkt.time_of_event;
@@ -177,10 +196,13 @@ export class Auslese extends Component {
      }
 
     GehenDaten = (daten) => {
+        //Aufbereitung der Daten
              if (daten === ""){
+                //Abfragen ob die Liste leer ist
                  daten = []
                 this.setState({gehennamen: daten})
             }else {
+                //Wenn sie nicht leer ist, dann geht man durch alle Daten und "verschönert" die Ausgabe
 
                  (daten.map(Zeitpunkt => {
                      //Change
@@ -203,10 +225,13 @@ export class Auslese extends Component {
     }
 
     PauseDaten = (daten) => {
+        //Aufbereitung der Daten
              if (daten === ""){
+                //Abfragen ob die Liste leer ist
                  daten = []
                 this.setState({pausennamen: daten})
             }else {
+                //Wenn sie nicht leer ist, dann geht man durch alle Daten und "verschönert" die Ausgabe
                     console.log(daten)
                  //(daten.map(Zeitpunkt => {
                      //Change
@@ -230,10 +255,13 @@ export class Auslese extends Component {
 
     }
     WorkTimeDaten = (daten) => {
+        //Aufbereitung der Daten
              if (daten === ""){
+                //Abfragen ob die Liste leer ist
                  daten = []
                 this.setState({worktimenamen: daten})
             }else {
+                //Wenn sie nicht leer ist, dann geht man durch alle Daten und "verschönert" die Ausgabe
 
                  (daten.map(Duration => {
 
@@ -258,6 +286,7 @@ export class Auslese extends Component {
     }
 
     editButtonClicked = (event) => {
+        // Wenn dieser Button geklickt wird öffnet sich der Dialog zum aktualisieren einer Buchung
       event.stopPropagation();
       this.setState({
         showUpdateDialog: true
@@ -281,6 +310,7 @@ export class Auslese extends Component {
   }
 
     render() {
+    //Rendert die Komponente
       const { showUpdateDialog ,open } = this.state;
 
         if(this.state.loading < 4) {
@@ -308,13 +338,14 @@ export class Auslese extends Component {
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Ende" onChange={(event) => this.setState({endeFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
                 <p></p>
                 <Button variant="contained" onClick={() => this.Datenfilter()}> Daten Filtern</Button>
+    
 
                 <br/>
-                <Divider sx={{margin:"40px"}}/>
-            <div style={{
+                <div style={{
                 position: 'absolute', left: '20%', top: '30%'
                 }}>
-                      <Accordion sx={{minWidth: "1200px"}}>
+                <Divider sx={{margin:"40px"}}/>
+                      <Accordion sx={{minWidth: "1200px"}} >
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Kommen</Typography>
                         </AccordionSummary>

@@ -1,6 +1,6 @@
 import EreignisBO from "./EreignisBO";
 /** 
- *@fileOverview 
+ *@fileOverview Representiert ein Projektdeadline-Ereignis von Ereignis
  *@author Luca Trautmann, Kim Kausler
 */
 

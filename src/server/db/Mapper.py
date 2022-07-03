@@ -14,7 +14,7 @@ class Mapper(AbstractContextManager, ABC):
 
         if os.getenv('GAE_ENV', '').startswith('standard'):
             """Landen wir in diesem Zweig, so haben wir festgestellt, dass der Code in der Cloud abläuft.
-            Die App befindet sich somit im **Production Mode** und zwar im *Standard Environment*.
+            Die App befindet sich somit im Production Mode und zwar im Standard Environment.
             Hierbei handelt es sich also um die Verbindung zwischen Google App Engine und Cloud SQL."""
 
             self._cnx = connector.connect(user='root', password='roottoor',

@@ -15,8 +15,8 @@ import { PauseBO } from '../../api';
 
 
 /** 
- *@fileOverview 
- *@author Kim Kausler
+ *@fileOverview Auf dieser Seite wird Komme, Gehen, Abwesenheit die Arbeitszeit für Aktivitäten gebucht
+ *@author Kim Kausler, Liam Wilke
 */
 
 export class Buchungen extends Component {
@@ -24,6 +24,7 @@ export class Buchungen extends Component {
   constructor(props) {
     super(props);
 
+    //setzt alle Standartstates für die Variablen
     this.state = {
       activities: [],
       selectedActivities: null,
@@ -42,9 +43,8 @@ export class Buchungen extends Component {
 
 
 
-
   kommenButtonClicked = event => {
-    
+    //Hier wird die Kommen Buchung gebucht
     let newKommen = new KommenBO();
     newKommen.event_name = "kommen";
     newKommen.time_of_event = this.getLocalTime();
@@ -59,7 +59,7 @@ export class Buchungen extends Component {
   }
 
   gehenButtonClicked = event => {
-    
+    //Hier wird die Gehen Buchung gebucht
     let newGehen = new GehenBO();
     newGehen.event_name = "gehen";
     newGehen.time_of_event = this.getLocalTime();
@@ -75,13 +75,14 @@ export class Buchungen extends Component {
   }
 
   bookPauseClicked = event => {
+    //Hier wird die Abwesenheit gebucht, dafür werden die nötigen Daten aus den Textfeldern ausgelesen 
 if  ( [this.state.pausedescription,this.state.beginnP,this.state.endeP ].includes('') || [this.state.pausedescription,this.state.beginnP,this.state.endeP].includes(null)) {
   alert("Füllen Sie bitte alle Werte aus")
     }else{
     SystemAPI.getAPI().getPersonByFirebaseID(this.props.user.uid).then((result) => {
 
       SystemAPI.getAPI().commitPauseTransaction(result.id, this.state.pausedescription, this.state.beginnP, this.state.endeP).then ((result) => {
-        alert("Aktivität wurde gebucht")
+        alert("Abwesenheit wurde gebucht")
 })})}
   }
 
@@ -115,10 +116,8 @@ if  ( [this.state.pausedescription,this.state.beginnP,this.state.endeP ].include
     })
   }
 
-
-
-
   bookBuchung = event => {
+    //Hier wird die Zeit  für eine Aktivität gebucht, dafür werdden die nötigen Daten aus den Textfeldern ausgelesen 
     console.log(this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA ,this.state.ende)
 if  ( [this.state.activitydescription,this.state.selectedActivities,this.state.beginnA,this.state.endeA ].includes('') || [this.state.activitydescription ,this.state.selectedActivities, this.state.beginnA ,this.state.endeA].includes(null)) {
   alert("Füllen Sie bitte alle Werte aus")
@@ -130,6 +129,7 @@ if  ( [this.state.activitydescription,this.state.selectedActivities,this.state.b
   }
 
   render() {
+    //Rendert die Komponente
     const { activities, selectedActivities } = this.state;
     return (
       <div>
