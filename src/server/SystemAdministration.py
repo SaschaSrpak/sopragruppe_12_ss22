@@ -1,6 +1,6 @@
 import datetime as dt
 from datetime import datetime
-
+from zoneinfo import ZoneInfo
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
 from server.business_objects.Zeitkonto import Zeitkonto
@@ -43,7 +43,7 @@ from server.db.Buchungen.ProjektarbeitBuchungMapper import ProjektarbeitBuchungM
 class SystemAdministration(object):
 
     def __init__(self):
-        pass
+        self._Zeitzone = ZoneInfo("Europe/Berlin")
 
     """
     Personen spezifische Methoden
@@ -57,7 +57,7 @@ class SystemAdministration(object):
         person.set_mail_address(mail_address)
         person.set_user_name(user_name)
         person.set_firebase_id(firebase_id)
-        person.set_last_modified_date(dt.datetime.now())
+        person.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         person.set_manager_status(manager_status)
         person.set_id(1)
 
@@ -98,7 +98,7 @@ class SystemAdministration(object):
 
     def save_person(self, person):
         """Den gegebenen Nutzer speichern"""
-        person.set_last_modified_date(dt.datetime.now())
+        person.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with PersonMapper() as mapper:
             mapper.update(person)
 
@@ -140,7 +140,7 @@ class SystemAdministration(object):
         for person in persons_responsible:
             activity.add_new_responsible(person)
         activity.set_man_day_capacity(man_day_capacity)
-        activity.set_last_modified_date(dt.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         activity.set_id(1)
 
         with AktivitaetMapper() as mapper:
@@ -207,7 +207,7 @@ class SystemAdministration(object):
             pr = SystemAdministration.get_person_by_key(self, person)
             prlist.append(pr)
         activity.set_persons_responsible(prlist)
-        activity.set_last_modified_date(dt.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
 
         with AktivitaetMapper() as mapper:
             responsible_dict = activity.get_persons_responsible()
@@ -224,7 +224,7 @@ class SystemAdministration(object):
 
     def save_activity(self, activity):
         """Die gegebene Aktivität speichern"""
-        activity.set_last_modified_date(dt.datetime.now())
+        activity.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         persons = SystemAdministration.get_persons_by_activity_key(self, activity.get_id())
         activity.set_persons_responsible(persons)
         with AktivitaetMapper() as mapper:
@@ -276,7 +276,7 @@ class SystemAdministration(object):
 
     def save_account(self, account):
         """Speichert eine Zeitkonto-Instanz."""
-        account.set_last_modified_date(dt.datetime.now())
+        account.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ZeitkontoMapper() as mapper:
             mapper.update(account)
 
@@ -571,7 +571,7 @@ class SystemAdministration(object):
             for person in persons_responsible:
                 project.add_person_responsible(person.get_id(), person)
 
-        project.set_last_modified_date(dt.datetime.now())
+        project.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         project.set_id(1)
 
         deadlinename = "Deadline: " + name
@@ -673,7 +673,7 @@ class SystemAdministration(object):
         Methode 'change_activity_persons_responsible'."""
         project = self.get_project_by_key(project_key)
         project.set_person_responsible(persons_responsible)
-        project.set_last_modified_date(dt.datetime.now())
+        project.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
 
         with ProjektMapper() as mapper:
             responsible_dict = project.get_persons_responsible()
@@ -721,7 +721,7 @@ class SystemAdministration(object):
 
         project = self.get_project_by_key(project_key)
         project.set_activities(activities)
-        project.set_last_modified_date(dt.datetime.now())
+        project.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
 
         with ProjektMapper() as mapper:
             activities_dict = project.get_activities()
@@ -737,7 +737,7 @@ class SystemAdministration(object):
 
     def save_project(self, project):
         """Speichert die Projekt-Instanz im System."""
-        project.set_last_modified_date(dt.datetime.now())
+        project.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ProjektMapper() as mapper:
             mapper.update(project)
 
@@ -779,7 +779,7 @@ class SystemAdministration(object):
         kommen = Kommen()
         kommen.set_event_name(name)
         kommen.set_time_of_event(time)
-        kommen.set_last_modified_date(dt.datetime.now())
+        kommen.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         kommen.set_id(1)
 
         with KommenMapper() as mapper:
@@ -803,7 +803,7 @@ class SystemAdministration(object):
 
     def save_kommen_event(self, event):
         """Speichert die Kommen-Instanz im System."""
-        event.set_last_modified_date(dt.datetime.now())
+        event.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with KommenMapper() as mapper:
             mapper.update(event)
 
@@ -821,7 +821,7 @@ class SystemAdministration(object):
         gehen = Gehen()
         gehen.set_event_name(name)
         gehen.set_time_of_event(time)
-        gehen.set_last_modified_date(dt.datetime.now())
+        gehen.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         gehen.set_id(1)
 
         with GehenMapper() as mapper:
@@ -845,7 +845,7 @@ class SystemAdministration(object):
 
     def save_gehen_event(self, event):
         """Speichert die Gehen-Instanz im System."""
-        event.set_last_modified_date(dt.datetime.now())
+        event.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with GehenMapper() as mapper:
             mapper.update(event)
 
@@ -863,7 +863,7 @@ class SystemAdministration(object):
         start = Startereignis()
         start.set_event_name(name)
         start.set_time_of_event(time)
-        start.set_last_modified_date(dt.datetime.now())
+        start.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         start.set_id(1)
 
         with StartereignisMapper() as mapper:
@@ -887,7 +887,7 @@ class SystemAdministration(object):
 
     def save_start_event(self, event):
         """Speichert die Start-Ereignis-Instanz im System."""
-        event.set_last_modified_date(dt.datetime.now())
+        event.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with StartereignisMapper() as mapper:
             mapper.update(event)
 
@@ -905,7 +905,7 @@ class SystemAdministration(object):
         end = Endereignis()
         end.set_event_name(name)
         end.set_time_of_event(time)
-        end.set_last_modified_date(dt.datetime.now())
+        end.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         end.set_id(1)
 
         with EndereignisMapper() as mapper:
@@ -929,7 +929,7 @@ class SystemAdministration(object):
 
     def save_end_event(self, event):
         """Speichert die End-Ereignis-Instanz im System."""
-        event.set_last_modified_date(dt.datetime.now())
+        event.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with EndereignisMapper() as mapper:
             mapper.update(event)
 
@@ -947,7 +947,7 @@ class SystemAdministration(object):
         projectdeadline = ProjektDeadline()
         projectdeadline.set_event_name(name)
         projectdeadline.set_time_of_event(time)
-        projectdeadline.set_last_modified_date(dt.datetime.now())
+        projectdeadline.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         projectdeadline.set_id(1)
 
         with ProjektDeadlineMapper() as mapper:
@@ -971,7 +971,7 @@ class SystemAdministration(object):
 
     def save_project_deadline(self, event):
         """Speichert die ProjektDeadline-Instanz im System."""
-        event.set_last_modified_date(dt.datetime.now())
+        event.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ProjektDeadlineMapper() as mapper:
             mapper.update(event)
 
@@ -997,7 +997,7 @@ class SystemAdministration(object):
         project_worktime.set_duration(duration_hours)
         project_worktime.set_start(start_event_id)
         project_worktime.set_end(end_event_id)
-        project_worktime.set_last_modified_date(dt.datetime.now())
+        project_worktime.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         project_worktime.set_id(1)
 
         with ProjektarbeitMapper() as mapper:
@@ -1032,7 +1032,7 @@ class SystemAdministration(object):
         duration_seconds = end_time - start_time
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         interval.set_duration(duration_hours)
-        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ProjektarbeitMapper() as mapper:
             mapper.update(interval)
 
@@ -1065,7 +1065,7 @@ class SystemAdministration(object):
         pause.set_duration(duration_hours)
         pause.set_start(start_event_id)
         pause.set_end(end_event_id)
-        pause.set_last_modified_date(dt.datetime.now())
+        pause.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         pause.set_id(1)
 
         with PauseMapper() as mapper:
@@ -1099,7 +1099,7 @@ class SystemAdministration(object):
         duration_seconds = end_time - start_time
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         interval.set_duration(duration_hours)
-        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with PauseMapper() as mapper:
             mapper.update(interval)
 
@@ -1131,7 +1131,7 @@ class SystemAdministration(object):
         project_duration.set_duration(duration_hours)
         project_duration.set_start(start_event_id)
         project_duration.set_end(end_event_id)
-        project_duration.set_last_modified_date(dt.datetime.now())
+        project_duration.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         project_duration.set_id(1)
 
         with ProjektlaufzeitMapper() as mapper:
@@ -1173,7 +1173,7 @@ class SystemAdministration(object):
         duration_seconds = end_time - start_time
         duration_hours = duration_seconds / dt.timedelta(hours=1)
         interval.set_duration(duration_hours)
-        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ProjektlaufzeitMapper() as mapper:
             mapper.update(interval)
 
@@ -1196,7 +1196,7 @@ class SystemAdministration(object):
         transaction = KommenBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         transaction.set_id(1)
 
         with KommenBuchungMapper() as mapper:
@@ -1281,7 +1281,7 @@ class SystemAdministration(object):
         transaction = GehenBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         transaction.set_id(1)
 
         with GehenBuchungMapper() as mapper:
@@ -1368,7 +1368,7 @@ class SystemAdministration(object):
         transaction = StartereignisBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         transaction.set_id(1)
 
         with StartereignisBuchungMapper() as mapper:
@@ -1423,7 +1423,7 @@ class SystemAdministration(object):
         transaction = EndereignisBuchung()
         transaction.set_target_user_account(account_id)
         transaction.set_event_id(event_id)
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         transaction.set_id(1)
 
         with EndereignisBuchungMapper() as mapper:
@@ -1477,7 +1477,7 @@ class SystemAdministration(object):
         interval = PauseBuchung()
         interval.set_target_user_account(account_id)
         interval.set_time_interval_id(interval_id)
-        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         interval.set_id(1)
 
         with PauseBuchungMapper() as mapper:
@@ -1536,7 +1536,7 @@ class SystemAdministration(object):
 
     def save_pause_transaction(self, transaction):
         """Speichert eine Pausen-Buchung-Instanz im System."""
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with PauseBuchungMapper() as mapper:
             mapper.update(transaction)
 
@@ -1580,7 +1580,7 @@ class SystemAdministration(object):
         interval.set_target_user_account(account_id)
         interval.set_target_activity(activity_id)
         interval.set_time_interval_id(interval_id)
-        interval.set_last_modified_date(dt.datetime.now())
+        interval.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         interval.set_id(1)
 
         with ProjektarbeitBuchungMapper() as mapper:
@@ -1736,7 +1736,7 @@ class SystemAdministration(object):
 
     def save_project_work_transaction(self, transaction):
         """Speichert eine Projektarbeits-Buchung-Instanz im System."""
-        transaction.set_last_modified_date(dt.datetime.now())
+        transaction.set_last_modified_date(dt.datetime.now().astimezone(self._Zeitzone))
         with ProjektarbeitBuchungMapper() as mapper:
             mapper.update(transaction)
 
