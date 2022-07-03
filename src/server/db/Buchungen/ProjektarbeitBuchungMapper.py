@@ -9,7 +9,8 @@ class ProjektarbeitBuchungMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
+        """Lesen aller Objekte in der Datenbank
+        :return Eine Sammlung von ProjektarbeitBuchung-Objekten"""
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from ProjektarbeitBuchung")
@@ -31,6 +32,10 @@ class ProjektarbeitBuchungMapper(Mapper):
         return result
 
     def find_by_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param id Primärschlüssel
+        :return Projektarbeitbuchungs-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem Tupel
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -58,6 +63,9 @@ class ProjektarbeitBuchungMapper(Mapper):
         return result
 
     def find_by_account_key(self, account_key):
+        """Lesen aller Projekktarbeitsbuchung aus der Datenbank mit dem gegebenem Account
+        :param account_key Primärschlüsselattribut
+        :return project, das dem übergebenen Schlüssel entspircht"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID FROM ProjektarbeitBuchung " \
@@ -72,6 +80,9 @@ class ProjektarbeitBuchungMapper(Mapper):
         return result
 
     def find_by_activity_key(self, activity_key):
+        """Lesen aller Projektarbeitsbuchung aus der Datenbank mit dem gegebenem Account
+        :param activity_key Primärschlüsselattribut
+        :return project, das dem übergebenen Schlüssel entspircht"""
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID FROM ProjektarbeitBuchung " \
@@ -87,7 +98,10 @@ class ProjektarbeitBuchungMapper(Mapper):
 
 
     def insert(self, transaction):
-
+        """Einfügen eines neuen ProjektarbeitBuchung-Objekts.
+            Der Primärschlüssel wird geprüft und ggf. berichtigt
+            :param arbeitskonto das zu speichernde Objekt
+            :return das bereits übergeben Objekt mit evtl. korrigierter ID"""
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM ProjektarbeitBuchung ")
         tuples = cursor.fetchall()
@@ -108,6 +122,8 @@ class ProjektarbeitBuchungMapper(Mapper):
         return transaction
 
     def update(self, transaction):
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param zeitkonto das Objekt, das in die DB geschrieben werden soll."""
 
         cursor = self._cnx.cursor()
 
@@ -123,7 +139,8 @@ class ProjektarbeitBuchungMapper(Mapper):
         cursor.close()
 
     def delete(self, transaction):
-
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param zeitkonto das aus der DB zu löschende "Objekt" """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM ProjektarbeitBuchung where Transaction_ID='{}'".format(transaction.get_id())

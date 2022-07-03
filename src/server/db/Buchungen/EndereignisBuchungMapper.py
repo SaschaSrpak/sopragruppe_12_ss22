@@ -9,7 +9,8 @@ class EndereignisBuchungMapper(Mapper):
         super().__init__()
 
     def find_all(self):
-
+        """Lesen aller Objekte in der Datenbank
+        :return Eine Sammlung von Zeitkonto-Objekten"""
         result = []
         cursor = self._cnx.cursor()
         cursor.execute("SELECT * from EndereignisBuchung")
@@ -30,6 +31,10 @@ class EndereignisBuchungMapper(Mapper):
         return result
 
     def find_by_key(self, key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param id Primärschlüssel
+        :return Zeitkonto-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem Tupel
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -56,6 +61,11 @@ class EndereignisBuchungMapper(Mapper):
         return result
 
     def find_by_event_key(self, event_key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param event_key Primärschlüssel
+        :return EndereignisBuchungs-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem
+        Tupel
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -82,6 +92,11 @@ class EndereignisBuchungMapper(Mapper):
         return result
 
     def find_by_account_key(self, account_key):
+        """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus.
+        :param account_key Primärschlüssel
+        :return EndereignisBuchungs-Objekt, das dem übergebenen Schlüssel entspricht, None bei nicht vorhandem
+        Tupel
+        """
         result = []
         cursor = self._cnx.cursor()
         command = "SELECT Transaction_ID FROM EndereignisBuchung " \
@@ -96,7 +111,10 @@ class EndereignisBuchungMapper(Mapper):
         return result
 
     def insert(self, transaction):
-
+        """Einfügen eines neuen EndereignisBuchungs-Objekts.
+            Der Primärschlüssel wird geprüft und ggf. berichtigt
+            :param transaction das zu speichernde Objekt
+            :return das bereits übergeben Objekt mit evtl. korrigierter ID"""
         cursor = self._cnx.cursor(buffered=True)
         cursor.execute("SELECT MAX(Transaction_ID) AS maxid FROM EndereignisBuchung ")
         tuples = cursor.fetchall()
@@ -116,7 +134,8 @@ class EndereignisBuchungMapper(Mapper):
         return transaction
 
     def update(self, transaction):
-
+        """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden.
+            :param transaction das Objekt, das in die DB geschrieben werden soll."""
         cursor = self._cnx.cursor()
 
         transaction.set_last_modified_date(datetime.datetime.now())
@@ -131,7 +150,8 @@ class EndereignisBuchungMapper(Mapper):
         cursor.close()
 
     def delete(self, transaction):
-
+        """Den Datensatz, der das gegebene Objekt in der DB repräsentiert löschen.
+            :param transaction das aus der DB zu löschende "Objekt" """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM EndereignisBuchung where Transaction_ID='{}'".format(transaction.get_id())
