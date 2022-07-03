@@ -88,9 +88,8 @@ export class Projektanzeige extends Component {
             console.log(this.state.projectChoice)
 
             SystemAPI.getAPI().getProjectDeadlineOnProject(this.state.projectChoice).then(newDeadline => {
-                console.log("Dead")
-                console.log(newDeadline)
-                var deadlineanzeige = newDeadline.time_of_event
+                 var deadlineanzeige = newDeadline[0]
+                deadlineanzeige = deadlineanzeige.time_of_event
                 deadlineanzeige = deadlineanzeige.replace("T", ' - ')
                 deadlineanzeige = deadlineanzeige.substring(0, 18)
                 this.setState({

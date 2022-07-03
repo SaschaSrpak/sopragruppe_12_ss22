@@ -296,16 +296,24 @@ export class Auslese extends Component {
         else {
         return (
 
-            <div style={{textAlign: "center"}}>
-                <div>
+
+                <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '20vh',
+      }}>
                 <br/>
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Beginn"  onChange={(event) => this.setState({startFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
                 <TextField id="outlined-basic"  variant="outlined" type="date" label="Ende" onChange={(event) => this.setState({endeFilter: event.target.value})}  InputLabelProps={{shrink: true,}}/>
                 <p></p>
                 <Button variant="contained" onClick={() => this.Datenfilter()}> Daten Filtern</Button>
-                </div>
+
                 <br/>
                 <Divider sx={{margin:"40px"}}/>
+            <div style={{
+                position: 'absolute', left: '20%', top: '30%'
+                }}>
                       <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Kommen</Typography>
@@ -331,15 +339,8 @@ export class Auslese extends Component {
                         </AccordionSummary>
                           <WorkTimeTable title=" " data={this.state.worktimenamen} handleUpdate={this.handleUpdateActivity} />
                       </Accordion>
+                 </div>
 
-                      <div>
-
-            
-
-
-            
-            
-        </div>
             </div>
 
 
