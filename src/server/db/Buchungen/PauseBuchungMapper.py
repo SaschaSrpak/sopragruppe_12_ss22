@@ -14,7 +14,7 @@ class PauseBuchungMapper(Mapper):
 
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT * from pausebuchung")
+        cursor.execute("SELECT * from PauseBuchung")
         tuples = cursor.fetchall()
 
         for (id, target_user_account_id, interval_id,

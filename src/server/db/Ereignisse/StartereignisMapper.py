@@ -92,7 +92,7 @@ class StartereignisMapper(Mapper):
         :param ereignis das Objekt, das in die DB geschrieben werden soll"""
         cursor = self._cnx.cursor()
 
-        command = "UPDATE startereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
+        command = "UPDATE Startereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
         data = (
             ereignis.get_event_name(),
             ereignis.get_time_of_event(),
