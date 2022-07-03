@@ -91,9 +91,11 @@ export class  WorkTimeTable extends Component{
         console.log(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende)
         SystemAPI.getAPI().updateProjectWorktimeTransactionWithValues(this.state.transaktionsid,this.state.intervalid,this.state.intervalname,this.state.start,this.state.ende).then(person => {
             this.setState({
-            })})
-        //////});
+            });
             this.props.handleUpdate()
+        })
+        //////});
+
        // })transaction_id, interval_id, interval_name, start_time, end_time
     }
 

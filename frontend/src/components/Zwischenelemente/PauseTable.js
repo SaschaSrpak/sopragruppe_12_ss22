@@ -93,8 +93,10 @@ export class  PauseTable extends Component{
         SystemAPI.getAPI().updatePauseTransactionWithValues(this.state.transaktionsid, this.state.intervalid,  this.state.pause, start, ende).then(pause => {
             this.setState({
                 openEdit: false
-            })})
-         this.props.handleUpdate()
+            });
+            this.props.handleUpdate()
+        })
+
         //////});
           //  window.location.reload(false);
        // })
