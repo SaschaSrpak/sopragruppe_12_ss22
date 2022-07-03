@@ -72,7 +72,7 @@ export class  WorkTimeTable extends Component{
         SystemAPI.getAPI().deleteProjectWorktimeTransaction(this.state.deleteId).then((result) => {this.setState({
           openDelete: false
       });
-            window.location.reload(false);
+            this.props.handleUpdate()
         })
     }
 
@@ -83,7 +83,7 @@ export class  WorkTimeTable extends Component{
             this.setState({
             })})
         //////});
-            window.location.reload(false)
+            this.props.handleUpdate()
        // })transaction_id, interval_id, interval_name, start_time, end_time
     }
 

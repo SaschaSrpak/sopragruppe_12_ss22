@@ -73,7 +73,7 @@ export class  PauseTable extends Component{
         SystemAPI.getAPI().deletePauseTransaction(this.state.deleteId).then((result) => {this.setState({
           openDelete: false
       });
-            window.location.reload(false);
+            this.props.handleUpdate()
         })
     }
 
@@ -86,7 +86,7 @@ export class  PauseTable extends Component{
             this.setState({
                 openEdit: false
             })})
-         window.location.reload(false);
+         this.props.handleUpdate()
         //////});
           //  window.location.reload(false);
        // })

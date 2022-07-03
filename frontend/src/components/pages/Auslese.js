@@ -276,6 +276,9 @@ export class Auslese extends Component {
   });
   };
 
+  handleUpdateActivity = () => {
+    this.Datenfilter()
+  }
 
     render() {
       const { showUpdateDialog ,open } = this.state;
@@ -320,13 +323,13 @@ export class Auslese extends Component {
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Abwesenheit</Typography>
                         </AccordionSummary>
-                          <PauseTable title=" " data={this.state.pausennamen}/>
+                          <PauseTable title=" " data={this.state.pausennamen} handleUpdate={this.handleUpdateActivity}/>
                       </Accordion>
                       <Accordion sx={{minWidth: "1200px"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                              <Typography>Arbeitszeit</Typography>
                         </AccordionSummary>
-                          <WorkTimeTable title=" " data={this.state.worktimenamen}/>
+                          <WorkTimeTable title=" " data={this.state.worktimenamen} handleUpdate={this.handleUpdateActivity} />
                       </Accordion>
 
                       <div>
