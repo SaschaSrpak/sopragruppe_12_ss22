@@ -104,14 +104,14 @@ class ProjektlaufzeitMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE Projektlaufzeit " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, " \
-                                            "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
+                                              "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
         data = (
-                projektlaufzeit.get_name(),
-                projektlaufzeit.get_duration(),
-                projektlaufzeit.get_start(),
-                projektlaufzeit.get_end(),
-                projektlaufzeit.get_last_modified_date(),
-                projektlaufzeit.get_id())
+            projektlaufzeit.get_name(),
+            projektlaufzeit.get_duration(),
+            projektlaufzeit.get_start(),
+            projektlaufzeit.get_end(),
+            projektlaufzeit.get_last_modified_date(),
+            projektlaufzeit.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -126,4 +126,3 @@ class ProjektlaufzeitMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-

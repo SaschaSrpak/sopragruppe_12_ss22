@@ -99,5 +99,3 @@ class GehenMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

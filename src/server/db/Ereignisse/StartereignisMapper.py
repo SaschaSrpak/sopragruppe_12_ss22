@@ -1,4 +1,3 @@
-
 from server.business_objects.Ereignisse.Startereignis import Startereignis
 from server.db.Mapper import Mapper
 
@@ -15,13 +14,12 @@ class StartereignisMapper(Mapper):
         cursor.execute("SELECT Event_ID, Name, Time, Last_modified_date from Startereignis")
         tuples = cursor.fetchall()
 
-        for ( Event_ID, Name, Time, Last_modified_date) in tuples:
+        for (Event_ID, Name, Time, Last_modified_date) in tuples:
             ereignis = Startereignis()
             ereignis.set_id(Event_ID)
             ereignis.set_event_name(Name)
             ereignis.set_time_of_event(Time)
             ereignis.set_last_modified_date(Last_modified_date)
-
 
             result.append(ereignis)
 
@@ -29,7 +27,6 @@ class StartereignisMapper(Mapper):
         cursor.close()
 
         return result
-
 
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
@@ -79,17 +76,16 @@ class StartereignisMapper(Mapper):
 
         return ereignis
 
-
     def update(self, ereignis):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
         command = "UPDATE startereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
         data = (
-                ereignis.get_event_name(),
-                ereignis.get_time_of_event(),
-                ereignis.get_last_modified_date(),
-                ereignis.get_id())
+            ereignis.get_event_name(),
+            ereignis.get_time_of_event(),
+            ereignis.get_last_modified_date(),
+            ereignis.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -104,4 +100,3 @@ class StartereignisMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-

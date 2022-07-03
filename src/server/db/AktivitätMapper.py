@@ -155,6 +155,3 @@ class AktivitaetMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return activity
-
-
-

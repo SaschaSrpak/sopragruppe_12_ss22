@@ -8,8 +8,6 @@ from flask import request, redirect, url_for
 from server.SystemAdministration import SystemAdministration
 from server.business_objects.Person import Person
 from server.business_objects.Aktivität import Aktivitaet
-from server.business_objects.Ereignisse.Kommen import Kommen
-from server.business_objects.Ereignisse.Gehen import Gehen
 from server.business_objects.Zeitkonto import Zeitkonto
 from server.business_objects.Projekt import Projekt
 from server.business_objects.Ereignisse.Kommen import Kommen
@@ -118,7 +116,10 @@ project = api.inherit('Projekt', bo, {
 activity = api.inherit('Aktivitaet', bo, {
     'activity_name': fields.String(attribute='_activity_name', description='Name der Aktivität'),
     'man_day_capacity': fields.Float(attribute='_man_day_capacity', description='Kapazität in Personentagen'),
-    'persons_responsible': fields.List(fields.Nested(person), attribute='_persons_responsible', description='Kapazität in Personentagen'),
+    'persons_responsible': fields.List(fields.Nested(person), attribute='_persons_responsible', description='Kapazität '
+                                                                                                            'in '
+                                                                                                            'Personen'
+                                                                                                            'tagen'),
 })
 
 zi = api.inherit('Zeitintervall', bo, {
@@ -192,7 +193,7 @@ project_worktime_transaction_response_special = api.model('Spezielle Projektarbe
                                                                        'activity_name': fields.String(),
                                                                        'start_time': fields.String(),
                                                                        'end_time': fields.String(),
-                                                                        'duration': fields.Float()})
+                                                                       'duration': fields.Float()})
 
 
 @timesystem.route('/persons')
@@ -246,7 +247,7 @@ class PersonOperations(Resource):
         p = s_adm.get_person_by_key(id)
         return p
 
-    #@secured
+    # @secured
     def delete(self, id):
         """
         Löscht eine bestimmte Person aus dem System.
@@ -568,7 +569,7 @@ class ProjectOperations(Resource):
         return '', 200
 
     @timesystem.marshal_with(project)
-    #@timesystem.expect(project, validate=True)
+    # @timesystem.expect(project, validate=True)
     @secured
     def put(self, id):
         """
@@ -592,7 +593,7 @@ class ProjectOperations(Resource):
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Projekt Objekts')
 class FullWorktimeOnProjectOperation(Resource):
-    #@secured
+    @secured
     def get(self, id):
         """
         Gibt die gesamte Arbeitszeit am Projekt aus.
@@ -774,7 +775,6 @@ class AllActivityListOperations(Resource):
             return '', 500
 
 
-
 @timesystem.route('/activities/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Aktivitäts-Objekts')
@@ -791,7 +791,8 @@ class ActivityOperations(Resource):
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
         return a
-    @timesystem.marshal_with(activity)    
+
+    @timesystem.marshal_with(activity)
     @secured
     def delete(self, id):
         """
@@ -802,11 +803,11 @@ class ActivityOperations(Resource):
         """
         s_adm = SystemAdministration()
         a = s_adm.get_activity_by_key(id)
-     
+
         return s_adm.delete_activity(a)
 
     @timesystem.marshal_with(activity)
-    #@timesystem.expect(activity, validate=True)
+    # @timesystem.expect(activity, validate=True)
     @secured
     def put(self, id):
         """
@@ -1012,7 +1013,6 @@ class AccountKommenDateOperations(Resource):
         return events
 
 
-
 @timesystem.route('/accounts/gehen/transaction/<int:id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -1059,7 +1059,6 @@ class AccountGehenDateOperations(Resource):
         events = s_adm.get_all_gehen_events_for_account_between_dates(id, start_date, end_date)
 
         return events
-
 
 
 @timesystem.route('/accounts/pause/<int:id>/time')
@@ -1133,7 +1132,6 @@ class PauseTransactionValueBetweenDatesAccountOperations(Resource):
             return pauses_values
 
 
-
 @timesystem.route('/accounts/worktime-transactions/<int:id>/')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -1183,6 +1181,7 @@ class ActivityWorktimeRelatedAccountOperations(Resource):
         else:
             return 'Activity not found', 500
 
+
 @timesystem.route('/accounts/worktime/values/<int:id>/<string:start_date>/<string:end_date>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Account-Objekts')
@@ -1206,7 +1205,7 @@ class WorktimeTransactionValueBetweenDatesAccountOperations(Resource):
 
         if account is not None:
             return worktime_values
-        
+
 
 @timesystem.route('/accounts/transactions/<int:id>/activities/<int:activity_id>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1835,14 +1834,15 @@ class PauseTransactionOperations(Resource):
         else:
             return '', 500
 
-@timesystem.route('/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>/<string:start_time>/<string:end_time>')
+
+@timesystem.route(
+    '/pause-transaction/values/<int:id>/<int:interval_id>/<string:interval_name>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('id', 'Die ID des Buchungs-Objekts')
 @timesystem.param('interval_id', 'Die ID des gebuchten Intervalls')
 @timesystem.param('interval_name', 'Der Name des gebuchten Intervalls')
 @timesystem.param('start_time', 'Startzeitpunkt des Intervalls')
 @timesystem.param('end_date', 'Endzeitpunkt des Intervalls')
-
 class PauseTransactionValueOperations(Resource):
     @timesystem.marshal_with(pause_transaction_response_special)
     @secured
@@ -1854,7 +1854,6 @@ class PauseTransactionValueOperations(Resource):
             return '', 200
         else:
             return '', 500
-
 
 
 @timesystem.route('/commit-pause-transaction/<int:account_id>/<string:name>/<string:start_time>/<string:end_time>')
@@ -2025,7 +2024,8 @@ class WorktimeTransactionValueOperations(Resource):
 
 
 @timesystem.route(
-    '/commit-worktime-transaction/<int:account_id>/<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
+    '/commit-worktime-transaction/<int:account_id>/'
+    '<string:name>/<int:activity_id>/<string:start_time>/<string:end_time>')
 @timesystem.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @timesystem.param('account_id', 'Die ID des buchenden Account-Objekts')
 @timesystem.param('name', 'Name der Pause')

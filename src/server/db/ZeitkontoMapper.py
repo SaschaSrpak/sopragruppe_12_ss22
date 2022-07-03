@@ -1,6 +1,7 @@
 from server.business_objects.Zeitkonto import Zeitkonto
 from server.db.Mapper import Mapper
 
+
 class ZeitkontoMapper(Mapper):
 
     def __init__(self):
@@ -25,7 +26,6 @@ class ZeitkontoMapper(Mapper):
 
         return result
 
-
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
         result = None
@@ -42,7 +42,6 @@ class ZeitkontoMapper(Mapper):
             zeitkonto = Zeitkonto()
             zeitkonto.set_id(Account_ID)
             zeitkonto.set_owner(Owner_ID)
-
 
             result = zeitkonto
         else:
@@ -69,7 +68,6 @@ class ZeitkontoMapper(Mapper):
             zeitkonto = Zeitkonto()
             zeitkonto.set_id(Account_ID)
             zeitkonto.set_owner(Owner_ID)
-
 
             result = zeitkonto
         else:
@@ -98,7 +96,6 @@ class ZeitkontoMapper(Mapper):
 
         return zeitkonto
 
-
     def update(self, zeitkonto):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
@@ -120,5 +117,3 @@ class ZeitkontoMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

@@ -291,7 +291,6 @@ class SystemAdministration(object):
         all_start_transactions = self.get_all_start_transactions_for_account(account)
         all_end_transactions = self.get_all_end_transactions_for_account(account)
 
-
         for transaction in all_kommen_transactions:
             self.delete_kommen_transaction(transaction)
 
@@ -306,7 +305,6 @@ class SystemAdministration(object):
 
         with ZeitkontoMapper() as mapper:
             mapper.delete(account)
-
 
     def get_all_bookings_for_account(self, account):
         """Gibt alle Buchungen, welche von dem Zeitkonto getätigt wurden aus."""
@@ -550,7 +548,6 @@ class SystemAdministration(object):
 
         return worktime_on_project
 
-
     """
     Projekt spezifische Methoden
     """
@@ -585,7 +582,6 @@ class SystemAdministration(object):
         endevent = SystemAdministration.create_end_event(self, "Deadline Projekt", deadline_id)
         projectdurationid = SystemAdministration.create_project_duration(self, name, startevent, endevent)
         project.set_project_duration(projectdurationid)
-
 
         with ProjektMapper() as mapper:
             project = mapper.insert(project)
@@ -665,8 +661,8 @@ class SystemAdministration(object):
     def add_person_responsible_to_project(self, project, person):
         """Fügt dem Projekt eine verantwortliche Person hinzu."""
         with ProjektMapper() as mapper:
-
             return mapper.insert_person_responsible(project, person)
+
     def add_person_creator(self, project, person):
         """Fügt dem Projekt eine verantwortliche Person hinzu."""
         with ProjektMapper() as mapper:
@@ -930,7 +926,6 @@ class SystemAdministration(object):
         """Gibt ein bestimmtes End-Ereignis anhand der Buchungs-Id aus."""
         transaction = self.get_end_event_transaction_by_key(transaction_key)
         return self.get_end_event_by_key(transaction.get_event_id())
-
 
     def save_end_event(self, event):
         """Speichert die End-Ereignis-Instanz im System."""
@@ -1413,12 +1408,11 @@ class SystemAdministration(object):
 
     def delete_start_event_transaction(self, transaction):
         """Löscht eine Start-Ereignis-Buchung-Instanz aus dem System."""
-        start_event =self.get_start_event_by_key(transaction.get_event_id())
+        start_event = self.get_start_event_by_key(transaction.get_event_id())
 
         with StartereignisBuchungMapper() as mapper:
             mapper.delete(transaction)
         self.delete_start_event(start_event)
-
 
     """
     EndereignisBuchung spezifische Methoden
@@ -1747,7 +1741,7 @@ class SystemAdministration(object):
             mapper.update(transaction)
 
     def save_worktime_transaction_with_values(self, transaction_id, interval_id,
-                                           intervall_name, start_time_str, end_time_str):
+                                              intervall_name, start_time_str, end_time_str):
         """Speichert eine Projektarbeits-Buchung anhand von bestimmten Werten.
         Hier wird absichtlich kein Objekt übergeben. Diese Funktion dient dazu,
         die API-Abfragen aus dem Frontend zu reduzieren."""
@@ -1770,7 +1764,6 @@ class SystemAdministration(object):
         self.save_end_event(end)
         self.save_project_worktime(interval)
         self.save_project_work_transaction(transaction)
-
 
     def delete_project_work_transaction(self, transaction):
         """Löscht eine Projektarbeits-Buchung aus dem System."""

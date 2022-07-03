@@ -2,7 +2,7 @@ from server.business_objects import BusinessObject as bo
 from datetime import datetime
 
 
-class Ereignis (bo.BusinessObject):
+class Ereignis(bo.BusinessObject):
 
     def __init__(self):
         super().__init__()

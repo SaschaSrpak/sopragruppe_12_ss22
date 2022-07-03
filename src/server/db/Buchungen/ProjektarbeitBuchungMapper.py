@@ -85,7 +85,6 @@ class ProjektarbeitBuchungMapper(Mapper):
         cursor.close()
         return result
 
-
     def insert(self, transaction):
 
         cursor = self._cnx.cursor(buffered=True)
@@ -113,10 +112,11 @@ class ProjektarbeitBuchungMapper(Mapper):
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE ProjektarbeitBuchung " + "SET Account_ID=%s, Activity_ID=%s, Interval_ID=%s," \
-                                                  "Last_modified_date=%s WHERE Transaction_ID=%s"
+                                                   "Last_modified_date=%s WHERE Transaction_ID=%s"
         data = (transaction.get_target_user_account(),
-                transaction.get_target_activity(), transaction.get_time_interval_id(), transaction.get_last_modified_date(),
-                 transaction.get_id())
+                transaction.get_target_activity(), transaction.get_time_interval_id(),
+                transaction.get_last_modified_date(),
+                transaction.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -131,5 +131,3 @@ class ProjektarbeitBuchungMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

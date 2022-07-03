@@ -104,14 +104,14 @@ class PauseMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE Pause " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, " \
-                                            "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
+                                    "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
         data = (
-                pause.get_name(),
-                pause.get_duration(),
-                pause.get_start(),
-                pause.get_end(),
-                pause.get_last_modified_date(),
-                pause.get_id())
+            pause.get_name(),
+            pause.get_duration(),
+            pause.get_start(),
+            pause.get_end(),
+            pause.get_last_modified_date(),
+            pause.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -126,5 +126,3 @@ class PauseMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

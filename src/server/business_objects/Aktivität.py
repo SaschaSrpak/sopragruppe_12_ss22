@@ -48,4 +48,3 @@ class Aktivitaet(bo.BusinessObject):
         obj.set_persons_responsible(dictionary['persons_responsible'])
         obj.set_last_modified_date(dictionary['last_modified_date'])
         return obj
-

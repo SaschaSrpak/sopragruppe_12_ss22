@@ -16,4 +16,3 @@ class Ereignisbuchung(Buchung):
         """Mit dieser Funktion kann ein Bezug zwischen der Buchung
         und einem Ereignis-Objekt hergestellt werden"""
         self._event_id = new_source
-

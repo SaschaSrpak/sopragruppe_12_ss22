@@ -139,8 +139,6 @@ class PersonMapper(Mapper):
         cursor.close()
         return result
 
-    
-
     def insert(self, person):
 
         cursor = self._cnx.cursor(buffered=True)
@@ -149,7 +147,6 @@ class PersonMapper(Mapper):
 
         for (maxid) in tuples:
             person.set_id(maxid[0] + 1)
-
 
         cursor.execute("INSERT INTO Person (User_ID, Name, Nachname, "
                        "EMail, Username, Firebase_ID, Last_modified_date,Manager_Status) "
@@ -188,5 +185,3 @@ class PersonMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

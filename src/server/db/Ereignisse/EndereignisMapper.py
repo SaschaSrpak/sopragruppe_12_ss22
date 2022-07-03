@@ -14,13 +14,12 @@ class EndereignisMapper(Mapper):
         cursor.execute("SELECT Event_ID, Name, Time, Last_modified_date from Endereignis")
         tuples = cursor.fetchall()
 
-        for ( Event_ID, Name, Time, Last_modified_date) in tuples:
+        for (Event_ID, Name, Time, Last_modified_date) in tuples:
             ereignis = Endereignis()
             ereignis.set_id(Event_ID)
             ereignis.set_event_name(Name)
             ereignis.set_time_of_event(Time)
             ereignis.set_last_modified_date(Last_modified_date)
-
 
             result.append(ereignis)
 
@@ -77,17 +76,16 @@ class EndereignisMapper(Mapper):
 
         return ereignis
 
-
     def update(self, ereignis):
         """Ein Objekt auf einen bereits in der DB enthaltenen Datensatz abbilden."""
         cursor = self._cnx.cursor()
 
         command = "UPDATE Endereignis " + "SET Name=%s, Time=%s, Last_modified_date=%s WHERE Event_ID=%s"
         data = (
-                ereignis.get_event_name(),
-                ereignis.get_time_of_event(),
-                ereignis.get_last_modified_date(),
-                ereignis.get_id())
+            ereignis.get_event_name(),
+            ereignis.get_time_of_event(),
+            ereignis.get_last_modified_date(),
+            ereignis.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -102,5 +100,3 @@ class EndereignisMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

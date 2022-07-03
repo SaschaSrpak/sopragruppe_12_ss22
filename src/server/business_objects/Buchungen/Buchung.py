@@ -8,7 +8,6 @@ class Buchung(bo.BusinessObject):
         super().__init__()
         self._target_user_account = Zeitkonto
 
-
     def get_target_user_account(self):
         """Anzeigen des Ziel-Nutzer-Zeitkontos"""
         return self._target_user_account
@@ -16,12 +15,3 @@ class Buchung(bo.BusinessObject):
     def set_target_user_account(self, new_target):
         """Ändern des Ziel-Nutzer-Zeitkontos"""
         self._target_user_account = new_target
-
-
-
-
-
-
-
-
-

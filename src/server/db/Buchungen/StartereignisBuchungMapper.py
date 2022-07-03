@@ -102,7 +102,7 @@ class StartereignisBuchungMapper(Mapper):
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
-            transaction.set_id(maxid[0]+1)
+            transaction.set_id(maxid[0] + 1)
 
         cursor.execute("INSERT INTO StartereignisBuchung (Transaction_ID, Account_ID, "
                        "Event_ID, Last_modified_date) "
@@ -121,7 +121,7 @@ class StartereignisBuchungMapper(Mapper):
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE StartereignisBuchung" + "SET Account_ID=%s, Event_ID=%s," \
-                                     "Last_modified_date=%s WHERE Transaction_ID=%s"
+                                                  "Last_modified_date=%s WHERE Transaction_ID=%s"
         data = (transaction.get_target_user_account(),
                 transaction.get_event_id(), transaction.get_last_modified_date(),
                 transaction.get_id())
@@ -139,4 +139,3 @@ class StartereignisBuchungMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-

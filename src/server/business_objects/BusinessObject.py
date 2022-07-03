@@ -23,4 +23,3 @@ class BusinessObject (ABC):
         """Setzt einen Zeitstempel für die letzte Änderung.
         Sollte am besten nach jeder Setter Funktion eingefügt werden."""
         self._last_modified_date = new_date
-

@@ -24,7 +24,7 @@ class Mapper(AbstractContextManager, ABC):
         else:
             """Hierbei stellen wir eine einfache Verbindung zu einer lokal installierten mySQL-Datenbank her."""
             self._cnx = connector.connect(host='localhost', user='root', password='roottoor',
-                                      database='SoPra_MySQL_DB')
+                                          database='SoPra_MySQL_DB')
 
         return self
 

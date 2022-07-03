@@ -2,6 +2,7 @@ from server.db.Mapper import Mapper
 from server.business_objects.Projekt import Projekt
 import datetime as dt
 
+
 class ProjektMapper(Mapper):
 
     def __init__(self):
@@ -69,7 +70,7 @@ class ProjektMapper(Mapper):
         cursor = self._cnx.cursor()
 
         cursor.execute(
-            "SELECT Project_ID, Name, Client, Description, Deadline_ID, " 
+            "SELECT Project_ID, Name, Client, Description, Deadline_ID, "
             "Project_Duration_ID, Last_modified_date FROM Projekt WHERE Client LIKE '{}' ORDER BY Client".format(
                 client))
         tuples = cursor.fetchall()
@@ -106,7 +107,6 @@ class ProjektMapper(Mapper):
         cursor.close()
         return result
 
-
     def insert_creator(self, person, project):
         """Einfügen einer neuen verantwortlichen Person im Projekt
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
@@ -138,7 +138,7 @@ class ProjektMapper(Mapper):
                 """
         cursor = self._cnx.cursor()
         command = "DELETE FROM Projekt_Ersteller WHERE Project_ID='{}'AND User_ID='{}'".format(project.get_id(),
-                                                                                             person_key)
+                                                                                               person_key)
         cursor.execute(command)
 
         self._cnx.commit()
@@ -158,7 +158,6 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
         return result
-
 
     def insert_person_responsible(self, project, person):
         """Einfügen einer neuen verantwortlichen Person im Projekt
@@ -191,7 +190,7 @@ class ProjektMapper(Mapper):
                 """
         cursor = self._cnx.cursor()
         command = "DELETE FROM Projekt_Zustaendigkeit WHERE Project_ID='{}' and User_ID='{}'".format(project.get_id(),
-                                                                                                  person.get_id())
+                                                                                                     person.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -230,11 +229,10 @@ class ProjektMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-
     def delete_activity(self, project, activity):
         cursor = self._cnx.cursor()
         command = "DELETE FROM Projekt_Aktivitaeten WHERE Project_ID='{}' and Activity_ID='{}'".format(project.get_id(),
-                                                                                                    activity.get_id())
+                                                                                                       activity.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
@@ -297,6 +295,3 @@ class ProjektMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-
-

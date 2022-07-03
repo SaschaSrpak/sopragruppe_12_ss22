@@ -95,7 +95,7 @@ class PauseBuchungMapper(Mapper):
 
         transaction.set_last_modified_date(datetime.datetime.now())
         command = "UPDATE PauseBuchung " + "SET Account_ID=%s, Interval_ID=%s," \
-                                     "Last_modified_date=%s WHERE Transaction_ID=%s"
+                                           "Last_modified_date=%s WHERE Transaction_ID=%s"
         data = (transaction.get_target_user_account(),
                 transaction.get_time_interval_id(), transaction.get_last_modified_date(),
                 transaction.get_id())
@@ -113,5 +113,3 @@ class PauseBuchungMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
-

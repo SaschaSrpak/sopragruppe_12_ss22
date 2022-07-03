@@ -1,4 +1,3 @@
-
 from server.business_objects.Zeitintervalle.Projektarbeit import Projektarbeit
 from server.db.Mapper import Mapper
 
@@ -31,7 +30,6 @@ class ProjektarbeitMapper(Mapper):
         cursor.close()
 
         return result
-
 
     def find_by_key(self, key):
         """Lies den einen Tupel mit der gegebenen ID (vgl. Primärschlüssel) aus."""
@@ -108,12 +106,12 @@ class ProjektarbeitMapper(Mapper):
         command = "UPDATE Projektarbeit " + "SET Name=%s, Duration=%s, Start_Event_ID=%s, " \
                                             "End_Event_ID=%s, Last_modified_date=%s WHERE Interval_ID=%s"
         data = (
-                projektarbeit.get_name(),
-                projektarbeit.get_duration(),
-                projektarbeit.get_start(),
-                projektarbeit.get_end(),
-                projektarbeit.get_last_modified_date(),
-                projektarbeit.get_id())
+            projektarbeit.get_name(),
+            projektarbeit.get_duration(),
+            projektarbeit.get_start(),
+            projektarbeit.get_end(),
+            projektarbeit.get_last_modified_date(),
+            projektarbeit.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -128,4 +126,3 @@ class ProjektarbeitMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-
