@@ -68,6 +68,7 @@ export class  KommenTable extends Component{
     };
 
     DeleteKommen = (event) => {
+        //Kommenbuchung wird gelöscht
         console.log(this.state.deleteElement)
          var newdata = this.state.data.filter(a => a.id !== this.state.deleteElement.id)
         console.log(newdata)

@@ -66,6 +66,7 @@ export class  GehenTable extends Component{
     };
 
     DeleteGehen = (event) => {
+        //Gehenbuchung wird gelöscht
         console.log(this.state.deleteElement)
         var newdata = this.state.data.filter(a => a.id !== this.state.deleteElement.id)
         console.log(newdata)
@@ -120,6 +121,7 @@ export class  GehenTable extends Component{
         })
     }
     render() {
+        //Rendert die Komponente
         if (this.props.data.length > 0 && this.state.data.length > 0) {
             const headers = Object.keys(this.state.data[0]);
             const headers2 = ["Event Name", "Zeitpunkt", "ID", "Letzt Änderung"];
